@@ -16,7 +16,6 @@ export {
 } from "./providers/index.js";
 export type {
   LLMProvider,
-  ProviderKind,
   ChatRequestOptions as ProviderChatRequestOptions,
   ChatResponse as ProviderChatResponse,
   StreamChunk as ProviderStreamChunk,
@@ -333,7 +332,8 @@ export {
   saveBaseUrl,
   writeConfig,
 } from "./config.js";
-export type { ReasonixConfig, ProviderKind } from "./config.js";
+export type { ReasonixConfig } from "./config.js";
+export type { ProviderKind } from "./providers/types.js";
 
 export type {
   ChatMessage,

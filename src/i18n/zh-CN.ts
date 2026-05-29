@@ -15,10 +15,10 @@ export const zhCN: TranslationSchema = {
     noTurns: "(暂无对话)",
   },
   cli: {
-    description: "DeepSeek 原生智能体框架 — 专为缓存命中和低成本令牌构建。",
+    description: "DeepMiCode - DeepSeek + Mimo AI 编码助手，专为缓存命中和低成本令牌构建。",
     continue: "恢复最近使用的聊天会话，不显示选择器。",
     setup: "交互式向导 — API 密钥、MCP 服务器。随时重新运行以重新配置。",
-    code: "代码编辑聊天 — 以 <dir>（默认：cwd）为根的文件系统工具，编码系统提示词，v4-flash 基线。",
+    code: "代码编辑聊天 — 以 <dir>（默认：cwd）为根的文件系统工具，编码系统提示词。",
     chat: "具有实时缓存/成本面板的交互式 Ink TUI。",
     run: "以非交互方式运行单个任务，流式输出。",
     stats: "显示使用情况仪表板。",
@@ -30,24 +30,24 @@ export const zhCN: TranslationSchema = {
     replay: "交互式 Ink TUI，用于浏览转录稿。",
     diff: "在分栏 Ink TUI 中比较两个转录稿。",
     mcp: "模型上下文协议 (MCP) 助手 — 发现服务器，测试您的设置。",
-    version: "打印 Reasonix 版本。",
-    update: "检查较新版本的 Reasonix 并安装。",
+    version: "打印 DeepMiCode 版本。",
+    update: "检查较新版本的 DeepMiCode 并安装。",
     index: "构建（或增量刷新）本地语义搜索索引。",
   },
   stats: {
-    usageHint: "运行 `reasonix chat`、`reasonix code` 或 `reasonix run <task>` — 每次对话都会记录",
-    usageDetail: "每次对话在日志中追加一行，`reasonix stats` 会将其汇总统计。",
+    usageHint: "运行 `deepmicode chat`、`deepmicode code` 或 `deepmicode run <task>` — 每次对话都会记录",
+    usageDetail: "每次对话在日志中追加一行，`deepmicode stats` 会将其汇总统计。",
   },
   run: {
     missingApiKey:
-      "未设置 DEEPSEEK_API_KEY 且标准输入不是 TTY（无法交互式输入）。\n" +
-      "请设置环境变量，或先运行 `reasonix chat` 交互一次以保存密钥。\n",
+      "未设置 DEEPSEEK_API_KEY 或 MIMO_API_KEY 且标准输入不是 TTY（无法交互式输入）。\n" +
+      "请设置环境变量，或先运行 `deepmicode chat` 交互一次以保存密钥。\n",
   },
   sessions: {
     emptyHint:
-      "暂无已保存的会话 — 运行 `reasonix chat`（会话会自动保存，除非使用了 --no-session）。",
-    listHeader: "保存的会话 (~/.reasonix/sessions/)：",
-    inspectHint: "查看：reasonix sessions <name>",
+      "暂无已保存的会话 — 运行 `deepmicode chat`（会话会自动保存，除非使用了 --no-session）。",
+    listHeader: "保存的会话 (~/.deepmicode/sessions/)：",
+    inspectHint: "查看：deepmicode sessions <name>",
     resumeHint: "恢复：reasonix chat --session <name>",
     noSession: '找不到会话 "{name}"（或为空）。',
     lookedAt: "位置：{path}",

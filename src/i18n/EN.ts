@@ -15,10 +15,10 @@ export const EN: TranslationSchema = {
     noTurns: "(no turns yet)",
   },
   cli: {
-    description: "DeepSeek-native agent framework — built for cache hits and cheap tokens.",
+    description: "DeepMiCode - DeepSeek + Mimo AI coding agent, built for cache hits and cheap tokens.",
     continue: "Resume the most recently used chat session without showing the picker.",
     setup: "Interactive wizard — API key, MCP servers. Re-run any time to reconfigure.",
-    code: "Code-editing chat — filesystem tools rooted at <dir> (default: cwd), coding system prompt, v4-flash baseline.",
+    code: "Code-editing chat — filesystem tools rooted at <dir> (default: cwd), coding system prompt.",
     chat: "Interactive Ink TUI with live cache/cost panel.",
     run: "Run a single task non-interactively, streaming output.",
     stats: "Show usage dashboard.",
@@ -30,24 +30,24 @@ export const EN: TranslationSchema = {
     replay: "Interactive Ink TUI to scrub through a transcript.",
     diff: "Compare two transcripts in a split-pane Ink TUI.",
     mcp: "Model Context Protocol helpers — discover servers, test your setup.",
-    version: "Print Reasonix version.",
-    update: "Check for a newer Reasonix and install it.",
+    version: "Print DeepMiCode version.",
+    update: "Check for a newer DeepMiCode and install it.",
     index: "Build (or incrementally refresh) a local semantic search index.",
   },
   stats: {
-    usageHint: "run `reasonix chat`, `reasonix code`, or `reasonix run <task>` — every turn",
-    usageDetail: "appends one line to the log and `reasonix stats` will roll it up.",
+    usageHint: "run `deepmicode chat`, `deepmicode code`, or `deepmicode run <task>` — every turn",
+    usageDetail: "appends one line to the log and `deepmicode stats` will roll it up.",
   },
   run: {
     missingApiKey:
-      "DEEPSEEK_API_KEY is not set and stdin is not a TTY (cannot prompt).\n" +
-      "Set the env var, or run `reasonix chat` once interactively to save a key.\n",
+      "DEEPSEEK_API_KEY or MIMO_API_KEY is not set and stdin is not a TTY (cannot prompt).\n" +
+      "Set the env var, or run `deepmicode chat` once interactively to save a key.\n",
   },
   sessions: {
     emptyHint:
-      "no saved sessions yet — run `reasonix chat` (sessions are auto-saved unless --no-session).",
-    listHeader: "Saved sessions (~/.reasonix/sessions/):",
-    inspectHint: "Inspect:  reasonix sessions <name>",
+      "no saved sessions yet — run `deepmicode chat` (sessions are auto-saved unless --no-session).",
+    listHeader: "Saved sessions (~/.deepmicode/sessions/):",
+    inspectHint: "Inspect:  deepmicode sessions <name>",
     resumeHint: "Resume:   reasonix chat --session <name>",
     noSession: 'no session named "{name}" (or it\u2019s empty).',
     lookedAt: "looked at: {path}",

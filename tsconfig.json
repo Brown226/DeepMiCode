@@ -3,7 +3,7 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "lib": ["ES2023"],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "jsx": "react",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -24,7 +24,8 @@
       "@/*": ["src/*"],
       "ink": ["packages/ink/src/index.ts"]
     },
-    "types": ["node"]
+    "types": ["node"],
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src/**/*", "packages/ink/src/**/*"],
   "exclude": ["node_modules", "dist", "tests", "examples", "benchmarks"]

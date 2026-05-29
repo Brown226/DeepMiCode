@@ -152,6 +152,8 @@ function stringifyJsonTransport(value: unknown): string {
 }
 
 export class DeepSeekClient {
+  readonly name = "DeepSeek";
+  readonly kind = "deepseek" as const;
   readonly apiKey: string;
   readonly baseUrl: string;
   readonly timeoutMs: number;

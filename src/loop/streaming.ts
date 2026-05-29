@@ -1,12 +1,13 @@
 import type { DeepSeekClient, Usage } from "../client.js";
 import type { ReasoningEffort } from "../config.js";
+import type { LLMProvider } from "../providers/types.js";
 import type { ChatMessage, ToolCall, ToolSpec } from "../types.js";
 import { looksLikeCompleteJson } from "./shrink.js";
 import { thinkingModeForModel } from "./thinking.js";
 import type { LoopEvent } from "./types.js";
 
 export interface StreamModelOptions {
-  client: DeepSeekClient;
+  client: DeepSeekClient | LLMProvider;
   model: string;
   messages: ChatMessage[];
   toolSpecs: ToolSpec[];

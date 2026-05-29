@@ -7,6 +7,7 @@ import { buildAssistantMessage } from "./loop/messages.js";
 import { DEFAULT_MAX_RESULT_CHARS } from "./mcp/registry.js";
 import type { AppendOnlyLog } from "./memory/runtime.js";
 import { rewriteSession } from "./memory/session.js";
+import type { LLMProvider } from "./providers/types.js";
 import {
   DEEPSEEK_CONTEXT_TOKENS,
   DEFAULT_CONTEXT_TOKENS,
@@ -50,7 +51,7 @@ export const SKILL_PIN_MEMO_HEADER = "[Active skill memos — preserved verbatim
 const SKILL_PIN_REGEX = /<skill-pin name="([^"]+)">\n[\s\S]*?\n<\/skill-pin>/g;
 
 export interface ContextManagerDeps {
-  client: DeepSeekClient;
+  client: DeepSeekClient | LLMProvider;
   log: AppendOnlyLog;
   stats: SessionStats;
   sessionName: string | null;
