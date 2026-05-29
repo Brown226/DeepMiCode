@@ -1,4 +1,4 @@
-# DeepMiCode 竞品分析与技术借鉴（务实版）
+# DeepMiCode 竞品分析
 
 > 扫描时间：2026-05-29
 > 核心准则：**锦上添花，不是推倒重来**
@@ -17,121 +17,9 @@
 
 ---
 
-## 二、务实评估：哪些真正适合 DeepMiCode
+## 二、评估结论：不借鉴任何特性
 
-### ✅ 真正值得借鉴的（1 个）
-
-#### reasonix-model-switch 的 Mimo 配置方式
-
-**为什么适合**：
-- DeepMiCode 的核心差异化就是添加 Mimo 支持
-- reasonix-model-switch 已经实现了 Mimo 的配置和切换
-- 代码量小（6 个文件），可以直接参考其配置方式
-
-**具体借鉴**：
-- Mimo 的 baseUrl：`https://token-plan-ams.xiaomimimo.com/v1`
-- Mimo 的模型 ID：`mimo-v2.5`、`mimo-v2.5-pro`
-- API Key 的环境变量名：`MIMO_API_KEY`
-- 区域选择：国内版/海外版
-
-**不借鉴的部分**：
-- 完整的 Provider 抽象层（过度设计，DeepMiCode 只需要 DeepSeek + Mimo）
-- 代理模式（增加复杂度，直接集成更好）
-- 预设系统（不需要）
-
----
-
-### ❌ 不适合迁移的（逐个分析）
-
-#### 1. CodeWhale 的宪法治理架构
-
-**为什么不适合**：
-- DeepMiCode 已经有 CLAUDE.md 系统，功能足够
-- 九层权威层级是过度设计，DeepMiCode 只需要两个提供商
-- 引入会破坏与上游 DeepSeek-Reasonix 的同步
-- 增加大量代码和维护成本
-
-**结论**：保持现有 CLAUDE.md 系统，不迁移
-
-#### 2. CodeWhale 的三种行动模式
-
-**为什么不适合**：
-- DeepMiCode 已经有 `editMode`（review/auto/yolo/plan）
-- 功能完全重叠，不需要替换
-- CodeWhale 的 Plan/Agent/YOLO 与现有的 review/auto/yolo/plan 本质相同
-
-**结论**：保持现有 editMode，不迁移
-
-#### 3. cc-haha 的 IM 适配器
-
-**为什么不适合**：
-- 这是全新功能，与核心编码助手功能无关
-- 增加大量代码（Telegram/飞书/微信/钉钉四个适配器）
-- 维护成本高（需要跟进各 IM 平台 API 变化）
-- 不是 DeepMiCode 的核心定位
-
-**结论**：不迁移，这不是锦上添花，而是画蛇添足
-
-#### 4. cc-haha 的多 Agent 协调器
-
-**为什么不适合**：
-- DeepMiCode 已经有子代理系统（`src/tools/subagent.ts`）
-- 功能重叠，不需要替换
-- 协调器增加复杂度，但不增加实际价值
-
-**结论**：保持现有子代理系统，不迁移
-
-#### 5. cc-haha 的 Skills 插件系统
-
-**为什么不适合**：
-- DeepMiCode 已经有 Skills 系统（`src/skills.ts`、`src/tools/skills.ts`）
-- 功能重叠，不需要替换
-
-**结论**：保持现有 Skills 系统，不迁移
-
-#### 6. claude-code-rust 的性能优化
-
-**为什么不适合**：
-- 这是 Rust 特有的优势，TypeScript 项目无法直接借鉴
-- 启动速度和体积优化需要重写整个项目
-- 与"最小化修改"策略冲突
-
-**结论**：不迁移，保持 TypeScript 技术栈
-
-#### 7. claude-code-rust 的 Feature flag 编译
-
-**为什么不适合**：
-- TypeScript 项目不需要这种编译策略
-- DeepMiCode 使用 tsup 构建，不需要复杂的 feature flag
-
-**结论**：不迁移
-
-#### 8. CodeWhale 的前缀缓存优化
-
-**为什么不适合**：
-- DeepMiCode 已经有前缀缓存机制（`ImmutablePrefix`）
-- 这是 DeepSeek-Reasonix 的核心优势，已经很好
-- 不需要替换
-
-**结论**：保持现有前缀缓存，不迁移
-
-#### 9. cc-haha 的 Token 用量可视化
-
-**为什么不适合**：
-- DeepMiCode 已经有 `SessionStats` 和 telemetry 系统
-- 功能重叠，不需要替换
-
-**结论**：保持现有统计系统，不迁移
-
----
-
-## 三、最终结论
-
-### 唯一值得借鉴的
-
-| 特性 | 来源 | 借鉴方式 |
-|------|------|----------|
-| Mimo 配置参数 | reasonix-model-switch | 参考其 baseUrl、模型 ID、API Key 配置 |
+经过全面扫描和务实评估，这四个项目的特性都不适合迁移到 DeepMiCode。
 
 ### 不借鉴的理由
 
@@ -146,12 +34,29 @@
 | Feature flag | claude-code-rust | TypeScript 不需要 |
 | 前缀缓存 | CodeWhale | 已有，不需要替换 |
 | Token 可视化 | cc-haha | 已有，不需要替换 |
+| Mimo 配置参数 | reasonix-model-switch | 已有独立配置文件 |
 
 ---
 
-## 四、对 DeepMiCode 的实际建议
+## 三、Mimo 配置参数（独立来源）
 
-### 保持不变的（核心优势）
+Mimo 的配置参数来自独立配置文件，不需要从 reasonix-model-switch 借鉴：
+
+```
+Mimo 模型：
+- Key: tp-e82vm1g24o4lnjmjo83qn0blrc3qbe803dxmx2cc0t0798yh
+- URL: https://token-plan-ams.xiaomimimo.com/v1
+- Model: mimo-v2.5（多模态）、mimo-v2.5-pro
+
+DeepSeek 模型：
+- Key: sk-f6baf485e46d40449d8f79ea764ee9d6
+- URL: https://api.deepseek.com
+- Model: deepseek-v4-flash、deepseek-v4-pro
+```
+
+---
+
+## 四、DeepMiCode 的核心优势（保持不变）
 
 1. **核心引擎** — CacheFirstLoop、StreamProcessor、ErrorRecovery、ToolCallRepair
 2. **工具系统** — 25+ 工具，功能完整
@@ -162,25 +67,17 @@
 7. **前缀缓存** — ImmutablePrefix，缓存命中率 90%+
 8. **editMode** — review/auto/yolo/plan
 
-### 需要修改的（差异化）
+---
+
+## 五、需要修改的（差异化）
 
 1. **品牌** — 名称、logo、颜色
-2. **Mimo 支持** — 参考 reasonix-model-switch 的配置方式
+2. **Mimo 支持** — 集成 Mimo API
 3. **配置系统** — 添加 Mimo 配置项
-
-### 时间计划（保持不变）
-
-| 阶段 | 任务 | 时间 |
-|------|------|------|
-| 1 | 品牌修改 | 2 天 |
-| 2 | Mimo 支持 | 3 天 |
-| 3 | 测试验证 | 2 天 |
-| 4 | 打包发布 | 1 天 |
-| **总计** | | **8 天** |
 
 ---
 
-## 五、核心理念
+## 六、核心理念
 
 > **"二次开发，不要从零开始"**
 >
@@ -191,6 +88,6 @@
 
 ---
 
-**文档版本**：v2.0（务实版）
+**文档版本**：v3.0（精简版）
 **更新时间**：2026-05-29
 **核心准则**：锦上添花，不是推倒重来
