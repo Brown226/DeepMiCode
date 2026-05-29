@@ -7,6 +7,8 @@ import {
   isPlausibleKey,
   loadApiKey,
   loadEndpoint,
+  loadMimoApiKey,
+  loadMimoEndpoint,
   loadToolRateLimit,
   normalizeMcpConfig,
   readConfig,
@@ -15,6 +17,9 @@ import {
 import { loadDotenv } from "../../env.js";
 import { t } from "../../i18n/index.js";
 import { CacheFirstLoop, DeepSeekClient, ImmutablePrefix } from "../../index.js";
+import { createProvider } from "../../providers/factory.js";
+import { isMimoModel } from "../../providers/mimo-client.js";
+import type { LLMProvider } from "../../providers/types.js";
 import { McpClient } from "../../mcp/client.js";
 import { preflightStdioSpec } from "../../mcp/preflight.js";
 import { bridgeMcpTools } from "../../mcp/registry.js";
@@ -139,8 +144,27 @@ export async function runCommand(opts: RunOptions): Promise<void> {
     if (successCount === 0) tools = undefined;
   }
 
-  const ep = loadEndpoint();
-  const client = new DeepSeekClient({ apiKey: ep.apiKey, baseUrl: ep.baseUrl });
+  // Select provider based on model name
+  let client: LLMProvider;
+  if (isMimoModel(opts.model)) {
+    // Use MiMo provider
+    const mimoEp = loadMimoEndpoint();
+    client = createProvider({
+      provider: "mimo",
+      model: opts.model,
+      apiKey: mimoEp.apiKey,
+      baseUrl: mimoEp.baseUrl,
+    });
+  } else {
+    // Use DeepSeek provider
+    const ep = loadEndpoint();
+    client = createProvider({
+      provider: "deepseek",
+      model: opts.model,
+      apiKey: ep.apiKey,
+      baseUrl: ep.baseUrl,
+    });
+  }
   const prefix = new ImmutablePrefix({
     system: opts.system,
     toolSpecs: tools?.specs(),
