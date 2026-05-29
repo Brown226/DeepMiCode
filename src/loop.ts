@@ -20,8 +20,10 @@ import {
   is4xxError,
   is5xxError,
   isDeepSeekHost,
+  isMimoHost,
   probeDeepSeekReachable,
 } from "./loop/errors.js";
+import type { LLMProvider } from "./providers/types.js";
 import { type ForceSummaryContext, forceSummaryAfterIterLimit } from "./loop/force-summary.js";
 import {
   fixToolCallPairing,
@@ -84,7 +86,7 @@ export {
 export type { EventRole, LoopEvent } from "./loop/types.js";
 
 export interface CacheFirstLoopOptions {
-  client: DeepSeekClient;
+  client: DeepSeekClient | LLMProvider;
   prefix: ImmutablePrefix;
   tools?: ToolRegistry;
   model?: string;
@@ -123,7 +125,7 @@ function shrinkMessageForRetention(message: ChatMessage): ChatMessage {
 }
 
 export class CacheFirstLoop {
-  readonly client: DeepSeekClient;
+  readonly client: DeepSeekClient | LLMProvider;
   readonly prefix: ImmutablePrefix;
   readonly tools: ToolRegistry;
   readonly log = new AppendOnlyLog();
@@ -201,7 +203,11 @@ export class CacheFirstLoop {
     this.client = opts.client;
     this.prefix = opts.prefix;
     this.tools = opts.tools ?? new ToolRegistry();
-    this.model = opts.model ?? "deepseek-v4-flash";
+    // Detect default model from provider kind
+    const defaultModel = "kind" in opts.client && opts.client.kind === "mimo"
+      ? "mimo-v2.5-pro"
+      : "deepseek-v4-flash";
+    this.model = opts.model ?? defaultModel;
     this.reasoningEffort = opts.reasoningEffort ?? "high";
     this.budgetUsd =
       typeof opts.budgetUsd === "number" && opts.budgetUsd > 0 ? opts.budgetUsd : null;
@@ -856,8 +862,9 @@ export class CacheFirstLoop {
         }
         const upstreamHost = this.client.baseUrl;
         const dsHost = isDeepSeekHost(upstreamHost);
+        const mimoHost = isMimoHost(upstreamHost);
         const probe =
-          is5xxError(err) && dsHost ? await probeDeepSeekReachable(this.client) : undefined;
+          is5xxError(err) && (dsHost || mimoHost) ? await probeDeepSeekReachable(this.client) : undefined;
         const cause = err instanceof Error ? err : new Error(String(err));
         const retryable = !is4xxError(cause) && cause.name !== "AbortError";
         const { code, phase } = errorMeta(cause);

@@ -2,14 +2,22 @@
 export function isThinkingModeModel(model: string): boolean {
   if (model.includes("reasoner")) return true;
   if (model === "deepseek-v4-flash" || model === "deepseek-v4-pro") return true;
+  // MiMo models return reasoning_content by default
+  if (model.startsWith("mimo-v2.5")) return true;
+  if (model === "mimo-v2-flash") return true;
+  if (model === "mimo-v2-omni") return true;
   return false;
 }
 
-/** Pins extra_body.thinking.type; `undefined` lets third-party endpoints skip the field. */
+/** Pins extra_body.thinking.type; `undefined` lets third-party endpoints skip the field.
+ *  MiMo: reasoning_content is returned by default, no extra_body needed. */
 export function thinkingModeForModel(model: string): "enabled" | "disabled" | undefined {
   if (model === "deepseek-chat") return "disabled";
   if (model.includes("reasoner")) return "enabled";
   if (model === "deepseek-v4-flash" || model === "deepseek-v4-pro") return "enabled";
+  // MiMo: reasoning_content is returned by default, no extra_body needed.
+  // Return undefined so the payload builder skips the thinking field.
+  if (model.startsWith("mimo-")) return undefined;
   return undefined;
 }
 

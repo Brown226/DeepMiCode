@@ -8,8 +8,6 @@
 - **Mi** - 来自 Mimo 的多模态能力
 - **Code** - 编码助手
 
----
-
 ## 核心策略
 
 > **"在巨人肩膀上开发，不要从零开始造轮子"**
@@ -30,6 +28,30 @@
 5. ✅ 用户深度使用过（效果良好，响应快，不中断）
 
 **基础项目路径**：`E:\DeepCode\DeepSeek-Reasonix-main`
+**项目路径**：`E:\DeepCode\DeepMiCode-Reasonix-v0.53.0`
+
+## Git 仓库
+
+**GitHub 仓库**：https://github.com/Brown226/DeepMiCode.git
+
+**重要规则**：每次修改代码后必须及时进行 Git 提交，确保代码版本可控。
+
+```bash
+# 进入项目目录
+cd E:/DeepCode/DeepMiCode-Reasonix-v0.53.0
+
+# 查看状态
+git status
+
+# 添加修改
+git add -A
+
+# 提交修改
+git commit -m "描述修改内容"
+
+# 推送到远程
+git push
+```
 
 ---
 
@@ -64,10 +86,10 @@
 
 ```bash
 # 复制 DeepSeek-Reasonix
-cp -r E:/DeepCode/DeepSeek-Reasonix-main E:/DeepCode/DeepMiCode-Reasonix
+cp -r E:/DeepCode/DeepSeek-Reasonix-main E:/DeepCode/DeepMyCode
 
 # 进入项目目录
-cd E:/DeepCode/DeepMiCode-Reasonix
+cd E:/DeepCode/DeepMyCode
 ```
 
 ### 第二步：修改品牌（1-2 天）
@@ -75,20 +97,20 @@ cd E:/DeepCode/DeepMiCode-Reasonix
 1. **修改 package.json**
    ```json
    {
-     "name": "deepmicode",
+     "name": "deepmycode",
      "version": "1.0.0",
-     "description": "DeepMiCode - AI coding assistant with DeepSeek and Mimo"
+     "description": "DeepMyCode - AI coding assistant"
    }
    ```
 
 2. **修改桌面应用品牌**
-   - `desktop/src-tauri/tauri.conf.json` - 修改 productName 为 DeepMiCode
+   - `desktop/src-tauri/tauri.conf.json` - 修改 productName
    - `desktop/src/theme.ts` - 修改主题颜色
    - `desktop/src/App.tsx` - 修改标题
    - `desktop/src/ui/about.tsx` - 修改关于信息
 
 3. **修改 CLI 品牌**
-   - `src/cli/index.ts` - 修改命令名称为 deepmicode
+   - `src/cli/index.ts` - 修改命令名称
    - `src/cli/ui/` - 修改 CLI 界面
 
 ### 第三步：添加 Mimo 支持（2-3 天）
@@ -160,7 +182,7 @@ cd E:/DeepCode/DeepMiCode-Reasonix
 ## 四、目录结构
 
 ```
-DeepMiCode-Reasonix/
+DeepMyCode/
 ├── src/                    # 核心代码（来自 DeepSeek-Reasonix）
 │   ├── core/              # 核心引擎
 │   ├── tools/             # 工具系统
@@ -218,7 +240,7 @@ DeepMiCode-Reasonix/
 
 | 阶段 | 任务 | 时间 | 交付物 |
 |------|------|------|--------|
-| **1** | 复制项目 + 修改品牌 | 2 天 | 可运行的 DeepMiCode |
+| **1** | 复制项目 + 修改品牌 | 2 天 | 可运行的 DeepMyCode |
 | **2** | 添加 Mimo 支持 | 3 天 | 支持 Mimo API |
 | **3** | 测试验证 | 2 天 | 测试通过 |
 | **4** | 打包发布 | 1 天 | 安装包 |
@@ -295,7 +317,7 @@ git merge upstream/main
 ### 第一步
 
 ```bash
-cp -r E:/DeepCode/DeepSeek-Reasonix-main E:/DeepCode/DeepMiCode-Reasonix
+cp -r E:/DeepCode/DeepSeek-Reasonix-main E:/DeepCode/DeepMyCode
 ```
 
 ### 第二步

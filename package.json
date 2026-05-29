@@ -1,11 +1,11 @@
 {
-  "name": "reasonix",
+  "name": "deepmicode",
   "version": "0.53.0",
-  "description": "DeepSeek-native coding agent: cache-first loop, flash-first cost control, tool-call repair.",
+  "description": "DeepMiCode - DeepSeek + Mimo AI coding agent with cache-first loop",
   "type": "module",
   "bin": {
-    "reasonix": "dist/cli/index.js",
-    "dsnix": "dist/cli/index.js"
+    "deepmicode": "dist/cli/index.js",
+    "dmcode": "dist/cli/index.js"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -60,22 +60,22 @@
     "agent",
     "llm",
     "deepseek",
-    "r1",
+    "mimo",
     "tool-use",
     "prompt-cache",
     "cli",
     "tui"
   ],
-  "author": "esengine",
+  "author": "Brown226",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/esengine/DeepSeek-Reasonix.git"
+    "url": "git+https://github.com/Brown226/DeepMiCode.git"
   },
   "bugs": {
-    "url": "https://github.com/esengine/DeepSeek-Reasonix/issues"
+    "url": "https://github.com/Brown226/DeepMiCode/issues"
   },
-  "homepage": "https://github.com/esengine/DeepSeek-Reasonix#readme",
+  "homepage": "https://github.com/Brown226/DeepMiCode#readme",
   "engines": {
     "node": ">=22"
   },
@@ -121,7 +121,7 @@
     "@stryker-mutator/core": "^9.6.1",
     "@stryker-mutator/vitest-runner": "^9.6.1",
     "@testing-library/react": "^16.3.2",
-    "@types/node": "^22.9.0",
+    "@types/node": "^22.19.19",
     "@types/picomatch": "^4.0.3",
     "@types/react": "^19.2.14",
     "@types/ws": "^8.18.1",
@@ -144,8 +144,8 @@
     "tree-sitter-typescript": "^0.23.2",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3",
+    "typescript": "^5.9.3",
     "uplot": "^1.6.31",
-    "vitest": "^2.1.5"
+    "vitest": "^2.1.9"
   }
 }

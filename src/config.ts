@@ -26,12 +26,36 @@ export type EditMode = "review" | "auto" | "yolo" | "plan";
 
 export const DEFAULT_MODEL = "deepseek-v4-flash";
 
+/** Provider kind — determines which API client to use. */
+export type ProviderKind = "deepseek" | "mimo";
+
 /** Models the official api.deepseek.com endpoint currently accepts. v3-era
  *  `deepseek-chat`/`deepseek-reasoner` are gone — sending them produces a 400. */
 export const SUPPORTED_OFFICIAL_MODELS: readonly string[] = [
   "deepseek-v4-flash",
   "deepseek-v4-pro",
 ];
+
+/** MiMo models supported by the xiaomimimo.com API. */
+export const MIMO_MODELS: readonly string[] = [
+  "mimo-v2.5-pro",
+  "mimo-v2.5",
+  "mimo-v2-flash",
+  "mimo-v2-omni",
+  "mimo-v2-pro",
+];
+
+/** All supported models across providers. */
+export const ALL_SUPPORTED_MODELS: readonly string[] = [
+  ...SUPPORTED_OFFICIAL_MODELS,
+  ...MIMO_MODELS,
+];
+
+/** MiMo API endpoints. */
+export const MIMO_ENDPOINTS = {
+  international: "https://token-plan-ams.xiaomimimo.com/v1",
+  china: "https://token-plan-cn.xiaomimimo.com/v1",
+} as const;
 
 export type ReasoningEffort = "low" | "medium" | "high" | "max";
 
@@ -150,8 +174,16 @@ export interface ReasonixConfig {
   apiKey?: string;
   baseUrl?: string;
   lang?: LanguageCode;
-  /** Persisted DeepSeek model id — `/model <id>` and the dashboard model picker write through this. */
+  /** Persisted model id — `/model <id>` and the dashboard model picker write through this. */
   model?: string;
+  /** AI provider kind — "deepseek" or "mimo". Auto-detected from model name if absent. */
+  provider?: ProviderKind;
+  /** MiMo API key. Falls back to MIMO_API_KEY env var. */
+  mimoApiKey?: string;
+  /** MiMo API base URL. Falls back to MIMO_BASE_URL env var. Default: international endpoint. */
+  mimoBaseUrl?: string;
+  /** MiMo region preference — "international" or "china". */
+  mimoRegion?: "international" | "china";
   editMode?: EditMode;
   editModeHintShown?: boolean;
   mouseClipboardHintShown?: boolean;
@@ -400,7 +432,7 @@ const DEFAULT_TIMEOUT_MS = 180_000;
 const DEFAULT_BATCH_SIZE = 10;
 
 export function defaultConfigPath(): string {
-  return join(homedir(), ".reasonix", "config.json");
+  return join(homedir(), ".deepmicode", "config.json");
 }
 
 const STRING_ARRAY_FIELDS: Array<readonly string[]> = [
@@ -687,11 +719,53 @@ export function loadBaseUrl(path: string = defaultConfigPath()): string | undefi
   return loadEndpoint(path).baseUrl;
 }
 
+/** Load MiMo API endpoint configuration.
+ *  Priority: env vars > config file > defaults. */
+export function loadMimoEndpoint(path: string = defaultConfigPath()): ResolvedEndpoint {
+  const envBaseUrl = process.env.MIMO_BASE_URL;
+  const envApiKey = process.env.MIMO_API_KEY;
+  if (envBaseUrl) {
+    return { baseUrl: envBaseUrl, apiKey: envApiKey };
+  }
+  const cfg = readConfig(path);
+  if (cfg.mimoBaseUrl) {
+    return { baseUrl: cfg.mimoBaseUrl, apiKey: cfg.mimoApiKey ?? envApiKey };
+  }
+  return { baseUrl: undefined, apiKey: envApiKey ?? cfg.mimoApiKey };
+}
+
+/** Load MiMo API key. */
+export function loadMimoApiKey(path: string = defaultConfigPath()): string | undefined {
+  return loadMimoEndpoint(path).apiKey;
+}
+
+/** Load MiMo base URL. */
+export function loadMimoBaseUrl(path: string = defaultConfigPath()): string | undefined {
+  return loadMimoEndpoint(path).baseUrl;
+}
+
+/** Detect provider kind from configuration.
+ *  Priority: explicit config > model name > base URL > default. */
+export function detectProviderFromConfig(path: string = defaultConfigPath()): ProviderKind {
+  const cfg = readConfig(path);
+  if (cfg.provider) return cfg.provider;
+  if (cfg.model && cfg.model.startsWith("mimo-")) return "mimo";
+  if (cfg.mimoBaseUrl || process.env.MIMO_BASE_URL) return "mimo";
+  return "deepseek";
+}
+
 // Mirrors the resolved tuple into env so subprocess constructions see the same pair.
 export function bridgeEndpointEnv(path: string = defaultConfigPath()): void {
   const ep = loadEndpoint(path);
   if (ep.apiKey) process.env.DEEPSEEK_API_KEY = ep.apiKey;
   if (ep.baseUrl) process.env.DEEPSEEK_BASE_URL = ep.baseUrl;
+}
+
+/** Bridge MiMo configuration to environment variables. */
+export function bridgeMimoEndpointEnv(path: string = defaultConfigPath()): void {
+  const ep = loadMimoEndpoint(path);
+  if (ep.apiKey) process.env.MIMO_API_KEY = ep.apiKey;
+  if (ep.baseUrl) process.env.MIMO_BASE_URL = ep.baseUrl;
 }
 
 function isNonNegativeNumber(value: unknown): value is number {

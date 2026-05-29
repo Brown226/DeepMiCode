@@ -1,7 +1,30 @@
-/** Reasonix — DeepSeek-native agent framework. Library entry point. */
+/** DeepMiCode — DeepSeek + Mimo AI coding agent. Library entry point. */
 
 export { DeepSeekClient, Usage } from "./client.js";
 export type { ChatResponse, StreamChunk, DeepSeekClientOptions } from "./client.js";
+
+// Provider abstraction layer
+export {
+  MimoClient,
+  createProvider,
+  createProviderFromEnv,
+  detectProvider,
+  isMimoModel,
+  isMimoEndpoint,
+  resolveMimoBaseUrl,
+  MIMO_ENDPOINTS,
+} from "./providers/index.js";
+export type {
+  LLMProvider,
+  ProviderKind,
+  ChatRequestOptions as ProviderChatRequestOptions,
+  ChatResponse as ProviderChatResponse,
+  StreamChunk as ProviderStreamChunk,
+  UserBalance,
+  ModelList,
+  MimoClientOptions,
+  ProviderConfig,
+} from "./providers/index.js";
 
 export {
   CacheFirstLoop,
@@ -299,13 +322,18 @@ export {
   loadExaApiKey,
   loadOllamaApiKey,
   loadBraveApiKey,
+  loadMimoApiKey,
+  loadMimoBaseUrl,
+  loadMimoEndpoint,
+  detectProviderFromConfig,
+  bridgeMimoEndpointEnv,
   readConfig,
   redactKey,
   saveApiKey,
   saveBaseUrl,
   writeConfig,
 } from "./config.js";
-export type { ReasonixConfig } from "./config.js";
+export type { ReasonixConfig, ProviderKind } from "./config.js";
 
 export type {
   ChatMessage,

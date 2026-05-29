@@ -1,4 +1,5 @@
 import type { DeepSeekClient } from "../client.js";
+import type { LLMProvider } from "../providers/types.js";
 import { t } from "../i18n/index.js";
 
 export interface DeepSeekProbeResult {
@@ -24,11 +25,13 @@ export function formatLoopError(
     return t("errors.contextOverflow", { requested });
   }
 
-  const m = /^DeepSeek (\d{3}):\s*([\s\S]*)$/.exec(msg);
+  // Support both DeepSeek and MiMo error formats
+  const m = /^(DeepSeek|MiMo) (\d{3}):\s*([\s\S]*)$/.exec(msg);
   if (!m) return msg;
-  const status = m[1] ?? "";
-  const body = m[2] ?? "";
-  const inner = extractDeepSeekErrorMessage(body);
+  const provider = m[1] ?? "DeepSeek";
+  const status = m[2] ?? "";
+  const body = m[3] ?? "";
+  const inner = extractErrorMessage(body);
 
   if (status === "401") return t("errors.auth401", { inner });
   if (status === "402") return t("errors.balance402", { inner });
@@ -41,13 +44,13 @@ export function formatLoopError(
 
 export function is5xxError(err: unknown): boolean {
   if (!(err instanceof Error)) return false;
-  const m = /^DeepSeek (5\d{2}):/.exec(err.message ?? "");
+  const m = /^(DeepSeek|MiMo) (5\d{2}):/.exec(err.message ?? "");
   return m !== null;
 }
 
 export function is4xxError(err: unknown): boolean {
   if (!(err instanceof Error)) return false;
-  return /^DeepSeek (4\d{2}):/.test(err.message ?? "");
+  return /^(DeepSeek|MiMo) (4\d{2}):/.test(err.message ?? "");
 }
 
 /** Read structured metadata off thrown errors without resorting to `as any`. */
@@ -59,9 +62,10 @@ export function errorMeta(err: unknown): { code?: string; phase?: string } {
 }
 
 export async function probeDeepSeekReachable(
-  client: DeepSeekClient,
+  client: DeepSeekClient | LLMProvider,
   timeoutMs = 1500,
 ): Promise<DeepSeekProbeResult> {
+  if (!client.getBalance) return { reachable: true };
   const balance = await client.getBalance({ signal: AbortSignal.timeout(timeoutMs) });
   return { reachable: balance !== null };
 }
@@ -75,6 +79,25 @@ export function isDeepSeekHost(baseUrl: string | undefined | null): boolean {
   } catch {
     return false;
   }
+}
+
+/** Detect MiMo API endpoints. */
+export function isMimoHost(baseUrl: string | undefined | null): boolean {
+  if (!baseUrl) return false;
+  try {
+    const host = new URL(baseUrl).hostname.toLowerCase();
+    return host.includes("xiaomimimo.com");
+  } catch {
+    return false;
+  }
+}
+
+/** Detect provider from error message or base URL. */
+export function detectProviderFromError(msg: string, baseUrl?: string): string {
+  if (msg.startsWith("MiMo ")) return "MiMo";
+  if (msg.startsWith("DeepSeek ")) return "DeepSeek";
+  if (isMimoHost(baseUrl)) return "MiMo";
+  return "DeepSeek";
 }
 
 function is5xxStatus(status: string): boolean {
@@ -131,7 +154,7 @@ export function errorLabelFor(reason: "aborted" | "context-guard" | "stuck"): st
   return t("errors.labelStuck");
 }
 
-function extractDeepSeekErrorMessage(body: string): string {
+function extractErrorMessage(body: string): string {
   const trimmed = body.trim();
   if (!trimmed) return t("errors.innerNoMessage");
   try {
