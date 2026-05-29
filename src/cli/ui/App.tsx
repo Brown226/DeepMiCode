@@ -59,6 +59,10 @@ import { formatHookOutcomeMessage, runHooks } from "../../hooks.js";
 import { t, tObj } from "../../i18n/index.js";
 import { CacheFirstLoop, DeepSeekClient, ImmutablePrefix } from "../../index.js";
 import type { LoopEvent } from "../../loop.js";
+import { createProvider } from "../../providers/factory.js";
+import { isMimoModel } from "../../providers/mimo-client.js";
+import type { LLMProvider } from "../../providers/types.js";
+import { loadMimoEndpoint } from "../../config.js";
 import {
   deleteSession,
   detectGitBranch,
@@ -975,8 +979,25 @@ function AppInner({
   // biome-ignore lint/correctness/useExhaustiveDependencies: currentRootDir —see comment above
   const loop = useMemo(() => {
     if (loopRef.current) return loopRef.current;
-    const ep = loadEndpoint();
-    const client = new DeepSeekClient({ apiKey: ep.apiKey, baseUrl: ep.baseUrl });
+    // Select provider based on model name
+    let client: LLMProvider;
+    if (isMimoModel(model)) {
+      const mimoEp = loadMimoEndpoint();
+      client = createProvider({
+        provider: "mimo",
+        model,
+        apiKey: mimoEp.apiKey,
+        baseUrl: mimoEp.baseUrl,
+      });
+    } else {
+      const ep = loadEndpoint();
+      client = createProvider({
+        provider: "deepseek",
+        model,
+        apiKey: ep.apiKey,
+        baseUrl: ep.baseUrl,
+      });
+    }
     // Register run_skill HERE (not in code.tsx / chat.tsx) because
     // subagent-runAs skills need the client + parent registry to
     // spawn child loops. Wiring lives in App.tsx so the same code

@@ -96,6 +96,10 @@ import {
   ImmutablePrefix,
   type LoopAbortOptions,
 } from "../../index.js";
+import { createProvider } from "../../providers/factory.js";
+import { isMimoModel } from "../../providers/mimo-client.js";
+import type { LLMProvider } from "../../providers/types.js";
+import { loadMimoEndpoint } from "../../config.js";
 import { parseMcpSpec } from "../../mcp/spec.js";
 import {
   deleteSession,
@@ -1016,8 +1020,25 @@ function buildRuntimeFor(tab: Tab): RuntimeState {
   if (!tab.toolset) throw new Error("buildRuntimeFor called before initTabToolset finished");
   const toolset = tab.toolset;
   applyPlanMode(toolset.tools, loadEditMode());
-  const ep = loadEndpoint();
-  const client = new DeepSeekClient({ apiKey: ep.apiKey, baseUrl: ep.baseUrl });
+  // Select provider based on model name
+  let client: LLMProvider;
+  if (isMimoModel(tab.currentModel)) {
+    const mimoEp = loadMimoEndpoint();
+    client = createProvider({
+      provider: "mimo",
+      model: tab.currentModel,
+      apiKey: mimoEp.apiKey,
+      baseUrl: mimoEp.baseUrl,
+    });
+  } else {
+    const ep = loadEndpoint();
+    client = createProvider({
+      provider: "deepseek",
+      model: tab.currentModel,
+      apiKey: ep.apiKey,
+      baseUrl: ep.baseUrl,
+    });
+  }
   const prefix = new ImmutablePrefix({ system: tab.system, toolSpecs: toolset.tools.specs() });
   const reasoningEffort = loadReasoningEffort();
   const loop = new CacheFirstLoop({

@@ -7,8 +7,11 @@ import { join } from "node:path";
 import { stdin, stdout } from "node:process";
 import { createInterface } from "node:readline/promises";
 import { DeepSeekClient } from "../../client.js";
-import { loadEndpoint } from "../../config.js";
+import { loadEndpoint, loadMimoEndpoint } from "../../config.js";
 import { loadDotenv } from "../../env.js";
+import { createProvider } from "../../providers/factory.js";
+import { isMimoModel } from "../../providers/mimo-client.js";
+import type { LLMProvider } from "../../providers/types.js";
 
 export interface CommitOptions {
   /** Override the default model (deepseek-v4-flash). */
@@ -267,8 +270,25 @@ export async function commitCommand(opts: CommitOptions = {}): Promise<void> {
     );
   }
 
-  const client = new DeepSeekClient({ apiKey: ep.apiKey, baseUrl: ep.baseUrl });
+  // Select provider based on model name
+  let client: LLMProvider;
   const model = opts.model ?? DEFAULT_MODEL;
+  if (isMimoModel(model)) {
+    const mimoEp = loadMimoEndpoint();
+    client = createProvider({
+      provider: "mimo",
+      model,
+      apiKey: mimoEp.apiKey,
+      baseUrl: mimoEp.baseUrl,
+    });
+  } else {
+    client = createProvider({
+      provider: "deepseek",
+      model,
+      apiKey: ep.apiKey,
+      baseUrl: ep.baseUrl,
+    });
+  }
   const recentCommits = readRecentCommits();
 
   let message = "";
