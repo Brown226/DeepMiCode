@@ -55,3 +55,4 @@ desktop/src-tauri/binaries/
 # API key configuration files
 mimo-LLM-配置文件.md
 *配置*.md
+test-mimo*.mjs
