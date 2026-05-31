@@ -2075,7 +2075,7 @@ function TabRuntime({
       cmd: "/feedback",
       desc: t("app.cmd.feedback"),
       run: () => {
-        void openUrl("https://github.com/esengine/DeepSeek-Reasonix/issues/new/choose").catch(
+        void openUrl("https://github.com/Brown226/DeepMiCode/issues/new/choose").catch(
           () => undefined,
         );
       },
@@ -2119,7 +2119,7 @@ function TabRuntime({
   const elapsed = useElapsed(state.busy);
   const workspaceLabel = state.settings?.workspaceDir
     ? state.settings.workspaceDir.split(/[\\/]/).pop() || "workspace"
-    : "Reasonix";
+    : "DeepMiCode";
   const session = (() => {
     if (state.currentSession) {
       const s = state.sessions.find((x) => x.name === state.currentSession);
@@ -2782,7 +2782,7 @@ function TitleBar({
         <div className="tb-meta" data-tauri-drag-region>
           <div className="brand" data-tauri-drag-region>
             <span className="mark" />
-            <span className="brand-name">Reasonix</span>
+            <span className="brand-name">DeepMiCode</span>
           </div>
           {session && (
             <div className="crumbs" data-tauri-drag-region>
