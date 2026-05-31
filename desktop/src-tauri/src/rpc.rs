@@ -41,11 +41,11 @@ struct ExitEvent {
 }
 
 fn resolve_cli(app: &AppHandle) -> Result<(String, Vec<String>)> {
-    if let Ok(custom) = env::var("REASONIX_CLI") {
+    if let Ok(custom) = env::var("DEEPMICODE_CLI") {
         let mut parts = custom.split_whitespace().map(String::from);
         let program = parts
             .next()
-            .ok_or_else(|| anyhow!("REASONIX_CLI is empty"))?;
+            .ok_or_else(|| anyhow!("DEEPMICODE_CLI is empty"))?;
         return Ok((program, parts.collect()));
     }
 
@@ -89,7 +89,7 @@ fn resolve_cli(app: &AppHandle) -> Result<(String, Vec<String>)> {
         .ok_or_else(|| anyhow!("dist/cli/index.js not found — run `npm run build` at repo root"))?;
 
     let node_path = find_real_node().context("node not found")?;
-    eprintln!("[reasonix] resolved node: {}", node_path.display());
+    eprintln!("[deepmicode] resolved node: {}", node_path.display());
 
     Ok((
         node_path.to_string_lossy().into_owned(),
@@ -129,7 +129,7 @@ fn find_real_node() -> Result<PathBuf> {
         }
     }
     Err(anyhow!(
-        "node not found in PATH or only stub binaries present.{}\nInstall Node 22 from nodejs.org and reopen Reasonix.",
+        "node not found in PATH or only stub binaries present.{}\nInstall Node 22 from nodejs.org and reopen DeepMiCode.",
         if tried.is_empty() {
             String::new()
         } else {

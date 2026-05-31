@@ -8,7 +8,7 @@ export type Lang = "en" | "zh-CN" | "de";
 const SUPPORTED_LANGS: readonly Lang[] = ["en", "zh-CN", "de"];
 const SUPPORTED: ReadonlySet<Lang> = new Set<Lang>(SUPPORTED_LANGS);
 const LANG_LABELS: Record<Lang, string> = { en: "English", "zh-CN": "简体中文", de: "Deutsch" };
-const STORAGE_KEY = "reasonix.lang";
+const STORAGE_KEY = "deepmicode.lang";
 
 type Listener = () => void;
 const listeners: Listener[] = [];

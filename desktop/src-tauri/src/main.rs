@@ -8,7 +8,7 @@ use std::path::{Path, PathBuf};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 fn pasted_images_dir() -> PathBuf {
-    std::env::temp_dir().join("reasonix-pasted-images")
+    std::env::temp_dir().join("deepmicode-pasted-images")
 }
 
 /// #892: bundled libwayland in AppImage can ABI-mismatch the host Wayland
@@ -234,7 +234,7 @@ fn save_clipboard_image(bytes: Vec<u8>, extension: Option<String>) -> Result<Str
         .duration_since(UNIX_EPOCH)
         .map_err(|e| format!("clock error: {e}"))?
         .as_millis();
-    let path = dir.join(format!("reasonix-pasted-{ts}.{ext}"));
+    let path = dir.join(format!("deepmicode-pasted-{ts}.{ext}"));
     std::fs::write(&path, bytes).map_err(|e| format!("write failed: {e}"))?;
     Ok(path.to_string_lossy().into_owned())
 }
@@ -300,7 +300,7 @@ fn main() {
                         let _ = w.center();
                     }
                 }
-                if std::env::var("REASONIX_DEVTOOLS").is_ok() {
+                if std::env::var("DEEPMICODE_DEVTOOLS").is_ok() {
                     #[cfg(debug_assertions)]
                     w.open_devtools();
                 }

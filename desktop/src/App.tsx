@@ -443,7 +443,7 @@ export function reduce(state: State, action: Action): State {
           ...state.messages,
           {
             kind: "error",
-            message: `reasonix exited (code ${action.code ?? "?"})`,
+            message: `DeepMiCode exited (code ${action.code ?? "?"})`,
             id: nextErrorId(),
           },
         ],
@@ -1055,7 +1055,7 @@ export function applyIncoming(state: State, ev: IncomingEvent): State {
             kind: "error",
             message:
               `Session "${ev.name}" loaded with no messages (${sizeNote}). ` +
-              `The file ~/.reasonix/sessions/${ev.name}.jsonl exists but couldn't be parsed — ` +
+              `The file ~/.deepmicode/sessions/${ev.name}.jsonl exists but couldn't be parsed — ` +
               `start a new chat or restore from .jsonl.bak if you have one.`,
             id: nextErrorId(),
           },
@@ -1267,7 +1267,7 @@ function formatConversationMarkdown(messages: ChatMessage[], userLabel: string):
           })
           .filter(Boolean)
           .join("\n\n");
-        return `### Reasonix\n\n${body}`;
+        return `### DeepMiCode\n\n${body}`;
       }
       if (m.kind === "error") return `### Error\n\n${m.message}`;
       return "";
@@ -1856,7 +1856,7 @@ function TabRuntime({
   const restoreScrollTop = useCallback(() => {
     const session = currentSessionRef.current;
     if (!session) return null;
-    const raw = localStorage.getItem(`reasonix.scroll.${session}`);
+    const raw = localStorage.getItem(`deepmicode.scroll.${session}`);
     const n = raw ? Number(raw) : Number.NaN;
     return Number.isFinite(n) ? n : null;
   }, []);
@@ -1874,7 +1874,7 @@ function TabRuntime({
     const el = threadRef.current;
     const session = state.currentSession;
     if (!el || !session) return;
-    const key = `reasonix.scroll.${session}`;
+    const key = `deepmicode.scroll.${session}`;
     let timer: ReturnType<typeof setTimeout>;
     const onScroll = () => {
       clearTimeout(timer);
@@ -3287,44 +3287,44 @@ export function App() {
     total: number | null;
   } | null>(null);
   const [currency, setCurrency] = useState<"CNY" | "USD">(() => {
-    const v = localStorage.getItem("reasonix.currency");
+    const v = localStorage.getItem("deepmicode.currency");
     return v === "USD" ? "USD" : "CNY";
   });
   const [theme, setTheme] = useState<Theme>(() => {
-    const v = localStorage.getItem("reasonix.theme");
-    const style = localStorage.getItem("reasonix.themeStyle");
+    const v = localStorage.getItem("deepmicode.theme");
+    const style = localStorage.getItem("deepmicode.themeStyle");
     if (isThemeStyle(style)) return themeForStyle(style);
     return isTheme(v) ? v : THEME.DARK;
   });
   const [themeStyle, setThemeStyle] = useState<ThemeStyle>(() => {
-    const style = localStorage.getItem("reasonix.themeStyle");
+    const style = localStorage.getItem("deepmicode.themeStyle");
     if (isThemeStyle(style)) return style;
-    const storedTheme = localStorage.getItem("reasonix.theme");
+    const storedTheme = localStorage.getItem("deepmicode.theme");
     return defaultStyleForTheme(isTheme(storedTheme) ? storedTheme : THEME.DARK);
   });
   const [fontScale, setFontScale] = useState<FontScale>(() => {
-    const v = localStorage.getItem("reasonix.fontScale");
+    const v = localStorage.getItem("deepmicode.fontScale");
     return isFontScale(v) ? v : FONT_SCALE.MEDIUM;
   });
   const [fontFamily, setFontFamily] = useState<FontFamily>(() => {
-    const v = localStorage.getItem("reasonix.fontFamily");
+    const v = localStorage.getItem("deepmicode.fontFamily");
     return isFontFamily(v) ? v : FONT_FAMILY.SANS;
   });
   const [customFontFamily, setCustomFontFamily] = useState<string>(() => {
-    return localStorage.getItem("reasonix.customFontFamily") ?? "";
+    return localStorage.getItem("deepmicode.customFontFamily") ?? "";
   });
   const {
     collapsed: sideCollapsed,
     toggle: onToggleSide,
     requireCollapsed: requireSideCollapsed,
     releaseCollapsed: releaseSideCollapsed,
-  } = useAutoCollapse("reasonix.sideCollapsed");
+  } = useAutoCollapse("deepmicode.sideCollapsed");
   const {
     collapsed: ctxCollapsed,
     toggle: onToggleCtx,
     requireCollapsed: requireCtxCollapsed,
     releaseCollapsed: releaseCtxCollapsed,
-  } = useAutoCollapse("reasonix.ctxCollapsed");
+  } = useAutoCollapse("deepmicode.ctxCollapsed");
 
   const { width: sideWidth, onMouseDown: onSideResizeDown } = useResizable("side", sideCollapsed);
   const { width: ctxWidth, onMouseDown: onCtxResizeDown } = useResizable("ctx", ctxCollapsed);
@@ -3336,8 +3336,8 @@ export function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     document.documentElement.dataset.themeStyle = themeStyle;
-    localStorage.setItem("reasonix.theme", theme);
-    localStorage.setItem("reasonix.themeStyle", themeStyle);
+    localStorage.setItem("deepmicode.theme", theme);
+    localStorage.setItem("deepmicode.themeStyle", themeStyle);
   }, [theme, themeStyle]);
 
   // Sync --composer-max-width to .app (separate from inline style to avoid React override)
@@ -3390,7 +3390,7 @@ export function App() {
   useEffect(() => {
     // Chromium webview supports `zoom`; scales every px-based size without touching CSS rules.
     document.documentElement.style.setProperty("zoom", String(FONT_SCALE_ZOOM[fontScale]));
-    localStorage.setItem("reasonix.fontScale", fontScale);
+    localStorage.setItem("deepmicode.fontScale", fontScale);
   }, [fontScale]);
 
   useEffect(() => {
@@ -3400,8 +3400,8 @@ export function App() {
         ? custom
         : FONT_FAMILY_STACK[fontFamily] ?? FONT_FAMILY_STACK.sans;
     document.documentElement.style.setProperty("--font-sans", stack);
-    localStorage.setItem("reasonix.fontFamily", fontFamily);
-    localStorage.setItem("reasonix.customFontFamily", customFontFamily);
+    localStorage.setItem("deepmicode.fontFamily", fontFamily);
+    localStorage.setItem("deepmicode.customFontFamily", customFontFamily);
   }, [fontFamily, customFontFamily]);
 
   useEffect(() => {
@@ -3409,8 +3409,8 @@ export function App() {
       const detail = (e as CustomEvent).detail;
       if (detail === "CNY" || detail === "USD") setCurrency(detail);
     };
-    window.addEventListener("reasonix:currency", onCur);
-    return () => window.removeEventListener("reasonix:currency", onCur);
+    window.addEventListener("deepmicode:currency", onCur);
+    return () => window.removeEventListener("deepmicode:currency", onCur);
   }, []);
 
   const deliverToTab = useCallback((tabId: string, action: TabAction) => {
@@ -3599,14 +3599,14 @@ export function App() {
                 )
               : prev,
           );
-          console.warn("[reasonix stderr]", e.payload.data);
+          console.warn("[deepmicode stderr]", e.payload.data);
         }),
         listen<{ code: number | null }>("rpc:exit", (e) => {
           for (const tabId of dispatchersRef.current.keys()) flushTabDeltas(tabId);
           if (dispatchersRef.current.size === 0) {
             setStartupFailure(
               coerceStartupFailure(
-                new Error(`reasonix exited (code ${e.payload.code ?? "?"})`),
+                new Error(`DeepMiCode exited (code ${e.payload.code ?? "?"})`),
                 startupStderrRef.current,
               ),
             );
@@ -3716,8 +3716,8 @@ export function App() {
   const onToggleCurrency = useCallback(() => {
     setCurrency((c) => {
       const next = c === "CNY" ? "USD" : "CNY";
-      localStorage.setItem("reasonix.currency", next);
-      window.dispatchEvent(new CustomEvent("reasonix:currency", { detail: next }));
+      localStorage.setItem("deepmicode.currency", next);
+      window.dispatchEvent(new CustomEvent("deepmicode:currency", { detail: next }));
       return next;
     });
   }, []);

@@ -344,7 +344,7 @@ function reduce(state: State, action: Action): State {
         queuedSends: [],
         messages: [
           ...state.messages,
-          { kind: "error", message: `reasonix exited (code ${action.code ?? "?"})` },
+          { kind: "error", message: `DeepMiCode exited (code ${action.code ?? "?"})` },
         ],
       };
     case "incoming":
@@ -881,7 +881,7 @@ export function applyIncoming(state: State, ev: IncomingEvent): State {
             kind: "error",
             message:
               `Session "${ev.name}" loaded with no messages (${sizeNote}). ` +
-              `The file ~/.reasonix/sessions/${ev.name}.jsonl exists but couldn't be parsed — ` +
+              `The file ~/.deepmicode/sessions/${ev.name}.jsonl exists but couldn't be parsed — ` +
               `start a new chat or restore from .jsonl.bak if you have one.`,
           },
         ],
@@ -1072,7 +1072,7 @@ function formatConversationMarkdown(messages: ChatMessage[], userLabel: string):
           })
           .filter(Boolean)
           .join("\n\n");
-        return `### Reasonix\n\n${body}`;
+        return `### DeepMiCode\n\n${body}`;
       }
       if (m.kind === "error") return `### Error\n\n${m.message}`;
       return "";
@@ -1482,7 +1482,7 @@ function TabRuntime({
   const restoreScrollTop = useCallback(() => {
     const session = currentSessionRef.current;
     if (!session) return null;
-    const raw = localStorage.getItem(`reasonix.scroll.${session}`);
+    const raw = localStorage.getItem(`deepmicode.scroll.${session}`);
     const n = raw ? Number(raw) : Number.NaN;
     return Number.isFinite(n) ? n : null;
   }, []);
@@ -1500,7 +1500,7 @@ function TabRuntime({
     const el = threadRef.current;
     const session = state.currentSession;
     if (!el || !session) return;
-    const key = `reasonix.scroll.${session}`;
+    const key = `deepmicode.scroll.${session}`;
     let timer: ReturnType<typeof setTimeout>;
     const onScroll = () => {
       clearTimeout(timer);
@@ -1688,7 +1688,7 @@ function TabRuntime({
       cmd: "/feedback",
       desc: t("app.cmd.feedback"),
       run: () => {
-        void openUrl("https://github.com/esengine/DeepSeek-Reasonix/issues/new/choose").catch(
+        void openUrl("https://github.com/Brown226/DeepMiCode/issues/new/choose").catch(
           () => undefined,
         );
       },
@@ -1731,7 +1731,7 @@ function TabRuntime({
   const elapsed = useElapsed(state.busy);
   const workspaceLabel = state.settings?.workspaceDir
     ? state.settings.workspaceDir.split(/[\\/]/).pop() || "workspace"
-    : "Reasonix";
+    : "DeepMiCode";
   const session = (() => {
     const firstUser = state.messages.find((m) => m.kind === "user");
     if (firstUser && firstUser.kind === "user") {
@@ -2391,7 +2391,7 @@ function TitleBar({
         <div className="tb-meta" data-tauri-drag-region>
           <div className="brand" data-tauri-drag-region>
             <span className="mark" />
-            <span className="brand-name">Reasonix</span>
+            <span className="brand-name">DeepMiCode</span>
           </div>
           {session && (
             <div className="crumbs" data-tauri-drag-region>
@@ -2817,61 +2817,61 @@ export function App() {
   }, [tabs]);
 
   const [currency, setCurrency] = useState<"CNY" | "USD">(() => {
-    const v = localStorage.getItem("reasonix.currency");
+    const v = localStorage.getItem("deepmicode.currency");
     return v === "USD" ? "USD" : "CNY";
   });
   const [theme, setTheme] = useState<Theme>(() => {
-    const v = localStorage.getItem("reasonix.theme");
-    const style = localStorage.getItem("reasonix.themeStyle");
+    const v = localStorage.getItem("deepmicode.theme");
+    const style = localStorage.getItem("deepmicode.themeStyle");
     if (isThemeStyle(style)) return themeForStyle(style);
     return isTheme(v) ? v : THEME.DARK;
   });
   const [themeStyle, setThemeStyle] = useState<ThemeStyle>(() => {
-    const style = localStorage.getItem("reasonix.themeStyle");
+    const style = localStorage.getItem("deepmicode.themeStyle");
     if (isThemeStyle(style)) return style;
-    const storedTheme = localStorage.getItem("reasonix.theme");
+    const storedTheme = localStorage.getItem("deepmicode.theme");
     return defaultStyleForTheme(isTheme(storedTheme) ? storedTheme : THEME.DARK);
   });
   const [fontScale, setFontScale] = useState<FontScale>(() => {
-    const v = localStorage.getItem("reasonix.fontScale");
+    const v = localStorage.getItem("deepmicode.fontScale");
     return isFontScale(v) ? v : FONT_SCALE.MEDIUM;
   });
   const [fontFamily, setFontFamily] = useState<FontFamily>(() => {
-    const v = localStorage.getItem("reasonix.fontFamily");
+    const v = localStorage.getItem("deepmicode.fontFamily");
     return isFontFamily(v) ? v : FONT_FAMILY.SANS;
   });
   const [sideCollapsed, setSideCollapsed] = useState(
-    () => localStorage.getItem("reasonix.sideCollapsed") === "1",
+    () => localStorage.getItem("deepmicode.sideCollapsed") === "1",
   );
   const [ctxCollapsed, setCtxCollapsed] = useState(
-    () => localStorage.getItem("reasonix.ctxCollapsed") === "1",
+    () => localStorage.getItem("deepmicode.ctxCollapsed") === "1",
   );
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     document.documentElement.dataset.themeStyle = themeStyle;
-    localStorage.setItem("reasonix.theme", theme);
-    localStorage.setItem("reasonix.themeStyle", themeStyle);
+    localStorage.setItem("deepmicode.theme", theme);
+    localStorage.setItem("deepmicode.themeStyle", themeStyle);
   }, [theme, themeStyle]);
 
   useEffect(() => {
-    localStorage.setItem("reasonix.sideCollapsed", sideCollapsed ? "1" : "0");
+    localStorage.setItem("deepmicode.sideCollapsed", sideCollapsed ? "1" : "0");
   }, [sideCollapsed]);
 
   useEffect(() => {
-    localStorage.setItem("reasonix.ctxCollapsed", ctxCollapsed ? "1" : "0");
+    localStorage.setItem("deepmicode.ctxCollapsed", ctxCollapsed ? "1" : "0");
   }, [ctxCollapsed]);
 
   useEffect(() => {
     // Chromium webview supports `zoom`; scales every px-based size without touching CSS rules.
     document.documentElement.style.setProperty("zoom", String(FONT_SCALE_ZOOM[fontScale]));
-    localStorage.setItem("reasonix.fontScale", fontScale);
+    localStorage.setItem("deepmicode.fontScale", fontScale);
   }, [fontScale]);
 
   useEffect(() => {
     // CSS rules use var(--font-sans); changing it here re-styles every sans surface in one shot. Mono stays put because code/transcripts hardcode "Geist Mono".
     document.documentElement.style.setProperty("--font-sans", FONT_FAMILY_STACK[fontFamily]);
-    localStorage.setItem("reasonix.fontFamily", fontFamily);
+    localStorage.setItem("deepmicode.fontFamily", fontFamily);
   }, [fontFamily]);
 
   useEffect(() => {
@@ -2879,8 +2879,8 @@ export function App() {
       const detail = (e as CustomEvent).detail;
       if (detail === "CNY" || detail === "USD") setCurrency(detail);
     };
-    window.addEventListener("reasonix:currency", onCur);
-    return () => window.removeEventListener("reasonix:currency", onCur);
+    window.addEventListener("deepmicode:currency", onCur);
+    return () => window.removeEventListener("deepmicode:currency", onCur);
   }, []);
 
   const deliverToTab = useCallback((tabId: string, action: TabAction) => {
@@ -3016,7 +3016,7 @@ export function App() {
           }
         }),
         listen<{ data: string }>("rpc:stderr", (e) => {
-          console.warn("[reasonix stderr]", e.payload.data);
+          console.warn("[deepmicode stderr]", e.payload.data);
         }),
         listen<{ code: number | null }>("rpc:exit", (e) => {
           for (const tabId of dispatchersRef.current.keys()) flushTabDeltas(tabId);
@@ -3117,8 +3117,8 @@ export function App() {
   const onToggleCurrency = useCallback(() => {
     setCurrency((c) => {
       const next = c === "CNY" ? "USD" : "CNY";
-      localStorage.setItem("reasonix.currency", next);
-      window.dispatchEvent(new CustomEvent("reasonix:currency", { detail: next }));
+      localStorage.setItem("deepmicode.currency", next);
+      window.dispatchEvent(new CustomEvent("deepmicode:currency", { detail: next }));
       return next;
     });
   }, []);

@@ -757,7 +757,13 @@ function ApiKeySection({
   );
 }
 
-const KNOWN_MODELS = ["deepseek-v4-flash", "deepseek-v4-pro"] as const;
+const KNOWN_MODELS = [
+  "deepseek-v4-flash",
+  "deepseek-v4-pro",
+  "mimo-v2.5-pro",
+  "mimo-v2.5",
+  "mimo-v2-flash",
+] as const;
 
 const EFFORT_VALUES = ["low", "medium", "high", "max"] as const;
 type EffortValue = (typeof EFFORT_VALUES)[number];

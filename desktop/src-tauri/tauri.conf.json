@@ -40,7 +40,7 @@
       "icons/icon.ico"
     ],
     "resources": {
-      "../../dist": "dist",
+      "../dist": "dist",
       "../../data": "data"
     },
     "createUpdaterArtifacts": true,
