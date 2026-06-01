@@ -1,4 +1,4 @@
-/** `reasonix mcp browse` â€” Ink TUI for the MCP marketplace. Lazy-loads pages on scroll. */
+/** `deepmicode mcp browse` â€?Ink TUI for the MCP marketplace. Lazy-loads pages on scroll. */
 
 import { Box, Text, render, useApp, useInput } from "ink";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -43,7 +43,7 @@ function McpBrowseApp() {
     loading: true,
     query: "",
     selected: 0,
-    status: "opening registryâ€¦",
+    status: "opening registryâ€?,
   });
 
   const setStatus = useCallback((status: string) => {
@@ -87,10 +87,10 @@ function McpBrowseApp() {
   const fetchMore = useCallback(async () => {
     if (!state.handle || state.loading) return;
     if (state.handle.cache.pagination.nextCursor === null) {
-      setStatus("no more pages â€” registry exhausted");
+      setStatus("no more pages â€?registry exhausted");
       return;
     }
-    setState((s) => ({ ...s, loading: true, status: "loading moreâ€¦" }));
+    setState((s) => ({ ...s, loading: true, status: "loading moreâ€? }));
     try {
       const r = await loadMorePages(state.handle, { pages: 5 });
       setState((s) => ({
@@ -120,7 +120,7 @@ function McpBrowseApp() {
           return;
         }
         writeConfig({ ...cfg, mcp: [...existing, spec] });
-        setStatus(`installed â†’ ${spec}`);
+        setStatus(`installed â†?${spec}`);
       } catch (err) {
         setStatus(`install failed: ${(err as Error).message}`);
       }
@@ -170,7 +170,7 @@ function McpBrowseApp() {
     <Box flexDirection="column" paddingX={1}>
       <Box>
         <Text bold color="ansi:cyan">
-          â—ˆ MCP marketplace
+          â—?MCP marketplace
         </Text>
         <Text dim>{`  Â·  ${state.status}`}</Text>
       </Box>
@@ -181,7 +181,7 @@ function McpBrowseApp() {
       </Box>
       <Box marginTop={1} flexDirection="column">
         {window.length === 0 ? (
-          <Text dim>{state.loading ? "loadingâ€¦" : "no entries"}</Text>
+          <Text dim>{state.loading ? "loadingâ€? : "no entries"}</Text>
         ) : (
           window.map((e, i) => {
             const idx = (start || 0) + i;
@@ -191,7 +191,7 @@ function McpBrowseApp() {
             const pop = e.popularity !== undefined ? ` Â· ${e.popularity.toLocaleString()}` : "";
             return (
               <Box key={e.name}>
-                <Text color={active ? "ansi:cyan" : undefined}>{active ? "â–¸ " : "  "}</Text>
+                <Text color={active ? "ansi:cyan" : undefined}>{active ? "â–?" : "  "}</Text>
                 <Text bold={active}>{e.name.padEnd(40).slice(0, 40)}</Text>
                 <Text dim>{` ${tag}${pop}`}</Text>
               </Box>
@@ -210,10 +210,10 @@ function McpBrowseApp() {
           </Text>
           {selected.install ? (
             <Text dim>
-              {`spec: ${selected.install.runtime} ${selected.install.packageId ?? selected.install.url ?? "â€”"} Â· ${selected.install.transport}`}
+              {`spec: ${selected.install.runtime} ${selected.install.packageId ?? selected.install.url ?? "â€?} Â· ${selected.install.transport}`}
             </Text>
           ) : (
-            <Text dim>(smithery listing â€” install info not exposed)</Text>
+            <Text dim>(smithery listing â€?install info not exposed)</Text>
           )}
           {selected.install?.requiredEnv?.length ? (
             <Text color="ansi:yellow">{`needs: ${selected.install.requiredEnv.join(", ")}`}</Text>
@@ -228,7 +228,7 @@ function McpBrowseApp() {
 }
 
 export interface McpBrowseOptions {
-  /** Reserved â€” currently unused, kept for symmetry with other commands. */
+  /** Reserved â€?currently unused, kept for symmetry with other commands. */
   _unused?: never;
 }
 

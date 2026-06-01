@@ -3,10 +3,10 @@
 import { type Skill, SkillStore } from "../skills.js";
 import type { ToolRegistry } from "../tools.js";
 
-/** Returns serialized tool-result string â€” dispatch path is pure pass-through. */
+/** Returns serialized tool-result string â€?dispatch path is pure pass-through. */
 export type SubagentRunner = (skill: Skill, task: string, signal?: AbortSignal) => Promise<string>;
 
-/** Fired after a successful `install_skill` write â€” host wires this to push a fresh `$skills` event so the desktop sidebar updates without a tab reload. */
+/** Fired after a successful `install_skill` write â€?host wires this to push a fresh `$skills` event so the desktop sidebar updates without a tab reload. */
 export type SkillInstalledHook = (info: {
   name: string;
   path: string;
@@ -14,7 +14,7 @@ export type SkillInstalledHook = (info: {
 }) => void;
 
 export interface SkillToolsOptions {
-  /** Override `$HOME` â€” tests set this to a tmpdir. */
+  /** Override `$HOME` â€?tests set this to a tmpdir. */
   homeDir?: string;
   projectRoot?: string;
   customSkillPaths?: readonly string[];
@@ -24,7 +24,7 @@ export interface SkillToolsOptions {
   disableBuiltins?: boolean;
   /** Called synchronously after `install_skill` successfully writes a new skill file. */
   onSkillInstalled?: SkillInstalledHook;
-  /** Per-skill model override for `runAs: subagent` skills â€” sourced from config.json's `subagentModels`. */
+  /** Per-skill model override for `runAs: subagent` skills â€?sourced from config.json's `subagentModels`. */
   subagentModels?: Record<string, "flash" | "pro">;
 }
 
@@ -41,7 +41,7 @@ function registerBuiltinSubagentTool(
   subagentRunner: SubagentRunner | undefined,
   spec: BuiltinSubagentToolSpec,
 ): void {
-  // Eager presence check â€” keeps disableBuiltins test mode clean (no
+  // Eager presence check â€?keeps disableBuiltins test mode clean (no
   // phantom tool spec when its skill body is absent).
   if (!store.read(spec.skillName)) return;
   registry.register({
@@ -59,13 +59,13 @@ function registerBuiltinSubagentTool(
     fn: async (args: { task?: unknown }, ctx) => {
       if (!subagentRunner) {
         return JSON.stringify({
-          error: `${spec.toolName}: no subagent runner is configured for this session â€” run inside \`reasonix code\`, or pass \`subagentRunner\` to \`registerSkillTools\`.`,
+          error: `${spec.toolName}: no subagent runner is configured for this session â€?run inside \`deepmicode code\`, or pass \`subagentRunner\` to \`registerSkillTools\`.`,
         });
       }
       const task = typeof args.task === "string" ? args.task.trim() : "";
       if (!task) {
         return JSON.stringify({
-          error: `${spec.toolName} requires a non-empty 'task' argument â€” describe the concrete question.`,
+          error: `${spec.toolName} requires a non-empty 'task' argument â€?describe the concrete question.`,
         });
       }
       const skill = store.read(spec.skillName);
@@ -75,7 +75,7 @@ function registerBuiltinSubagentTool(
         });
       }
       // A user-supplied skill with the same name but `runAs: inline`
-      // would silently lose isolation if we dispatched it here â€” bounce
+      // would silently lose isolation if we dispatched it here â€?bounce
       // back to run_skill where inline is well-defined.
       if (skill.runAs !== "subagent") {
         return JSON.stringify({
@@ -105,7 +105,7 @@ export function registerSkillTools(
   registry.register({
     name: "run_skill",
     description:
-      "Invoke a user-defined playbook from the Skills index pinned in the system prompt. **For the built-in subagent skills (explore / research / review / security_review), prefer the dedicated top-level tools by the same name â€” they're cheaper to pick and produce the same result.** Pass `name` as the BARE skill identifier (e.g. 'my-custom-skill'), NOT the `[ðŸ§¬ subagent]` tag that appears after it in the index. Entries tagged `[ðŸ§¬ subagent]` spawn an isolated subagent â€” only the final distilled answer comes back. Plain skills are inlined: the body becomes a tool result you read and follow. For subagent skills, supply 'arguments' describing the concrete task â€” they'll be the only context the subagent has.",
+      "Invoke a user-defined playbook from the Skills index pinned in the system prompt. **For the built-in subagent skills (explore / research / review / security_review), prefer the dedicated top-level tools by the same name â€?they're cheaper to pick and produce the same result.** Pass `name` as the BARE skill identifier (e.g. 'my-custom-skill'), NOT the `[ðŸ§¬ subagent]` tag that appears after it in the index. Entries tagged `[ðŸ§¬ subagent]` spawn an isolated subagent â€?only the final distilled answer comes back. Plain skills are inlined: the body becomes a tool result you read and follow. For subagent skills, supply 'arguments' describing the concrete task â€?they'll be the only context the subagent has.",
     readOnly: true,
     parallelSafe: true,
     parameters: {
@@ -119,7 +119,7 @@ export function registerSkillTools(
         arguments: {
           type: "string",
           description:
-            "Free-form arguments the skill should act on. For inline skills: appended to the body as an 'Arguments:' line; the skill's own instructions decide how to consume them. For `[ðŸ§¬ subagent]` skills: REQUIRED â€” becomes the entire task description the subagent receives, since it has no other context.",
+            "Free-form arguments the skill should act on. For inline skills: appended to the body as an 'Arguments:' line; the skill's own instructions decide how to consume them. For `[ðŸ§¬ subagent]` skills: REQUIRED â€?becomes the entire task description the subagent receives, since it has no other context.",
         },
       },
       required: ["name"],
@@ -136,7 +136,7 @@ export function registerSkillTools(
       //   1. Drop any `[...]` bracketed tag (possibly containing
       //      emoji + "subagent" label).
       //   2. Find the first whitespace-delimited token whose first
-      //      char is alphanumeric â€” that's the skill identifier,
+      //      char is alphanumeric â€?that's the skill identifier,
       //      whether the tag came before or after the name.
       const stripped = raw.replace(/\[[^\]]*\]/g, " ").trim();
       const tokens = stripped.split(/\s+/).filter(Boolean);
@@ -155,7 +155,7 @@ export function registerSkillTools(
           .join(", ");
         return JSON.stringify({
           error: `unknown skill: ${JSON.stringify(name)}`,
-          available: available || "(none â€” user has not defined any skills)",
+          available: available || "(none â€?user has not defined any skills)",
         });
       }
       const rawArgs = typeof args.arguments === "string" ? args.arguments.trim() : "";
@@ -163,12 +163,12 @@ export function registerSkillTools(
       if (skill.runAs === "subagent") {
         if (!subagentRunner) {
           return JSON.stringify({
-            error: `run_skill: skill ${JSON.stringify(name)} is marked runAs=subagent but no subagent runner is configured for this session. Skill authors who need isolation should run inside reasonix code (or a library setup that passes subagentRunner to registerSkillTools).`,
+            error: `run_skill: skill ${JSON.stringify(name)} is marked runAs=subagent but no subagent runner is configured for this session. Skill authors who need isolation should run inside deepmicode code (or a library setup that passes subagentRunner to registerSkillTools).`,
           });
         }
         if (!rawArgs) {
           return JSON.stringify({
-            error: `run_skill: skill ${JSON.stringify(name)} is a subagent and requires 'arguments' â€” the subagent has no other context, so describe the concrete task in the arguments field.`,
+            error: `run_skill: skill ${JSON.stringify(name)} is a subagent and requires 'arguments' â€?the subagent has no other context, so describe the concrete task in the arguments field.`,
           });
         }
         return subagentRunner(skill, rawArgs, ctx?.signal);
@@ -190,29 +190,29 @@ export function registerSkillTools(
 
   // Top-level wrappers for built-in subagent skills. Same underlying
   // subagentRunner path as `run_skill(name="explore", ...)`, but the
-  // tool name matches the verb in the question â€” models pick it
+  // tool name matches the verb in the question â€?models pick it
   // because affordance design > prompt rules.
   registerBuiltinSubagentTool(registry, store, subagentRunner, {
     toolName: "explore",
     skillName: "explore",
     description:
-      "Run a focused read-only codebase investigation in an isolated subagent. **Use for broad survey questions across multiple files** â€” 'find all places that X', 'how does Y work across the project', 'audit Z'. Returns one distilled answer with file:line citations. Chained `read_file` is the wrong tool for these â€” it bloats your context with raw file contents; `explore`'s reads + reasoning never enter your log.",
+      "Run a focused read-only codebase investigation in an isolated subagent. **Use for broad survey questions across multiple files** â€?'find all places that X', 'how does Y work across the project', 'audit Z'. Returns one distilled answer with file:line citations. Chained `read_file` is the wrong tool for these â€?it bloats your context with raw file contents; `explore`'s reads + reasoning never enter your log.",
     taskDescription:
-      "Concrete investigation question. The subagent has none of your context â€” write a self-contained prompt naming the symbol / pattern / behavior you want surveyed.",
+      "Concrete investigation question. The subagent has none of your context â€?write a self-contained prompt naming the symbol / pattern / behavior you want surveyed.",
   });
   registerBuiltinSubagentTool(registry, store, subagentRunner, {
     toolName: "research",
     skillName: "research",
     description:
-      "Combine web search + code reading in an isolated subagent. **Use when the answer needs both external reference and local verification** â€” 'is X supported by lib Y in version Z', 'compare our impl against the spec', 'what's the canonical way to do Q'. Returns one synthesis citing code (file:line) and web (URL). Reads + searches stay in the subagent.",
+      "Combine web search + code reading in an isolated subagent. **Use when the answer needs both external reference and local verification** â€?'is X supported by lib Y in version Z', 'compare our impl against the spec', 'what's the canonical way to do Q'. Returns one synthesis citing code (file:line) and web (URL). Reads + searches stay in the subagent.",
     taskDescription:
-      "Concrete research question. The subagent has none of your context â€” name the external thing to look up and the local code to compare against.",
+      "Concrete research question. The subagent has none of your context â€?name the external thing to look up and the local code to compare against.",
   });
   registerBuiltinSubagentTool(registry, store, subagentRunner, {
     toolName: "review",
     skillName: "review",
     description:
-      "Review the pending changes (current branch diff) in an isolated subagent â€” flags correctness / security / missing-tests / hidden behavior per file:line. Read-only; you decide what to act on. Use before suggesting a PR-shaped change, or when you've finished a multi-step edit and want a second pass.",
+      "Review the pending changes (current branch diff) in an isolated subagent â€?flags correctness / security / missing-tests / hidden behavior per file:line. Read-only; you decide what to act on. Use before suggesting a PR-shaped change, or when you've finished a multi-step edit and want a second pass.",
     taskDescription:
       "What to focus the review on (e.g. 'focus on the auth changes' or 'general'). The subagent reads the diff itself.",
   });
@@ -220,36 +220,36 @@ export function registerSkillTools(
     toolName: "security_review",
     skillName: "security-review",
     description:
-      "Security-focused review of current branch diff in an isolated subagent â€” injection / authz / secrets / deserialization / path-traversal / crypto issues, severity-tagged. Use when shipping changes that touch auth, input parsing, file IO, or external requests. Read-only.",
+      "Security-focused review of current branch diff in an isolated subagent â€?injection / authz / secrets / deserialization / path-traversal / crypto issues, severity-tagged. Use when shipping changes that touch auth, input parsing, file IO, or external requests. Read-only.",
     taskDescription:
       "Optional scope hint (e.g. 'focus on token handling in src/auth/') or 'full' for everything in the diff.",
   });
 
   const installScopeDesc = hasProjectScope
-    ? "'project' (default) writes to <repo>/.reasonix/skills/, scoped to this workspace only; 'global' writes to ~/.reasonix/skills/, available in every project."
-    : "'global' (only option here â€” no project workspace) writes to ~/.reasonix/skills/.";
+    ? "'project' (default) writes to <repo>/.deepmicode/skills/, scoped to this workspace only; 'global' writes to ~/.deepmicode/skills/, available in every project."
+    : "'global' (only option here â€?no project workspace) writes to ~/.deepmicode/skills/.";
 
   registry.register({
     name: "install_skill",
     description:
-      "Author and save a new skill â€” a reusable playbook future turns invoke via `run_skill`. Runnable immediately (same turn); appears in the pinned Skills index on next `/new` or launch. Skill bodies become prompts for future turns, so write what you'd want your future self to follow.",
+      "Author and save a new skill â€?a reusable playbook future turns invoke via `run_skill`. Runnable immediately (same turn); appears in the pinned Skills index on next `/new` or launch. Skill bodies become prompts for future turns, so write what you'd want your future self to follow.",
     parameters: {
       type: "object",
       properties: {
         name: {
           type: "string",
           description:
-            "Identifier â€” letters/digits/_/-/., 1-64 chars, starts alnum. Becomes the filename.",
+            "Identifier â€?letters/digits/_/-/., 1-64 chars, starts alnum. Becomes the filename.",
         },
         description: {
           type: "string",
           description:
-            "â‰¤120 char one-liner shown in the pinned Skills index â€” future agents read this to decide whether to invoke.",
+            "â‰?20 char one-liner shown in the pinned Skills index â€?future agents read this to decide whether to invoke.",
         },
         body: {
           type: "string",
           description:
-            "Markdown playbook. For subagent skills, write the subagent's persona/rules â€” it gets no context besides `arguments` at runtime.",
+            "Markdown playbook. For subagent skills, write the subagent's persona/rules â€?it gets no context besides `arguments` at runtime.",
         },
         scope: {
           type: "string",
@@ -295,13 +295,13 @@ export function registerSkillTools(
       if (!description) {
         return JSON.stringify({
           error:
-            "install_skill requires a non-empty 'description' â€” it is what appears in the Skills index and how future agents decide whether to invoke the skill",
+            "install_skill requires a non-empty 'description' â€?it is what appears in the Skills index and how future agents decide whether to invoke the skill",
         });
       }
       if (!body.trim()) {
         return JSON.stringify({
           error:
-            "install_skill requires a non-empty 'body' â€” the playbook the skill executes when invoked",
+            "install_skill requires a non-empty 'body' â€?the playbook the skill executes when invoked",
         });
       }
 
@@ -313,7 +313,7 @@ export function registerSkillTools(
       if (scope === "project" && !hasProjectScope) {
         return JSON.stringify({
           error:
-            "install_skill: scope='project' requires a workspace â€” run from `reasonix code`, or use scope='global'",
+            "install_skill: scope='project' requires a workspace â€?run from `deepmicode code`, or use scope='global'",
         });
       }
 

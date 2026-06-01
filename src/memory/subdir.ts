@@ -1,4 +1,4 @@
-/** Module-scoped memory files (#1033). Walks from a file's dir up to rootDir, collecting REASONIX.md (or AGENTS.md / AGENT.md) found along the way. The root's memory is excluded â€” it's already in the system prompt via applyProjectMemory. */
+/** Module-scoped memory files (#1033). Walks from a file's dir up to rootDir, collecting DEEPMICODE.md (or AGENTS.md / AGENT.md) found along the way. The root's memory is excluded â€?it's already in the system prompt via applyProjectMemory. */
 
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
@@ -44,7 +44,7 @@ export function readSubdirMemoryContent(path: string): string | null {
   const trimmed = raw.trim();
   if (!trimmed) return null;
   if (trimmed.length <= PROJECT_MEMORY_MAX_CHARS) return trimmed;
-  return `${trimmed.slice(0, PROJECT_MEMORY_MAX_CHARS)}\nâ€¦ (truncated ${
+  return `${trimmed.slice(0, PROJECT_MEMORY_MAX_CHARS)}\nâ€?(truncated ${
     trimmed.length - PROJECT_MEMORY_MAX_CHARS
   } chars)`;
 }

@@ -1,7 +1,7 @@
 import {
   DEFAULT_MODEL,
   type ReasoningEffort,
-  type ReasonixConfig,
+  type DeepMiCodeConfig,
   isReasoningEffort,
   loadReasoningEffort,
   normalizeMcpConfig,
@@ -29,7 +29,7 @@ export interface RawCliFlags {
 }
 
 export function resolveDefaults(flags: RawCliFlags): ResolvedDefaults {
-  const cfg: ReasonixConfig = flags.noConfig ? {} : readConfig();
+  const cfg: DeepMiCodeConfig = flags.noConfig ? {} : readConfig();
   const model = flags.model?.trim() || cfg.model?.trim() || DEFAULT_MODEL;
 
   const flagEffort = flags.effort?.toLowerCase();
@@ -52,7 +52,7 @@ export function resolveDefaults(flags: RawCliFlags): ResolvedDefaults {
   return { model, reasoningEffort, mcp, session };
 }
 
-function mergeDotMcpJson(cfg: ReasonixConfig, projectRoot: string): ReasonixConfig {
+function mergeDotMcpJson(cfg: DeepMiCodeConfig, projectRoot: string): DeepMiCodeConfig {
   const project = loadDotMcpJson(projectRoot);
   if (!project) return cfg;
   return { ...cfg, mcpServers: { ...(cfg.mcpServers ?? {}), ...project } };
@@ -78,14 +78,14 @@ export function resolveContinueFlag(
   if (!flag) return { session: fallbackSession, forceResume: false };
   const latest = getLatestSession();
   if (!latest) {
-    warn("â–¸ -c/--continue: no saved sessions yet â€” starting a fresh one.");
+    warn("â–?-c/--continue: no saved sessions yet â€?starting a fresh one.");
     return { session: fallbackSession, forceResume: false };
   }
   return { session: latest.name, forceResume: true };
 }
 
 export function resolveBareCommandMode(
-  cfg: Pick<ReasonixConfig, "setupCompleted">,
+  cfg: Pick<DeepMiCodeConfig, "setupCompleted">,
 ): "setup" | "code" {
   if (!cfg.setupCompleted) return "setup";
   return "code";

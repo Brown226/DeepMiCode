@@ -1,4 +1,4 @@
-/** Bundled GET â€” avoids 6 round-trips per 2s poll; runtime fields null in standalone mode. */
+/** Bundled GET â€?avoids 6 round-trips per 2s poll; runtime fields null in standalone mode. */
 
 import { isReasoningEffort, readConfig } from "../../config.js";
 import { indexExists } from "../../index/semantic/builder.js";
@@ -8,9 +8,9 @@ import type { ApiResult } from "../router.js";
 import { type CockpitData, computeCockpit } from "./cockpit.js";
 
 export interface OverviewResponse {
-  /** Reasonix version string (drives the "vs latest" comparison in the SPA). */
+  /** DeepMiCode version string (drives the "vs latest" comparison in the SPA). */
   version: string;
-  /** Current runtime mode â€” drives whether the SPA hides "live-only" controls. */
+  /** Current runtime mode â€?drives whether the SPA hides "live-only" controls. */
   mode: "standalone" | "attached";
   /** Latest published version, or null when the background fetch hasn't resolved. */
   latestVersion: string | null;
@@ -28,7 +28,7 @@ export interface OverviewResponse {
   reasoningEffort: string;
   /** Session USD spend cap; null when off. Drives the chat side-rail's Tool budget card. */
   budgetUsd: number | null;
-  /** Live session stats â€” null in standalone mode. */
+  /** Live session stats â€?null in standalone mode. */
   stats: DashboardStats | null;
   semanticIndexExists: boolean | null;
   cockpit: CockpitData;

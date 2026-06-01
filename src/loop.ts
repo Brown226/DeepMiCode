@@ -92,16 +92,16 @@ export interface CacheFirstLoopOptions {
   model?: string;
   stream?: boolean;
   reasoningEffort?: ReasoningEffort;
-  /** Soft USD cap â€” warns at 80%, refuses next turn at 100%. Opt-in (default no cap). */
+  /** Soft USD cap â€?warns at 80%, refuses next turn at 100%. Opt-in (default no cap). */
   budgetUsd?: number;
   session?: string;
-  /** PreToolUse + PostToolUse only â€” UserPromptSubmit / Stop live at the App boundary. */
+  /** PreToolUse + PostToolUse only â€?UserPromptSubmit / Stop live at the App boundary. */
   hooks?: ResolvedHook[];
-  /** `cwd` reported to hooks; `reasonix code` sets this to the sandbox root, not shell home. */
+  /** `cwd` reported to hooks; `deepmicode code` sets this to the sandbox root, not shell home. */
   hookCwd?: string;
-  /** PauseGate bridge â€” defaults to singleton, injectable for tests. */
+  /** PauseGate bridge â€?defaults to singleton, injectable for tests. */
   confirmationGate?: PauseGate;
-  /** Re-runs the prompt builder (applyMemoryStack / codeSystemPrompt) on /new so REASONIX.md edits take effect without a restart. Accepting a cache miss is the price. */
+  /** Re-runs the prompt builder (applyMemoryStack / codeSystemPrompt) on /new so DEEPMICODE.md edits take effect without a restart. Accepting a cache miss is the price. */
   rebuildSystem?: () => string;
 }
 
@@ -132,23 +132,23 @@ export class CacheFirstLoop {
   readonly scratch = new VolatileScratch();
   readonly stats = new SessionStats();
   readonly repair: ToolCallRepair;
-  /** Files the model has read this session; gates edit_file / multi_edit so SEARCH text matches on-disk bytes. Cleared on fold / mechanical truncate (the model's byte-level view of the elided history is gone). In-memory only â€” naturally empty on resume. */
+  /** Files the model has read this session; gates edit_file / multi_edit so SEARCH text matches on-disk bytes. Cleared on fold / mechanical truncate (the model's byte-level view of the elided history is gone). In-memory only â€?naturally empty on resume. */
   readonly readTracker = new ReadTracker();
 
-  // Mutable via configure() â€” slash commands in the TUI / library callers tweak
+  // Mutable via configure() â€?slash commands in the TUI / library callers tweak
   // these mid-session so users don't have to restart.
   model: string;
   stream: boolean;
   reasoningEffort: ReasoningEffort;
   budgetUsd: number | null;
-  /** One-shot 80% warning latch â€” cleared by setBudget so a bump re-arms at the new boundary. */
+  /** One-shot 80% warning latch â€?cleared by setBudget so a bump re-arms at the new boundary. */
   private _budgetWarned = false;
   sessionName: string | null;
 
   hooks: ResolvedHook[];
   hookCwd: string;
 
-  /** PauseGate bridge â€” defaults to singleton, injectable for tests. */
+  /** PauseGate bridge â€?defaults to singleton, injectable for tests. */
   readonly confirmationGate: PauseGate;
 
   /** Number of messages that were pre-loaded from the session file. */
@@ -161,7 +161,7 @@ export class CacheFirstLoop {
   /** Threaded through HTTP + every tool dispatch so Esc cancels in-flight work, not after. */
   private _turnAbort: AbortController = new AbortController();
   private _discardAbortRequested = false;
-  /** Authoritative running-id set â€” UI cards consult this instead of trusting end-event delivery. Insert at dispatch entry, delete in finally. */
+  /** Authoritative running-id set â€?UI cards consult this instead of trusting end-event delivery. Insert at dispatch entry, delete in finally. */
   private readonly _inflight = new InflightSet();
 
   /** Typeahead steer messages set by the UI; step() consumes one at each iter boundary. */
@@ -221,7 +221,7 @@ export class CacheFirstLoop {
     this.stream = this._streamPreference;
 
     const allowedNames = new Set([...this.prefix.toolSpecs.map((s) => s.function.name)]);
-    // Storm breaker clears its window on mutating calls so read â†’ edit â†’ verify isn't a storm.
+    // Storm breaker clears its window on mutating calls so read â†?edit â†?verify isn't a storm.
     const registry = this.tools;
     const isStormExempt = (call: ToolCall): boolean => {
       const name = call.function?.name;
@@ -269,11 +269,11 @@ export class CacheFirstLoop {
         try {
           rewriteSession(this.sessionName, messages);
         } catch {
-          /* disk full / perms â€” skip, in-memory heal still applies */
+          /* disk full / perms â€?skip, in-memory heal still applies */
         }
         if (healedCount > 0) {
           process.stderr.write(
-            `â–¸ session "${this.sessionName}": healed ${healedCount} entr${healedCount === 1 ? "y" : "ies"}${tokensSaved > 0 ? ` (shrunk ${tokensSaved.toLocaleString()} tokens of oversized tool output/arguments)` : " (dropped dangling tool_calls tail)"}. Rewrote session file.\n`,
+            `â–?session "${this.sessionName}": healed ${healedCount} entr${healedCount === 1 ? "y" : "ies"}${tokensSaved > 0 ? ` (shrunk ${tokensSaved.toLocaleString()} tokens of oversized tool output/arguments)` : " (dropped dangling tool_calls tail)"}. Rewrote session file.\n`,
           );
         }
       }
@@ -305,7 +305,7 @@ export class CacheFirstLoop {
     return this.context.fold(this.model, opts);
   }
 
-  /** Real-time token count of the current log â€” forwarded to Desktop for meter refresh. */
+  /** Real-time token count of the current log â€?forwarded to Desktop for meter refresh. */
   getCurrentLogTokens(): number {
     return this.context.getLogTokens();
   }
@@ -322,7 +322,7 @@ export class CacheFirstLoop {
     }
   }
 
-  /** Swap the just-appended assistant entry â€” used by self-correction to restore the original tool_calls without dropping reasoning_content. */
+  /** Swap the just-appended assistant entry â€?used by self-correction to restore the original tool_calls without dropping reasoning_content. */
   private replaceTailAssistantMessage(message: ChatMessage): void {
     const retained = shrinkMessageForRetention(message);
     const entries = this.log.entries;
@@ -340,7 +340,7 @@ export class CacheFirstLoop {
     }
   }
 
-  /** "New chat" â€” drops in-memory messages, archives the on-disk transcript so it survives in Sessions, keeps sessionName so the prefix cache stays warm. Re-runs the system-prompt builder if one was wired (issue #778: REASONIX.md edits otherwise need a restart). */
+  /** "New chat" â€?drops in-memory messages, archives the on-disk transcript so it survives in Sessions, keeps sessionName so the prefix cache stays warm. Re-runs the system-prompt builder if one was wired (issue #778: DEEPMICODE.md edits otherwise need a restart). */
   clearLog(): { dropped: number; archived: string | null; systemRebuilt: boolean } {
     const dropped = this.log.length;
     this.log.compactInPlace([]);
@@ -358,7 +358,7 @@ export class CacheFirstLoop {
     this.stats.reset();
     this._turn = 0;
     this._budgetWarned = false;
-    // Drain leftover steer text â€” otherwise the first step() after /new
+    // Drain leftover steer text â€?otherwise the first step() after /new
     // injects it as a user message and the next turn leaks prior intent.
     this._steerQueue.length = 0;
     this._steerConsumed = false;
@@ -367,13 +367,13 @@ export class CacheFirstLoop {
       try {
         systemRebuilt = this.prefix.replaceSystem(this._rebuildSystem());
       } catch {
-        /* builder threw â€” keep prior system rather than crash /new */
+        /* builder threw â€?keep prior system rather than crash /new */
       }
     }
     return { dropped, archived, systemRebuilt };
   }
 
-  /** `/cwd` follow-through â€” archives the previous session, drops in-memory state, repoints sessionName, and rebuilds the system prompt against whatever the rebuilder closure now resolves (the caller is expected to have already updated the root the closure reads). */
+  /** `/cwd` follow-through â€?archives the previous session, drops in-memory state, repoints sessionName, and rebuilds the system prompt against whatever the rebuilder closure now resolves (the caller is expected to have already updated the root the closure reads). */
   switchWorkspace(opts: { sessionName: string }): { dropped: number; archived: string | null } {
     const dropped = this.log.length;
     let archived: string | null = null;
@@ -395,7 +395,7 @@ export class CacheFirstLoop {
       try {
         this.prefix.replaceSystem(this._rebuildSystem());
       } catch {
-        /* builder threw â€” keep prior system rather than crash /cwd */
+        /* builder threw â€?keep prior system rather than crash /cwd */
       }
     }
     return { dropped, archived };
@@ -416,7 +416,7 @@ export class CacheFirstLoop {
     this._budgetWarned = false;
   }
 
-  /** UI surface â€” model id of the call about to run (or running) right now. */
+  /** UI surface â€?model id of the call about to run (or running) right now. */
   get currentCallModel(): string {
     return this.model;
   }
@@ -432,7 +432,7 @@ export class CacheFirstLoop {
       try {
         args = JSON.parse(call.function?.arguments ?? "{}") ?? {};
       } catch {
-        // Malformed args â†’ fall through to the static flag below; the
+        // Malformed args â†?fall through to the static flag below; the
         // dynamic check would've thrown anyway.
       }
       try {
@@ -561,7 +561,7 @@ export class CacheFirstLoop {
       try {
         rewriteSession(this.sessionName, preserved);
       } catch {
-        /* disk-full / perms â€” in-memory compaction still applies */
+        /* disk-full / perms â€?in-memory compaction still applies */
       }
     }
   }
@@ -585,7 +585,7 @@ export class CacheFirstLoop {
       try {
         rewriteSession(this.sessionName, preserved);
       } catch {
-        /* disk-full / perms â€” in-memory compaction still applies */
+        /* disk-full / perms â€?in-memory compaction still applies */
       }
     }
     return userText;
@@ -613,7 +613,7 @@ export class CacheFirstLoop {
       try {
         rewriteSession(this.sessionName, preserved);
       } catch {
-        /* disk-full / perms â€” in-memory compaction still applies */
+        /* disk-full / perms â€?in-memory compaction still applies */
       }
     }
     return userText;
@@ -663,7 +663,7 @@ export class CacheFirstLoop {
     }
     this._turn++;
     this.scratch.reset();
-    // A fresh user turn is a new intent â€” don't let StormBreaker's
+    // A fresh user turn is a new intent â€?don't let StormBreaker's
     // old sliding window of (name, args) signatures keep blocking
     // calls that are now legitimately on-task. The window repopulates
     // naturally as this turn's tool calls flow through.
@@ -674,7 +674,7 @@ export class CacheFirstLoop {
     // already fired (or stayed clean); either way we don't want its
     // state to bleed into the new turn.
     //
-    // Edge case â€” `loop.abort()` may have been called BEFORE step()
+    // Edge case â€?`loop.abort()` may have been called BEFORE step()
     // ran (race: caller fires abort during async setup, but step()
     // hadn't been awaited yet). Naively reassigning _turnAbort would
     // silently drop that abort. Forward the prior aborted state into
@@ -689,7 +689,7 @@ export class CacheFirstLoop {
     // Persist the user message before the first API round-trip so a
     // mid-stream abort or a session switch doesn't drop the prompt and
     // leave a new session orphaned without a .jsonl on disk (issue #943
-    // â€” sidebar globs .jsonl files, so an unpersisted new session vanishes
+    // â€?sidebar globs .jsonl files, so an unpersisted new session vanishes
     // when the user navigates away before the model responds). A failed
     // first round-trip still leaves the message in the log; the user can
     // /retry without re-typing.
@@ -698,8 +698,8 @@ export class CacheFirstLoop {
     const toolSpecs = this.prefix.tools();
     const rateLimitState = { shown: false };
 
-    // Turn-start fold: covers cases the post-response check can't see â€” terminal
-    // prior turn (no tool_calls â†’ no decideAfterUsage), session restore from
+    // Turn-start fold: covers cases the post-response check can't see â€?terminal
+    // prior turn (no tool_calls â†?no decideAfterUsage), session restore from
     // disk, huge user paste. Fires only above TURN_START_FOLD_THRESHOLD; the
     // post-response 75% trigger handles routine growth.
     {
@@ -736,7 +736,7 @@ export class CacheFirstLoop {
 
     for (let iter = 0; ; iter++) {
       if (signal.aborted) {
-        // Reset in finally â€” the consumer (desktop runTurn) breaks the
+        // Reset in finally â€?the consumer (desktop runTurn) breaks the
         // for-await on its own aborter between our yields, which calls
         // generator.return() and skips post-yield straight-line code.
         // Without finally the reset is lost and carryAbort locks every
@@ -744,8 +744,8 @@ export class CacheFirstLoop {
         try {
           const discardTurn = this._discardAbortRequested;
           const stoppedMsg = discardTurn
-            ? "[aborted by user (Esc) â€” interrupted turn discarded. Ask again when ready.]"
-            : "[aborted by user (Esc) â€” no summary produced. Ask again or /retry when ready; prior tool output is still in the log.]";
+            ? "[aborted by user (Esc) â€?interrupted turn discarded. Ask again when ready.]"
+            : "[aborted by user (Esc) â€?no summary produced. Ask again or /retry when ready; prior tool output is still in the log.]";
           if (discardTurn) {
             this.discardLogFrom(turnStartLogIndex);
           } else {
@@ -836,8 +836,7 @@ export class CacheFirstLoop {
           usage = resp.usage;
         }
       } catch (err) {
-        // An aborted signal here is almost always our own doing â€”
-        // either Esc, or App.tsx calling `loop.abort()` to switch to a
+        // An aborted signal here is almost always our own doing â€?        // either Esc, or App.tsx calling `loop.abort()` to switch to a
         // queued synthetic input (ShellConfirm "always allow", PlanConfirm
         // approve, etc.). The DeepSeek client's fetch path translates
         // the abort into a generic `AbortError("This operation was
@@ -847,7 +846,7 @@ export class CacheFirstLoop {
         // synthetic OR user re-prompt) starts immediately and gets to
         // produce its own answer.
         if (signal.aborted) {
-          // Reset in finally â€” same rationale as the iter-start handler:
+          // Reset in finally â€?same rationale as the iter-start handler:
           // if the consumer breaks the for-await before draining `done`,
           // generator.return() would skip a bare post-yield reset and
           // leave carryAbort locked on the next step().
@@ -886,7 +885,7 @@ export class CacheFirstLoop {
         return;
       }
 
-      // Attribute under the actual model used (escalated â†’ pro, else
+      // Attribute under the actual model used (escalated â†?pro, else
       // this.model) so cost/usage logs reflect reality.
       const turnStats = this.stats.record(this._turn, this.model, usage ?? new Usage());
 
@@ -932,7 +931,7 @@ export class CacheFirstLoop {
 
       // First all-suppressed storm: rewrite tail with the original tool_calls
       // (so the next prompt shows what was attempted), stub tool responses to
-      // keep the API contract, and continue the iter â€” model gets one shot to
+      // keep the API contract, and continue the iter â€?model gets one shot to
       // self-correct before the loud-warning path takes over.
       if (allSuppressed && !this._turnSelfCorrected) {
         this._turnSelfCorrected = true;
@@ -945,7 +944,7 @@ export class CacheFirstLoop {
             tool_call_id: call.id ?? "",
             name: call.function?.name ?? "",
             content:
-              "[repeat-loop guard] this call was suppressed because it was identical to a previous call in this turn. Earlier results for it are above â€” try a meaningfully different approach, or stop and answer if you have enough.",
+              "[repeat-loop guard] this call was suppressed because it was identical to a previous call in this turn. Earlier results for it are above â€?try a meaningfully different approach, or stop and answer if you have enough.",
           });
         }
         yield {
@@ -958,7 +957,7 @@ export class CacheFirstLoop {
       }
 
       if (report.stormsBroken > 0) {
-        const noteTail = report.notes.length ? ` â€” ${report.notes[report.notes.length - 1]}` : "";
+        const noteTail = report.notes.length ? ` â€?${report.notes[report.notes.length - 1]}` : "";
         const phrase = allSuppressed
           ? t("loop.stormStuck")
           : t("loop.stormSuppressed", { count: report.stormsBroken });
@@ -1044,7 +1043,7 @@ export class CacheFirstLoop {
         rateLimitState,
       });
     }
-    // Unreachable â€” the for-loop above is unbounded. The model exits the
+    // Unreachable â€?the for-loop above is unbounded. The model exits the
     // loop via return statements when it produces no more tool calls,
     // when the context guard fires, when an abort fires, or when a fatal
     // error escapes the inner try blocks.

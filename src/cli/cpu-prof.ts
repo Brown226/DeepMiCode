@@ -10,7 +10,7 @@ let stopping = false;
 
 function defaultOutPath(): string {
   const stamp = new Date().toISOString().replace(/[:.]/g, "-").replace("Z", "");
-  return resolve(process.cwd(), `reasonix-cpu-${stamp}.cpuprofile`);
+  return resolve(process.cwd(), `deepmicode-cpu-${stamp}.cpuprofile`);
 }
 
 export async function startCpuProfile(pathArg?: string | true): Promise<string> {
@@ -20,7 +20,7 @@ export async function startCpuProfile(pathArg?: string | true): Promise<string> 
   session.connect();
   await session.post("Profiler.enable");
   await session.post("Profiler.start");
-  process.stderr.write(`â–¸ cpu profile recording â€” will save to ${outPath} on exit\n`);
+  process.stderr.write(`â–?cpu profile recording â€?will save to ${outPath} on exit\n`);
   installSignalHandler();
   return outPath;
 }
@@ -39,10 +39,10 @@ export async function stopAndSaveCpuProfile(): Promise<void> {
     writeFileSync(gzPath, gz);
     const mb = (gz.length / (1024 * 1024)).toFixed(2);
     process.stderr.write(
-      `â–¸ cpu profile saved â†’ ${gzPath} (${mb} MB gzipped)\n  drag into a GitHub issue comment, or:\n  gh issue comment <N> --repo esengine/DeepSeek-Reasonix -F "${gzPath}"\n`,
+      `â–?cpu profile saved â†?${gzPath} (${mb} MB gzipped)\n  drag into a GitHub issue comment, or:\n  gh issue comment <N> --repo esengine/DeepSeek-DeepMiCode -F "${gzPath}"\n`,
     );
   } catch (e) {
-    process.stderr.write(`â–² cpu profile save failed: ${(e as Error).message}\n`);
+    process.stderr.write(`â–?cpu profile save failed: ${(e as Error).message}\n`);
   } finally {
     try {
       s.disconnect();

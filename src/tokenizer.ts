@@ -91,10 +91,10 @@ export function resolveDataPath(): string {
   try {
     const req = createRequire(import.meta.url);
     candidates.push(
-      join(dirname(req.resolve("reasonix/package.json")), "data", "deepseek-tokenizer.json.gz"),
+      join(dirname(req.resolve("deepmicode/package.json")), "data", "deepseek-tokenizer.json.gz"),
     );
   } catch {
-    /* Not installed as `reasonix/` — the earlier candidates still may hit. */
+    /* Not installed as `deepmicode/` — the earlier candidates still may hit. */
   }
   for (const p of candidates) {
     if (existsSync(p)) return p;

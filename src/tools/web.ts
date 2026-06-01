@@ -1,4 +1,4 @@
-/** web_search uses Bing (cn.bing.com â€” works from CN without proxy); web_fetch sniffs HTML to text. */
+/** web_search uses Bing (cn.bing.com â€?works from CN without proxy); web_fetch sniffs HTML to text. */
 
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
@@ -20,7 +20,7 @@ export interface SearchResult {
   title: string;
   url: string;
   snippet: string;
-  /** AI-generated answer text â€” set by AI-native engines (Perplexity, Exa); undefined for traditional engines. */
+  /** AI-generated answer text â€?set by AI-native engines (Perplexity, Exa); undefined for traditional engines. */
   answer?: string;
 }
 
@@ -37,7 +37,7 @@ export interface WebFetchOptions {
   maxChars?: number;
   /** Timeout in ms. Defaults to 15_000. */
   timeoutMs?: number;
-  /** Config path for provider-specific keys. Defaults to ~/.reasonix/config.json. */
+  /** Config path for provider-specific keys. Defaults to ~/.deepmicode/config.json. */
   configPath?: string;
   signal?: AbortSignal;
 }
@@ -45,9 +45,9 @@ export interface WebFetchOptions {
 export interface WebSearchOptions {
   topK?: number;
   signal?: AbortSignal;
-  /** Config path for provider-specific keys. Defaults to ~/.reasonix/config.json. */
+  /** Config path for provider-specific keys. Defaults to ~/.deepmicode/config.json. */
   configPath?: string;
-  /** Backend engine: "bing" (scrapes cn.bing.com HTML â€” default, works from CN without proxy), "searxng" (self-hosted SearXNG), "metaso" (Metaso API), "tavily" (LLM-friendly JSON API), "perplexity" (Perplexity AI), "exa" (Exa API), "brave" (Brave Search API), or "ollama" (Ollama cloud web search). */
+  /** Backend engine: "bing" (scrapes cn.bing.com HTML â€?default, works from CN without proxy), "searxng" (self-hosted SearXNG), "metaso" (Metaso API), "tavily" (LLM-friendly JSON API), "perplexity" (Perplexity AI), "exa" (Exa API), "brave" (Brave Search API), or "ollama" (Ollama cloud web search). */
   engine?: "bing" | "searxng" | "metaso" | "tavily" | "perplexity" | "exa" | "brave" | "ollama";
   /** Base URL for SearXNG. Default http://localhost:8080. */
   endpoint?: string;
@@ -56,13 +56,13 @@ export interface WebSearchOptions {
 const DEFAULT_FETCH_MAX_CHARS = 32_000;
 const DEFAULT_FETCH_TIMEOUT_MS = 15_000;
 const DEFAULT_TOPK = 5;
-/** Bytes cap applied before `resp.text()` â€” char cap can't fire until the body is fully buffered. */
+/** Bytes cap applied before `resp.text()` â€?char cap can't fire until the body is fully buffered. */
 const FETCH_MAX_BYTES = 10 * 1024 * 1024;
 // Real-browser UA. Most search backends gate obvious scraper UAs; a stock
 // Chrome string clears the fast-path block.
 const USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
-// cn.bing.com over www.bing.com â€” CN endpoint returns raw URLs in the
+// cn.bing.com over www.bing.com â€?CN endpoint returns raw URLs in the
 // HTML; the international endpoint wraps them in `bing.com/ck/a?u=a1<base64>`
 // click-tracking redirects we'd have to decode per result.
 const BING_ENDPOINT = "https://cn.bing.com/search";
@@ -214,13 +214,12 @@ async function assertPublicHttpUrl(rawUrl: string): Promise<URL> {
   }
 
   if (sysAddrs.some(isInternalAddress)) {
-    // System DNS returned fake/internal addresses (e.g. TUN Fake-IP) â€”
-    // fall back to DoH to get the real public IPs
+    // System DNS returned fake/internal addresses (e.g. TUN Fake-IP) â€?    // fall back to DoH to get the real public IPs
     const dohAddrs = await dohResolve(host).catch(() => null);
     if (!dohAddrs || dohAddrs.some(isInternalAddress)) {
       throw new Error(`web_fetch refuses internal or reserved host: ${host}`);
     }
-    // DoH resolved to public IPs â†’ host is legitimate
+    // DoH resolved to public IPs â†?host is legitimate
   }
 
   return url;
@@ -671,7 +670,7 @@ async function searchOllama(query: string, opts: WebSearchOptions = {}): Promise
   const apiKey = loadOllamaApiKey(opts.configPath);
   if (!apiKey) {
     throw new Error(
-      "web_search: Ollama web search requires an API key â€” set OLLAMA_API_KEY, `ollamaApiKey`, or use /search-engine ollama <key>.",
+      "web_search: Ollama web search requires an API key â€?set OLLAMA_API_KEY, `ollamaApiKey`, or use /search-engine ollama <key>.",
     );
   }
 
@@ -696,7 +695,7 @@ async function searchOllama(query: string, opts: WebSearchOptions = {}): Promise
 
   if (!resp.ok) {
     if (resp.status === 401 || resp.status === 403) {
-      throw new Error("web_search: Ollama API key rejected â€” check OLLAMA_API_KEY.");
+      throw new Error("web_search: Ollama API key rejected â€?check OLLAMA_API_KEY.");
     }
     if (resp.status === 429) {
       throw new Error("web_search: Ollama web search is rate-limited or quota-limited.");
@@ -793,7 +792,7 @@ async function webFetchOllama(
   const apiKey = loadOllamaApiKey(opts.configPath);
   if (!apiKey) {
     throw new Error(
-      "web_fetch: Ollama web fetch requires an API key â€” set OLLAMA_API_KEY, `ollamaApiKey`, or use /search-engine ollama <key>.",
+      "web_fetch: Ollama web fetch requires an API key â€?set OLLAMA_API_KEY, `ollamaApiKey`, or use /search-engine ollama <key>.",
     );
   }
 
@@ -827,7 +826,7 @@ async function webFetchOllama(
 
   if (!resp.ok) {
     if (resp.status === 401 || resp.status === 403) {
-      throw new Error("web_fetch: Ollama API key rejected â€” check OLLAMA_API_KEY.");
+      throw new Error("web_fetch: Ollama API key rejected â€?check OLLAMA_API_KEY.");
     }
     if (resp.status === 429) {
       throw new Error("web_fetch: Ollama web fetch is rate-limited or quota-limited.");
@@ -899,9 +898,9 @@ export function parseSearxngHtmlResults(html: string): SearchResult[] {
   return results;
 }
 
-/** Title-anchor + snippet-paragraph passes paired positionally â€” robust to attribute reorder. */
+/** Title-anchor + snippet-paragraph passes paired positionally â€?robust to attribute reorder. */
 export function parseBingResults(html: string): SearchResult[] {
-  // DOM walk rather than regex â€” `<li[^>]*\bclass\b[^>]*>` triggers
+  // DOM walk rather than regex â€?`<li[^>]*\bclass\b[^>]*>` triggers
   // polynomial backtracking on adversarial input (CodeQL js/polynomial-redos).
   const root = parseHtml(html);
   const results: SearchResult[] = [];
@@ -924,7 +923,7 @@ export async function webFetch(url: string, opts: WebFetchOptions = {}): Promise
   const timeoutMs = opts.timeoutMs ?? DEFAULT_FETCH_TIMEOUT_MS;
   const ctl = new AbortController();
   // Track whether the abort came from our internal timer vs the caller's
-  // signal â€” only the timer-driven abort should produce a "timed out" hint.
+  // signal â€?only the timer-driven abort should produce a "timed out" hint.
   let timedOut = false;
   const timer = setTimeout(() => {
     timedOut = true;
@@ -973,7 +972,7 @@ export async function webFetch(url: string, opts: WebFetchOptions = {}): Promise
   const text = contentType.includes("text/html") ? htmlToText(raw) : raw;
   const truncated = text.length > maxChars;
   const finalText = truncated
-    ? `${text.slice(0, maxChars)}\n\n[â€¦ truncated ${text.length - maxChars} chars â€¦]`
+    ? `${text.slice(0, maxChars)}\n\n[â€?truncated ${text.length - maxChars} chars â€¦]`
     : text;
   return { url: currentUrl, title, text: finalText, truncated };
 }
@@ -1035,7 +1034,7 @@ const BLOCK_BREAK_TAGS = new Set([
 
 export function htmlToText(html: string): string {
   const input = html.length > MAX_HTML_INPUT ? html.slice(0, MAX_HTML_INPUT) : html;
-  // Real HTML parser â€” sidesteps the well-known regex anti-patterns
+  // Real HTML parser â€?sidesteps the well-known regex anti-patterns
   // (`<X[\s\S]*?</X>`, `<[^>]+>`) CodeQL flags as bad-tag-filter and
   // incomplete-multi-character-sanitization.
   const root = parseHtml(input);
@@ -1085,7 +1084,7 @@ const HTML_ENTITIES: Readonly<Record<string, string>> = {
   nbsp: " ",
 };
 
-/** Single-pass decode â€” the previous chained `replace`s decoded `&amp;lt;` into `<` because `&amp;` ran before `&lt;`. */
+/** Single-pass decode â€?the previous chained `replace`s decoded `&amp;lt;` into `<` because `&amp;` ran before `&lt;`. */
 function decodeHtmlEntities(s: string): string {
   return s.replace(/&(#\d+|#x[0-9a-fA-F]+|\w+);/g, (raw, name: string) => {
     if (name.startsWith("#x") || name.startsWith("#X")) {
@@ -1111,7 +1110,7 @@ export interface WebToolsOptions {
   defaultTopK?: number;
   /** Byte cap for `web_fetch` extracted text. */
   maxFetchChars?: number;
-  /** Config path to read at tool-call time. Defaults to ~/.reasonix/config.json. */
+  /** Config path to read at tool-call time. Defaults to ~/.deepmicode/config.json. */
   configPath?: string;
 }
 
@@ -1122,7 +1121,7 @@ export function registerWebTools(registry: ToolRegistry, opts: WebToolsOptions =
   registry.register({
     name: "web_search",
     description:
-      "Search the public web. Returns ranked results with title, url, and snippet. Call this when the answer's correctness depends on current state â€” anything that changes over time (events, prices, releases, status of a thing in the real world). Composing such answers from training memory invents stale numbers; search first, then ground the answer in the results. For evergreen / definitional questions you don't need this.",
+      "Search the public web. Returns ranked results with title, url, and snippet. Call this when the answer's correctness depends on current state â€?anything that changes over time (events, prices, releases, status of a thing in the real world). Composing such answers from training memory invents stale numbers; search first, then ground the answer in the results. For evergreen / definitional questions you don't need this.",
     readOnly: true,
     parallelSafe: true,
     parameters: {
@@ -1137,7 +1136,7 @@ export function registerWebTools(registry: ToolRegistry, opts: WebToolsOptions =
       required: ["query"],
     },
     fn: async (args: { query: string; topK?: number }, ctx) => {
-      // Read at call time, not registration time â€” `/search-engine` mutates config mid-session (#1309).
+      // Read at call time, not registration time â€?`/search-engine` mutates config mid-session (#1309).
       const engine = loadWebSearchEngine(opts.configPath);
       const endpoint = loadWebSearchEndpoint(opts.configPath);
       const results = await webSearch(args.query, {

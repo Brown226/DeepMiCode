@@ -1,4 +1,4 @@
-/** `reasonix stats [path]` â€” path arg switches to per-transcript mode; default is the cross-session dashboard. */
+/** `deepmicode stats [path]` â€?path arg switches to per-transcript mode; default is the cross-session dashboard. */
 
 import { existsSync, readFileSync } from "node:fs";
 import { t } from "../../i18n/index.js";
@@ -14,7 +14,7 @@ import {
 } from "../../telemetry/usage.js";
 
 export interface StatsOptions {
-  /** Optional transcript path. Absent â†’ dashboard mode. */
+  /** Optional transcript path. Absent â†?dashboard mode. */
   transcript?: string;
   /** Override usage log location (tests). */
   logPath?: string;
@@ -72,11 +72,11 @@ function dashboard(opts: StatsOptions): void {
   console.log(renderDashboard(agg, path));
 }
 
-/** Pure renderer â€” pulled out so tests can assert on the string directly. */
+/** Pure renderer â€?pulled out so tests can assert on the string directly. */
 export function renderDashboard(agg: UsageAggregate, logPath: string): string {
   const lines: string[] = [];
   const size = formatLogSize(logPath);
-  lines.push(`Reasonix usage â€” ${logPath}${size ? ` (${size})` : ""}`);
+  lines.push(`DeepMiCode usage â€?${logPath}${size ? ` (${size})` : ""}`);
   lines.push("");
   lines.push(header());
   lines.push(divider());
@@ -85,7 +85,7 @@ export function renderDashboard(agg: UsageAggregate, logPath: string): string {
   }
   lines.push("");
 
-  // Model + session breakdown â€” both trim to top 3 so a user with 20
+  // Model + session breakdown â€?both trim to top 3 so a user with 20
   // sessions doesn't drown the table.
   if (agg.byModel.length > 0) {
     const totalTurns = agg.buckets[agg.buckets.length - 1]?.turns ?? 0;
@@ -154,15 +154,15 @@ function bucketRow(b: UsageBucket): string {
   return [
     pad(b.label, 10),
     pad(b.turns.toString(), 8, "right"),
-    pad(b.turns > 0 ? `${(hit * 100).toFixed(1)}%` : "â€”", 10, "right"),
-    pad(b.turns > 0 ? `$${b.costUsd.toFixed(6)}` : "â€”", 14, "right"),
+    pad(b.turns > 0 ? `${(hit * 100).toFixed(1)}%` : "â€?, 10, "right"),
+    pad(b.turns > 0 ? `$${b.costUsd.toFixed(6)}` : "â€?, 14, "right"),
     pad(
-      b.turns > 0 && b.cacheSavingsUsd > 0 ? `$${b.cacheSavingsUsd.toFixed(4)}` : "â€”",
+      b.turns > 0 && b.cacheSavingsUsd > 0 ? `$${b.cacheSavingsUsd.toFixed(4)}` : "â€?,
       14,
       "right",
     ),
-    pad(b.turns > 0 ? `$${b.claudeEquivUsd.toFixed(4)}` : "â€”", 14, "right"),
-    pad(b.turns > 0 && savings > 0 ? `${(savings * 100).toFixed(1)}%` : "â€”", 10, "right"),
+    pad(b.turns > 0 ? `$${b.claudeEquivUsd.toFixed(4)}` : "â€?, 14, "right"),
+    pad(b.turns > 0 && savings > 0 ? `${(savings * 100).toFixed(1)}%` : "â€?, 10, "right"),
   ].join("  ");
 }
 

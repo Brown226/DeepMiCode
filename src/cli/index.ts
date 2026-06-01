@@ -1,4 +1,4 @@
-// First import ‚Äî reject unsupported Node versions before heavier startup
+// First import ‚Ä?reject unsupported Node versions before heavier startup
 // paths can turn an engine mismatch into an opaque crash.
 import "./node-version-guard.js";
 
@@ -48,8 +48,8 @@ function persistEffortFlag(flag: unknown): void {
 
 // HTTPS_PROXY / HTTP_PROXY only reach Node's fetch via undici's global
 // dispatcher; install before any client (DeepSeek, web tools, dashboard)
-// constructs a fetch closure (#646). Argv is peeked manually here ‚Äî commander
-// hasn't run yet ‚Äî so position of `--no-proxy` doesn't matter and we can
+// constructs a fetch closure (#646). Argv is peeked manually here ‚Ä?commander
+// hasn't run yet ‚Ä?so position of `--no-proxy` doesn't matter and we can
 // honor it before any fetch closure captures the dispatcher.
 const cliNoProxy = process.argv.includes("--no-proxy");
 const cfgProxy = loadProxyConfig();
@@ -65,40 +65,40 @@ markPhase("cli_module_loaded");
 function defaultSystemPrompt(modelId: string): string {
   return `You are DeepMiCode, a helpful AI coding assistant powered by DeepSeek and MiMo. Be concise and accurate. Use tools when available.
 
-# Cite or shut up ‚Äî non-negotiable
+# Cite or shut up ‚Ä?non-negotiable
 
-Every factual claim about a codebase must be backed by evidence. Reasonix VALIDATES your citations ‚Äî broken paths render in **red strikethrough with ‚ùå** in front of the user.
+Every factual claim about a codebase must be backed by evidence. DeepMiCode VALIDATES your citations ‚Ä?broken paths render in **red strikethrough with ‚ù?* in front of the user.
 
-**Positive claims** ‚Äî append a markdown link:
-- ‚úÖ \`The MCP client supports listResources [listResources](src/mcp/client.ts:142).\`
-- ‚ùå \`The MCP client supports listResources.\` ‚Üê unverifiable, do not write.
+**Positive claims** ‚Ä?append a markdown link:
+- ‚ú?\`The MCP client supports listResources [listResources](src/mcp/client.ts:142).\`
+- ‚ù?\`The MCP client supports listResources.\` ‚Ü?unverifiable, do not write.
 
-**Negative claims** ("X is missing", "Y isn't implemented", "lacks Z") are the #1 hallucination shape. STOP before writing them. If you have a search tool, call it first; if the search returns nothing, cite the search itself as evidence (\`No matches for "foo" in src/\`). If you have no tool, qualify hard: "I haven't verified ‚Äî this is a guess."
+**Negative claims** ("X is missing", "Y isn't implemented", "lacks Z") are the #1 hallucination shape. STOP before writing them. If you have a search tool, call it first; if the search returns nothing, cite the search itself as evidence (\`No matches for "foo" in src/\`). If you have no tool, qualify hard: "I haven't verified ‚Ä?this is a guess."
 
 Asserting absence without checking is how evaluative answers go wrong. Treat the urge to write "missing" as a red flag in your own reasoning.
 
-# Don't invent what changes ‚Äî search instead
+# Don't invent what changes ‚Ä?search instead
 
 Your training data has a cutoff. When an answer's correctness depends on something that changes over time (the user is asking what's happening, not what's true) and a search tool is available, search first. Inventing currently-correct values from training memory is the most common way these answers go wrong, and the user usually can't tell until much later.
 
-The signal isn't a topic list ‚Äî it's: "if I'm wrong about this, is it because reality moved on?". If yes, ground the answer in fresh evidence; if no (definitions, mechanisms, well-established APIs), answer from memory.
+The signal isn't a topic list ‚Ä?it's: "if I'm wrong about this, is it because reality moved on?". If yes, ground the answer in fresh evidence; if no (definitions, mechanisms, well-established APIs), answer from memory.
 
 ${escalationContract(modelId)}`;
 }
 
-/** Lenient: malformed ‚Üí undefined (no cap) so a bad flag doesn't abort launch. */
+/** Lenient: malformed ‚Ü?undefined (no cap) so a bad flag doesn't abort launch. */
 function parseBudgetFlag(raw: number | undefined): number | undefined {
   if (raw === undefined) return undefined;
   if (!Number.isFinite(raw) || raw <= 0) {
     process.stderr.write(
-      `‚ñ≤ ignoring --budget=${raw} (must be a positive number) ‚Äî running with no cap\n`,
+      `‚ñ?ignoring --budget=${raw} (must be a positive number) ‚Ä?running with no cap\n`,
     );
     return undefined;
   }
   return raw;
 }
 
-/** Lenient port parser ‚Äî bad value warns + falls back to ephemeral, same shape as parseBudgetFlag. */
+/** Lenient port parser ‚Ä?bad value warns + falls back to ephemeral, same shape as parseBudgetFlag. */
 function parseDashboardPortFlag(raw: string | undefined): number | undefined {
   if (raw === undefined) return undefined;
   const n = Number.parseInt(raw, 10);
@@ -124,7 +124,7 @@ function resolveDashboardPort(
     : undefined;
 }
 
-/** Resolution order: flag ‚Üí DEEPMICODE_DASHBOARD_HOST env ‚Üí config.dashboard.host ‚Üí undefined (server defaults to 127.0.0.1). */
+/** Resolution order: flag ‚Ü?DEEPMICODE_DASHBOARD_HOST env ‚Ü?config.dashboard.host ‚Ü?undefined (server defaults to 127.0.0.1). */
 function resolveDashboardHost(
   flagValue: string | undefined,
   noConfig: boolean,
@@ -138,13 +138,13 @@ function resolveDashboardHost(
   return typeof fromCfg === "string" && fromCfg.trim() ? fromCfg.trim() : undefined;
 }
 
-/** Resolution order: DEEPMICODE_DASHBOARD_TOKEN env ‚Üí config.dashboard.token (minted + persisted on first call so the URL survives CLI restarts). Min 16 chars; shorter env overrides are dropped with a warning. */
+/** Resolution order: DEEPMICODE_DASHBOARD_TOKEN env ‚Ü?config.dashboard.token (minted + persisted on first call so the URL survives CLI restarts). Min 16 chars; shorter env overrides are dropped with a warning. */
 function resolveDashboardToken(noConfig: boolean): string | undefined {
   const fromEnv = process.env.DEEPMICODE_DASHBOARD_TOKEN?.trim();
   if (fromEnv) {
     if (fromEnv.length < 16) {
       process.stderr.write(
-        `‚ñ≤ ignoring dashboard token (${fromEnv.length} chars; min 16) ‚Äî using ephemeral per-boot token instead\n`,
+        `‚ñ?ignoring dashboard token (${fromEnv.length} chars; min 16) ‚Ä?using ephemeral per-boot token instead\n`,
       );
       return undefined;
     }
@@ -156,16 +156,16 @@ function resolveDashboardToken(noConfig: boolean): string | undefined {
 
 const program = new Command();
 program
-  .name("reasonix")
+  .name("deepmicode")
   .description(t("cli.description"))
   .version(VERSION)
   .option("-c, --continue", t("cli.continue"))
   .option("--no-mouse", t("ui.noMouseHint"))
   .option("--no-proxy", t("ui.noProxyHint"));
 
-// `reasonix` with no subcommand ‚Üí setup wizard on first run, otherwise `code`
+// `deepmicode` with no subcommand ‚Ü?setup wizard on first run, otherwise `code`
 // in the current directory. Filesystem-less chat stays reachable via
-// `reasonix chat`.
+// `deepmicode chat`.
 program.action(async (opts: { continue?: boolean; mouse?: boolean }) => {
   const cfg = readConfig();
   const mode = resolveBareCommandMode(cfg);
@@ -207,7 +207,7 @@ program
   .option("--dashboard-port <port>", t("ui.dashboardPortHint"))
   .option(
     "--dashboard-host <host>",
-    "bind address for the dashboard (default 127.0.0.1; use 0.0.0.0 for LAN access ‚Äî the URL token is then the only auth)",
+    "bind address for the dashboard (default 127.0.0.1; use 0.0.0.0 for LAN access ‚Ä?the URL token is then the only auth)",
   )
   .option("--system-append <prompt>", t("ui.systemAppendHint"))
   .option("--system-append-file <path>", t("ui.systemAppendFileHint"))
@@ -270,7 +270,7 @@ program
   .option("--dashboard-port <port>", t("ui.dashboardPortHint"))
   .option(
     "--dashboard-host <host>",
-    "bind address for the dashboard (default 127.0.0.1; use 0.0.0.0 for LAN access ‚Äî the URL token is then the only auth)",
+    "bind address for the dashboard (default 127.0.0.1; use 0.0.0.0 for LAN access ‚Ä?the URL token is then the only auth)",
   )
   .option(
     "--profile [path]",
@@ -369,7 +369,7 @@ program
 
 program
   .command("acp")
-  .description("run reasonix as an Agent Client Protocol (ACP) agent on stdio NDJSON JSON-RPC")
+  .description("run deepmicode as an Agent Client Protocol (ACP) agent on stdio NDJSON JSON-RPC")
   .option("-m, --model <id>", t("ui.modelIdHint"))
   .option("--dir <path>", "root directory for filesystem tools (default: cwd)")
   .option("--effort <level>", t("ui.effortHintShort"))

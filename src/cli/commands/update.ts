@@ -31,30 +31,30 @@ export interface PlanUpdateInput {
 }
 
 export const MANUAL_UPDATE_COMMANDS: readonly string[] = [
-  "npm install -g reasonix@latest",
-  "bun add -g reasonix",
-  "pnpm add -g reasonix@latest",
-  "yarn global add reasonix@latest",
+  "npm install -g deepmicode@latest",
+  "bun add -g deepmicode",
+  "pnpm add -g deepmicode@latest",
+  "yarn global add deepmicode@latest",
 ];
 
-/** Pure decision â€” split out so tests don't need to spawn child processes or hit the network. */
+/** Pure decision â€?split out so tests don't need to spawn child processes or hit the network. */
 export function planUpdate(input: PlanUpdateInput): UpdatePlan {
   const diff = compareVersions(input.current, input.latest);
   if (diff > 0) {
     return {
       action: "newer-local",
-      message: `current (${input.current}) is newer than the published ${input.latest} â€” nothing to do.`,
+      message: `current (${input.current}) is newer than the published ${input.latest} â€?nothing to do.`,
     };
   }
   if (diff === 0) {
-    return { action: "up-to-date", message: `reasonix ${input.current} is up to date.` };
+    return { action: "up-to-date", message: `deepmicode ${input.current} is up to date.` };
   }
   if (input.installSource === "npx") {
     return {
       action: "npx-hint",
       message: [
-        `reasonix ${input.latest} is available.`,
-        "you're running via npx â€” the next `npx reasonix ...` launch will auto-fetch",
+        `deepmicode ${input.latest} is available.`,
+        "you're running via npx â€?the next `npx deepmicode ...` launch will auto-fetch",
         "the latest (npx caches packages for a short window). to force a refresh",
         "sooner, clear the cache: `npm cache clean --force`.",
       ].join("\n"),
@@ -64,8 +64,8 @@ export function planUpdate(input: PlanUpdateInput): UpdatePlan {
     return {
       action: "manual-hint",
       message: [
-        `reasonix ${input.latest} is available, but the install source could not be determined automatically.`,
-        "run one of these manually based on how you installed reasonix:",
+        `deepmicode ${input.latest} is available, but the install source could not be determined automatically.`,
+        "run one of these manually based on how you installed deepmicode:",
         ...MANUAL_UPDATE_COMMANDS.map((c) => `  ${c}`),
       ].join("\n"),
     };
@@ -73,7 +73,7 @@ export function planUpdate(input: PlanUpdateInput): UpdatePlan {
   const command = buildUpdateCommand(input.installSource, input.npmPrefix ?? null);
   return {
     action: "run-install",
-    message: `upgrading reasonix ${input.current} â†’ ${input.latest} (via ${input.installSource})`,
+    message: `upgrading deepmicode ${input.current} â†?${input.latest} (via ${input.installSource})`,
     command,
   };
 }
@@ -85,14 +85,14 @@ function buildUpdateCommand(
   switch (source) {
     case "npm":
       return npmPrefix
-        ? ["npm", "--prefix", npmPrefix, "install", "-g", "reasonix@latest"]
-        : ["npm", "install", "-g", "reasonix@latest"];
+        ? ["npm", "--prefix", npmPrefix, "install", "-g", "deepmicode@latest"]
+        : ["npm", "install", "-g", "deepmicode@latest"];
     case "bun":
-      return ["bun", "add", "-g", "reasonix"];
+      return ["bun", "add", "-g", "deepmicode"];
     case "pnpm":
-      return ["pnpm", "add", "-g", "reasonix@latest"];
+      return ["pnpm", "add", "-g", "deepmicode@latest"];
     case "yarn":
-      return ["yarn", "global", "add", "reasonix@latest"];
+      return ["yarn", "global", "add", "deepmicode@latest"];
   }
 }
 
@@ -109,7 +109,7 @@ export interface UpdateCommandOptions {
   spawnInstall?: (argv: string[]) => Promise<number>;
   /** Test seam: stdout writer. */
   write?: (msg: string) => void;
-  /** Test seam: process exit â€” tests don't want to tear down vitest. */
+  /** Test seam: process exit â€?tests don't want to tear down vitest. */
   exit?: (code: number) => void;
 }
 
@@ -117,7 +117,7 @@ function defaultSpawn(argv: string[]): Promise<number> {
   return new Promise((resolve, reject) => {
     // `shell: true` on Windows is what lets `npm` resolve to `npm.cmd`
     // without routing through our `prepareSpawn` helper. The args here
-    // are literal strings under our control â€” no user input flows in,
+    // are literal strings under our control â€?no user input flows in,
     // so injection is not a concern. Avoiding `prepareSpawn` keeps
     // this command free of a dep on the shell tools module.
     const child = spawn(argv[0]!, argv.slice(1), {
@@ -137,14 +137,14 @@ export async function updateCommand(opts: UpdateCommandOptions = {}): Promise<vo
   const detectPrefix = opts.detectPrefix ?? (() => detectNpmInstallPrefix());
   const doSpawn = opts.spawnInstall ?? defaultSpawn;
 
-  write(`current: reasonix ${VERSION}\n`);
+  write(`current: deepmicode ${VERSION}\n`);
   const latest = await fetchLatest();
   if (!latest) {
-    write("could not reach registry.npmjs.org â€” check your network.\n");
+    write("could not reach registry.npmjs.org â€?check your network.\n");
     exit(1);
     return;
   }
-  write(`latest:  reasonix ${latest}\n`);
+  write(`latest:  deepmicode ${latest}\n`);
 
   const installSource = detectSource();
   const npmPrefix = installSource === "npm" ? detectPrefix() : null;

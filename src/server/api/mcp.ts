@@ -1,4 +1,4 @@
-/** Spec mutations don't auto-reload â€” adding a server shifts the system prefix and zeroes the next cache hit. */
+/** Spec mutations don't auto-reload â€?adding a server shifts the system prefix and zeroes the next cache hit. */
 
 import { readConfig, writeConfig } from "../../config.js";
 import {
@@ -89,7 +89,7 @@ export async function handleMcp(
     };
   }
 
-  // Persisted spec list â€” what config.mcp[] holds. May differ from
+  // Persisted spec list â€?what config.mcp[] holds. May differ from
   // bridged set (a recent edit hasn't been reloaded yet).
   if (method === "GET" && rest[0] === "specs") {
     const cfg = readConfig(ctx.configPath);
@@ -155,7 +155,7 @@ export async function handleMcp(
         status: 503,
         body: {
           error:
-            "live MCP reload not wired in this session â€” restart `reasonix code` to apply spec edits.",
+            "live MCP reload not wired in this session â€?restart `deepmicode code` to apply spec edits.",
         },
       };
     }
@@ -163,7 +163,7 @@ export async function handleMcp(
     return { status: 200, body: { reloaded: true, count } };
   }
 
-  // Marketplace registry â€” open + lazy-paginate. Query: ?pages=N&q=&maxPages=&limit=&refresh=1
+  // Marketplace registry â€?open + lazy-paginate. Query: ?pages=N&q=&maxPages=&limit=&refresh=1
   // Caps are generous on purpose: registry walks are bounded by the upstream
   // 24h cache, and an HTTP response of ~1000 entries is still under 1 MB.
   // The dashboard's "load more" click bumps these by 50 entries / 3 pages

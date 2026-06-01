@@ -17,7 +17,7 @@ export type EventRole =
   /** Mid-turn steer injected as queued user guidance without aborting the current turn. */
   | "steer";
 
-/** "low" = chatty / self-correcting / counter â€” Desktop+Dashboard filter these out by default.
+/** "low" = chatty / self-correcting / counter â€?Desktop+Dashboard filter these out by default.
  *  Undefined / "high" = real event the user should see (compaction, abort, budget, rate-limit, etc.).
  *  TUI ignores this and renders every warning. */
 export type EventSeverity = "low" | "high";
@@ -29,7 +29,7 @@ export interface LoopEvent {
   severity?: EventSeverity;
   reasoningDelta?: string;
   toolName?: string;
-  /** Raw args JSON â€” needed by `reasonix diff` to explain why a tool was called. */
+  /** Raw args JSON â€?needed by `deepmicode diff` to explain why a tool was called. */
   toolArgs?: string;
   /** Cumulative arguments-string length for `role === "tool_call_delta"`. */
   toolCallArgsChars?: number;
@@ -37,7 +37,7 @@ export interface LoopEvent {
   toolCallIndex?: number;
   /** Count of tool calls whose args have parsed as valid JSON (UI progress, not dispatch gate). */
   toolCallReadyCount?: number;
-  /** Stable id for tool_start / tool pairs â€” also the inflight-set key. UI uses this as the card id so it can derive `running` from `loop.inflight.has(callId)` instead of trusting end-event delivery. */
+  /** Stable id for tool_start / tool pairs â€?also the inflight-set key. UI uses this as the card id so it can derive `running` from `loop.inflight.has(callId)` instead of trusting end-event delivery. */
   callId?: string;
   stats?: TurnStats;
   repair?: RepairReport;
@@ -50,6 +50,6 @@ export interface LoopEvent {
     retryable: boolean;
     recoverable: boolean;
   };
-  /** Display-only â€” code-mode applier MUST skip SEARCH/REPLACE in forced-summary text. */
+  /** Display-only â€?code-mode applier MUST skip SEARCH/REPLACE in forced-summary text. */
   forcedSummary?: boolean;
 }

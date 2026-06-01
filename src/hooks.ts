@@ -9,7 +9,7 @@ import { t } from "./i18n/index.js";
 
 export type HookEvent = "PreToolUse" | "PostToolUse" | "UserPromptSubmit" | "Stop";
 
-/** All four events as a const array â€” drives slash listing + validation. */
+/** All four events as a const array â€?drives slash listing + validation. */
 export const HOOK_EVENTS: readonly HookEvent[] = [
   "PreToolUse",
   "PostToolUse",
@@ -35,15 +35,15 @@ export interface HookConfig {
   match?: string;
   /** Shell command to run. Spawned through the platform shell. */
   command: string;
-  /** Optional human description â€” surfaced in `/hooks`. */
+  /** Optional human description â€?surfaced in `/hooks`. */
   description?: string;
   /** Per-hook timeout override in ms. */
   timeout?: number;
-  /** Defaults: project scope â†’ project root; global scope â†’ process.cwd(). */
+  /** Defaults: project scope â†?project root; global scope â†?process.cwd(). */
   cwd?: string;
 }
 
-/** Shape of `<scope>/.reasonix/settings.json` â€” only `hooks` for now. */
+/** Shape of `<scope>/.deepmicode/settings.json` â€?only `hooks` for now. */
 export interface HookSettings {
   hooks?: Partial<Record<HookEvent, HookConfig[]>>;
 }
@@ -76,14 +76,14 @@ export interface HookOutcome {
 export interface HookReport {
   event: HookEvent;
   outcomes: HookOutcome[];
-  /** True iff at least one outcome was a `block` â€” only meaningful for blocking events. */
+  /** True iff at least one outcome was a `block` â€?only meaningful for blocking events. */
   blocked: boolean;
 }
 
 export const HOOK_SETTINGS_FILENAME = "settings.json";
-export const HOOK_SETTINGS_DIRNAME = ".reasonix";
+export const HOOK_SETTINGS_DIRNAME = ".deepmicode";
 
-/** Where the global settings.json lives. Equivalent to `~/.reasonix/settings.json`. */
+/** Where the global settings.json lives. Equivalent to `~/.deepmicode/settings.json`. */
 export function globalSettingsPath(homeDirOverride?: string): string {
   return join(homeDirOverride ?? homedir(), HOOK_SETTINGS_DIRNAME, HOOK_SETTINGS_FILENAME);
 }
@@ -100,7 +100,7 @@ function readSettingsFile(path: string): HookSettings | null {
     const parsed = JSON.parse(raw);
     if (parsed && typeof parsed === "object") return parsed as HookSettings;
   } catch {
-    /* malformed JSON â†’ treat as no hooks; do NOT throw, the user
+    /* malformed JSON â†?treat as no hooks; do NOT throw, the user
      * shouldn't lose the whole CLI to a typo in their settings */
   }
   return null;
@@ -151,7 +151,7 @@ function appendResolved(
   }
 }
 
-/** Match field is an ANCHORED regex â€” `"file"` won't trigger on `read_file`; use `".*file"`. */
+/** Match field is an ANCHORED regex â€?`"file"` won't trigger on `read_file`; use `".*file"`. */
 export function matchesTool(hook: ResolvedHook, toolName: string): boolean {
   if (hook.event !== "PreToolUse" && hook.event !== "PostToolUse") return true;
   const m = hook.match;
@@ -160,7 +160,7 @@ export function matchesTool(hook: ResolvedHook, toolName: string): boolean {
     const re = new RegExp(`^(?:${m})$`);
     return re.test(toolName);
   } catch {
-    /* malformed regex â†’ don't fire (safer than firing on every tool) */
+    /* malformed regex â†?don't fire (safer than firing on every tool) */
     return false;
   }
 }
@@ -177,7 +177,7 @@ export interface HookPayload {
   turn?: number;
 }
 
-/** Test seam â€” same shape as Node's spawn but returns a Promise of the raw outcome bits. */
+/** Test seam â€?same shape as Node's spawn but returns a Promise of the raw outcome bits. */
 export interface HookSpawnInput {
   command: string;
   cwd: string;
@@ -190,18 +190,18 @@ export interface HookSpawnResult {
   stdout: string;
   stderr: string;
   timedOut: boolean;
-  /** True iff spawn() itself failed (ENOENT, EACCES, â€¦). */
+  /** True iff spawn() itself failed (ENOENT, EACCES, â€?. */
   spawnError?: Error;
-  /** Output capped at byte limit â€” hook ran to completion but consumers see clipped view. */
+  /** Output capped at byte limit â€?hook ran to completion but consumers see clipped view. */
   truncated?: boolean;
 }
 
-/** Per-stream cap â€” bounds heap exposure to a runaway child between spawn and timeout. */
+/** Per-stream cap â€?bounds heap exposure to a runaway child between spawn and timeout. */
 const HOOK_OUTPUT_CAP_BYTES = 256 * 1024;
 
 export type HookSpawner = (input: HookSpawnInput) => Promise<HookSpawnResult>;
 
-/** `shell: true` â€” hook is a shell command by contract; pipes / `&&` / env expansion must work. */
+/** `shell: true` â€?hook is a shell command by contract; pipes / `&&` / env expansion must work. */
 function defaultSpawner(input: HookSpawnInput): Promise<HookSpawnResult> {
   return new Promise<HookSpawnResult>((resolve) => {
     const child = spawn(input.command, {
@@ -211,7 +211,7 @@ function defaultSpawner(input: HookSpawnInput): Promise<HookSpawnResult> {
     });
     // Collect raw bytes per stream and decode once at close so a
     // multi-byte UTF-8 sequence split across data chunks doesn't
-    // corrupt â€” same approach shell.ts uses for run_command output.
+    // corrupt â€?same approach shell.ts uses for run_command output.
     const stdoutChunks: Buffer[] = [];
     const stderrChunks: Buffer[] = [];
     let stdoutBytes = 0;
@@ -221,7 +221,7 @@ function defaultSpawner(input: HookSpawnInput): Promise<HookSpawnResult> {
     const timer = setTimeout(() => {
       timedOut = true;
       child.kill("SIGTERM");
-      // SIGTERM may not land on Windows for shell children â€” followed
+      // SIGTERM may not land on Windows for shell children â€?followed
       // by a hard kill a moment later if the process is still around.
       setTimeout(() => {
         try {
@@ -318,7 +318,7 @@ export function decideOutcome(
 export interface RunHooksOptions {
   payload: HookPayload;
   hooks: ResolvedHook[];
-  /** Test seam â€” defaults to a real `spawn`. */
+  /** Test seam â€?defaults to a real `spawn`. */
   spawner?: HookSpawner;
 }
 

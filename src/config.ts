@@ -1,4 +1,4 @@
-/** Library reads only DEEPSEEK_API_KEY from env; the CLI bridges config.json â†’ env var. */
+/** Library reads only DEEPSEEK_API_KEY from env; the CLI bridges config.json â†?env var. */
 
 import { randomBytes } from "node:crypto";
 import { mkdirSync, readFileSync } from "node:fs";
@@ -26,11 +26,11 @@ export type EditMode = "review" | "auto" | "yolo" | "plan";
 
 export const DEFAULT_MODEL = "deepseek-v4-flash";
 
-/** Provider kind â€” determines which API client to use. */
+/** Provider kind â€?determines which API client to use. */
 export type ProviderKind = "deepseek" | "mimo";
 
 /** Models the official api.deepseek.com endpoint currently accepts. v3-era
- *  `deepseek-chat`/`deepseek-reasoner` are gone â€” sending them produces a 400. */
+ *  `deepseek-chat`/`deepseek-reasoner` are gone â€?sending them produces a 400. */
 export const SUPPORTED_OFFICIAL_MODELS: readonly string[] = [
   "deepseek-v4-flash",
   "deepseek-v4-pro",
@@ -155,34 +155,34 @@ export interface PricingOverride {
 }
 
 export interface RateLimitConfig {
-  /** Client-side self-throttle in requests/minute â€” paces outbound chat calls with a min-interval timer. NOT a DeepSeek-enforced limit: DeepSeek's actual cap is concurrency, not RPM (500 for v4-pro, 2500 for v4-flash, account-wide), surfaced as HTTP 429. Set this only to be a polite neighbor on shared infra; single-user CLI rarely needs it. */
+  /** Client-side self-throttle in requests/minute â€?paces outbound chat calls with a min-interval timer. NOT a DeepSeek-enforced limit: DeepSeek's actual cap is concurrency, not RPM (500 for v4-pro, 2500 for v4-flash, account-wide), surfaced as HTTP 429. Set this only to be a polite neighbor on shared infra; single-user CLI rarely needs it. */
   rpm?: number;
 }
 
 export interface ProxyConfig {
   /** Proxy URL (e.g. `http://127.0.0.1:7897`, `socks5://host:1080`). Takes precedence over HTTPS_PROXY / HTTP_PROXY / ALL_PROXY env vars when set, so desktop users on Windows can route through Clash without fighting GUI env-var propagation (issue #1868). */
   url?: string;
-  /** Skip proxy detection entirely â€” equivalent to launching with `--no-proxy`. */
+  /** Skip proxy detection entirely â€?equivalent to launching with `--no-proxy`. */
   disabled?: boolean;
   /** Additional NO_PROXY patterns (curl syntax). Additive on top of env NO_PROXY and the default DeepSeek-bypass whitelist. */
   noProxy?: string[];
-  /** When false, route api.deepseek.com / *.deepseek.com through the proxy too (issue #1497 â€” corporate firewalls that block direct egress). Default true preserves the clash/v2ray US-exit-IP 403 fix. Env `DEEPMICODE_PROXY_DEEPSEEK_DIRECT` overrides. */
+  /** When false, route api.deepseek.com / *.deepseek.com through the proxy too (issue #1497 â€?corporate firewalls that block direct egress). Default true preserves the clash/v2ray US-exit-IP 403 fix. Env `DEEPMICODE_PROXY_DEEPSEEK_DIRECT` overrides. */
   bypassDeepSeekDirect?: boolean;
 }
 
-export interface ReasonixConfig {
+export interface DeepMiCodeConfig {
   apiKey?: string;
   baseUrl?: string;
   lang?: LanguageCode;
-  /** Persisted model id â€” `/model <id>` and the dashboard model picker write through this. */
+  /** Persisted model id â€?`/model <id>` and the dashboard model picker write through this. */
   model?: string;
-  /** AI provider kind â€” "deepseek" or "mimo". Auto-detected from model name if absent. */
+  /** AI provider kind â€?"deepseek" or "mimo". Auto-detected from model name if absent. */
   provider?: ProviderKind;
   /** MiMo API key. Falls back to MIMO_API_KEY env var. */
   mimoApiKey?: string;
   /** MiMo API base URL. Falls back to MIMO_BASE_URL env var. Default: international endpoint. */
   mimoBaseUrl?: string;
-  /** MiMo region preference â€” "international" or "china". */
+  /** MiMo region preference â€?"international" or "china". */
   mimoRegion?: "international" | "china";
   editMode?: EditMode;
   editModeHintShown?: boolean;
@@ -194,18 +194,18 @@ export interface ReasonixConfig {
   workspaceDir?: string;
   /** Last N workspace paths the desktop client has opened, most recent first. */
   recentWorkspaces?: string[];
-  /** Desktop only â€” open tabs in tab order, each with its workspace dir, loaded session and focus, persisted so restart restores every tab and its conversation (issues #933, #1244). Empty/absent â†’ boot with a single default tab. */
+  /** Desktop only â€?open tabs in tab order, each with its workspace dir, loaded session and focus, persisted so restart restores every tab and its conversation (issues #933, #1244). Empty/absent â†?boot with a single default tab. */
   desktopOpenTabs?: DesktopOpenTab[];
-  /** Desktop only â€” `openWith` value for clicking file links. Empty/undefined = OS default app. Examples: "code", "cursor", "C:\\path\\to\\editor.exe". */
+  /** Desktop only â€?`openWith` value for clicking file links. Empty/undefined = OS default app. Examples: "code", "cursor", "C:\\path\\to\\editor.exe". */
   editor?: string;
   theme?: ThemeName | "auto";
   /** Stored as `--mcp`-format strings so one parser handles both flag and config. */
   mcp?: string[];
-  /** Names of servers in `mcp` to skip on bridge â€” see `/mcp disable <name>`. */
+  /** Names of servers in `mcp` to skip on bridge â€?see `/mcp disable <name>`. */
   mcpDisabled?: string[];
   /** Env overlay per MCP server name (matches the `name=` prefix of the spec). Stdio transports merge this over process.env; SSE/HTTP ignore it. */
   mcpEnv?: Record<string, Record<string, string>>;
-  /** Canonical MCP server configuration â€” merges with and overrides legacy `mcp`/`mcpEnv`/`mcpDisabled`. */
+  /** Canonical MCP server configuration â€?merges with and overrides legacy `mcp`/`mcpEnv`/`mcpDisabled`. */
   mcpServers?: Record<string, McpServerConfig>;
   session?: string | null;
   setupCompleted?: boolean;
@@ -224,7 +224,7 @@ export interface ReasonixConfig {
   webSearchEndpoint?: string;
   /** Metaso API key. Falls back to METASO_API_KEY env var. */
   metasoApiKey?: string;
-  /** Tavily API key. Falls back to TAVILY_API_KEY env var. No baked-in default â€” free tier is 1000/mo per account, sharing would burn out. */
+  /** Tavily API key. Falls back to TAVILY_API_KEY env var. No baked-in default â€?free tier is 1000/mo per account, sharing would burn out. */
   tavilyApiKey?: string;
   /** Perplexity API key. Falls back to PERPLEXITY_API_KEY env var. Get one at https://perplexity.ai/settings/api */
   perplexityApiKey?: string;
@@ -235,16 +235,16 @@ export interface ReasonixConfig {
   /** Brave Search API key. Falls back to BRAVE_SEARCH_API_KEY env var. Free 2000/mo signup at https://brave.com/search/api/ */
   braveApiKey?: string;
 
-  /** TUI mouse-wheel scrolling via SGR mouse tracking. Default true. Set false to fall back to native terminal drag-select for copy (then wheel is terminal-dependent â€” most terminals translate wheelâ†’arrow in alt-screen, some don't). */
+  /** TUI mouse-wheel scrolling via SGR mouse tracking. Default true. Set false to fall back to native terminal drag-select for copy (then wheel is terminal-dependent â€?most terminals translate wheelâ†’arrow in alt-screen, some don't). */
   mouseTracking?: boolean;
-  /** Rows scrolled per single SGR mouse-wheel report. Default 1 â€” most terminals emit 2-5 reports per physical notch, so 1 already produces 2-5 rows per notch (#1419). Bump to 3-5 only if your terminal emits one report per notch and scrolling feels slow (#1494). Clamped to [1, 10]. */
+  /** Rows scrolled per single SGR mouse-wheel report. Default 1 â€?most terminals emit 2-5 reports per physical notch, so 1 already produces 2-5 rows per notch (#1419). Bump to 3-5 only if your terminal emits one report per notch and scrolling feels slow (#1494). Clamped to [1, 10]. */
   mouseWheelRows?: number;
   /** Chat-history scrolling: "native" leaves terminal scrollback in charge; "app" captures wheel/PgUp/PgDn/End inside the TUI; "auto" enables app mode for terminals with known jumpy native scrollback. */
   historyScrollMode?: HistoryScrollMode;
   dashboard?: {
     /** Whether the embedded dashboard auto-starts on launch. Default true. Set false to disable without passing --no-dashboard each time. */
     enabled?: boolean;
-    /** Pin the embedded dashboard to a fixed port â€” required for stable SSH tunnels. 0/absent â†’ ephemeral. */
+    /** Pin the embedded dashboard to a fixed port â€?required for stable SSH tunnels. 0/absent â†?ephemeral. */
     port?: number;
     /** Bind address (#968). Defaults to 127.0.0.1 (loopback only). Set to 0.0.0.0 / :: / a LAN IP to expose to other devices; the URL token is then the only auth, so keep it secret. */
     host?: string;
@@ -279,7 +279,7 @@ export interface ReasonixConfig {
       pathAllowed?: string[];
     };
   };
-  /** Issue #259 â€” user-configurable sensitive-path prefixes and filename patterns.
+  /** Issue #259 â€?user-configurable sensitive-path prefixes and filename patterns.
    *  Commands touching these paths are demoted to the confirm gate even when allowlisted. */
   sensitivePaths?: {
     /** Path prefixes (tilde-relative or absolute) that trigger confirmation. */
@@ -292,7 +292,7 @@ export interface ReasonixConfig {
   skills?: {
     paths?: string[];
   };
-  /** Per-skill model override for `runAs: subagent` skills, keyed by skill name. Empty / missing entry â†’ spawn site's default. */
+  /** Per-skill model override for `runAs: subagent` skills, keyed by skill name. Empty / missing entry â†?spawn site's default. */
   subagentModels?: Record<string, "flash" | "pro">;
   /** Enable the `java_source` tool for finding and decompiling Java class source. Default off. */
   javaSource?: boolean;
@@ -310,7 +310,7 @@ export interface ReasonixConfig {
     mode?: EngineeringLifecycleMode;
   };
   filesystem?: {
-    /** read_file flips to outline mode for files above this. Default 64 KiB â€” keeps the cache prefix slim while covering ~99% of source files. Raise to 524288 (512 KiB) for the pre-0.46.0 "trust the cache" behavior. */
+    /** read_file flips to outline mode for files above this. Default 64 KiB â€?keeps the cache prefix slim while covering ~99% of source files. Raise to 524288 (512 KiB) for the pre-0.46.0 "trust the cache" behavior. */
     outlineThresholdBytes?: number;
   };
   /** QQ Bot configuration */
@@ -339,9 +339,9 @@ const BUILTIN_TYPE_DOCS: Record<string, string> = {
   reference: "pointers to external systems the user uses",
 };
 
-/** Resolve the merged registry of memory types â€” built-ins, overlaid by anything in `config.memory.customTypes`. */
+/** Resolve the merged registry of memory types â€?built-ins, overlaid by anything in `config.memory.customTypes`. */
 export function loadMemoryTypeRegistry(
-  cfg: ReasonixConfig = readConfig(),
+  cfg: DeepMiCodeConfig = readConfig(),
 ): MemoryTypeRegistryEntry[] {
   const out: MemoryTypeRegistryEntry[] = [];
   for (const name of ["user", "feedback", "project", "reference"]) {
@@ -367,7 +367,7 @@ export function loadMemoryTypeRegistry(
 
 export function memoryTypeDefaults(
   typeName: string,
-  cfg: ReasonixConfig = readConfig(),
+  cfg: DeepMiCodeConfig = readConfig(),
 ): { priority?: "low" | "medium" | "high"; expires?: "project_end" } {
   const found = loadMemoryTypeRegistry(cfg).find((e) => e.name === typeName);
   if (!found) return {};
@@ -384,7 +384,7 @@ export function loadMetasoApiKey(path: string = defaultConfigPath()): string | u
   return undefined;
 }
 
-/** Tavily API key â€” env > config > undefined. Returning undefined means the caller must error out with a clear "go get one at tavily.com" message; we deliberately ship no default because the free 1000/mo quota wouldn't survive being shared. */
+/** Tavily API key â€?env > config > undefined. Returning undefined means the caller must error out with a clear "go get one at tavily.com" message; we deliberately ship no default because the free 1000/mo quota wouldn't survive being shared. */
 export function loadTavilyApiKey(path: string = defaultConfigPath()): string | undefined {
   if (process.env.TAVILY_API_KEY) return process.env.TAVILY_API_KEY.trim();
   const cfg = readConfig(path).tavilyApiKey;
@@ -392,7 +392,7 @@ export function loadTavilyApiKey(path: string = defaultConfigPath()): string | u
   return undefined;
 }
 
-/** Perplexity API key â€” env > config > undefined. Get one at https://perplexity.ai/settings/api */
+/** Perplexity API key â€?env > config > undefined. Get one at https://perplexity.ai/settings/api */
 export function loadPerplexityApiKey(path: string = defaultConfigPath()): string | undefined {
   if (process.env.PERPLEXITY_API_KEY) return process.env.PERPLEXITY_API_KEY.trim();
   const cfg = readConfig(path).perplexityApiKey;
@@ -400,7 +400,7 @@ export function loadPerplexityApiKey(path: string = defaultConfigPath()): string
   return undefined;
 }
 
-/** Exa API key â€” env > config > undefined. Free 1000/mo signup at https://exa.ai */
+/** Exa API key â€?env > config > undefined. Free 1000/mo signup at https://exa.ai */
 export function loadExaApiKey(path: string = defaultConfigPath()): string | undefined {
   if (process.env.EXA_API_KEY) return process.env.EXA_API_KEY.trim();
   const cfg = readConfig(path).exaApiKey;
@@ -408,7 +408,7 @@ export function loadExaApiKey(path: string = defaultConfigPath()): string | unde
   return undefined;
 }
 
-/** Ollama cloud API key â€” env > config > undefined. */
+/** Ollama cloud API key â€?env > config > undefined. */
 export function loadOllamaApiKey(path: string = defaultConfigPath()): string | undefined {
   if (process.env.OLLAMA_API_KEY) return process.env.OLLAMA_API_KEY.trim();
   if (process.env.ollamaApiKey) return process.env.ollamaApiKey.trim();
@@ -417,7 +417,7 @@ export function loadOllamaApiKey(path: string = defaultConfigPath()): string | u
   return undefined;
 }
 
-/** Brave Search API key â€” env > config > undefined. Free 2000/mo signup at https://brave.com/search/api/ */
+/** Brave Search API key â€?env > config > undefined. Free 2000/mo signup at https://brave.com/search/api/ */
 export function loadBraveApiKey(path: string = defaultConfigPath()): string | undefined {
   if (process.env.BRAVE_SEARCH_API_KEY) return process.env.BRAVE_SEARCH_API_KEY.trim();
   if (process.env.BRAVE_API_KEY) return process.env.BRAVE_API_KEY.trim();
@@ -462,7 +462,7 @@ function sanitizeStringArrayField(
   if (value === undefined) return;
   const fieldName = segments.join(".");
   if (!Array.isArray(value)) {
-    console.warn(`reasonix: config "${filePath}" field "${fieldName}" is not an array â€” ignoring`);
+    console.warn(`deepmicode: config "${filePath}" field "${fieldName}" is not an array â€?ignoring`);
     delete parent[leaf];
     return;
   }
@@ -470,14 +470,14 @@ function sanitizeStringArrayField(
   if (parsed.success) return;
   const filtered = value.filter((x): x is string => typeof x === "string");
   console.warn(
-    `reasonix: config "${filePath}" field "${fieldName}" had ${value.length - filtered.length} non-string item(s) â€” dropped`,
+    `deepmicode: config "${filePath}" field "${fieldName}" had ${value.length - filtered.length} non-string item(s) â€?dropped`,
   );
   parent[leaf] = filtered;
 }
 
-export function readConfig(path: string = defaultConfigPath()): ReasonixConfig {
+export function readConfig(path: string = defaultConfigPath()): DeepMiCodeConfig {
   try {
-    // Strip the UTF-8 BOM if a foreign writer left one in â€” Windows
+    // Strip the UTF-8 BOM if a foreign writer left one in â€?Windows
     // PowerShell 5's `Set-Content -Encoding UTF8` and several text
     // editors emit `EF BB BF` at the head of the file. `JSON.parse`
     // refuses BOM-prefixed input and throws, which used to fall
@@ -490,10 +490,10 @@ export function readConfig(path: string = defaultConfigPath()): ReasonixConfig {
       for (const segments of STRING_ARRAY_FIELDS) {
         sanitizeStringArrayField(cfg, segments, path);
       }
-      return cfg as ReasonixConfig;
+      return cfg as DeepMiCodeConfig;
     }
   } catch {
-    /* missing or malformed â†’ empty config */
+    /* missing or malformed â†?empty config */
   }
   return {};
 }
@@ -508,13 +508,13 @@ export function loadDashboardEnabled(
   return v !== false;
 }
 
-/** Get-or-mint a 32-byte hex dashboard token, persisting on first call so subsequent CLI boots reuse it (URLs survive restarts). Returns the existing token if it's already â‰¥16 chars. */
+/** Get-or-mint a 32-byte hex dashboard token, persisting on first call so subsequent CLI boots reuse it (URLs survive restarts). Returns the existing token if it's already â‰?6 chars. */
 export function ensureDashboardToken(path: string = defaultConfigPath()): string {
   const cfg = readConfig(path);
   const existing = cfg.dashboard?.token?.trim();
   if (existing && existing.length >= 16) return existing;
   const minted = randomBytes(32).toString("hex");
-  const next: ReasonixConfig = { ...cfg, dashboard: { ...cfg.dashboard, token: minted } };
+  const next: DeepMiCodeConfig = { ...cfg, dashboard: { ...cfg.dashboard, token: minted } };
   writeConfig(next, path);
   return minted;
 }
@@ -524,22 +524,22 @@ export function saveDashboardPort(port: number, path: string = defaultConfigPath
   if (!Number.isInteger(port) || port < 1 || port > 65535) return;
   const cfg = readConfig(path);
   if (cfg.dashboard?.port === port) return;
-  const next: ReasonixConfig = { ...cfg, dashboard: { ...cfg.dashboard, port } };
+  const next: DeepMiCodeConfig = { ...cfg, dashboard: { ...cfg.dashboard, port } };
   writeConfig(next, path);
 }
 
-/** Wipe the persisted dashboard token â€” next boot mints a fresh one. Used by `/dashboard reset-token`. */
+/** Wipe the persisted dashboard token â€?next boot mints a fresh one. Used by `/dashboard reset-token`. */
 export function clearDashboardToken(path: string = defaultConfigPath()): void {
   const cfg = readConfig(path);
   if (!cfg.dashboard?.token) return;
   const { token: _drop, ...rest } = cfg.dashboard;
-  const next: ReasonixConfig = { ...cfg, dashboard: rest };
+  const next: DeepMiCodeConfig = { ...cfg, dashboard: rest };
   writeConfig(next, path);
 }
 
-export function writeConfig(cfg: ReasonixConfig, path: string = defaultConfigPath()): void {
+export function writeConfig(cfg: DeepMiCodeConfig, path: string = defaultConfigPath()): void {
   mkdirSync(dirname(path), { recursive: true });
-  // Atomic â€” write to a sibling tmp then rename. A torn write (process
+  // Atomic â€?write to a sibling tmp then rename. A torn write (process
   // killed mid-write, or another reader catching the file before
   // writeFileSync finished) used to leave a 0-byte or truncated
   // config.json, which readConfig would then parse as `{}` and the next
@@ -556,12 +556,12 @@ export function loadLanguage(path: string = defaultConfigPath()): LanguageCode |
 
 export function mcpEnvFor(
   serverName: string | null | undefined,
-  cfg: ReasonixConfig,
+  cfg: DeepMiCodeConfig,
 ): Record<string, string> | undefined {
   if (!serverName) return undefined;
   const entry = cfg.mcpEnv?.[serverName];
   if (!entry) return undefined;
-  // Coerce to string and drop empty values â€” JSON config could be sloppy.
+  // Coerce to string and drop empty values â€?JSON config could be sloppy.
   const filtered: Record<string, string> = {};
   for (const [k, v] of Object.entries(entry)) {
     if (typeof v === "string" && v.length > 0) filtered[k] = v;
@@ -589,7 +589,7 @@ function normalizeStringRecord(value: unknown): Record<string, string> | undefin
   return Object.keys(out).length > 0 ? out : undefined;
 }
 
-export function normalizeMcpConfig(cfg: ReasonixConfig, extraLegacy?: string[]): McpServerSpec[] {
+export function normalizeMcpConfig(cfg: DeepMiCodeConfig, extraLegacy?: string[]): McpServerSpec[] {
   const result: McpServerSpec[] = [];
   const seen = new Set<string>();
 
@@ -1020,7 +1020,7 @@ export function webSearchEngine(
   if (cfg === "brave") return "brave";
   if (cfg === "ollama") return "ollama";
   // Any other value (including legacy "mojeek" from configs predating the
-  // engine swap) falls through to bing. Read-only â€” we never rewrite the
+  // engine swap) falls through to bing. Read-only â€?we never rewrite the
   // user's config, so `/search-engine mojeek` later still rejects loudly.
   return "bing";
 }
@@ -1037,12 +1037,12 @@ export function saveApiKey(key: string, path: string = defaultConfigPath()): voi
   cfg.apiKey = trimmed;
   writeConfig(cfg, path);
   // A stale process env (User-level Windows env, `.env`, shell rc) shadows config in
-  // loadEndpoint's fallback branch â€” an explicit UI save must win for the current run.
+  // loadEndpoint's fallback branch â€?an explicit UI save must win for the current run.
   if (trimmed) process.env.DEEPSEEK_API_KEY = trimmed;
 }
 
-/** Windows: case-insensitive â€” NTFS treats `F:\Foo` and `f:\foo` as one directory (#402). */
-function findProjectKey(cfg: ReasonixConfig, rootDir: string): string | undefined {
+/** Windows: case-insensitive â€?NTFS treats `F:\Foo` and `f:\foo` as one directory (#402). */
+function findProjectKey(cfg: DeepMiCodeConfig, rootDir: string): string | undefined {
   const projects = cfg.projects;
   if (!projects) return undefined;
   if (Object.hasOwn(projects, rootDir)) return rootDir;
@@ -1081,7 +1081,7 @@ export function addProjectShellAllowed(
   writeConfig(cfg, path);
 }
 
-/** Match is exact after trim â€” NOT prefix-match: removing `git` MUST NOT drop `git push origin main`. */
+/** Match is exact after trim â€?NOT prefix-match: removing `git` MUST NOT drop `git push origin main`. */
 export function removeProjectShellAllowed(
   rootDir: string,
   prefix: string,
@@ -1239,7 +1239,7 @@ export function mouseClipboardHintShown(path: string = defaultConfigPath()): boo
   return readConfig(path).mouseClipboardHintShown === true;
 }
 
-/** Unknown / missing fall back to "high" â€” the only value every OpenAI-compatible endpoint accepts (vLLM rejects "max"). */
+/** Unknown / missing fall back to "high" â€?the only value every OpenAI-compatible endpoint accepts (vLLM rejects "max"). */
 export function loadReasoningEffort(path: string = defaultConfigPath()): ReasoningEffort {
   const v = readConfig(path).reasoningEffort;
   return isReasoningEffort(v) ? v : "high";
@@ -1321,7 +1321,7 @@ export function saveEditor(editor: string, path: string = defaultConfigPath()): 
   writeConfig(cfg, path);
 }
 
-/** Default true â€” quiet inline dividers (fold / abort / rate-limit) are valuable
+/** Default true â€?quiet inline dividers (fold / abort / rate-limit) are valuable
  *  for transparency; users opt out only if they want a fully clean thread. */
 export function loadShowSystemEvents(path: string = defaultConfigPath()): boolean {
   return readConfig(path).thread?.showSystemEvents !== false;
@@ -1349,7 +1349,7 @@ export function pushRecentWorkspace(dir: string, path: string = defaultConfigPat
   writeConfig(cfg, path);
 }
 
-/** Desktop only â€” one open tab's restorable state. */
+/** Desktop only â€?one open tab's restorable state. */
 export interface DesktopOpenTab {
   dir: string;
   /** Session the tab had loaded; reopened on boot if its jsonl still exists. */
@@ -1494,7 +1494,7 @@ export function markMouseClipboardHintShown(path: string = defaultConfigPath()):
   writeConfig(cfg, path);
 }
 
-/** Self-hosted DeepSeek-compatible endpoints may issue any token shape, so we only typo-guard here â€” the real auth check is the first API call against `baseUrl`. */
+/** Self-hosted DeepSeek-compatible endpoints may issue any token shape, so we only typo-guard here â€?the real auth check is the first API call against `baseUrl`. */
 export function isPlausibleKey(key: string): boolean {
   const trimmed = key.trim();
   if (trimmed.length < 16) return false;
@@ -1505,7 +1505,7 @@ export function isPlausibleKey(key: string): boolean {
 export function redactKey(key: string): string {
   if (!key) return "";
   if (key.length <= 12) return "****";
-  return `${key.slice(0, 6)}â€¦${key.slice(-4)}`;
+  return `${key.slice(0, 6)}â€?{key.slice(-4)}`;
 }
 
 function normalizeSemanticEmbeddingUserConfig(

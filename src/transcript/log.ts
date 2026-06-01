@@ -9,7 +9,7 @@ export interface TranscriptRecord {
   ts: string;
   /** 1-based turn number within the session. */
   turn: number;
-  /** LoopEvent role â€” "assistant_delta" | "assistant_final" | "tool" | "done" | ... */
+  /** LoopEvent role â€?"assistant_delta" | "assistant_final" | "tool" | "done" | ... */
   role: string;
   /** For assistant events, the final (or delta) text; for tool events, the tool result. */
   content: string;
@@ -40,7 +40,7 @@ export interface TranscriptRecord {
 
 export interface TranscriptMeta {
   version: 1;
-  source: string; // e.g. "reasonix chat", "bench/baseline", "bench/reasonix"
+  source: string; // e.g. "deepmicode chat", "bench/baseline", "bench/deepmicode"
   model?: string;
   task?: string;
   mode?: string;
@@ -85,7 +85,7 @@ export function recordFromLoopEvent(
     rec.prefixHash = extra.prefixHash;
   } else if (ev.role === "assistant_final") {
     // assistant_final without stats (shouldn't happen in the live loop but
-    // might in test fixtures) â€” still persist model + prefix for continuity.
+    // might in test fixtures) â€?still persist model + prefix for continuity.
     rec.model = extra.model;
     rec.prefixHash = extra.prefixHash;
   }
@@ -116,7 +116,7 @@ export function openTranscriptFile(path: string, meta: TranscriptMeta): WriteStr
   return stream;
 }
 
-/** Tolerant: empty / malformed lines skipped, missing optionals OK â€” live chats may be mid-write. */
+/** Tolerant: empty / malformed lines skipped, missing optionals OK â€?live chats may be mid-write. */
 export function readTranscript(path: string): ReadTranscriptResult {
   const raw = readFileSync(path, "utf8");
   return parseTranscript(raw);

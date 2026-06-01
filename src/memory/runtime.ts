@@ -8,12 +8,12 @@ export interface ImmutablePrefixOptions {
 }
 
 export class ImmutablePrefix {
-  /** Stable across turns; rebuilt only on /new when REASONIX.md changed on disk. */
+  /** Stable across turns; rebuilt only on /new when DEEPMICODE.md changed on disk. */
   system: string;
-  /** Each `addTool` costs one cache-miss turn â€” DeepSeek's prefix cache is keyed by full tool list. */
+  /** Each `addTool` costs one cache-miss turn â€?DeepSeek's prefix cache is keyed by full tool list. */
   private _toolSpecs: ToolSpec[];
   readonly fewShots: readonly ChatMessage[];
-  /** Invalidated by addTool / removeTool / replaceSystem; bypassing any of those leaves cache stale â†’ fingerprint diverges from sent prefix. */
+  /** Invalidated by addTool / removeTool / replaceSystem; bypassing any of those leaves cache stale â†?fingerprint diverges from sent prefix. */
   private _fingerprintCache: string | null = null;
 
   constructor(opts: ImmutablePrefixOptions) {
@@ -51,7 +51,7 @@ export class ImmutablePrefix {
     return true;
   }
 
-  /** Mirror of addTool for MCP hot-unbridge. Same cache-miss cost â€” prefix changes shape. */
+  /** Mirror of addTool for MCP hot-unbridge. Same cache-miss cost â€?prefix changes shape. */
   removeTool(name: string): boolean {
     const idx = this._toolSpecs.findIndex((t) => t.function?.name === name);
     if (idx < 0) return false;
@@ -66,12 +66,12 @@ export class ImmutablePrefix {
     return this._fingerprintCache;
   }
 
-  /** Dev/test only â€” throws on cache drift, which always means a non-`addTool` mutation slipped in. */
+  /** Dev/test only â€?throws on cache drift, which always means a non-`addTool` mutation slipped in. */
   verifyFingerprint(): string {
     const fresh = this.computeFingerprint();
     if (this._fingerprintCache !== null && this._fingerprintCache !== fresh) {
       throw new Error(
-        `ImmutablePrefix fingerprint drift: cached=${this._fingerprintCache}, fresh=${fresh}. A mutation path bypassed addTool's cache invalidation â€” DeepSeek will see prefix churn that the TUI / transcript log don't know about.`,
+        `ImmutablePrefix fingerprint drift: cached=${this._fingerprintCache}, fresh=${fresh}. A mutation path bypassed addTool's cache invalidation â€?DeepSeek will see prefix churn that the TUI / transcript log don't know about.`,
       );
     }
     this._fingerprintCache = fresh;
@@ -102,7 +102,7 @@ export class AppendOnlyLog {
     for (const m of messages) this.append(m);
   }
 
-  /** The one append-only-breaking path â€” reserved for `/compact` + recovery. Use `append()` otherwise. */
+  /** The one append-only-breaking path â€?reserved for `/compact` + recovery. Use `append()` otherwise. */
   compactInPlace(replacement: ChatMessage[]): void {
     this._entries = [...replacement];
   }

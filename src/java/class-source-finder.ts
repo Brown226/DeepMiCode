@@ -1,4 +1,4 @@
-// Java source resolver: project tree â†’ ~/.m2 + ~/.gradle jar cache â†’ javap decompile.
+// Java source resolver: project tree â†?~/.m2 + ~/.gradle jar cache â†?javap decompile.
 
 import { execFile } from "node:child_process";
 import * as fs from "node:fs";
@@ -140,7 +140,7 @@ export class ClassSourceFinder {
       await this.walkForJars(repoDir, sourceJars, regularJars, jarKeyword);
     }
 
-    // Pass 1: prefer source jars â€” read .java directly, no decompile.
+    // Pass 1: prefer source jars â€?read .java directly, no decompile.
     for (const jarPath of sourceJars) {
       this.throwIfAborted();
       try {
@@ -158,7 +158,7 @@ export class ClassSourceFinder {
       }
     }
 
-    // Pass 2: fall back to regular jars â€” decompile .class via javap.
+    // Pass 2: fall back to regular jars â€?decompile .class via javap.
     let scanned = 0;
     for (const jarPath of regularJars) {
       this.throwIfAborted();
@@ -221,7 +221,7 @@ export class ClassSourceFinder {
     classBytes: Buffer,
     fqn: string,
   ): Promise<string> {
-    const tmpDir = await fsp.mkdtemp(path.join(os.tmpdir(), "reasonix-java-src-"));
+    const tmpDir = await fsp.mkdtemp(path.join(os.tmpdir(), "deepmicode-java-src-"));
 
     try {
       const pkgPath = fqn.replace(/\./g, path.sep);
@@ -239,7 +239,7 @@ export class ClassSourceFinder {
   }
 
   // Strip constant pool, debug tables (LineNumberTable / LocalVariableTable /
-  // StackMapTable), and "Compiled from â€¦" from javap output â€” cuts ~60-80% of
+  // StackMapTable), and "Compiled from â€? from javap output â€?cuts ~60-80% of
   // tokens for AI consumption while keeping method sigs + bytecode.
   private static compressJavapOutput(raw: string): string {
     const lines = raw.split("\n");
@@ -247,10 +247,10 @@ export class ClassSourceFinder {
     let skipUntilIndent: number | null = null;
 
     for (const line of lines) {
-      // Constant pool entry lines â€” always indented `#N = ...`
+      // Constant pool entry lines â€?always indented `#N = ...`
       if (/^\s+#\d+\s*=/.test(line)) continue;
 
-      // Inside a debug table body â€” skip lines indented deeper than the header
+      // Inside a debug table body â€?skip lines indented deeper than the header
       if (skipUntilIndent !== null) {
         const m = line.match(/^(\s*)/);
         const indent = m?.[1]?.length ?? 0;
@@ -260,14 +260,14 @@ export class ClassSourceFinder {
         if (line.trim() === "") continue;
       }
 
-      // Debug table header â€” note its indent so we know when the body ends
+      // Debug table header â€?note its indent so we know when the body ends
       const debugMatch = line.match(/^(\s+)(LineNumberTable|LocalVariableTable|StackMapTable):/);
       if (debugMatch) {
         skipUntilIndent = debugMatch[1]!.length;
         continue;
       }
 
-      // "Compiled from â€¦" preamble
+      // "Compiled from â€? preamble
       if (line.startsWith("Compiled from ")) continue;
 
       out.push(line);
@@ -291,7 +291,7 @@ export class ClassSourceFinder {
         },
         (err, stdout, stderr) => {
           if (err) {
-            // javap exits non-zero on missing class / unsupported bytecode â€” keep its diagnostics.
+            // javap exits non-zero on missing class / unsupported bytecode â€?keep its diagnostics.
             const msg = [stdout, stderr].filter(Boolean).join("\n") || err.message;
             reject(new Error(`javap failed: ${msg}`));
             return;

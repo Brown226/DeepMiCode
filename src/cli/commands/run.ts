@@ -35,11 +35,11 @@ export interface RunOptions {
   model: string;
   system: string;
   budgetUsd?: number;
-  /** JSONL transcript path â€” lets `reasonix replay` / `diff` audit this run. */
+  /** JSONL transcript path â€?lets `deepmicode replay` / `diff` audit this run. */
   transcript?: string;
   /** Zero or more MCP server specs. Each: `"name=cmd args..."` or `"cmd args..."`. */
   mcp?: string[];
-  /** Global prefix â€” only honored when a single anonymous server is given. */
+  /** Global prefix â€?only honored when a single anonymous server is given. */
   mcpPrefix?: string;
 }
 
@@ -58,7 +58,7 @@ async function ensureApiKey(): Promise<string> {
   const rl = createInterface({ input: stdin, output: stdout });
   try {
     while (true) {
-      const answer = (await rl.question("API key â€º ")).trim();
+      const answer = (await rl.question("API key â€?")).trim();
       if (!answer) continue;
       if (!isPlausibleKey(answer)) {
         process.stdout.write("Key looks too short. Paste the full token (16+ chars, no spaces).\n");
@@ -78,7 +78,7 @@ export async function runCommand(opts: RunOptions): Promise<void> {
   await ensureApiKey();
   bridgeEndpointEnv();
 
-  // Optional MCP setup â€” mirrors chat's flow. Must happen before loop
+  // Optional MCP setup â€?mirrors chat's flow. Must happen before loop
   // construction so the tools make it into the prefix.
   const cfg = readConfig();
   const normalizedSpecs = normalizeMcpConfig(
@@ -131,7 +131,7 @@ export async function runCommand(opts: RunOptions): Promise<void> {
         clients.push(mcp);
         successCount++;
       } catch (err) {
-        // Non-fatal â€” skip and continue, same as `reasonix chat`. A
+        // Non-fatal â€?skip and continue, same as `deepmicode chat`. A
         // one-shot `run` invocation with a broken MCP server otherwise
         // fails the whole run over a side-concern tool the task might
         // not even touch.
@@ -182,7 +182,7 @@ export async function runCommand(opts: RunOptions): Promise<void> {
   if (opts.transcript) {
     transcriptStream = openTranscriptFile(opts.transcript, {
       version: 1,
-      source: "reasonix run",
+      source: "deepmicode run",
       model: opts.model,
       startedAt: new Date().toISOString(),
     });
@@ -203,12 +203,12 @@ export async function runCommand(opts: RunOptions): Promise<void> {
       if (ev.role === "error") process.stderr.write(`\n[error] ${ev.error}\n`);
       if (ev.role === "done") process.stdout.write("\n");
       if (ev.role === "assistant_final" && ev.stats?.usage) {
-        // `reasonix run` is often used in CI / scripting â€” we want
-        // those turns to show up in `reasonix stats` too so the
+        // `deepmicode run` is often used in CI / scripting â€?we want
+        // those turns to show up in `deepmicode stats` too so the
         // dashboard reflects all DeepSeek spend, not just TUI sessions.
         appendUsage({ session: null, model: ev.stats.model, usage: ev.stats.usage });
       }
-      // Persist every non-streaming event â€” deltas would flood the file and
+      // Persist every non-streaming event â€?deltas would flood the file and
       // aren't useful for replay (replay renders final content, not keystrokes).
       if (transcriptStream && ev.role !== "assistant_delta") {
         writeRecord(transcriptStream, recordFromLoopEvent(ev, { model: opts.model, prefixHash }));
@@ -220,12 +220,12 @@ export async function runCommand(opts: RunOptions): Promise<void> {
 
   const s = loop.stats.summary();
   process.stdout.write(
-    `\nâ€” turns:${s.turns} cache:${(s.cacheHitRatio * 100).toFixed(1)}% ` +
+    `\nâ€?turns:${s.turns} cache:${(s.cacheHitRatio * 100).toFixed(1)}% ` +
       `cost:$${s.totalCostUsd.toFixed(6)} save-vs-claude:${s.savingsVsClaudePct.toFixed(1)}%\n`,
   );
   if (opts.transcript) {
     process.stdout.write(`\ntranscript: ${opts.transcript}\n`);
-    process.stdout.write(`  â†’ npx reasonix replay ${opts.transcript}\n`);
+    process.stdout.write(`  â†?npx deepmicode replay ${opts.transcript}\n`);
   }
 
   for (const c of clients) await c.close();

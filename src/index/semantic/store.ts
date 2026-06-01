@@ -1,4 +1,4 @@
-/** JSONL append-only (Ctrl+C-safe) + linear cosine scan over unboxed Float32Array â€” fast enough for â‰¤10k chunks. */
+/** JSONL append-only (Ctrl+C-safe) + linear cosine scan over unboxed Float32Array â€?fast enough for â‰?0k chunks. */
 
 import { promises as fs } from "node:fs";
 import path from "node:path";
@@ -130,7 +130,7 @@ export class SemanticStore {
   search(query: Float32Array, topK = 8, minScore = 0): SearchHit[] {
     if (this.entries.length === 0) return [];
     if (query.length !== this.dim && this.dim !== 0) {
-      throw new Error(`query dim ${query.length} â‰  index dim ${this.dim}`);
+      throw new Error(`query dim ${query.length} â‰?index dim ${this.dim}`);
     }
     const heap: SearchHit[] = [];
     for (const entry of this.entries) {
@@ -195,13 +195,13 @@ export async function openStore(indexDir: string, identity: IndexIdentity): Prom
   if (meta) {
     if (meta.version !== STORE_VERSION) {
       throw new Error(
-        `Index format version ${meta.version} does not match current ${STORE_VERSION}. Run \`reasonix index --rebuild\`.`,
+        `Index format version ${meta.version} does not match current ${STORE_VERSION}. Run \`deepmicode index --rebuild\`.`,
       );
     }
     const mismatch = compareIndexIdentity(meta, identity);
     if (mismatch !== null) {
       throw new Error(
-        `Index was built with provider "${meta.provider}" model "${meta.model}" but current config is provider "${identity.provider}" model "${identity.model}". Run \`reasonix index --rebuild\`.`,
+        `Index was built with provider "${meta.provider}" model "${meta.model}" but current config is provider "${identity.provider}" model "${identity.model}". Run \`deepmicode index --rebuild\`.`,
       );
     }
   }

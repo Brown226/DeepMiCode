@@ -1,4 +1,4 @@
-/** First-run / re-configure wizard — saves to `~/.reasonix/config.json`. */
+/** First-run / re-configure wizard �?saves to `~/.deepmicode/config.json`. */
 
 import { mkdirSync, statSync } from "node:fs";
 import { Box, Text, useApp, useInput } from "ink";
@@ -6,7 +6,7 @@ import { TextInput } from "ink";
 // biome-ignore lint/style/useImportType: JSX (jsx: "react") needs React as a value at runtime
 import React, { useEffect, useState } from "react";
 import {
-  type ReasonixConfig,
+  type DeepMiCodeConfig,
   defaultConfigPath,
   isPlausibleKey,
   loadBaseUrl,
@@ -33,12 +33,12 @@ import { type ThemeName, listThemeNames } from "./theme/tokens.js";
 
 export interface WizardProps {
   /** Called once the config has been saved. */
-  onComplete: (cfg: ReasonixConfig) => void;
+  onComplete: (cfg: DeepMiCodeConfig) => void;
   /** Called if the user presses Esc to abort. */
   onCancel?: () => void;
   /** Skip the API-key step if a key already exists (env or config). */
   existingApiKey?: string;
-  /** Force the API-key step so `reasonix setup` can replace a saved key. */
+  /** Force the API-key step so `deepmicode setup` can replace a saved key. */
   forceApiKeyStep?: boolean;
   /** Verifies the submitted key before the wizard can continue. */
   validateApiKey?: (apiKey: string) => Promise<ApiKeyValidationResult>;
@@ -67,7 +67,7 @@ const CATALOG_BY_NAME = new Map(MCP_CATALOG.map((e) => [e.name, e]));
 
 const LANGUAGE_LABELS: Record<LanguageCode, string> = {
   EN: "English",
-  "zh-CN": "简体中文",
+  "zh-CN": "简体中�?,
   de: "Deutsch",
   ru: "Русский",
 };
@@ -234,7 +234,7 @@ export function Wizard({
                   buildSpec(name, data.catalogArgs),
                 );
                 const prev = readConfig();
-                const next: ReasonixConfig = {
+                const next: DeepMiCodeConfig = {
                   ...prev,
                   apiKey: data.apiKey,
                   theme: data.theme,
@@ -316,12 +316,12 @@ function ThemeStep({
         {THEME_NAMES.map((name, i) => (
           <Box key={name}>
             <Text color={i === index ? theme.tone.brand : undefined}>
-              {i === index ? "▸ " : "  "}
+              {i === index ? "�?" : "  "}
             </Text>
             <Text bold={i === index} color={i === index ? theme.fg.strong : theme.fg.body}>
               {name}
             </Text>
-            <Text color={theme.fg.meta}>{" — "}</Text>
+            <Text color={theme.fg.meta}>{" �?"}</Text>
             <Text color={theme.fg.meta}>{t(`wizard.themeCaption.${name}`)}</Text>
           </Box>
         ))}
@@ -335,11 +335,11 @@ function ThemeStep({
       >
         <Text color={theme.fg.meta}>{t("wizard.themeSampleHeading")}</Text>
         <Box marginTop={1}>
-          <Text color={theme.tone.accent}>{"◆ "}</Text>
+          <Text color={theme.tone.accent}>{"�?"}</Text>
           <Text color={theme.tone.accent}>{t("wizard.themeSampleReasoning")}</Text>
         </Box>
         <Box>
-          <Text color={theme.tone.info}>{"▣ "}</Text>
+          <Text color={theme.tone.info}>{"�?"}</Text>
           <Text color={theme.fg.body}>{"fs.readFile("}</Text>
           <Text color={theme.tone.ok}>{'"main.ts"'}</Text>
           <Text color={theme.fg.body}>{")"}</Text>
@@ -454,7 +454,7 @@ function ApiKeyStep({
               onSubmit(trimmed);
             });
           }}
-          mask="•"
+          mask="�?
           placeholder="sk-..."
         />
       </Box>
@@ -477,7 +477,7 @@ function ApiKeyStep({
 
 // Hit `/models` instead of DeepSeek's `/user/balance`: the OpenAI-compat
 // listing endpoint exists on every provider that pretends to be OpenAI
-// (DeepSeek, DashScope/Tongyi, Moonshot, Zhipu, …), and 401/403 there
+// (DeepSeek, DashScope/Tongyi, Moonshot, Zhipu, �?, and 401/403 there
 // still means "key bad" the same way.
 export async function validateDeepSeekApiKey(
   apiKey: string,
@@ -583,7 +583,7 @@ function McpArgsStep({
         <Box marginTop={1}>
           <Text bold color="ansi:cyan">
             {entry.userArgs}
-            {" › "}
+            {" �?"}
           </Text>
           <TextInput
             value={value}
@@ -692,7 +692,7 @@ function mcpItems(): SelectItem<string>[] {
 }
 
 function placeholderFor(entry: CatalogEntry): string {
-  if (entry.name === "filesystem") return "e.g. /tmp/reasonix-sandbox";
+  if (entry.name === "filesystem") return "e.g. /tmp/deepmicode-sandbox";
   if (entry.name === "sqlite") return "e.g. ./notes.sqlite";
   return entry.userArgs ?? "";
 }
@@ -713,8 +713,8 @@ function deriveInitialCatalog(existingSpecs: string[]): string[] {
 
 /**
  * Build the `--mcp` spec string for a catalog entry. Same format
- * `mcpCommandFor` produces for `reasonix mcp list`, minus the leading
- * `--mcp "..."` wrapper — we store the inner spec directly.
+ * `mcpCommandFor` produces for `deepmicode mcp list`, minus the leading
+ * `--mcp "..."` wrapper �?we store the inner spec directly.
  */
 export function buildSpec(name: string, argsByName: Record<string, string>): string {
   const entry = CATALOG_BY_NAME.get(name);
@@ -725,7 +725,7 @@ export function buildSpec(name: string, argsByName: Record<string, string>): str
 }
 
 function quoteIfNeeded(s: string): string {
-  // Escape backslashes BEFORE quotes — otherwise a trailing `\` in the
+  // Escape backslashes BEFORE quotes �?otherwise a trailing `\` in the
   // input would consume the closing quote when a downstream parser
   // un-escapes the output (CodeQL js/incomplete-sanitization).
   return /\s|"/.test(s) ? `"${s.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"` : s;

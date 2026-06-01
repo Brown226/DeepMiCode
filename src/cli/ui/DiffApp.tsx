@@ -1,10 +1,10 @@
 /**
- * Ink TUI for `reasonix diff`. Split-pane: A on the left, B on the right,
+ * Ink TUI for `deepmicode diff`. Split-pane: A on the left, B on the right,
  * shared cursor. Header shows aggregate deltas; footer shows the current
  * pair's divergence note (if any) + key cheat sheet.
  *
  * j/k moves the cursor by one turn; n/N jumps to the next/prev divergent
- * turn â€” which is the whole point of a diff tool. Quit with q.
+ * turn â€?which is the whole point of a diff tool. Quit with q.
  *
  * Pure navigation lives in src/diff.ts (findNextDivergence / findPrevDivergence).
  */
@@ -27,7 +27,7 @@ export interface DiffAppProps {
 export function DiffApp({ report }: DiffAppProps) {
   const { exit } = useApp();
   const maxIdx = Math.max(0, report.pairs.length - 1);
-  // Start at the first divergence when one exists â€” that's the user's most
+  // Start at the first divergence when one exists â€?that's the user's most
   // likely destination. Falls back to idx 0 for fully-matching diffs.
   const initialIdx = report.firstDivergenceTurn
     ? report.pairs.findIndex((p) => p.turn === report.firstDivergenceTurn)
@@ -80,7 +80,7 @@ export function DiffApp({ report }: DiffAppProps) {
 
       {pair?.divergenceNote ? (
         <Box marginTop={1} paddingX={1}>
-          <Text color="ansi:yellow">â˜… </Text>
+          <Text color="ansi:yellow">â˜?</Text>
           <Text>{pair.divergenceNote}</Text>
         </Box>
       ) : null}
@@ -119,7 +119,7 @@ function DiffHeader({ report }: { report: DiffReport }) {
     const churnCount = aStable ? b.stats.prefixHashes.length : a.stats.prefixHashes.length;
     prefixLine = `${stableLabel} stayed byte-stable; ${churnLabel} churned ${churnCount} distinct prefixes.`;
   } else if (a.stats.prefixHashes[0] && a.stats.prefixHashes[0] === b.stats.prefixHashes[0]) {
-    prefixLine = `shared prefix hash ${a.stats.prefixHashes[0].slice(0, 12)}â€¦ â€” cache delta attributable to log stability, not prompt change.`;
+    prefixLine = `shared prefix hash ${a.stats.prefixHashes[0].slice(0, 12)}â€?â€?cache delta attributable to log stability, not prompt change.`;
   }
 
   return (
@@ -141,7 +141,7 @@ function DiffHeader({ report }: { report: DiffReport }) {
         <Text>
           <Text dim>cache </Text>
           <Text>{(a.stats.cacheHitRatio * 100).toFixed(1)}%</Text>
-          <Text dim> â†’ </Text>
+          <Text dim> â†?</Text>
           <Text>{(b.stats.cacheHitRatio * 100).toFixed(1)}%</Text>
           <Text color={cacheDelta >= 0 ? "ansi:green" : "ansi:red"} bold>
             {"  "}
@@ -152,7 +152,7 @@ function DiffHeader({ report }: { report: DiffReport }) {
         <Text>
           <Text dim>cost </Text>
           <Text>${a.stats.totalCostUsd.toFixed(6)}</Text>
-          <Text dim> â†’ </Text>
+          <Text dim> â†?</Text>
           <Text>${b.stats.totalCostUsd.toFixed(6)}</Text>
           <Text color={costDelta <= 0 ? "ansi:green" : "ansi:red"} bold>
             {"  "}
@@ -163,7 +163,7 @@ function DiffHeader({ report }: { report: DiffReport }) {
         <Text>
           <Text dim>model calls </Text>
           <Text>
-            {a.stats.turns} â†’ {b.stats.turns}
+            {a.stats.turns} â†?{b.stats.turns}
           </Text>
         </Text>
       </Box>

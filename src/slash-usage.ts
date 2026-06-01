@@ -12,7 +12,7 @@ interface UsageFile {
 export function slashUsagePath(): string {
   const override = process.env.DEEPMICODE_SLASH_USAGE_PATH;
   if (override) return override;
-  return join(homedir(), ".reasonix", "slash-usage.json");
+  return join(homedir(), ".deepmicode", "slash-usage.json");
 }
 
 export function loadSlashUsage(): SlashUsageCounts {
@@ -41,11 +41,11 @@ function persist(counts: Record<string, number>): void {
     writeFileSync(tmp, JSON.stringify(payload), "utf8");
     renameSync(tmp, path);
   } catch {
-    /* disk full / perms â€” non-fatal, in-memory state still increments */
+    /* disk full / perms â€?non-fatal, in-memory state still increments */
   }
 }
 
-/** Read-modify-write so two concurrent reasonix processes don't clobber each other's counts. */
+/** Read-modify-write so two concurrent deepmicode processes don't clobber each other's counts. */
 export function recordSlashUse(name: string): SlashUsageCounts {
   const counts: Record<string, number> = { ...loadSlashUsage() };
   counts[name] = (counts[name] ?? 0) + 1;

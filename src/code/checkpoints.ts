@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync
 import { homedir } from "node:os";
 import { dirname, join, relative, resolve, sep } from "node:path";
 
-/** One file's state at the time of snapshot. `content === null` â†’ didn't exist. */
+/** One file's state at the time of snapshot. `content === null` â†?didn't exist. */
 export interface CheckpointFile {
   path: string;
   content: string | null;
@@ -40,7 +40,7 @@ function sanitizeRoot(rootDir: string): string {
 }
 
 function storeRoot(rootDir: string): string {
-  return join(homedir(), ".reasonix", "sessions", sanitizeRoot(rootDir), "checkpoints");
+  return join(homedir(), ".deepmicode", "sessions", sanitizeRoot(rootDir), "checkpoints");
 }
 
 function indexPath(rootDir: string): string {
@@ -119,7 +119,7 @@ export function createCheckpoint(opts: CreateCheckpointOptions): CheckpointMeta 
     seen.add(p);
     const abs = resolve(absRoot, p);
     // Path-escape guard. A snapshot of `../../../etc/passwd` is not
-    // something we want â€” refuse silently rather than abort the whole
+    // something we want â€?refuse silently rather than abort the whole
     // checkpoint.
     if (abs !== absRoot && !abs.startsWith(`${absRoot}${sep}`)) continue;
     const rel = relative(absRoot, abs).split(sep).join("/");
@@ -129,7 +129,7 @@ export function createCheckpoint(opts: CreateCheckpointOptions): CheckpointMeta 
         files.push({ path: rel, content });
         bytes += content.length;
       } catch {
-        // Unreadable (binary, perms) â€” record as null so restore knows
+        // Unreadable (binary, perms) â€?record as null so restore knows
         // to delete on revert. Wrong for binary files but consistent.
         files.push({ path: rel, content: null });
       }

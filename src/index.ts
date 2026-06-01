@@ -1,4 +1,4 @@
-/** DeepMiCode â€” DeepSeek + Mimo AI coding agent. Library entry point. */
+/** DeepMiCode â€?DeepSeek + Mimo AI coding agent. Library entry point. */
 
 export { DeepSeekClient, Usage } from "./client.js";
 export type { ChatResponse, StreamChunk, DeepSeekClientOptions } from "./client.js";
@@ -332,7 +332,7 @@ export {
   saveBaseUrl,
   writeConfig,
 } from "./config.js";
-export type { ReasonixConfig } from "./config.js";
+export type { DeepMiCodeConfig } from "./config.js";
 export type { ProviderKind } from "./providers/types.js";
 
 export type {

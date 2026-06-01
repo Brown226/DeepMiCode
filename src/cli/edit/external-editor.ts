@@ -11,7 +11,7 @@ export interface OpenEditorResult {
   kind: "ok" | "missing" | "failed";
   /** Final buffer contents. On `missing` / `failed`, this is the original `initial` (caller restores composer state). */
   content: string;
-  /** Human-readable detail â€” surface to the user on failed / missing. */
+  /** Human-readable detail â€?surface to the user on failed / missing. */
   detail?: string;
 }
 
@@ -34,7 +34,7 @@ export async function openInExternalEditor(initial: string): Promise<OpenEditorR
       detail: t("composer.editorMissing"),
     };
   }
-  const dir = mkdtempSync(join(tmpdir(), "reasonix-compose-"));
+  const dir = mkdtempSync(join(tmpdir(), "deepmicode-compose-"));
   const path = join(dir, "DEEPMICODE_INPUT.md");
   try {
     writeFileSync(path, initial, "utf8");
@@ -51,7 +51,7 @@ export async function openInExternalEditor(initial: string): Promise<OpenEditorR
     try {
       rmSync(dir, { recursive: true, force: true });
     } catch {
-      /* leftover temp file is harmless â€” OS cleans tmpdir periodically */
+      /* leftover temp file is harmless â€?OS cleans tmpdir periodically */
     }
   }
 }
@@ -60,7 +60,7 @@ function spawnEditor(editor: string, path: string): Promise<void> {
   return new Promise((resolve, reject) => {
     // Use a shell so `editor` strings like `nvim --noplugin` or `code --wait`
     // split correctly across platforms. `stdio: inherit` is what lets vim /
-    // nano take over the terminal â€” they need TTY input + output.
+    // nano take over the terminal â€?they need TTY input + output.
     const child = spawn(`${editor} "${path}"`, {
       shell: true,
       stdio: "inherit",

@@ -1,4 +1,4 @@
-// Reasonix dashboard SPA â€” Preact 10 + HTM, bundled by tsup. CDN imports stay external.
+// DeepMiCode dashboard SPA â€?Preact 10 + HTM, bundled by tsup. CDN imports stay external.
 
 import htm from "htm";
 import { h, render } from "preact";
@@ -41,7 +41,7 @@ function useTheme() {
     try {
       localStorage.setItem("rx.theme", theme);
     } catch {
-      /* private mode / disabled storage â€” ignore */
+      /* private mode / disabled storage â€?ignore */
     }
   }, [theme]);
   return [theme, setTheme];
@@ -52,12 +52,12 @@ function tabSections() {
     {
       label: t("app.sectionWorkspace"),
       tabs: [
-        { id: "chat", name: t("app.tabChat"), glyph: "â—†", panel: () => html`<${ChatPanel} />` },
-        { id: "plans", name: t("app.tabPlans"), glyph: "âŠž", panel: () => html`<${PlansPanel} />` },
+        { id: "chat", name: t("app.tabChat"), glyph: "â—?, panel: () => html`<${ChatPanel} />` },
+        { id: "plans", name: t("app.tabPlans"), glyph: "âŠ?, panel: () => html`<${PlansPanel} />` },
         {
           id: "sessions",
           name: t("app.tabSessions"),
-          glyph: "â€º",
+          glyph: "â€?,
           panel: () => html`<${SessionsPanel} />`,
         },
       ],
@@ -68,7 +68,7 @@ function tabSections() {
         {
           id: "changes",
           name: t("app.tabChanges"),
-          glyph: "â–¨",
+          glyph: "â–?,
           panel: () => html`<${ChangesPanel} />`,
         },
       ],
@@ -79,7 +79,7 @@ function tabSections() {
         {
           id: "overview",
           name: t("app.tabOverview"),
-          glyph: "â—ˆ",
+          glyph: "â—?,
           panel: () => html`<${OverviewPanel} />`,
         },
         { id: "usage", name: t("app.tabUsage"), glyph: "$", panel: () => html`<${UsagePanel} />` },
@@ -92,7 +92,7 @@ function tabSections() {
         {
           id: "semantic",
           name: t("app.tabSemantic"),
-          glyph: "â‰ˆ",
+          glyph: "â‰?,
           panel: () => html`<${SemanticPanel} />`,
         },
       ],
@@ -100,11 +100,11 @@ function tabSections() {
     {
       label: t("app.sectionConfigure"),
       tabs: [
-        { id: "tools", name: t("app.tabTools"), glyph: "â–£", panel: () => html`<${ToolsPanel} />` },
+        { id: "tools", name: t("app.tabTools"), glyph: "â–?, panel: () => html`<${ToolsPanel} />` },
         {
           id: "permissions",
           name: t("app.tabPermissions"),
-          glyph: "â–Ž",
+          glyph: "â–?,
           panel: () => html`<${PermissionsPanel} />`,
         },
         { id: "mcp", name: t("app.tabMcp"), glyph: "M", panel: () => html`<${McpPanel} />` },
@@ -124,7 +124,7 @@ function tabSections() {
         {
           id: "settings",
           name: t("app.tabSettings"),
-          glyph: "âŒ˜",
+          glyph: "âŒ?,
           panel: () => html`<${SettingsPanel} />`,
         },
       ],
@@ -156,14 +156,14 @@ function App() {
     try {
       localStorage.setItem("rx.sidebarCollapsed", sidebarCollapsed ? "1" : "0");
     } catch {
-      /* private mode / disabled storage â€” ignore */
+      /* private mode / disabled storage â€?ignore */
     }
   }, [sidebarCollapsed]);
   useEffect(() => {
     try {
       localStorage.setItem("rx.activeTab", activeId);
     } catch {
-      /* private mode / disabled storage â€” ignore */
+      /* private mode / disabled storage â€?ignore */
     }
   }, [activeId]);
   const TAB_SECTIONS = tabSections();
@@ -188,8 +188,8 @@ function App() {
     <div class=${`app ${sidebarCollapsed ? "collapsed" : ""}`}>
       <aside class="app-side">
         <div class="brand">
-          <span class="glyph">â—ˆ</span>
-          <span class="label">REASONIX</span>
+          <span class="glyph">â—?/span>
+          <span class="label">DEEPMICODE</span>
           <span class="ver">${MODE}</span>
         </div>
         <div class="side-tabs">
@@ -217,7 +217,7 @@ function App() {
             class="toggle theme-toggle"
             title=${t("app.themeToggle") + (theme === "dark" ? ` (${t("app.themeLight")})` : ` (${t("app.themeDark")})`)}
             onClick=${() => setTheme(theme === "dark" ? "light" : "dark")}
-          >${theme === "dark" ? "â˜€" : "â˜¾"}</span>
+          >${theme === "dark" ? "â˜€" : "â˜?}</span>
           <span
             class="toggle"
             title=${sidebarCollapsed ? "expand" : "collapse"}

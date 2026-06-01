@@ -19,7 +19,7 @@ const INSTALL_PAGE_CAP = 30;
 
 const progressToStderr: FetchProgress = ({ source, page, entries }) => {
   if (page === 1 || page % 5 === 0) {
-    process.stderr.write(`\r▸ fetching ${source} registry · page ${page} · ${entries} entries`);
+    process.stderr.write(`\r�?fetching ${source} registry · page ${page} · ${entries} entries`);
   }
 };
 
@@ -30,7 +30,7 @@ function finishProgressLine(): void {
 
 export interface McpListOptions {
   json?: boolean;
-  /** Skip network — only show the bundled MCP_CATALOG entries. */
+  /** Skip network �?only show the bundled MCP_CATALOG entries. */
   local?: boolean;
   /** Bypass cache TTL. */
   refresh?: boolean;
@@ -86,7 +86,7 @@ function printEntry(e: RegistryEntry, indent = "  "): void {
   if (e.install?.requiredEnv?.length) {
     console.log(`${indent}    needs: ${e.install.requiredEnv.join(", ")}`);
   } else if (!e.install) {
-    console.log(`${indent}    (smithery listing — install detail fetched lazily on install)`);
+    console.log(`${indent}    (smithery listing �?install detail fetched lazily on install)`);
   }
 }
 
@@ -279,7 +279,7 @@ export async function mcpInstallCommand(name: string, opts: McpInstallOptions = 
   }
 
   if (!entry.install && entry.source === "smithery") {
-    process.stderr.write(`▸ fetching smithery install detail for ${entry.name}…\n`);
+    process.stderr.write(`�?fetching smithery install detail for ${entry.name}…\n`);
     const fetched = await fetchSmitheryDetail(entry.name);
     if (fetched) entry.install = fetched;
   }
@@ -316,12 +316,12 @@ export async function mcpInstallCommand(name: string, opts: McpInstallOptions = 
     console.log("           Either export these before launching, or add them to config:");
     console.log(`             mcpEnv.${installedName ?? entry.name} = { ... }`);
     console.log(
-      `           (edit ${defaultConfigPath()} — values merge over process.env at spawn)`,
+      `           (edit ${defaultConfigPath()} �?values merge over process.env at spawn)`,
     );
   }
   console.log("");
   console.log(
-    "Use it:  reasonix chat   (or `reasonix code`) — the server will be bridged automatically.",
+    "Use it:  deepmicode chat   (or `deepmicode code`) �?the server will be bridged automatically.",
   );
 }
 

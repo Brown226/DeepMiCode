@@ -86,7 +86,7 @@ export async function handleHooks(
       if (!cwd) {
         return {
           status: 503,
-          body: { error: "no active project â€” open `/dashboard` from inside `reasonix code`" },
+          body: { error: "no active project â€?open `/dashboard` from inside `deepmicode code`" },
         };
       }
       trustProjectHooks(cwd, ctx.configPath);
@@ -106,7 +106,7 @@ export async function handleHooks(
     if (!ctx.reloadHooks) {
       return {
         status: 503,
-        body: { error: "reload requires an attached session â€” App.tsx wires the callback" },
+        body: { error: "reload requires an attached session â€?App.tsx wires the callback" },
       };
     }
     const count = ctx.reloadHooks();

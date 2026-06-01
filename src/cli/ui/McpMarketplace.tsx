@@ -1,4 +1,4 @@
-/** `/mcp browse` modal â€” registry marketplace inside the chat session. */
+/** `/mcp browse` modal â€?registry marketplace inside the chat session. */
 
 import { Box, Text } from "ink";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -23,7 +23,7 @@ export interface McpMarketplaceProps {
   onClose: () => void;
   /** Pushed back into the chat scrollback after install/uninstall. */
   postInfo: (text: string) => void;
-  /** Optional hot-reload â€” present in chat session, absent in standalone CLI use. */
+  /** Optional hot-reload â€?present in chat session, absent in standalone CLI use. */
   reloadMcp?: () => Promise<{
     added: string[];
     removed: string[];
@@ -38,7 +38,7 @@ interface State {
   query: string;
   selected: number;
   status: string;
-  /** specs currently in config.mcp[] â€” refreshed after install/uninstall. */
+  /** specs currently in config.mcp[] â€?refreshed after install/uninstall. */
   installedSpecs: string[];
 }
 
@@ -175,14 +175,14 @@ export function McpMarketplace({ onClose, postInfo, reloadMcp, pickerPorts }: Mc
       if (reloadMcp) {
         try {
           await reloadMcp();
-          postInfo(`âœ“ uninstalled ${entry.name} â€” bridge dropped`);
+          postInfo(`âœ?uninstalled ${entry.name} â€?bridge dropped`);
         } catch (err) {
           postInfo(
-            `âœ“ uninstalled ${entry.name} â€” restart \`reasonix code\` to drop the bridge (reload failed: ${(err as Error).message})`,
+            `âœ?uninstalled ${entry.name} â€?restart \`deepmicode code\` to drop the bridge (reload failed: ${(err as Error).message})`,
           );
         }
       } else {
-        postInfo(`âœ“ uninstalled ${entry.name} â€” restart \`reasonix code\` to drop the bridge`);
+        postInfo(`âœ?uninstalled ${entry.name} â€?restart \`deepmicode code\` to drop the bridge`);
       }
     },
     [postInfo, reloadMcp],
@@ -207,7 +207,7 @@ export function McpMarketplace({ onClose, postInfo, reloadMcp, pickerPorts }: Mc
       if (!install) {
         setState((s) => ({
           ...s,
-          status: `no install info for ${entry.name} â€” try \`npx -y @smithery/cli install ${entry.name}\``,
+          status: `no install info for ${entry.name} â€?try \`npx -y @smithery/cli install ${entry.name}\``,
         }));
         return;
       }
@@ -225,7 +225,7 @@ export function McpMarketplace({ onClose, postInfo, reloadMcp, pickerPorts }: Mc
         }
         const next = [...existing, spec];
         writeConfig({ ...cfg, mcp: next });
-        setState((s) => ({ ...s, installedSpecs: next, status: `installed â†’ ${spec}` }));
+        setState((s) => ({ ...s, installedSpecs: next, status: `installed â†?${spec}` }));
         const envHint = install.requiredEnv?.length
           ? `  Â·  needs env: ${install.requiredEnv.join(", ")}`
           : "";
@@ -234,17 +234,17 @@ export function McpMarketplace({ onClose, postInfo, reloadMcp, pickerPorts }: Mc
             const r = await reloadMcp();
             const failedHere = r.failed.find((f) => f.spec === spec);
             if (failedHere) {
-              postInfo(`â–² installed ${entry.name} â€” bridge failed: ${failedHere.reason}${envHint}`);
+              postInfo(`â–?installed ${entry.name} â€?bridge failed: ${failedHere.reason}${envHint}`);
             } else {
-              postInfo(`âœ“ installed ${entry.name} â€” bridged${envHint}`);
+              postInfo(`âœ?installed ${entry.name} â€?bridged${envHint}`);
             }
           } catch (err) {
             postInfo(
-              `âœ“ installed ${entry.name} â€” restart \`reasonix code\` to bridge (reload failed: ${(err as Error).message})${envHint}`,
+              `âœ?installed ${entry.name} â€?restart \`deepmicode code\` to bridge (reload failed: ${(err as Error).message})${envHint}`,
             );
           }
         } else {
-          postInfo(`âœ“ installed ${entry.name} â€” restart \`reasonix code\` to bridge${envHint}`);
+          postInfo(`âœ?installed ${entry.name} â€?restart \`deepmicode code\` to bridge${envHint}`);
         }
       } catch (err) {
         setState((s) => ({ ...s, status: `install failed: ${(err as Error).message}` }));
@@ -358,7 +358,7 @@ export function McpMarketplace({ onClose, postInfo, reloadMcp, pickerPorts }: Mc
     <Box flexDirection="column" paddingX={1}>
       <Box>
         <Text bold color={COLOR.brand}>
-          â—ˆ MCP marketplace
+          â—?MCP marketplace
         </Text>
         <Text dim>{`  Â·  ${state.status}`}</Text>
       </Box>
@@ -381,11 +381,11 @@ export function McpMarketplace({ onClose, postInfo, reloadMcp, pickerPorts }: Mc
             const tag =
               e.source === "official" ? "[off]" : e.source === "smithery" ? "[smt]" : "[loc]";
             const installedSpec = isInstalled(state.installedSpecs, e);
-            const installedBadge = installedSpec ? " âœ“" : "";
+            const installedBadge = installedSpec ? " âœ? : "";
             const pop = e.popularity !== undefined ? ` Â· ${e.popularity.toLocaleString()}` : "";
             return (
               <Box key={e.name}>
-                <Text color={active ? COLOR.brand : undefined}>{active ? "â–¸ " : "  "}</Text>
+                <Text color={active ? COLOR.brand : undefined}>{active ? "â–?" : "  "}</Text>
                 <Text bold={active}>{e.name.padEnd(38).slice(0, 38)}</Text>
                 <Text dim>{` ${tag}${pop}${installedBadge}`}</Text>
               </Box>

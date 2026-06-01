@@ -20,7 +20,7 @@ interface SessionMessage {
   content?: string;
   /** Assistant `reasoning_content` (R1 / V4 thinking). */
   reasoning?: string;
-  /** Assistant tool_calls â€” emitted alongside `content` for tool-call turns. */
+  /** Assistant tool_calls â€?emitted alongside `content` for tool-call turns. */
   toolCalls?: SessionToolCall[];
   /** Tool-result message: the call id this row answers. */
   toolCallId?: string;
@@ -67,7 +67,7 @@ function parseTranscript(path: string, maxBytes = 4 * 1024 * 1024): SessionMessa
       else if (typeof rec.name === "string" && role === "tool") msg.toolName = rec.name;
       out.push(msg);
     } catch {
-      /* skip malformed line â€” same rule as the rest of Reasonix's JSONL readers */
+      /* skip malformed line â€?same rule as the rest of DeepMiCode's JSONL readers */
     }
   }
   return out;
@@ -79,9 +79,9 @@ export async function handleSessions(
   _body: string,
   ctx: DashboardContext,
 ): Promise<ApiResult> {
-  // Listing â€” workspace-scoped when the CLI knows its cwd. Without this,
+  // Listing â€?workspace-scoped when the CLI knows its cwd. Without this,
   // every subagent transcript and every other-workspace session lands in the
-  // sidebar; users have reported 10 000+ entries in `~/.reasonix/sessions/`.
+  // sidebar; users have reported 10 000+ entries in `~/.deepmicode/sessions/`.
   if (method === "GET" && rest.length === 0) {
     const workspaceFilter = ctx.getCurrentCwd?.();
     const sessions = workspaceFilter ? listSessionsForWorkspace(workspaceFilter) : listSessions();
@@ -104,7 +104,7 @@ export async function handleSessions(
     };
   }
 
-  // New session â€” mints a fresh session by calling switchSession(undefined).
+  // New session â€?mints a fresh session by calling switchSession(undefined).
   // We echo the new session name back so the dashboard can update its own
   // currentSession (and the URL via #1586's mirror effect) without having to
   // diff the listing.
@@ -147,13 +147,13 @@ export async function handleSessions(
     if (rest.length !== 1) {
       return { status: 405, body: { error: `method ${method} not supported on this path` } };
     }
-    // Refuse to delete the currently-attached session â€” the live process
+    // Refuse to delete the currently-attached session â€?the live process
     // still has the file open for append, and deleting it would resurrect
     // an empty file on the next message.
     if (currentName && name === currentName) {
       return {
         status: 409,
-        body: { error: "cannot delete the currently-active session â€” switch away first." },
+        body: { error: "cannot delete the currently-active session â€?switch away first." },
       };
     }
     if (!existsSync(path)) return { status: 404, body: { error: `no such session: ${name}` } };

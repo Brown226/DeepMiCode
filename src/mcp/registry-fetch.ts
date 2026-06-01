@@ -19,7 +19,7 @@ export const FETCH_TIMEOUT_MS = 10_000;
 export const CACHE_SCHEMA_VERSION = 2;
 
 export function defaultCachePath(): string {
-  return join(homedir(), ".reasonix", "mcp-registry-cache.json");
+  return join(homedir(), ".deepmicode", "mcp-registry-cache.json");
 }
 
 function readCache(path: string): CacheFile | null {
@@ -191,7 +191,7 @@ interface SmitheryDetailResponse {
   connections?: SmitheryConnection[];
 }
 
-/** Resolve a Smithery listing entry into a runnable install. http â†’ streamable-http remote; stdio â†’ spawn via @smithery/cli. */
+/** Resolve a Smithery listing entry into a runnable install. http â†?streamable-http remote; stdio â†?spawn via @smithery/cli. */
 export async function fetchSmitheryDetail(
   qualifiedName: string,
   fetcher: typeof fetch = globalThis.fetch,
@@ -254,13 +254,13 @@ export type FetchProgress = (info: {
 export interface FetchOptions {
   /** Force a network refresh even when cache is fresh. */
   noCache?: boolean;
-  /** Override fetch â€” primarily for tests. */
+  /** Override fetch â€?primarily for tests. */
   fetcher?: typeof fetch;
-  /** Override cache file path â€” primarily for tests. */
+  /** Override cache file path â€?primarily for tests. */
   cachePath?: string;
   /** Skip the fallback chain and force a specific source. */
   preferSource?: "official" | "smithery" | "local";
-  /** Progress callback â€” once per fetched page. */
+  /** Progress callback â€?once per fetched page. */
   onProgress?: FetchProgress;
 }
 
@@ -397,7 +397,7 @@ export async function openRegistry(opts: FetchOptions = {}): Promise<RegistryHan
 export interface LoadMoreOptions {
   /** Number of additional pages to fetch (cap). Stops early when the source is exhausted. */
   pages?: number;
-  /** Override fetch â€” primarily for tests. */
+  /** Override fetch â€?primarily for tests. */
   fetcher?: typeof fetch;
   /** Stop early if filter() finds at least this many matching entries (across all loaded pages). */
   matchTarget?: number;

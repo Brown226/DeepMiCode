@@ -1,9 +1,9 @@
-/** Reads DEEPMICODE.md â†’ AGENTS.md â†’ AGENT.md (first that exists); writes prefer the file already on disk. */
+/** Reads DEEPMICODE.md â†?AGENTS.md â†?AGENT.md (first that exists); writes prefer the file already on disk. */
 
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { basename, join } from "node:path";
 
-/** Default WRITE target â€” created when no candidate exists yet. */
+/** Default WRITE target â€?created when no candidate exists yet. */
 export const PROJECT_MEMORY_FILE = "DEEPMICODE.md";
 
 /** READ candidates, in priority order. AGENTS.md is the open spec at agents.md (Linux Foundation).
@@ -49,7 +49,7 @@ export function findProjectMemoryPath(rootDir: string): string | null {
   return null;
 }
 
-/** Path callers should write to: an existing candidate wins, otherwise rootDir/REASONIX.md. */
+/** Path callers should write to: an existing candidate wins, otherwise rootDir/DEEPMICODE.md. */
 export function resolveProjectMemoryWritePath(rootDir: string): string {
   return findProjectMemoryPath(rootDir) ?? join(rootDir, PROJECT_MEMORY_FILE);
 }
@@ -57,7 +57,7 @@ export function resolveProjectMemoryWritePath(rootDir: string): string {
 export interface ProjectMemory {
   /** Absolute path the memory was read from. */
   path: string;
-  /** Post-truncation content (may include a "â€¦ (truncated N chars)" marker). */
+  /** Post-truncation content (may include a "â€?(truncated N chars)" marker). */
   content: string;
   /** Original byte length before truncation. */
   originalChars: number;
@@ -80,7 +80,7 @@ export function readProjectMemory(rootDir: string): ProjectMemory | null {
   const originalChars = trimmed.length;
   const truncated = originalChars > PROJECT_MEMORY_MAX_CHARS;
   const content = truncated
-    ? `${trimmed.slice(0, PROJECT_MEMORY_MAX_CHARS)}\nâ€¦ (truncated ${
+    ? `${trimmed.slice(0, PROJECT_MEMORY_MAX_CHARS)}\nâ€?(truncated ${
         originalChars - PROJECT_MEMORY_MAX_CHARS
       } chars)`
     : trimmed;
@@ -93,7 +93,7 @@ export function memoryEnabled(): boolean {
   return true;
 }
 
-/** Deterministic â€” same memory file always yields the same prefix hash. */
+/** Deterministic â€?same memory file always yields the same prefix hash. */
 export function applyProjectMemory(basePrompt: string, rootDir: string): string {
   if (!memoryEnabled()) return basePrompt;
   const mem = readProjectMemory(rootDir);
@@ -103,7 +103,7 @@ export function applyProjectMemory(basePrompt: string, rootDir: string): string 
 
 # Project memory (${filename})
 
-The user pinned these notes about this project â€” treat them as authoritative context for every turn:
+The user pinned these notes about this project â€?treat them as authoritative context for every turn:
 
 \`\`\`
 ${mem.content}

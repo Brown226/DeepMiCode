@@ -1,4 +1,4 @@
-/** Bridges Reasonix's internal `PauseGate` requests onto ACP `session/request_permission` round-trips. */
+/** Bridges DeepMiCode's internal `PauseGate` requests onto ACP `session/request_permission` round-trips. */
 
 import { resolveApprovalPrompt, toApprovalPrompt } from "@reasonix/core-utils";
 import type { PauseRequest } from "../core/pause-gate.js";

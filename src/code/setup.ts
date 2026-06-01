@@ -35,11 +35,11 @@ import { registerWebTools } from "../tools/web.js";
 
 export interface CodeToolsetOpts {
   rootDir: string;
-  /** Override the default `~/.reasonix/config.json` lookup â€” primarily for tests that pin a tmp config. */
+  /** Override the default `~/.deepmicode/config.json` lookup â€?primarily for tests that pin a tmp config. */
   configPath?: string;
-  /** Fired after `install_skill` writes a new skill â€” desktop wires this to push a fresh `$skills` event so the sidebar updates without a tab reload. */
+  /** Fired after `install_skill` writes a new skill â€?desktop wires this to push a fresh `$skills` event so the sidebar updates without a tab reload. */
   onSkillInstalled?: SkillInstalledHook;
-  /** Fired after `run_background` / `stop_job` mutate the JobRegistry â€” desktop pushes a fresh `$jobs` event so the popover updates without waiting for poll. */
+  /** Fired after `run_background` / `stop_job` mutate the JobRegistry â€?desktop pushes a fresh `$jobs` event so the popover updates without waiting for poll. */
   onJobsChanged?: () => void;
   /** Shared `{current: callback}` sink the TUI populates after mount. Setup forwards it into every `spawnSubagent` so live progress events reach the rich subagent row even though setup runs before the UI does. */
   subagentSink?: SubagentSink;
@@ -53,7 +53,7 @@ export interface CodeToolset {
   semantic: { enabled: boolean };
 }
 
-/** Mirror `editMode === "plan"` into the registry's dispatch gate â€” keeps a single source of truth (the persisted EditMode) for the read-only mode. */
+/** Mirror `editMode === "plan"` into the registry's dispatch gate â€?keeps a single source of truth (the persisted EditMode) for the read-only mode. */
 export function applyPlanMode(tools: ToolRegistry, editMode: EditMode): void {
   tools.setPlanMode(editMode === "plan");
 }
@@ -97,8 +97,8 @@ export async function buildCodeToolset(opts: CodeToolsetOpts): Promise<CodeTools
     registerJavaSourceTool(tools, { projectRoot: opts.rootDir });
   }
   // Lazy: constructing DeepSeekClient throws when DEEPSEEK_API_KEY is unset,
-  // which would kill `reasonix code` before the setup wizard can prompt for
-  // one. Defer to first subagent dispatch â€” by then the user has either keyed
+  // which would kill `deepmicode code` before the setup wizard can prompt for
+  // one. Defer to first subagent dispatch â€?by then the user has either keyed
   // in or we error per-call instead of at boot.
   let subagentClient: DeepSeekClient | null = null;
   registerSkillTools(tools, {
@@ -122,8 +122,8 @@ export async function buildCodeToolset(opts: CodeToolsetOpts): Promise<CodeTools
         skillName: skill.name,
         // Late-bound: the TUI's `useSubagent` writes the live callback into
         // SHARED_SUBAGENT_SINK after mount. Until then `.current` is null
-        // and the events are silently dropped â€” that's fine for non-TUI
-        // callers (`reasonix chat --transcript`, library use).
+        // and the events are silently dropped â€?that's fine for non-TUI
+        // callers (`deepmicode chat --transcript`, library use).
         sink: opts.subagentSink ?? SHARED_SUBAGENT_SINK,
       });
       return formatSubagentResult(result);

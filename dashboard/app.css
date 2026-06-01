@@ -1,11 +1,11 @@
-/* Reasonix dashboard styles — anchored to docs/design/agent-dashboard.html.
+/* DeepMiCode dashboard styles �?anchored to docs/design/agent-dashboard.html.
  * Re-import: extract the <style> block from the design mockup verbatim.
  * Doc-chrome selectors (.page / .toc / .section / .subsec / .mock) are
  * unused in the live dashboard but kept so the CSS stays in lockstep
  * with the mockup; they cost nothing at runtime.
  */
 /* ============================================================================
-   Reasonix Dashboard — design anchor for the web companion to the TUI.
+   DeepMiCode Dashboard �?design anchor for the web companion to the TUI.
 
    Positioning: NOT a TUI mirror. Does what the TUI cannot:
      - long-form session reading
@@ -15,10 +15,10 @@
 
    Aesthetic: TUI heritage (palette, glyph icons, sharp edges) + web fluency
      (sans-serif body, real form controls, hover states, modal dialogs).
-     NOT slavish terminal mimicry — that's a portfolio gimmick, not a tool.
+     NOT slavish terminal mimicry �?that's a portfolio gimmick, not a tool.
    ============================================================================ */
 :root {
-  /* Surfaces — same family as TUI, slightly lifted for screen comfort */
+  /* Surfaces �?same family as TUI, slightly lifted for screen comfort */
   --bg:         #0a0c10;
   --bg-elev:    #11141a;
   --bg-elev-2:  #161a22;
@@ -33,16 +33,16 @@
   --fg-3:       #6e7681;   /* dim */
   --fg-4:       #484f58;   /* very dim, separators in text */
 
-  /* Accents — TUI lineage, unchanged */
-  --c-brand:    #79c0ff;   /* sky      — in-progress, links */
-  --c-accent:   #d2a8ff;   /* purple   — reasoning, plan */
-  --c-violet:   #b395f5;   /* violet   — sub-agent */
-  --c-ok:       #7ee787;   /* green    — success */
-  --c-warn:     #f0b07d;   /* amber    — warning, approval */
-  --c-err:      #ff8b81;   /* coral    — error */
+  /* Accents �?TUI lineage, unchanged */
+  --c-brand:    #79c0ff;   /* sky      �?in-progress, links */
+  --c-accent:   #d2a8ff;   /* purple   �?reasoning, plan */
+  --c-violet:   #b395f5;   /* violet   �?sub-agent */
+  --c-ok:       #7ee787;   /* green    �?success */
+  --c-warn:     #f0b07d;   /* amber    �?warning, approval */
+  --c-err:      #ff8b81;   /* coral    �?error */
   --c-info:     #79c0ff;
 
-  /* Chart spectrum — for series; 6-stop gradient that reads in dark mode */
+  /* Chart spectrum �?for series; 6-stop gradient that reads in dark mode */
   --s1: #79c0ff;  /* sky */
   --s2: #56d4dd;  /* teal */
   --s3: #7ee787;  /* mint */
@@ -57,7 +57,7 @@
   --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono:  'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
 
-  /* Spacing / radius — tiny radius (2px) keeps web feel without going SaaS */
+  /* Spacing / radius �?tiny radius (2px) keeps web feel without going SaaS */
   --r:    2px;
   --r-sm: 4px;
   --r-md: 4px;
@@ -65,7 +65,7 @@
   /* Inline elevation step above --bg-elev-2 for nested cards/dropdowns. */
   --bg-elev-3: #1d2230;
 
-  /* Brand sweep — used by .md hr and the mini status bar fill. */
+  /* Brand sweep �?used by .md hr and the mini status bar fill. */
   --gradient-rule: linear-gradient(90deg, var(--c-brand), var(--c-accent));
 }
 
@@ -137,7 +137,7 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
 .subsec > h3 .desc { color: var(--fg-3); font-weight: 400; margin-left: 10px; font-size: 13px; text-transform: none; letter-spacing: 0; }
 .subsec > p { color: var(--fg-3); font-size: 15px; margin: 0 0 12px; max-width: 720px; line-height: 1.6; }
 
-/* "Mock" — a faux-window frame to display dashboard pieces inside the design doc */
+/* "Mock" �?a faux-window frame to display dashboard pieces inside the design doc */
 .mock {
   background: var(--bg-elev);
   border: 1px solid var(--bd);
@@ -178,7 +178,7 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
 .glyph-cell .g { color: var(--c-brand); font-size: 16px; width: 18px; text-align: center; }
 .glyph-cell .n { color: var(--fg-2); font-size: 11px; }
 
-/* ── App shell — sidebar / topbar / statusrow ──────────────────────────── */
+/* ── App shell �?sidebar / topbar / statusrow ──────────────────────────── */
 .app {
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
@@ -397,12 +397,12 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
 .diff-row.expand .txt { padding: 4px 12px; color: var(--fg-3); text-align: center; font-size: 11px; border-top: 1px dashed var(--bd); border-bottom: 1px dashed var(--bd); }
 .diff-row.expand:hover .txt { color: var(--fg-1); border-color: var(--c-brand); }
 
-/* Side-by-side variant — content split into two cells, no shared gutter strip. */
+/* Side-by-side variant �?content split into two cells, no shared gutter strip. */
 .diff.split .diff-row { grid-template-columns: 32px 1fr 32px 1fr; }
 .diff.split .diff-row .pane { padding: 0 10px; white-space: pre; }
 .diff.split .diff-row.add .pane.l, .diff.split .diff-row.rem .pane.r { background: var(--bg-elev); color: var(--fg-4); }
 
-/* Edit-review panel — multi-file aggregator card list. */
+/* Edit-review panel �?multi-file aggregator card list. */
 .review-summary {
   display: flex; align-items: center; gap: 14px; padding: 10px 14px;
   background: var(--bg-elev); border: 1px solid var(--bd); border-radius: var(--r);
@@ -432,8 +432,8 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
 .review-file-h .stat .rem { color: var(--c-err); }
 .review-file-h .acts { margin-left: auto; display: flex; gap: 6px; }
 .review-file.collapsed .review-file-body { display: none; }
-.review-file.collapsed .review-file-h .chev::before { content: "▸"; }
-.review-file:not(.collapsed) .review-file-h .chev::before { content: "▾"; }
+.review-file.collapsed .review-file-h .chev::before { content: "�?; }
+.review-file:not(.collapsed) .review-file-h .chev::before { content: "�?; }
 
 /* Chart frame */
 .chart {
@@ -492,7 +492,7 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
 .progress.err  .progress-fill { background: var(--c-err); }
 .progress.acc  .progress-fill { background: var(--c-accent); }
 
-/* Indeterminate — shimmer slice loops left-to-right */
+/* Indeterminate �?shimmer slice loops left-to-right */
 .progress.indet .progress-fill {
   width: 30%; animation: progress-indet 1.4s linear infinite;
 }
@@ -501,7 +501,7 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
   100% { transform: translateX(400%); }
 }
 
-/* Segmented — multiple fills side by side, e.g. cache-hit / cache-miss split */
+/* Segmented �?multiple fills side by side, e.g. cache-hit / cache-miss split */
 .progress.segmented { display: flex; gap: 1px; background: transparent; padding: 0; height: 6px; }
 .progress.segmented .progress-seg { height: 100%; }
 .progress.segmented .progress-seg.s1 { background: var(--s1); }
@@ -517,7 +517,7 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
 .progress-row .v   { font-family: var(--font-mono); font-size: 11.5px; color: var(--fg-0); flex-shrink: 0; min-width: 60px; text-align: right; }
 .progress-row .progress { flex: 1; }
 
-/* Step progress — numbered dots connected by lines */
+/* Step progress �?numbered dots connected by lines */
 .steps { display: flex; align-items: center; gap: 0; padding: 4px 0; }
 .step-dot {
   width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
@@ -532,7 +532,7 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
 .step-line.done   { background: var(--c-ok); }
 .step-line.active { background: linear-gradient(90deg, var(--c-ok), var(--c-brand)); }
 
-/* Ring — circular progress, anchors its own value text */
+/* Ring �?circular progress, anchors its own value text */
 .ring { position: relative; display: inline-block; line-height: 0; }
 .ring svg { transform: rotate(-90deg); display: block; }
 .ring-bg { fill: none; stroke: var(--bg-input); }
@@ -554,7 +554,7 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
   display: flex; align-items: center; justify-content: center;
 }
 .overlay::before {
-  /* Box-drawing corner ticks at the four corners — TUI signature */
+  /* Box-drawing corner ticks at the four corners �?TUI signature */
   content: "";
   position: absolute; inset: 8px;
   border: 1px solid #14171e;
@@ -588,7 +588,7 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
 .dialog.acc .dialog-h .title { color: var(--c-accent); }
 .dialog.acc { border-top: 2px solid var(--c-accent); }
 
-/* Command palette — centered, larger, search-driven */
+/* Command palette �?centered, larger, search-driven */
 .cmd-palette {
   background: var(--bg-elev);
   border: 1px solid var(--bd-strong);
@@ -623,7 +623,7 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
 .cmd-row .kbd { font-family: var(--font-mono); font-size: 10.5px; color: var(--fg-3); border: 1px solid var(--bd); padding: 1px 5px; border-radius: var(--r); background: var(--bg-input); }
 .cmd-section-h { font-family: var(--font-mono); font-size: 10px; color: var(--fg-4); padding: 8px 16px 4px; text-transform: uppercase; letter-spacing: .12em; }
 
-/* Popover — anchored dropdown for slash / @ menus */
+/* Popover �?anchored dropdown for slash / @ menus */
 .popover {
   background: var(--bg-elev-2);
   border: 1px solid var(--bd-strong);
@@ -692,7 +692,7 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
 .tui-status.laggy   { color: var(--c-warn); } .tui-status.laggy   .dot { background: var(--c-warn); }
 .tui-status.offline { color: var(--c-err);  } .tui-status.offline .dot { background: var(--c-err);  }
 
-/* ── Breadcrumbs — replace topbar `·` with `›` for crumb-style flow ───── */
+/* ── Breadcrumbs �?replace topbar `·` with `›` for crumb-style flow ───── */
 .crumbs { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 12px; }
 .crumbs .crumb { color: var(--fg-1); }
 .crumbs .crumb.dim { color: var(--fg-3); }
@@ -703,7 +703,7 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
   /* `minmax(0, 1fr)` on the row + `min-height: 0` on the children is the
-     standard recipe for "let the inner overflow:auto take effect" — without
+     standard recipe for "let the inner overflow:auto take effect" �?without
      it the grid items default to min-height: auto (= content size) and
      grow past the parent's max-height, dragging .app-body along. */
   grid-template-rows: minmax(0, 1fr);
@@ -985,7 +985,7 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
 
 .chat-stream { display: flex; flex-direction: column; gap: 12px; }
 
-/* Chat cards — web-flavored cards, more breathing room than the TUI */
+/* Chat cards �?web-flavored cards, more breathing room than the TUI */
 .cc {
   background: var(--bg-elev); border: 1px solid var(--bd); border-radius: var(--r);
   padding: 12px 14px;
@@ -1078,13 +1078,13 @@ main { padding: 32px 40px 60px 32px; min-width: 0; }
 }
 .why b { color: var(--fg-1); font-weight: 600; }
 
-/* ── Live-mode overrides — design mockup constrained .app to a 640px tile;
+/* ── Live-mode overrides �?design mockup constrained .app to a 640px tile;
  *    the actual dashboard fills the viewport. ──────────────────────────── */
 html, body, #root { height: 100%; }
 #root { display: contents; }
 .app { height: 100vh; }
 
-/* ── Shared utilities — small classes used across multiple panels. ── */
+/* ── Shared utilities �?small classes used across multiple panels. ── */
 .boot { color: var(--fg-3); padding: 24px; text-align: center; font-family: var(--font-mono); font-size: 12px; }
 .empty { color: var(--fg-3); padding: 18px; border: 1px dashed var(--bd); border-radius: var(--r); font-size: 12.5px; }
 .notice { background: var(--bg-elev); border: 1px solid var(--bd); border-left: 2px solid var(--c-brand); border-radius: var(--r); padding: 8px 12px; margin: 8px 0; font-size: 12.5px; color: var(--fg-1); }
@@ -1102,7 +1102,7 @@ input[type=text], input[type=number], input[type=password], textarea, select { b
 input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
 .kv-key { display: inline-block; min-width: 70px; color: var(--fg-3); font-family: var(--font-mono); font-size: 11px; margin-right: 8px; }
 
-/* ── Chat-panel legacy CSS — restored from pre-foundation app.css.
+/* ── Chat-panel legacy CSS �?restored from pre-foundation app.css.
  *    These selectors back the Chat panel's interior (chat-shell /
  *    chat-feed / chat-msg / mode-picker / composer / modals / toasts /
  *    tool-card / markdown blocks). The design mockup §4 covers the
@@ -1115,17 +1115,17 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
 /* ---------- Markdown rendering (matches TUI markdown.tsx palette) ----------
  *
  * Mapping comes from src/cli/ui/markdown.tsx:
- *   H1 → bg #67e8f9 (cyan)   text black, bold     — pill
- *   H2 → bg #c4b5fd (violet) text black, bold     — pill
- *   H3 → bg #f0abfc (fuchsia) text black, bold    — pill
- *   inline code → amber text on bg-2
- *   code block  → bg-1, monospace, soft border
- *   blockquote  → teal-300 left bar (brand)
- *   strong / em → bold / italic
- *   tables      → bordered, monospace
- *   strike      → red strikethrough
- *   link        → cyan underline
- *   diff +/-    → green / red lines (handled by code-block class)
+ *   H1 �?bg #67e8f9 (cyan)   text black, bold     �?pill
+ *   H2 �?bg #c4b5fd (violet) text black, bold     �?pill
+ *   H3 �?bg #f0abfc (fuchsia) text black, bold    �?pill
+ *   inline code �?amber text on bg-2
+ *   code block  �?bg-1, monospace, soft border
+ *   blockquote  �?teal-300 left bar (brand)
+ *   strong / em �?bold / italic
+ *   tables      �?bordered, monospace
+ *   strike      �?red strikethrough
+ *   link        �?cyan underline
+ *   diff +/-    �?green / red lines (handled by code-block class)
  */
 
 .md {
@@ -1228,7 +1228,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
   font-size: inherit;
 }
 
-/* Diff blocks — rendered by the custom renderer in app.js for
+/* Diff blocks �?rendered by the custom renderer in app.js for
  * SEARCH/REPLACE markers and ``` diff fences. Mirror TUI's
  * markdown.tsx red/green palette so the experience reads as the same
  * tool whether you're in the terminal or the browser. */
@@ -1268,7 +1268,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
 
 /* highlight.js github-dark loads from CDN; we tweak surface colors
  * to merge with our card backgrounds. The theme provides token colors
- * (keyword, string, number, comment etc.) we keep as-is — they read
+ * (keyword, string, number, comment etc.) we keep as-is �?they read
  * well against bg-1. */
 .md .hljs,
 .hljs {
@@ -1612,7 +1612,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
 
 /* Onboarding banner that nudges new users to the Semantic panel.
  * Only shown when the project has no built index AND the user hasn't
- * explicitly dismissed it (state in localStorage). The "Build it →"
+ * explicitly dismissed it (state in localStorage). The "Build it �?
  * action navigates the sidebar via the appBus so the rest of the
  * panel state isn't disturbed. */
 .chat-banner {
@@ -1662,7 +1662,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
   color: var(--fg-0);
 }
 
-/* In-flight row sits just above ChatStatusBar — the user's eyes are
+/* In-flight row sits just above ChatStatusBar �?the user's eyes are
  * already at the input; this puts the spinner + elapsed + token
  * stream in the same visual neighborhood instead of pushing them up
  * to the top of the panel. Border on the bottom only so it shares the
@@ -1821,7 +1821,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
 
 /* ---------- Modal cards (shell / choice / plan / edit-review) ----------
  *
- * Mirrors the TUI's ModalCard shape — left-accent border in the modal
+ * Mirrors the TUI's ModalCard shape �?left-accent border in the modal
  * kind's color (red shell, magenta choice, cyan plan, green edits)
  * with an icon, title, optional subtitle, then content + actions. The
  * card sits above the chat input area, full-width within the chat
@@ -1956,7 +1956,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
   overflow-y: auto;
 }
 
-/* Plan-revision modal — list of remaining steps with risk dots. */
+/* Plan-revision modal �?list of remaining steps with risk dots. */
 .modal-revise-reason {
   background: var(--bg-elev-2);
   border-left: 3px solid #c4b5fd;
@@ -2177,7 +2177,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
   overflow-y: auto;
 }
 
-/* Side-by-side diff for the edit-review modal — left is "before" (red
+/* Side-by-side diff for the edit-review modal �?left is "before" (red
  * tint), right is "after" (green tint), context rows render unchanged.
  * Lines hljs-highlight per the file's language. */
 .edit-diff-wrap {
@@ -2334,7 +2334,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
 /* ---------- Error overlay ----------
  *
  * Full-screen modal triggered by uncaught exceptions / promise
- * rejections / Preact render errors. The TUI is unaffected — this
+ * rejections / Preact render errors. The TUI is unaffected �?this
  * only blocks the browser tab. Includes "Copy details" + a GitHub
  * issue link prefilled with redacted environment info.
  */
@@ -3017,14 +3017,13 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
   font-size: 12px;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   Light theme — toggled via data-theme="light" on <html>
+/* ══════════════════════════════════════════════════════════════════════════�?   Light theme �?toggled via data-theme="light" on <html>
 
    Palette inspired by Element Plus: clean white surfaces, dark body text,
    and slightly deepened accent colours so they stay legible on light
    backgrounds.  Every variable from the :root dark set is overridden here;
    hardcoded-hex fixups follow in a second block.
-   ═══════════════════════════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════════════════════�?*/
 [data-theme="light"] {
   /* Surfaces */
   --bg:         #f5f7fa;
@@ -3035,13 +3034,13 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
   --bg-hover:   #ecf5ff;
 
   /* Text */
-  --fg-0:       #303133;   /* primary   — headings, emphasis */
-  --fg-1:       #606266;   /* body      — paragraphs, default */
-  --fg-2:       #909399;   /* secondary — labels, meta */
-  --fg-3:       #a8abb2;   /* dim       — placeholders, hints */
-  --fg-4:       #c0c4cc;   /* very dim  — separators, disabled */
+  --fg-0:       #303133;   /* primary   �?headings, emphasis */
+  --fg-1:       #606266;   /* body      �?paragraphs, default */
+  --fg-2:       #909399;   /* secondary �?labels, meta */
+  --fg-3:       #a8abb2;   /* dim       �?placeholders, hints */
+  --fg-4:       #c0c4cc;   /* very dim  �?separators, disabled */
 
-  /* Accents — deepened ~15% so they hit ≥4.5:1 on white */
+  /* Accents �?deepened ~15% so they hit �?.5:1 on white */
   --c-brand:    #409eff;   /* primary blue (Element Plus) */
   --c-accent:   #9b6bff;   /* purple */
   --c-violet:   #8b5cf6;   /* violet */
@@ -3062,7 +3061,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
   --bd:         #e4e7ed;
   --bd-strong:  #dcdfe6;
 
-  /* Elevation step above --bg-elev-2 in light mode — matches the surface scale. */
+  /* Elevation step above --bg-elev-2 in light mode �?matches the surface scale. */
   --bg-elev-3: #e4e7ed;
 }
 
@@ -3072,7 +3071,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
    white background.  Keep them scoped under [data-theme="light"] so
    dark mode is never touched. ────────────────────────────────────────── */
 
-/* Hardcoded #14171e borders (dark-theme inner dividers) → var(--bd) */
+/* Hardcoded #14171e borders (dark-theme inner dividers) �?var(--bd) */
 [data-theme="light"] .section,
 [data-theme="light"] .ssl-row,
 [data-theme="light"] .sr-card {
@@ -3088,7 +3087,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
   border-bottom-color: var(--bd);
 }
 
-/* Primary button hover — lighten the brand colour instead of the
+/* Primary button hover �?lighten the brand colour instead of the
    dark-theme hardcoded #94cdff. */
 [data-theme="light"] .btn.primary:hover,
 [data-theme="light"] button.primary:hover {
@@ -3097,7 +3096,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
   color: #fff;
 }
 
-/* Markdown headings — dark theme puts black text on coloured bg;
+/* Markdown headings �?dark theme puts black text on coloured bg;
    light theme uses white text for cleaner contrast. */
 [data-theme="light"] .md h1,
 [data-theme="light"] .md h2,
@@ -3105,14 +3104,14 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
   color: #fff;
 }
 
-/* Chat banner — rgba tint references the brand colour so it must
+/* Chat banner �?rgba tint references the brand colour so it must
    switch to the light-mode brand hex. */
 [data-theme="light"] .chat-banner {
   background: rgba(64,158,255,.06);
   border-color: rgba(64,158,255,.18);
 }
 
-/* Pills — semi-transparent accent backgrounds must shift hue. */
+/* Pills �?semi-transparent accent backgrounds must shift hue. */
 [data-theme="light"] .pill.ok   { background: rgba(103,194,58,.10); }
 [data-theme="light"] .pill.warn { background: rgba(230,162,60,.12); }
 [data-theme="light"] .pill.err  { background: rgba(245,108,108,.10); }
@@ -3121,7 +3120,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
 [data-theme="light"] .pill-err  { background: rgba(245,108,108,.10); }
 [data-theme="light"] .pill-active { background: rgba(64,158,255,.10); }
 
-/* Step-dot glow — brand-colour box-shadow. */
+/* Step-dot glow �?brand-colour box-shadow. */
 [data-theme="light"] .plan-step.active::before {
   box-shadow: 0 0 0 3px rgba(64,158,255,.18);
 }
@@ -3207,7 +3206,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
   box-shadow: 0 0 6px rgba(103,194,58,.5);
 }
 
-/* Dialog box-shadow — dark mode uses a deep black shadow; light mode
+/* Dialog box-shadow �?dark mode uses a deep black shadow; light mode
    needs a softer grey one. */
 [data-theme="light"] .dialog {
   box-shadow: 0 18px 48px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.04);
@@ -3219,7 +3218,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--c-brand); }
   box-shadow: 0 12px 32px rgba(0,0,0,.08);
 }
 
-/* Scrollbar — lighter thumb for light backgrounds. */
+/* Scrollbar �?lighter thumb for light backgrounds. */
 [data-theme="light"] * {
   scrollbar-color: var(--bd-strong) transparent;
 }

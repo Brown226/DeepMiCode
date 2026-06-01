@@ -1,4 +1,4 @@
-/** Mutations require an attached session â€” standalone mode returns 503 because we have no project root to scope under. */
+/** Mutations require an attached session â€?standalone mode returns 503 because we have no project root to scope under. */
 
 import {
   addProjectShellAllowed,
@@ -31,7 +31,7 @@ export async function handlePermissions(
   body: string,
   ctx: DashboardContext,
 ): Promise<ApiResult> {
-  // GET â€” listing works regardless of mode (builtin always shown,
+  // GET â€?listing works regardless of mode (builtin always shown,
   // project list optional).
   if (method === "GET" && rest.length === 0) {
     const cwd = ctx.getCurrentCwd?.();
@@ -53,7 +53,7 @@ export async function handlePermissions(
       status: 503,
       body: {
         error:
-          "no active project â€” mutations require an attached dashboard session (run `/dashboard` from inside `reasonix code`).",
+          "no active project â€?mutations require an attached dashboard session (run `/dashboard` from inside `deepmicode code`).",
       },
     };
   }
@@ -68,7 +68,7 @@ export async function handlePermissions(
       return {
         status: 409,
         body: {
-          error: `\`${trimmed}\` is already in the builtin allowlist â€” no project entry needed.`,
+          error: `\`${trimmed}\` is already in the builtin allowlist â€?no project entry needed.`,
         },
       };
     }
@@ -116,7 +116,7 @@ export async function handlePermissions(
       return {
         status: 400,
         body: {
-          error: "clear requires { confirm: true } in the body â€” guards against accidental wipe.",
+          error: "clear requires { confirm: true } in the body â€?guards against accidental wipe.",
         },
       };
     }

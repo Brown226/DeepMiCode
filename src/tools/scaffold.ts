@@ -10,7 +10,7 @@ import type { ToolRegistry } from "../tools.js";
 export interface ScaffoldToolsOptions {
   homeDir?: string;
   projectRoot?: string;
-  /** Override config path â€” tests point this at a tmp file. */
+  /** Override config path â€?tests point this at a tmp file. */
   configPath?: string;
 }
 
@@ -34,11 +34,11 @@ export function registerScaffoldTools(
         name: {
           type: "string",
           description:
-            "Identifier â€” letters/digits/`_`/`-`/`.`, 1â€“64 chars. Becomes filename + frontmatter `name`.",
+            "Identifier â€?letters/digits/`_`/`-`/`.`, 1â€?4 chars. Becomes filename + frontmatter `name`.",
         },
         description: {
           type: "string",
-          description: 'One-liner for the skills index. Lead with the verb ("Run X and â€¦").',
+          description: 'One-liner for the skills index. Lead with the verb ("Run X and â€?).',
         },
         body: {
           type: "string",
@@ -48,7 +48,7 @@ export function registerScaffoldTools(
           type: "string",
           enum: ["project", "global"],
           description:
-            "`project` (default) = workspace .reasonix/skills/; `global` = ~/.reasonix/skills/.",
+            "`project` (default) = workspace .deepmicode/skills/; `global` = ~/.deepmicode/skills/.",
         },
         allowed_tools: {
           type: "array",
@@ -83,7 +83,7 @@ export function registerScaffoldTools(
       const name = typeof args.name === "string" ? args.name.trim() : "";
       if (!VALID_SKILL_NAME.test(name)) {
         return JSON.stringify({
-          error: `invalid skill name: ${JSON.stringify(name)} â€” use letters, digits, _, -, .`,
+          error: `invalid skill name: ${JSON.stringify(name)} â€?use letters, digits, _, -, .`,
         });
       }
       const description =
@@ -159,17 +159,17 @@ export function registerScaffoldTools(
         },
         command: {
           type: "string",
-          description: "Argv[0] for stdio â€” typically `npx` or a binary path.",
+          description: "Argv[0] for stdio â€?typically `npx` or a binary path.",
         },
         args: {
           type: "array",
           items: { type: "string" },
           description:
-            'Remaining argv for stdio â€” e.g. `["-y", "@modelcontextprotocol/server-filesystem", "/path/to/dir"]`.',
+            'Remaining argv for stdio â€?e.g. `["-y", "@modelcontextprotocol/server-filesystem", "/path/to/dir"]`.',
         },
         url: {
           type: "string",
-          description: "Endpoint URL for sse / streamable-http â€” must be http(s)://.",
+          description: "Endpoint URL for sse / streamable-http â€?must be http(s)://.",
         },
         from_catalog: {
           type: "string",
@@ -190,7 +190,7 @@ export function registerScaffoldTools(
       const name = typeof args.name === "string" ? args.name.trim() : "";
       if (!VALID_SERVER_NAME.test(name)) {
         return JSON.stringify({
-          error: `invalid server name: ${JSON.stringify(name)} â€” must match [a-zA-Z_][a-zA-Z0-9_-]*`,
+          error: `invalid server name: ${JSON.stringify(name)} â€?must match [a-zA-Z_][a-zA-Z0-9_-]*`,
         });
       }
 
@@ -305,13 +305,13 @@ function buildSpecString(input: BuildSpecInput): { spec: string } | { error: str
     if (!entry) {
       const known = MCP_CATALOG.map((e) => e.name).join(", ");
       return {
-        error: `unknown catalog entry: ${JSON.stringify(input.fromCatalog)} â€” known: ${known}`,
+        error: `unknown catalog entry: ${JSON.stringify(input.fromCatalog)} â€?known: ${known}`,
       };
     }
     const userArgs = input.argv ?? [];
     if (entry.userArgs && userArgs.length === 0) {
       return {
-        error: `catalog entry "${entry.name}" needs ${entry.userArgs} â€” pass it via the 'args' parameter`,
+        error: `catalog entry "${entry.name}" needs ${entry.userArgs} â€?pass it via the 'args' parameter`,
       };
     }
     const tail = userArgs.map(quoteIfNeeded).join(" ");

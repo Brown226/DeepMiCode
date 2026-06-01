@@ -65,7 +65,7 @@ export const SLASH_COMMANDS: readonly SlashCommandSpec[] = [
     group: "chat",
     argsHint: "<question>",
     summary:
-      "ask a quick side question â€” answered from a blank slate, never added to the conversation context",
+      "ask a quick side question â€?answered from a blank slate, never added to the conversation context",
   },
 
   {
@@ -80,7 +80,7 @@ export const SLASH_COMMANDS: readonly SlashCommandSpec[] = [
     group: "setup",
     argsHint: "<low|medium|high|max>",
     summary:
-      "reasoning_effort cap â€” high is the safe default (vLLM/Azure compatible); max is a DeepSeek extension.",
+      "reasoning_effort cap â€?high is the safe default (vLLM/Azure compatible); max is a DeepSeek extension.",
     argCompleter: ["low", "medium", "high", "max"],
   },
   {
@@ -105,7 +105,7 @@ export const SLASH_COMMANDS: readonly SlashCommandSpec[] = [
     group: "info",
     argsHint: "[text]",
     summary:
-      "bare â†’ last turn's spend (Usage card); with text â†’ estimate cost of sending it next (worst-case + likely-cache)",
+      "bare â†?last turn's spend (Usage card); with text â†?estimate cost of sending it next (worst-case + likely-cache)",
   },
   {
     cmd: "context",
@@ -136,10 +136,10 @@ export const SLASH_COMMANDS: readonly SlashCommandSpec[] = [
   {
     cmd: "about",
     group: "info",
-    summary: "project info â€” version, website, repo, license",
+    summary: "project info â€?version, website, repo, license",
   },
 
-  { cmd: "sessions", group: "session", summary: "list saved sessions (current marked with â–¸)" },
+  { cmd: "sessions", group: "session", summary: "list saved sessions (current marked with â–?" },
   {
     cmd: "title",
     group: "session",
@@ -152,21 +152,21 @@ export const SLASH_COMMANDS: readonly SlashCommandSpec[] = [
     cmd: "resource",
     group: "extend",
     argsHint: "[uri]",
-    summary: "browse + read MCP resources (no arg â†’ list URIs; <uri> â†’ fetch contents)",
+    summary: "browse + read MCP resources (no arg â†?list URIs; <uri> â†?fetch contents)",
     argCompleter: "mcp-resources",
   },
   {
     cmd: "prompt",
     group: "extend",
     argsHint: "[name]",
-    summary: "browse + fetch MCP prompts (no arg â†’ list names; <name> â†’ render prompt)",
+    summary: "browse + fetch MCP prompts (no arg â†?list names; <name> â†?render prompt)",
     argCompleter: "mcp-prompts",
   },
   {
     cmd: "memory",
     group: "extend",
     argsHint: "[list|show <name>|forget <name>|clear <scope> confirm]",
-    summary: "show / manage pinned memory (REASONIX.md + ~/.reasonix/memory)",
+    summary: "show / manage pinned memory (DEEPMICODE.md + ~/.deepmicode/memory)",
   },
   {
     cmd: "skill",
@@ -189,7 +189,7 @@ export const SLASH_COMMANDS: readonly SlashCommandSpec[] = [
     group: "code",
     argsHint: "[force]",
     summary:
-      "scan the project and synthesize a baseline REASONIX.md (model writes; review with /apply). `force` overwrites an existing file.",
+      "scan the project and synthesize a baseline DEEPMICODE.md (model writes; review with /apply). `force` overwrites an existing file.",
     contextual: "code",
     argCompleter: ["force"],
   },
@@ -198,14 +198,14 @@ export const SLASH_COMMANDS: readonly SlashCommandSpec[] = [
     group: "code",
     argsHint: "[N|N,M|N-M]",
     summary:
-      "commit pending edit blocks to disk (no arg â†’ all; `1`, `1,3`, or `1-4` â†’ that subset, rest stay pending)",
+      "commit pending edit blocks to disk (no arg â†?all; `1`, `1,3`, or `1-4` â†?that subset, rest stay pending)",
     contextual: "code",
   },
   {
     cmd: "discard",
     group: "code",
     argsHint: "[N|N,M|N-M]",
-    summary: "drop pending edit blocks without writing (no arg â†’ all; indices â†’ that subset)",
+    summary: "drop pending edit blocks without writing (no arg â†?all; indices â†?that subset)",
     contextual: "code",
   },
   {
@@ -279,7 +279,7 @@ export const SLASH_COMMANDS: readonly SlashCommandSpec[] = [
     group: "code",
     argsHint: "[path]",
     summary:
-      "switch the workspace root mid-session â€” re-points fs / shell / memory tools, reloads project hooks, refreshes the at-mention walker",
+      "switch the workspace root mid-session â€?re-points fs / shell / memory tools, reloads project hooks, refreshes the at-mention walker",
     contextual: "code",
     aliases: ["sandbox"],
     argCompleter: "path",
@@ -295,7 +295,7 @@ export const SLASH_COMMANDS: readonly SlashCommandSpec[] = [
     cmd: "kill",
     group: "jobs",
     argsHint: "<id>",
-    summary: "stop a background job by id (SIGTERM â†’ SIGKILL after grace)",
+    summary: "stop a background job by id (SIGTERM â†?SIGKILL after grace)",
     contextual: "code",
   },
   {
@@ -311,7 +311,7 @@ export const SLASH_COMMANDS: readonly SlashCommandSpec[] = [
     group: "advanced",
     argsHint: "[usd|off]",
     summary:
-      "session USD cap â€” warns at 80%, refuses next turn at 100%. Off by default. /budget alone shows status",
+      "session USD cap â€?warns at 80%, refuses next turn at 100%. Off by default. /budget alone shows status",
     argCompleter: ["off", "1", "5", "10", "20", "50"],
   },
   {
@@ -319,7 +319,7 @@ export const SLASH_COMMANDS: readonly SlashCommandSpec[] = [
     group: "advanced",
     argsHint: "<bing|searxng|metaso|tavily|perplexity|exa|brave|ollama> [<key>]",
     summary:
-      "switch web search backend â€” bing (default, works from CN without proxy), searxng (self-hosted), metaso (free 100/d), tavily (free 1000/mo), perplexity (AI-native), exa (AI-native), brave (independent index, free 2000/mo), or ollama (Ollama cloud web search). Provider with no key prompts inline config.",
+      "switch web search backend â€?bing (default, works from CN without proxy), searxng (self-hosted), metaso (free 100/d), tavily (free 1000/mo), perplexity (AI-native), exa (AI-native), brave (independent index, free 2000/mo), or ollama (Ollama cloud web search). Provider with no key prompts inline config.",
     argCompleter: ["bing", "searxng", "metaso", "tavily", "perplexity", "exa", "brave", "ollama"],
     aliases: ["se"],
   },
@@ -327,14 +327,14 @@ export const SLASH_COMMANDS: readonly SlashCommandSpec[] = [
     cmd: "hooks",
     group: "advanced",
     argsHint: "[reload]",
-    summary: "list active hooks (settings.json under .reasonix/) Â· reload re-reads from disk",
+    summary: "list active hooks (settings.json under .deepmicode/) Â· reload re-reads from disk",
   },
   {
     cmd: "permissions",
     group: "advanced",
     argsHint: "[list|add <prefix>|remove <prefix|N>|clear confirm]",
     summary:
-      "show / edit shell allowlist (builtin read-only Â· per-project: ~/.reasonix/config.json)",
+      "show / edit shell allowlist (builtin read-only Â· per-project: ~/.deepmicode/config.json)",
     argCompleter: ["list", "add", "remove", "clear"],
   },
   {
@@ -376,7 +376,7 @@ export function suggestSlashCommands(
 ): SlashCommandSpec[] {
   const p = prefix.toLowerCase();
   const matches = SLASH_COMMANDS.filter((c) => {
-    // Empty prefix = browsing the menu â€” show the full release command surface except
+    // Empty prefix = browsing the menu â€?show the full release command surface except
     // advanced rows, which remain collapsed behind the footer hint.
     if (p === "") return c.group !== "advanced";
     if (c.contextual === "code" && !codeMode) return false;
@@ -399,7 +399,7 @@ export function countAdvancedCommands(codeMode: boolean): number {
   ).length;
 }
 
-/** alias â†’ canonical cmd map, derived from SLASH_COMMANDS at module init. */
+/** alias â†?canonical cmd map, derived from SLASH_COMMANDS at module init. */
 const ALIAS_TO_CMD: Readonly<Record<string, string>> = (() => {
   const m: Record<string, string> = {};
   for (const spec of SLASH_COMMANDS) {

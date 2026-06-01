@@ -13,7 +13,7 @@ import {
 import { ToolRegistry } from "../tools.js";
 import { SUBAGENT_TYPE_NAMES, getSubagentType } from "./subagent-types.js";
 
-/** Side-channel â€” subagents run inside a tool-dispatch frame, can't go through parent's `LoopEvent` stream. */
+/** Side-channel â€?subagents run inside a tool-dispatch frame, can't go through parent's `LoopEvent` stream. */
 export interface SubagentEvent {
   kind: "start" | "progress" | "end" | "inner" | "phase" | "stream-progress";
   /** Stable per-spawn id; lets the UI key parallel runs apart instead of overwriting one shared row. */
@@ -32,7 +32,7 @@ export interface SubagentEvent {
   inner?: import("../loop.js").LoopEvent;
   /** When kind === "phase": coarse status verb for the activity row. */
   phase?: "exploring" | "summarising";
-  /** When kind === "stream-progress": monotonic char counters across the whole spawn, throttled. Lets the UI prove bytes are flowing during the long gaps between tool calls. `toolReadChars` is the sum of tool-result string lengths â€” the bytes pulled INTO the subagent from its reads/searches. */
+  /** When kind === "stream-progress": monotonic char counters across the whole spawn, throttled. Lets the UI prove bytes are flowing during the long gaps between tool calls. `toolReadChars` is the sum of tool-result string lengths â€?the bytes pulled INTO the subagent from its reads/searches. */
   outputChars?: number;
   reasoningChars?: number;
   toolReadChars?: number;
@@ -48,7 +48,7 @@ export interface SubagentSink {
   current: ((ev: SubagentEvent) => void) | null;
 }
 
-/** Process-wide late-bound channel. `buildCodeToolset` runs before the TUI mounts, so its `subagentRunner` closure can't capture a UI ref directly â€” it reads `.current` at dispatch time. The TUI's `useSubagent` writes `.current` on mount. Both sides reference the same singleton object so prop-drilling through `chatCommand` is unnecessary. Tests / library callers that want isolation pass their own `subagentSink` to `buildCodeToolset` (overrides the singleton for that toolset). */
+/** Process-wide late-bound channel. `buildCodeToolset` runs before the TUI mounts, so its `subagentRunner` closure can't capture a UI ref directly â€?it reads `.current` at dispatch time. The TUI's `useSubagent` writes `.current` on mount. Both sides reference the same singleton object so prop-drilling through `chatCommand` is unnecessary. Tests / library callers that want isolation pass their own `subagentSink` to `buildCodeToolset` (overrides the singleton for that toolset). */
 export const SHARED_SUBAGENT_SINK: SubagentSink = { current: null };
 
 export interface SpawnSubagentOptions {
@@ -64,7 +64,7 @@ export interface SpawnSubagentOptions {
   skillName?: string;
   /** Scopes the child registry to these literal tool names; NEVER_INHERITED still wins. Driven by skill `allowed-tools` frontmatter. */
   allowedTools?: readonly string[];
-  /** Continue an earlier session instead of starting fresh â€” loads the prior messages from disk; `task` is treated as a continuation nudge. */
+  /** Continue an earlier session instead of starting fresh â€?loads the prior messages from disk; `task` is treated as a continuation nudge. */
   resumeSession?: string;
 }
 
@@ -80,7 +80,7 @@ export interface SubagentResult {
   skillName?: string;
   /** Zero-filled when no API calls landed so consumers always see a valid shape. */
   usage: Usage;
-  /** True when the child terminated via forceSummaryAfterIterLimit (storm-breaker / context-guard) â€” `output` carries the partial synthesis the model managed to produce; not a full answer. User-abort forced summaries do NOT set this (their content is a UX placeholder, routed to `error`). */
+  /** True when the child terminated via forceSummaryAfterIterLimit (storm-breaker / context-guard) â€?`output` carries the partial synthesis the model managed to produce; not a full answer. User-abort forced summaries do NOT set this (their content is a UX placeholder, routed to `error`). */
   forcedSummary?: boolean;
 }
 
@@ -95,13 +95,13 @@ export interface SubagentToolOptions {
   onSpawnComplete?: (result: SubagentResult) => void;
 }
 
-/** Memory-stable prefix â€” shared across spawns, cached. The model-dependent escalation contract is appended per spawn so a pro spawn doesn't get told it's running on flash (#582). */
-const SUBAGENT_BASE_SYSTEM = `You are a Reasonix subagent. The parent agent spawned you to handle one focused subtask, then return.
+/** Memory-stable prefix â€?shared across spawns, cached. The model-dependent escalation contract is appended per spawn so a pro spawn doesn't get told it's running on flash (#582). */
+const SUBAGENT_BASE_SYSTEM = `You are a DeepMiCode subagent. The parent agent spawned you to handle one focused subtask, then return.
 
 Rules:
 - Stay on the task you were given. Do not expand scope.
 - Use tools as needed. You share the parent's sandbox + safety rules.
-- When you're done, your final assistant message is the only thing the parent will see â€” make it complete and self-contained. No follow-up offers, no questions, no "let me know if you need more."
+- When you're done, your final assistant message is the only thing the parent will see â€?make it complete and self-contained. No follow-up offers, no questions, no "let me know if you need more."
 - Prefer one clear, distilled answer over a long log of what you tried.
 
 ${NEGATIVE_CLAIM_RULE}
@@ -113,7 +113,7 @@ function defaultSubagentSystem(modelId: string): string {
 }
 
 const DEFAULT_MAX_RESULT_CHARS = 8000;
-// Subagents default to flash â€” their work is read-and-synthesize
+// Subagents default to flash â€?their work is read-and-synthesize
 // (explore, research), which doesn't need the 12Ã— pro tier. Skill
 // frontmatter `model: deepseek-v4-pro` is the opt-in override for
 // skills that empirically benefit from the stronger model.
@@ -121,7 +121,7 @@ const DEFAULT_SUBAGENT_MODEL = "deepseek-v4-flash";
 const DEFAULT_SUBAGENT_EFFORT: import("../config.js").ReasoningEffort = "high";
 
 const SUBAGENT_TOOL_NAME = "spawn_subagent";
-/** spawn_subagent excluded â†’ depth=1 hard cap; submit_plan excluded â†’ no picker mid-parent-turn. */
+/** spawn_subagent excluded â†?depth=1 hard cap; submit_plan excluded â†?no picker mid-parent-turn. */
 const NEVER_INHERITED_TOOLS = new Set<string>([SUBAGENT_TOOL_NAME, "submit_plan"]);
 
 /** Per-session spawn count past which the soft hint fires on every subsequent return. */
@@ -131,10 +131,10 @@ const STRONG_HINT_AFTER_SPAWNS = 4;
 /** Per-session cumulative subagent token total past which the strong hint also fires. */
 const STRONG_HINT_TOKEN_THRESHOLD = 50_000;
 
-/** null â†’ first spawn of the session, no hint. Pure for testability. */
+/** null â†?first spawn of the session, no hint. Pure for testability. */
 export function subagentBudgetHint(spawnCount: number, totalTokens: number): string | null {
   if (spawnCount > STRONG_HINT_AFTER_SPAWNS || totalTokens >= STRONG_HINT_TOKEN_THRESHOLD) {
-    return `[budget: this session has now spawned ${spawnCount} subagents totalling ${totalTokens} tokens. Each spawn pays a fresh prefix-cache miss plus a full child loop â€” confirm the next spawn is genuinely needed (parallel fan-out or >10-read context blow-up) before calling spawn_subagent again. If you can answer with direct tools, do that instead.]`;
+    return `[budget: this session has now spawned ${spawnCount} subagents totalling ${totalTokens} tokens. Each spawn pays a fresh prefix-cache miss plus a full child loop â€?confirm the next spawn is genuinely needed (parallel fan-out or >10-read context blow-up) before calling spawn_subagent again. If you can answer with direct tools, do that instead.]`;
   }
   if (spawnCount > SOFT_HINT_AFTER_SPAWNS) {
     return `[note: this session has spawned ${spawnCount} subagents totalling ${totalTokens} tokens; confirm this one is worth it.]`;
@@ -142,7 +142,7 @@ export function subagentBudgetHint(spawnCount: number, totalTokens: number): str
   return null;
 }
 
-/** Errors captured in the result shape, never thrown â€” caller decides how to surface. */
+/** Errors captured in the result shape, never thrown â€?caller decides how to surface. */
 export async function spawnSubagent(opts: SpawnSubagentOptions): Promise<SubagentResult> {
   const model = opts.model ?? DEFAULT_SUBAGENT_MODEL;
   const maxResultChars = opts.maxResultChars ?? DEFAULT_MAX_RESULT_CHARS;
@@ -211,7 +211,7 @@ export async function spawnSubagent(opts: SpawnSubagentOptions): Promise<Subagen
     prefix: childPrefix,
     tools: childTools,
     model,
-    // Subagents run on a constrained thinking budget by default â€” the
+    // Subagents run on a constrained thinking budget by default â€?the
     // task is already narrow by construction, and `high` cuts output
     // tokens substantially vs `max`.
     reasoningEffort: DEFAULT_SUBAGENT_EFFORT,
@@ -220,14 +220,14 @@ export async function spawnSubagent(opts: SpawnSubagentOptions): Promise<Subagen
     session: sessionName,
   });
 
-  // Wire parent-abort â†’ child-abort. Two pitfalls we have to handle:
+  // Wire parent-abort â†?child-abort. Two pitfalls we have to handle:
   //
   //   1. `addEventListener("abort", ...)` does NOT fire for a signal
   //      that's already aborted (the abort event has already been
   //      dispatched once and `once: true` is moot). If the parent
   //      aborted between dispatch entry and our listener attach,
   //      the listener stays silent forever and the child runs free.
-  //      â†’ Check `.aborted` synchronously and forward immediately.
+  //      â†?Check `.aborted` synchronously and forward immediately.
   //
   //   2. childLoop.step() reassigns its internal _turnAbort at the
   //      top of step(). loop.ts forwards prior aborted state into
@@ -250,7 +250,7 @@ export async function spawnSubagent(opts: SpawnSubagentOptions): Promise<Subagen
   let toolReadChars = 0;
   let lastStreamEmitAt = 0;
   let charsSinceLastEmit = 0;
-  // Throttle gates â€” 200ms or 400 chars between emits, whichever first.
+  // Throttle gates â€?200ms or 400 chars between emits, whichever first.
   // Cheap enough that React doesn't drown, often enough that the seconds
   // counter has company.
   const STREAM_EMIT_INTERVAL_MS = 200;
@@ -285,7 +285,7 @@ export async function spawnSubagent(opts: SpawnSubagentOptions): Promise<Subagen
 
       if (ev.role === "tool") {
         toolIter++;
-        // New tool dispatched â€” the model went back to deciding, summarising flag resets so the next final-answer delta re-emits.
+        // New tool dispatched â€?the model went back to deciding, summarising flag resets so the next final-answer delta re-emits.
         summarisingEmitted = false;
         toolReadChars += ev.content?.length ?? 0;
         sink?.current?.({
@@ -330,7 +330,7 @@ export async function spawnSubagent(opts: SpawnSubagentOptions): Promise<Subagen
       if (ev.role === "assistant_final") {
         if (ev.forcedSummary) {
           // Two paths emit forcedSummary: user-abort (loop.ts ~670) carries a
-          // UX placeholder ("aborted by user (Esc)â€¦") that's useless to a
+          // UX placeholder ("aborted by user (Esc)â€?) that's useless to a
           // parent loop; storm-breaker / context-guard (force-summary.ts)
           // carries a real partial synthesis worth keeping. Discriminate on
           // parentSignal.aborted because the abort path only fires when the
@@ -355,7 +355,7 @@ export async function spawnSubagent(opts: SpawnSubagentOptions): Promise<Subagen
     opts.parentSignal?.removeEventListener("abort", onParentAbort);
   }
   // The loop yields `done` without an `error` event when its API call
-  // is aborted mid-flight (intentional UX â€” see the matching catch in
+  // is aborted mid-flight (intentional UX â€?see the matching catch in
   // CacheFirstLoop.step). From a SUBAGENT consumer's perspective that
   // still counts as a failure: no answer came back, the parent has
   // nothing to render. Synthesize an error so `success: false` and the
@@ -429,7 +429,7 @@ export function formatSubagentResult(r: SubagentResult): string {
       tool_iters: r.toolIters,
       elapsed_ms: r.elapsedMs,
       cost_usd: r.costUsd,
-      note: "Subagent was force-summarized (storm-breaker or context-guard fired). `output` carries the partial synthesis the model produced before being stopped â€” useful but not a complete answer. Decide whether to accept the partial, narrow the task and re-spawn, or fall back to direct tools.",
+      note: "Subagent was force-summarized (storm-breaker or context-guard fired). `output` carries the partial synthesis the model produced before being stopped â€?useful but not a complete answer. Decide whether to accept the partial, narrow the task and re-spawn, or fall back to direct tools.",
     });
   }
   if (!r.success) {
@@ -451,14 +451,14 @@ export function formatSubagentResult(r: SubagentResult): string {
   });
 }
 
-/** Library surface only â€” `reasonix code` uses Skills `runAs: subagent` as the user-facing path. */
+/** Library surface only â€?`deepmicode code` uses Skills `runAs: subagent` as the user-facing path. */
 export function registerSubagentTool(
   parentRegistry: ToolRegistry,
   opts: SubagentToolOptions,
 ): ToolRegistry {
   const baseSystem = opts.defaultSystem ?? SUBAGENT_BASE_SYSTEM;
-  // Bake project memory into the default once â€” re-reading on every
-  // spawn would (a) make the child prefix unstable when REASONIX.md
+  // Bake project memory into the default once â€?re-reading on every
+  // spawn would (a) make the child prefix unstable when DEEPMICODE.md
   // changes mid-session, defeating cache reuse across multiple
   // subagent calls, and (b) cost a stat() per call. The parent itself
   // also reads memory once at startup; matching that semantics keeps
@@ -471,7 +471,7 @@ export function registerSubagentTool(
   const maxResultChars = opts.maxResultChars ?? DEFAULT_MAX_RESULT_CHARS;
   const sink = opts.sink;
   // Per-session counters survive across spawn calls because registerSubagentTool
-  // runs once per parent registry â€” closure scope is the session scope.
+  // runs once per parent registry â€?closure scope is the session scope.
   let sessionSpawnCount = 0;
   let sessionSpawnTokens = 0;
 
@@ -479,25 +479,25 @@ export function registerSubagentTool(
     name: SUBAGENT_TOOL_NAME,
     parallelSafe: true,
     description:
-      "Spawn an isolated subagent to handle a self-contained subtask in a fresh context, returning only its final answer. **Prefer direct tools.** Spawn primarily for parallel fan-out (2+ independent investigations issued in one tool batch) or when the work would otherwise need >10 file reads/searches whose trail you don't need to keep. Single greps, 1-3 file cross-references, and 'keep my context clean for one question' are NOT good reasons to spawn â€” direct tools are cheaper and let you reference the evidence later. Each fresh spawn pays a prefix-cache miss plus a full child loop. The subagent inherits your tools but runs in its own isolated message log; only the final assistant message comes back. The subagent runs to completion â€” same stops as top-level chat (token-context guard, storm breaker, parent Esc cascade).",
+      "Spawn an isolated subagent to handle a self-contained subtask in a fresh context, returning only its final answer. **Prefer direct tools.** Spawn primarily for parallel fan-out (2+ independent investigations issued in one tool batch) or when the work would otherwise need >10 file reads/searches whose trail you don't need to keep. Single greps, 1-3 file cross-references, and 'keep my context clean for one question' are NOT good reasons to spawn â€?direct tools are cheaper and let you reference the evidence later. Each fresh spawn pays a prefix-cache miss plus a full child loop. The subagent inherits your tools but runs in its own isolated message log; only the final assistant message comes back. The subagent runs to completion â€?same stops as top-level chat (token-context guard, storm breaker, parent Esc cascade).",
     parameters: {
       type: "object",
       properties: {
         task: {
           type: "string",
           description:
-            'The subtask the subagent should perform. Be specific and self-contained â€” the subagent has none of your conversation context, only what you write here. When resuming via `resume_session`, this becomes a continuation nudge (e.g. "finish what you started" or a delta instruction).',
+            'The subtask the subagent should perform. Be specific and self-contained â€?the subagent has none of your conversation context, only what you write here. When resuming via `resume_session`, this becomes a continuation nudge (e.g. "finish what you started" or a delta instruction).',
         },
         system: {
           type: "string",
           description:
-            "Optional override for the subagent's system prompt. The default tells it to stay focused and return a concise answer; override only when the subtask needs a specialized persona. Ignored on resume â€” the prior session keeps its original system prompt for cache stability.",
+            "Optional override for the subagent's system prompt. The default tells it to stay focused and return a concise answer; override only when the subtask needs a specialized persona. Ignored on resume â€?the prior session keeps its original system prompt for cache stability.",
         },
         model: {
           type: "string",
           enum: ["deepseek-v4-flash", "deepseek-v4-pro"],
           description:
-            "Which DeepSeek model the subagent runs on. Default is 'deepseek-v4-flash' â€” cheap and fast, fine for explore/research-style subtasks. Override to 'deepseek-v4-pro' (~12Ã— more expensive) when the subtask genuinely needs the stronger model: cross-file architecture, subtle bug hunts, anything where flash has empirically underperformed.",
+            "Which DeepSeek model the subagent runs on. Default is 'deepseek-v4-flash' â€?cheap and fast, fine for explore/research-style subtasks. Override to 'deepseek-v4-pro' (~12Ã— more expensive) when the subtask genuinely needs the stronger model: cross-file architecture, subtle bug hunts, anything where flash has empirically underperformed.",
         },
         resume_session: {
           type: "string",
@@ -571,7 +571,7 @@ export function registerSubagentTool(
   return parentRegistry;
 }
 
-/** Plan-mode state propagates â€” a subagent spawned under `/plan` MUST NOT escape it. */
+/** Plan-mode state propagates â€?a subagent spawned under `/plan` MUST NOT escape it. */
 // Registry forks inherit the policy but start with fresh counters, preserving session-local limits.
 export function forkRegistryExcluding(
   parent: ToolRegistry,
@@ -585,7 +585,7 @@ export function forkRegistryExcluding(
     if (!def) continue;
     // Re-register copies the public ToolDefinition fields. The child
     // re-runs auto-flatten analysis on its own, which produces an
-    // identical flatSchema for the same input â€” no surprise.
+    // identical flatSchema for the same input â€?no surprise.
     child.register(def);
   }
   if (parent.planMode) child.setPlanMode(true);

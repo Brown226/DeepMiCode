@@ -13,10 +13,10 @@ export interface ClipboardWrite {
 }
 
 export function writeClipboard(text: string): ClipboardWrite {
-  // mkdtemp creates a private 0700 directory atomically â€” keeps the
+  // mkdtemp creates a private 0700 directory atomically â€?keeps the
   // file out of the shared tmp namespace where a sibling process can
   // race or read it (CodeQL js/insecure-temporary-file).
-  const dir = mkdtempSync(join(tmpdir(), "reasonix-clip-"));
+  const dir = mkdtempSync(join(tmpdir(), "deepmicode-clip-"));
   const filePath = join(dir, "clip.txt");
   let osc52 = false;
   if (text.length <= OSC_52_LIMIT) {

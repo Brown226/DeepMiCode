@@ -1,4 +1,4 @@
-/** `reasonix setup` â€” re-mount the first-run wizard. */
+/** `deepmicode setup` â€?re-mount the first-run wizard. */
 
 import { render } from "ink";
 import React from "react";
@@ -7,7 +7,7 @@ import { loadDotenv } from "../../env.js";
 import { Wizard } from "../ui/Wizard.js";
 
 export interface SetupOptions {
-  /** Test-only â€” skip the API-key step. */
+  /** Test-only â€?skip the API-key step. */
   skipKeyStep?: boolean;
   /** Show the API-key step even when a saved/env key already exists. */
   forceKeyStep?: boolean;

@@ -15,7 +15,7 @@ export async function handleTools(
       status: 503,
       body: {
         error:
-          "live tools view requires an attached session â€” run `/dashboard` from inside `reasonix code` instead of standalone `reasonix dashboard`.",
+          "live tools view requires an attached session â€?run `/dashboard` from inside `deepmicode code` instead of standalone `deepmicode dashboard`.",
         available: false,
       },
     };

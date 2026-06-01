@@ -17,8 +17,8 @@ export const EN: TranslationSchema = {
   cli: {
     description: "DeepMiCode - DeepSeek + Mimo AI coding agent, built for cache hits and cheap tokens.",
     continue: "Resume the most recently used chat session without showing the picker.",
-    setup: "Interactive wizard ‚Äî API key, MCP servers. Re-run any time to reconfigure.",
-    code: "Code-editing chat ‚Äî filesystem tools rooted at <dir> (default: cwd), coding system prompt.",
+    setup: "Interactive wizard ‚Ä?API key, MCP servers. Re-run any time to reconfigure.",
+    code: "Code-editing chat ‚Ä?filesystem tools rooted at <dir> (default: cwd), coding system prompt.",
     chat: "Interactive Ink TUI with live cache/cost panel.",
     run: "Run a single task non-interactively, streaming output.",
     stats: "Show usage dashboard.",
@@ -29,13 +29,13 @@ export const EN: TranslationSchema = {
     events: "Pretty-print the kernel event-log sidecar.",
     replay: "Interactive Ink TUI to scrub through a transcript.",
     diff: "Compare two transcripts in a split-pane Ink TUI.",
-    mcp: "Model Context Protocol helpers ‚Äî discover servers, test your setup.",
+    mcp: "Model Context Protocol helpers ‚Ä?discover servers, test your setup.",
     version: "Print DeepMiCode version.",
     update: "Check for a newer DeepMiCode and install it.",
     index: "Build (or incrementally refresh) a local semantic search index.",
   },
   stats: {
-    usageHint: "run `deepmicode chat`, `deepmicode code`, or `deepmicode run <task>` ‚Äî every turn",
+    usageHint: "run `deepmicode chat`, `deepmicode code`, or `deepmicode run <task>` ‚Ä?every turn",
     usageDetail: "appends one line to the log and `deepmicode stats` will roll it up.",
   },
   run: {
@@ -45,10 +45,10 @@ export const EN: TranslationSchema = {
   },
   sessions: {
     emptyHint:
-      "no saved sessions yet ‚Äî run `deepmicode chat` (sessions are auto-saved unless --no-session).",
+      "no saved sessions yet ‚Ä?run `deepmicode chat` (sessions are auto-saved unless --no-session).",
     listHeader: "Saved sessions (~/.deepmicode/sessions/):",
     inspectHint: "Inspect:  deepmicode sessions <name>",
-    resumeHint: "Resume:   reasonix chat --session <name>",
+    resumeHint: "Resume:   DeepMiCode chat --session <name>",
     noSession: 'no session named "{name}" (or it\u2019s empty).',
     lookedAt: "looked at: {path}",
     noIdleSessions: "no sessions idle \u2265{days} days. Nothing pruned.",
@@ -58,14 +58,14 @@ export const EN: TranslationSchema = {
     daysInvalid: "--days must be a positive integer (got {days}).",
   },
   ui: {
-    welcome: "Run `reasonix` any time to start chatting ‚Äî your settings are remembered.",
+    welcome: "Run `DeepMiCode` any time to start chatting ‚Ä?your settings are remembered.",
     taglineChat: "DeepSeek-native agent",
     taglineCode: "DeepSeek-native coding agent",
     taglineSub: "cache-first ¬∑ flash-first",
     startSessionHint: "type a message to start your session",
     inputPlaceholder: "Ask anything... (type / for commands, @ for files)",
     busy: "Thinking...",
-    thinking: "‚ñ∏ thinking...",
+    thinking: "‚ñ?thinking...",
     undo: "Undo",
     undoHint: "press u within 5s to undo",
     applied: "applied",
@@ -74,21 +74,21 @@ export const EN: TranslationSchema = {
     openDashboardHint:
       "Open the dashboard URL in your default browser as soon as the server is ready. No-op when --no-dashboard is set.",
     dashboardPortHint:
-      "Pin the dashboard to a fixed port (1‚Äì65535). Stable across restarts ‚Äî required for SSH tunnels. Default: ephemeral.",
+      "Pin the dashboard to a fixed port (1‚Ä?5535). Stable across restarts ‚Ä?required for SSH tunnels. Default: ephemeral.",
     dashboardPortInvalid:
-      "‚ñ≤ ignoring --dashboard-port={value} (must be an integer 1‚Äì65535) ‚Äî falling back to ephemeral",
+      "‚ñ?ignoring --dashboard-port={value} (must be an integer 1‚Ä?5535) ‚Ä?falling back to ephemeral",
     dashboardAutoStartFailed:
-      "‚ñ≤ dashboard auto-start failed ({reason}) ‚Äî try /dashboard, or pass --no-dashboard to silence",
+      "‚ñ?dashboard auto-start failed ({reason}) ‚Ä?try /dashboard, or pass --no-dashboard to silence",
     systemAppendHint:
-      "Append instructions to the code system prompt. Does NOT replace the default prompt ‚Äî adds after it.",
+      "Append instructions to the code system prompt. Does NOT replace the default prompt ‚Ä?adds after it.",
     systemAppendFileHint:
       "Append file contents to the code system prompt. Does NOT replace the default prompt. UTF-8, relative to cwd or absolute.",
     resumedSession:
-      '‚ñ∏ resumed session "{name}" with {count} prior messages ¬∑ /new to start fresh ¬∑ /sessions to manage',
-    newSession: '‚ñ∏ session "{name}" (new) ‚Äî auto-saved as you chat ¬∑ /sessions to rename or delete',
-    ephemeralSession: "‚ñ∏ ephemeral chat (no session persistence) ‚Äî drop --no-session to enable",
+      '‚ñ?resumed session "{name}" with {count} prior messages ¬∑ /new to start fresh ¬∑ /sessions to manage',
+    newSession: '‚ñ?session "{name}" (new) ‚Ä?auto-saved as you chat ¬∑ /sessions to rename or delete',
+    ephemeralSession: "‚ñ?ephemeral chat (no session persistence) ‚Ä?drop --no-session to enable",
     restoredEdits:
-      "‚ñ∏ restored {count} pending edit block(s) from an interrupted prior run ‚Äî /apply to commit or /discard to drop.",
+      "‚ñ?restored {count} pending edit block(s) from an interrupted prior run ‚Ä?/apply to commit or /discard to drop.",
     resumedPlan: "Resumed plan ¬∑ {when}{summary}",
     tipEditBindings: {
       topic: "edit-gate keybindings",
@@ -98,7 +98,7 @@ export const EN: TranslationSchema = {
             { key: "y / n", text: "accept or drop pending edits" },
             {
               key: "Shift+Tab",
-              text: "switch review ‚Üî AUTO (persisted; AUTO applies instantly)",
+              text: "switch review ‚Ü?AUTO (persisted; AUTO applies instantly)",
             },
             { key: "u", text: "undo the last auto-applied batch (within the 5s banner)" },
           ],
@@ -111,15 +111,15 @@ export const EN: TranslationSchema = {
       sections: [
         {
           rows: [
-            { key: "drag", text: "select text ‚Äî terminal-native, no modifier needed" },
+            { key: "drag", text: "select text ‚Ä?terminal-native, no modifier needed" },
             {
               key: "right-click",
               text: "your terminal's native menu (paste / copy on Windows Terminal etc.)",
             },
             { key: "wheel", text: "scrolls chat history (works on web/cloud/SSH terminals too)" },
             {
-              key: "‚Üë / ‚Üì",
-              text: "prompt history (or per-line cursor in a multi-line draft) ‚Äî Ctrl+P / Ctrl+N alias",
+              key: "‚Ü?/ ‚Ü?,
+              text: "prompt history (or per-line cursor in a multi-line draft) ‚Ä?Ctrl+P / Ctrl+N alias",
             },
             { key: "PgUp / PgDn", text: "scroll chat history (mouse wheel routes here too)" },
           ],
@@ -128,7 +128,7 @@ export const EN: TranslationSchema = {
       footer: "Run /keys for the full keyboard + mouse reference",
     },
     keysReference: {
-      topic: "Reasonix keys + mouse reference",
+      topic: "DeepMiCode keys + mouse reference",
       sections: [
         {
           title: "keyboard",
@@ -136,22 +136,22 @@ export const EN: TranslationSchema = {
             { key: "Enter", text: "submit the prompt" },
             { key: "Shift+Enter", text: "insert a newline in the prompt" },
             {
-              key: "‚Üë / ‚Üì",
+              key: "‚Ü?/ ‚Ü?,
               text: "previous / next prompt history ¬∑ cursor up / down in a multi-line draft",
             },
-            { key: "Ctrl+P / Ctrl+N", text: "readline alias for ‚Üë / ‚Üì" },
+            { key: "Ctrl+P / Ctrl+N", text: "readline alias for ‚Ü?/ ‚Ü? },
             { key: "Ctrl+A / Ctrl+E", text: "jump to start / end of the current line" },
             { key: "Ctrl+W", text: "delete the word before the cursor" },
             { key: "Ctrl+U", text: "clear the entire prompt buffer" },
             { key: "Tab", text: "complete @-mention ¬∑ drill folder ¬∑ accept slash command" },
-            { key: "Shift+Tab", text: "edit-gate: toggle review ‚Üî AUTO mode" },
+            { key: "Shift+Tab", text: "edit-gate: toggle review ‚Ü?AUTO mode" },
             { key: "Esc", text: "dismiss picker ¬∑ abort the running model turn" },
-            { key: "Ctrl+C", text: "abort the running model turn (NOT copy ‚Äî see clipboard)" },
+            { key: "Ctrl+C", text: "abort the running model turn (NOT copy ‚Ä?see clipboard)" },
             { key: "PgUp / PgDn", text: "scroll chat history a page at a time" },
             { key: "End", text: "jump chat to the most recent line" },
             {
               key: "Ctrl+R",
-              text: "toggle verbose mode ‚Äî full reasoning + tool output, no head/tail elision",
+              text: "toggle verbose mode ‚Ä?full reasoning + tool output, no head/tail elision",
             },
           ],
         },
@@ -159,22 +159,22 @@ export const EN: TranslationSchema = {
           title: "mouse",
           rows: [
             { key: "wheel", text: "scrolls chat history (works on web/cloud/SSH terminals too)" },
-            { key: "drag", text: "selects text natively ‚Äî direct copy works, no modifier" },
+            { key: "drag", text: "selects text natively ‚Ä?direct copy works, no modifier" },
             { key: "right-click", text: "terminal-native (paste menu on Windows Terminal etc.)" },
           ],
         },
         {
           title: "copy / paste",
           rows: [
-            { key: "select text", text: "drag to select ‚Äî terminal-native (no modifier needed)" },
+            { key: "select text", text: "drag to select ‚Ä?terminal-native (no modifier needed)" },
             {
               key: "copy",
-              text: "Ctrl+Shift+C (Win/Linux) ¬∑ Cmd+C (macOS) ‚Äî or auto-copy-on-select if your terminal does it",
+              text: "Ctrl+Shift+C (Win/Linux) ¬∑ Cmd+C (macOS) ‚Ä?or auto-copy-on-select if your terminal does it",
             },
             { key: "paste", text: "Ctrl+V or Ctrl+Shift+V (Win/Linux) ¬∑ Cmd+V (macOS)" },
             {
               key: "bracketed paste",
-              text: "multi-line pastes stay one block ‚Äî no auto-submit on intermediate newlines",
+              text: "multi-line pastes stay one block ‚Ä?no auto-submit on intermediate newlines",
             },
           ],
         },
@@ -182,13 +182,13 @@ export const EN: TranslationSchema = {
           title: "edit-gate (code mode)",
           rows: [
             { key: "y / n", text: "accept or drop pending edits in the review modal" },
-            { key: "Shift+Tab", text: "toggle review ‚Üî AUTO (persisted across sessions)" },
+            { key: "Shift+Tab", text: "toggle review ‚Ü?AUTO (persisted across sessions)" },
             { key: "u", text: "undo the last auto-applied batch (within the 5s banner)" },
           ],
         },
       ],
       footer:
-        "Wheel scrolls chat on most terminals (web/cloud/SSH included) ‚Äî SGR mouse tracking is on by default and stays out of the way of native drag-select and right-click. Pass --no-mouse to opt out.",
+        "Wheel scrolls chat on most terminals (web/cloud/SSH included) ‚Ä?SGR mouse tracking is on by default and stays out of the way of native drag-select and right-click. Pass --no-mouse to opt out.",
     },
     tipShownOnce: "shown once",
     modelOverride: "override the default model",
@@ -198,16 +198,16 @@ export const EN: TranslationSchema = {
     resumeHint: "force-resume the named session (even if idle)",
     newHint: "force a fresh session (ignore --session / --continue)",
     transcriptHint: "path to write the JSONL transcript",
-    budgetHint: "session USD cap ‚Äî warns at 80%, refuses next turn at 100%",
+    budgetHint: "session USD cap ‚Ä?warns at 80%, refuses next turn at 100%",
     modelIdHint: "DeepSeek model id (e.g. deepseek-v4-flash)",
     systemPromptHint: "override the default system prompt",
-    effortHint: "reasoning effort ‚Äî low|medium|high|max",
+    effortHint: "reasoning effort ‚Ä?low|medium|high|max",
     sessionNameHint: "session name (default: 'default')",
     ephemeralHint: "disable session persistence for this run",
     mcpSpecHint: "MCP server spec (repeatable)",
     mcpPrefixHint: "prefix MCP tool names with this string",
-    noConfigHint: "ignore ~/.reasonix/config.json for this run",
-    effortHintShort: "reasoning effort ‚Äî low|medium|high|max",
+    noConfigHint: "ignore ~/.deepmicode/config.json for this run",
+    effortHintShort: "reasoning effort ‚Ä?low|medium|high|max",
     budgetHintShort: "session USD cap",
     transcriptHintShort: "JSONL transcript path",
     mcpSpecHintShort: "MCP server spec (repeatable)",
@@ -234,11 +234,11 @@ export const EN: TranslationSchema = {
     tuiHint: "open the interactive TUI",
     labelAHint: "label for the left pane",
     labelBHint: "label for the right pane",
-    mcpListDescription: "browse the MCP registry (official ‚Üí smithery ‚Üí local fallback)",
+    mcpListDescription: "browse the MCP registry (official ‚Ü?smithery ‚Ü?local fallback)",
     mcpInspectDescription: "inspect an MCP server spec (tools, resources, prompts)",
     mcpSearchDescription: "search the MCP registry for servers matching a query",
     mcpInstallDescription: "install an MCP server by name (writes its spec to your config)",
-    mcpBrowseDescription: "interactive marketplace browser ‚Äî type to filter, enter to install",
+    mcpBrowseDescription: "interactive marketplace browser ‚Ä?type to filter, enter to install",
     mcpLocalHint: "show only the bundled offline catalog",
     mcpRefreshHint: "bypass the 24h cache and refetch",
     mcpLimitHint: "max entries to show",
@@ -254,8 +254,8 @@ export const EN: TranslationSchema = {
   },
   code: {
     workspaceConflict:
-      "‚ö† workspace contains another agent platform's files ({platforms}). Reasonix Code may read them as project content; relaunch with --dir <your-project> if that's not what you want.\n",
-    systemAppendEmpty: "--system-append is empty ‚Äî no prompt text will be appended\n",
+      "‚ö?workspace contains another agent platform's files ({platforms}). DeepMiCode Code may read them as project content; relaunch with --dir <your-project> if that's not what you want.\n",
+    systemAppendEmpty: "--system-append is empty ‚Ä?no prompt text will be appended\n",
     systemAppendFileReadError:
       'Error: cannot read --system-append-file "{filePath}": {errorDetails}\n',
   },
@@ -281,20 +281,20 @@ export const EN: TranslationSchema = {
     },
     budget: {
       description:
-        "session USD cap ‚Äî warns at 80%, refuses next turn at 100%. Off by default. /budget alone shows status",
+        "session USD cap ‚Ä?warns at 80%, refuses next turn at 100%. Off by default. /budget alone shows status",
       argsHint: "[usd|off]",
     },
     mcp: { description: "list MCP servers + tools attached to this session" },
     resource: {
-      description: "browse + read MCP resources (no arg ‚Üí list URIs; <uri> ‚Üí fetch contents)",
+      description: "browse + read MCP resources (no arg ‚Ü?list URIs; <uri> ‚Ü?fetch contents)",
       argsHint: "[uri]",
     },
     prompt: {
-      description: "browse + fetch MCP prompts (no arg ‚Üí list names; <name> ‚Üí render prompt)",
+      description: "browse + fetch MCP prompts (no arg ‚Ü?list names; <name> ‚Ü?render prompt)",
       argsHint: "[name]",
     },
     memory: {
-      description: "show / manage pinned memory (REASONIX.md + ~/.reasonix/memory)",
+      description: "show / manage pinned memory (DEEPMICODE.md + ~/.deepmicode/memory)",
       argsHint: "[list|show <name>|forget <name>|clear <scope> confirm]",
     },
     skill: {
@@ -302,12 +302,12 @@ export const EN: TranslationSchema = {
       argsHint: "[list|paths|show <name>|<name> [args]]",
     },
     hooks: {
-      description: "list active hooks (settings.json under .reasonix/) ¬∑ reload re-reads from disk",
+      description: "list active hooks (settings.json under .deepmicode/) ¬∑ reload re-reads from disk",
       argsHint: "[reload]",
     },
     permissions: {
       description:
-        "show / edit shell allowlist (builtin read-only ¬∑ per-project: ~/.reasonix/config.json)",
+        "show / edit shell allowlist (builtin read-only ¬∑ per-project: ~/.deepmicode/config.json)",
       argsHint: "[list|add <prefix>|remove <prefix|N>|clear confirm]",
     },
     dashboard: {
@@ -321,7 +321,7 @@ export const EN: TranslationSchema = {
     },
     cost: {
       description:
-        "bare ‚Üí last turn's spend (Usage card); with text ‚Üí estimate cost of sending it next (worst-case + likely-cache)",
+        "bare ‚Ü?last turn's spend (Usage card); with text ‚Ü?estimate cost of sending it next (worst-case + likely-cache)",
       argsHint: "[text]",
     },
     doctor: { description: "health check (api / config / api-reach / index / hooks / project)" },
@@ -334,28 +334,28 @@ export const EN: TranslationSchema = {
     },
     cwd: {
       description:
-        "switch the workspace root mid-session ‚Äî re-points fs / shell / memory tools, reloads project hooks, refreshes the at-mention walker",
+        "switch the workspace root mid-session ‚Ä?re-points fs / shell / memory tools, reloads project hooks, refreshes the at-mention walker",
       argsHint: "[path]",
     },
     stop: { description: "abort the current model turn (typed alternative to Esc)" },
     feedback: { description: "open a GitHub issue with diagnostic info copied to clipboard" },
-    about: { description: "project info ‚Äî version, website, repo, license" },
+    about: { description: "project info ‚Ä?version, website, repo, license" },
     keys: { description: "keyboard + mouse + copy/paste reference" },
     plans: { description: "list this session's active + archived plans, newest first" },
     replay: {
       description: "load an archived plan as a read-only Time Travel snapshot (default: newest)",
       argsHint: "[N]",
     },
-    sessions: { description: "list saved sessions (current marked with ‚ñ∏)" },
+    sessions: { description: "list saved sessions (current marked with ‚ñ?" },
     title: { description: "ask the model to rename this session from the conversation" },
     qq: {
       description:
         "connect, inspect, or disconnect the QQ channel for this session (first connect guides App ID / App Secret setup)",
       argsHint: "[connect [appId appSecret [sandbox]]|status|disconnect]",
     },
-    setup: { description: "reminds you to exit and run `reasonix setup`" },
+    setup: { description: "reminds you to exit and run `DeepMiCode setup`" },
     semantic: {
-      description: "show semantic_search status ‚Äî built? Ollama installed? how to enable",
+      description: "show semantic_search status ‚Ä?built? Ollama installed? how to enable",
     },
     clear: { description: "clear visible scrollback only (log/context kept)" },
     new: { description: "start a fresh conversation (clear context + scrollback)" },
@@ -367,16 +367,16 @@ export const EN: TranslationSchema = {
     exit: { description: "quit the TUI" },
     init: {
       description:
-        "scan the project and synthesize a baseline REASONIX.md (model writes; review with /apply). `force` overwrites an existing file.",
+        "scan the project and synthesize a baseline DEEPMICODE.md (model writes; review with /apply). `force` overwrites an existing file.",
       argsHint: "[force]",
     },
     apply: {
       description:
-        "commit pending edit blocks to disk (no arg ‚Üí all; `1`, `1,3`, or `1-4` ‚Üí that subset, rest stay pending)",
+        "commit pending edit blocks to disk (no arg ‚Ü?all; `1`, `1,3`, or `1-4` ‚Ü?that subset, rest stay pending)",
       argsHint: "[N|N,M|N-M]",
     },
     discard: {
-      description: "drop pending edit blocks without writing (no arg ‚Üí all; indices ‚Üí that subset)",
+      description: "drop pending edit blocks without writing (no arg ‚Ü?all; indices ‚Ü?that subset)",
       argsHint: "[N|N,M|N-M]",
     },
     walk: {
@@ -410,7 +410,7 @@ export const EN: TranslationSchema = {
     },
     jobs: { description: "list background jobs started by run_background" },
     kill: {
-      description: "stop a background job by id (SIGTERM ‚Üí SIGKILL after grace)",
+      description: "stop a background job by id (SIGTERM ‚Ü?SIGKILL after grace)",
       argsHint: "<id>",
     },
     logs: {
@@ -419,25 +419,25 @@ export const EN: TranslationSchema = {
     },
     btw: {
       description:
-        "ask a quick side question ‚Äî answered from a blank slate, never added to the conversation context",
+        "ask a quick side question ‚Ä?answered from a blank slate, never added to the conversation context",
       argsHint: "<question>",
     },
     "search-engine": {
       description:
-        "switch web search backend ‚Äî bing (default, works from CN without proxy), searxng (self-hosted), metaso (free 100/d), tavily (free 1000/mo), perplexity (AI-native), exa (AI-native), or ollama (Ollama cloud web search)",
+        "switch web search backend ‚Ä?bing (default, works from CN without proxy), searxng (self-hosted), metaso (free 100/d), tavily (free 1000/mo), perplexity (AI-native), exa (AI-native), or ollama (Ollama cloud web search)",
       argsHint: "<bing|searxng|metaso|tavily|perplexity|exa|brave|ollama> [<key>]",
     },
   },
   wizard: {
     languageTitle: "Choose your language",
     languageSubtitle: "Detected from your system locale. Switch later via /language.",
-    welcomeTitle: "Welcome to Reasonix.",
+    welcomeTitle: "Welcome to DeepMiCode.",
     apiKeyPrompt: "Paste your DeepSeek API key to get started.",
     apiKeyGetOne: "Get one at: https://platform.deepseek.com/api_keys",
     apiKeySavedLocally: "Saved locally to {path}",
-    apiKeyInputLabel: "key ‚Ä∫ ",
-    apiKeyInvalid: "Key looks too short ‚Äî paste the full token (16+ chars, no spaces).",
-    apiKeyChecking: "Checking API key‚Ä¶",
+    apiKeyInputLabel: "key ‚Ä?",
+    apiKeyInvalid: "Key looks too short ‚Ä?paste the full token (16+ chars, no spaces).",
+    apiKeyChecking: "Checking API key‚Ä?,
     apiKeyRejected:
       "DeepSeek rejected this API key. Paste a valid key, or press Esc to cancel setup.",
     apiKeyCheckFailed:
@@ -455,7 +455,7 @@ export const EN: TranslationSchema = {
       "high-contrast": "Accessibility",
     },
     reviewLabelTheme: "Theme",
-    mcpTitle: "Which MCP servers should Reasonix wire up for you?",
+    mcpTitle: "Which MCP servers should DeepMiCode wire up for you?",
     mcpUserArgsHint: "(you'll provide {arg})",
     mcpFooterMulti:
       "[‚Üë‚Üì] navigate  ¬∑  [Space] toggle  ¬∑  [Enter] confirm  ¬∑  [Esc] cancel  ¬∑  empty = skip",
@@ -464,7 +464,7 @@ export const EN: TranslationSchema = {
     mcpArgsDirCreateHint: "[Y/Enter] create it (mkdir -p) ¬∑ [N/Esc] enter a different path",
     mcpArgsDirCreateFailed: "Couldn't create {path}: {message}",
     mcpArgsRequiredParam: "Required parameter: ",
-    mcpArgsEmpty: "{name} needs a value ‚Äî got an empty string.",
+    mcpArgsEmpty: "{name} needs a value ‚Ä?got an empty string.",
     mcpArgsNotADir: "{path} exists but is not a directory.",
     reviewTitle: "Ready to save",
     reviewLabelApiKey: "API key",
@@ -475,9 +475,9 @@ export const EN: TranslationSchema = {
     reviewSavesTo: "Saves to {path}",
     reviewSaveError: "Could not save config: {message}",
     reviewFooter: "[Enter] save ¬∑ [Esc] cancel",
-    savedTitle: "‚ñ∏ Saved.",
+    savedTitle: "‚ñ?Saved.",
     savedShellHint:
-      "Shell commands the model wants to run ask each time ‚Äî pick `allow always` on the prompt to whitelist that exact command for this project. No global allow-all flag by design.",
+      "Shell commands the model wants to run ask each time ‚Ä?pick `allow always` on the prompt to whitelist that exact command for this project. No global allow-all flag by design.",
     savedFooter: "[Enter] to exit",
     selectFooter: "[‚Üë‚Üì] navigate ¬∑ [Enter] confirm ¬∑ [Esc] cancel",
     stepCounter: "Step {step}/{total} ¬∑ ",
@@ -487,7 +487,7 @@ export const EN: TranslationSchema = {
   },
   themePicker: {
     header: "Theme",
-    footer: "‚Üë‚Üì pick ¬∑ ‚èé confirm ¬∑ esc cancel",
+    footer: "‚Üë‚Üì pick ¬∑ ‚è?confirm ¬∑ esc cancel",
     currentPref: "current preference",
     activeNow: "active now",
     autoDesc: "use DEEPMICODE_THEME or default",
@@ -496,10 +496,10 @@ export const EN: TranslationSchema = {
     approveCardTitle: "Approve plan",
     approveCardMetaRight: "awaiting",
     openQuestionsBanner:
-      "‚ñ≤ the plan flags open questions or risks ‚Äî pick {refine} to write concrete answers before the model moves on.",
+      "‚ñ?the plan flags open questions or risks ‚Ä?pick {refine} to write concrete answers before the model moves on.",
     openQuestionsHeader: "Open questions / risks",
-    truncatedBodyMore: "‚Ä¶ {n} more line above in scrollback",
-    truncatedBodyMorePlural: "‚Ä¶ {n} more lines above in scrollback",
+    truncatedBodyMore: "‚Ä?{n} more line above in scrollback",
+    truncatedBodyMorePlural: "‚Ä?{n} more lines above in scrollback",
     picker: {
       accept: "accept",
       acceptHint: "run it now, in order",
@@ -510,45 +510,45 @@ export const EN: TranslationSchema = {
       reject: "reject",
       rejectHint: "discard, agent will retry from scratch",
     },
-    refineFooter: "‚èé send  ¬∑  esc return to picker",
+    refineFooter: "‚è?send  ¬∑  esc return to picker",
     refineQuestionsHeading: "Answer these or describe the change you want:",
     modes: {
       approve: {
-        title: "approving ‚Äî any last instructions?",
+        title: "approving ‚Ä?any last instructions?",
         hint: "Answer questions the plan raised, add constraints, or just press Enter to approve as-is.",
         blankHint: " (Enter with blank = approve without extra instructions.)",
       },
       refine: {
-        title: "refining ‚Äî what should the model change?",
+        title: "refining ‚Ä?what should the model change?",
         hint: "Describe what's wrong or missing, or answer questions the plan raised.",
         blankHint: " (Enter with blank = let the model pick safe defaults for any open questions.)",
       },
       reject: {
-        title: "rejecting ‚Äî tell the model why (optional)",
+        title: "rejecting ‚Ä?tell the model why (optional)",
         hint: "Say what the model got wrong about your goal, or what you actually want instead.",
         blankHint:
           " (Enter with blank = cancel without explanation; the model will ask what you want.)",
       },
       "checkpoint-revise": {
-        title: "revising ‚Äî what should change before the next step?",
-        hint: "Scope change, skip steps, alternative approach ‚Äî the model adjusts the remaining plan.",
+        title: "revising ‚Ä?what should change before the next step?",
+        hint: "Scope change, skip steps, alternative approach ‚Ä?the model adjusts the remaining plan.",
         blankHint: " (Enter with blank = continue with the current plan.)",
       },
       "choice-custom": {
-        title: "custom answer ‚Äî type whatever fits",
-        hint: "Free-form reply. The model reads it verbatim and proceeds ‚Äî no need to match the listed options.",
+        title: "custom answer ‚Ä?type whatever fits",
+        hint: "Free-form reply. The model reads it verbatim and proceeds ‚Ä?no need to match the listed options.",
         blankHint: " (Enter with blank = ask the model what you actually want.)",
       },
     },
     checkpoint: {
-      title: "Checkpoint ‚Äî step done",
-      continue: "Continue ‚Äî run the next step",
+      title: "Checkpoint ‚Ä?step done",
+      continue: "Continue ‚Ä?run the next step",
       continueHint: "Model resumes with the next step.",
-      finish: "Finish ‚Äî summarize and close",
+      finish: "Finish ‚Ä?summarize and close",
       finishHint: "Model records the final step and summarizes the completed plan.",
-      revise: "Revise ‚Äî give feedback before the next step",
+      revise: "Revise ‚Ä?give feedback before the next step",
       reviseHint: "Stay paused, type guidance; model adjusts the remaining plan.",
-      stop: "Stop ‚Äî end the plan here",
+      stop: "Stop ‚Ä?end the plan here",
       stopHint: "Model summarizes what was done and ends.",
     },
     stepList: {
@@ -572,68 +572,68 @@ export const EN: TranslationSchema = {
     completeMsg: "\u25b8 plan complete \u2014 all {total} step{s} done \u00b7 archived",
   },
   app: {
-    walkCancelledRemaining: "‚ñ∏ walk cancelled ‚Äî {count} block(s) still pending.",
-    walkCancelled: "‚ñ∏ walk cancelled.",
+    walkCancelledRemaining: "‚ñ?walk cancelled ‚Ä?{count} block(s) still pending.",
+    walkCancelled: "‚ñ?walk cancelled.",
     editModeYolo:
-      "‚ñ∏ edit mode: YOLO ‚Äî edits AND shell commands auto-run. /undo still rolls back edits. Use carefully.",
+      "‚ñ?edit mode: YOLO ‚Ä?edits AND shell commands auto-run. /undo still rolls back edits. Use carefully.",
     editModeAuto:
-      "‚ñ∏ edit mode: AUTO ‚Äî edits apply immediately; press u within 5s to undo (space pauses the timer). Shell commands still ask.",
-    editModeReview: "‚ñ∏ edit mode: review ‚Äî edits queue for /apply (or y) / /discard (or n)",
-    rejectedEdit: "‚ñ∏ rejected edit to {path}{context}",
-    autoApprovingRest: "‚ñ∏ auto-approving remaining edits for this turn",
-    flippedAutoSession: "‚ñ∏ flipped to AUTO mode for the rest of the session (persisted)",
-    flippedAutoWalk: "‚ñ∏ flipped to AUTO mode ‚Äî future edits will apply immediately. Walk exited.",
-    dashboardStopped: "‚ñ∏ dashboard stopped.",
-    notedMemory: "‚ñ∏ noted ({scope}) ‚Äî {verb} {path}",
+      "‚ñ?edit mode: AUTO ‚Ä?edits apply immediately; press u within 5s to undo (space pauses the timer). Shell commands still ask.",
+    editModeReview: "‚ñ?edit mode: review ‚Ä?edits queue for /apply (or y) / /discard (or n)",
+    rejectedEdit: "‚ñ?rejected edit to {path}{context}",
+    autoApprovingRest: "‚ñ?auto-approving remaining edits for this turn",
+    flippedAutoSession: "‚ñ?flipped to AUTO mode for the rest of the session (persisted)",
+    flippedAutoWalk: "‚ñ?flipped to AUTO mode ‚Ä?future edits will apply immediately. Walk exited.",
+    dashboardStopped: "‚ñ?dashboard stopped.",
+    notedMemory: "‚ñ?noted ({scope}) ‚Ä?{verb} {path}",
     notedScopeProject: "project",
     notedScopeGlobal: "global",
     notedVerbCreated: "created",
     notedVerbAppended: "appended to",
     memoryWriteFailed: "# memory write failed",
-    verboseOn: "‚ñ∏ verbose mode on ‚Äî full reasoning + tool output",
-    verboseOff: "‚ñ∏ verbose mode off ‚Äî head/tail elision restored",
+    verboseOn: "‚ñ?verbose mode on ‚Ä?full reasoning + tool output",
+    verboseOff: "‚ñ?verbose mode off ‚Ä?head/tail elision restored",
     commandFailed: "! command failed",
-    steerInjected: "‚ñ∏ steering queued ‚Äî will be added after the current step",
-    steerCommandRejected: "‚ñ∏ commands are disabled while steering a busy turn",
-    btwUsage: "‚ñ∏ /btw <question> ‚Äî ask a side question without polluting the conversation context.",
-    btwHeader: "‚â´ btw",
+    steerInjected: "‚ñ?steering queued ‚Ä?will be added after the current step",
+    steerCommandRejected: "‚ñ?commands are disabled while steering a busy turn",
+    btwUsage: "‚ñ?/btw <question> ‚Ä?ask a side question without polluting the conversation context.",
+    btwHeader: "‚â?btw",
     btwFailed: "/btw failed",
-    restoreCodeOnly: "‚ñ∏ /restore is code-mode only",
+    restoreCodeOnly: "‚ñ?/restore is code-mode only",
     hookUserPromptSubmit: "UserPromptSubmit hook",
     hookStop: "Stop hook",
-    atMentions: "‚ñ∏ @mentions: {parts}",
-    atUrl: "‚ñ∏ @url: {parts}",
+    atMentions: "‚ñ?@mentions: {parts}",
+    atUrl: "‚ñ?@url: {parts}",
     atUrlFailed: "@url expansion failed",
-    sessionTitleNoSession: "‚ñ∏ no persisted session is active, so there is nothing to rename.",
-    sessionTitleNoContent: "‚ñ∏ not enough conversation content to name this session yet.",
-    sessionTitleNoTitle: "‚ñ∏ the model did not return a usable session title.",
-    sessionTitleUpdated: '‚ñ∏ session title updated: "{title}"',
-    sessionTitleRenameFailed: '‚ñ∏ could not rename the session for title "{title}".',
-    sessionTitleRenamed: '‚ñ∏ session renamed to "{name}" ‚Äî {title}',
-    sessionTitleAutoRenamed: '‚ñ∏ auto-named session "{name}" ‚Äî {title}',
-    workspaceSwitched: "‚ñ∏ workspace switched to {root}",
-    semanticRepointed: "‚ñ∏ semantic_search re-pointed at {root}",
-    semanticDisabledForRoot: "‚ñ∏ semantic_search disabled (no compatible index in {root})",
-    semanticRebootstrapFailed: "‚ñ∏ semantic_search re-bootstrap failed: {reason}",
-    denied: "‚ñ∏ denied: {cmd}{context}",
-    alwaysAllowed: '‚ñ∏ always allowed "{prefix}" for {dir}',
-    runningCommand: "‚ñ∏ running: {cmd}",
-    startingBackground: "‚ñ∏ starting (background): {cmd}",
+    sessionTitleNoSession: "‚ñ?no persisted session is active, so there is nothing to rename.",
+    sessionTitleNoContent: "‚ñ?not enough conversation content to name this session yet.",
+    sessionTitleNoTitle: "‚ñ?the model did not return a usable session title.",
+    sessionTitleUpdated: '‚ñ?session title updated: "{title}"',
+    sessionTitleRenameFailed: '‚ñ?could not rename the session for title "{title}".',
+    sessionTitleRenamed: '‚ñ?session renamed to "{name}" ‚Ä?{title}',
+    sessionTitleAutoRenamed: '‚ñ?auto-named session "{name}" ‚Ä?{title}',
+    workspaceSwitched: "‚ñ?workspace switched to {root}",
+    semanticRepointed: "‚ñ?semantic_search re-pointed at {root}",
+    semanticDisabledForRoot: "‚ñ?semantic_search disabled (no compatible index in {root})",
+    semanticRebootstrapFailed: "‚ñ?semantic_search re-bootstrap failed: {reason}",
+    denied: "‚ñ?denied: {cmd}{context}",
+    alwaysAllowed: '‚ñ?always allowed "{prefix}" for {dir}',
+    runningCommand: "‚ñ?running: {cmd}",
+    startingBackground: "‚ñ?starting (background): {cmd}",
     checkpointSaved:
-      "‚õÅ checkpoint saved ¬∑ {id} ¬∑ {count} file{s} ¬∑ /restore {id} to roll back this step",
-    continuingAfter: "‚ñ∏ continuing after {label}{counter}",
-    planStoppedAt: "‚ñ∏ plan stopped at {label}{counter}",
-    revisingAfter: "‚ñ∏ revising after {label} ‚Äî {feedback}",
-    historyScrollHint: " ‚Üë reading history ¬∑ End / PgDn returns to bottom ¬∑ ‚Üì advances one line",
+      "‚õ?checkpoint saved ¬∑ {id} ¬∑ {count} file{s} ¬∑ /restore {id} to roll back this step",
+    continuingAfter: "‚ñ?continuing after {label}{counter}",
+    planStoppedAt: "‚ñ?plan stopped at {label}{counter}",
+    revisingAfter: "‚ñ?revising after {label} ‚Ä?{feedback}",
+    historyScrollHint: " ‚Ü?reading history ¬∑ End / PgDn returns to bottom ¬∑ ‚Ü?advances one line",
     editHistoryTitle: "Edit history (oldest first):",
     editHistoryNoCodeMode: "not in code mode",
     editHistoryNoEdits: "no edits recorded this session yet",
     editHistoryNoShowId:
       "usage: /show [id] [path]   (omit id for newest; path from the per-file summary)",
-    editHistoryIdNotFound: "no edit #{id} ‚Äî run /history to see valid ids",
+    editHistoryIdNotFound: "no edit #{id} ‚Ä?run /history to see valid ids",
     editHistoryLookupFailed: "unexpected: history lookup failed",
-    editHistoryBatchNoFile: 'batch #{id} doesn\'t include "{path}" ‚Äî files in this batch: {files}',
-    editHistoryNoEdits2: "no edits recorded this session ‚Äî /history is empty",
+    editHistoryBatchNoFile: 'batch #{id} doesn\'t include "{path}" ‚Ä?files in this batch: {files}',
+    editHistoryNoEdits2: "no edits recorded this session ‚Ä?/history is empty",
     editHistoryStatusApplied: "applied",
     editHistoryStatusPartial: "PARTIAL",
     editHistoryStatusUndone: "UNDONE",
@@ -672,68 +672,68 @@ export const EN: TranslationSchema = {
     decisionError: "error",
   },
   summary: {
-    status: "summarizing what was gathered‚Ä¶",
+    status: "summarizing what was gathered‚Ä?,
     hallucinatedFallback:
-      "(model emitted fake tool-call markup instead of a prose summary ‚Äî try /retry with a narrower question, or /think to inspect R1's reasoning)",
+      "(model emitted fake tool-call markup instead of a prose summary ‚Ä?try /retry with a narrower question, or /think to inspect R1's reasoning)",
     failedAfterReason:
       "{label} and the fallback summary call failed: {message}. Run /clear and retry with a narrower question, or raise --max-tool-iters.",
   },
   loop: {
     budgetExhausted:
-      "session budget exhausted ‚Äî spent ${spent} ‚â• cap ${cap}. Bump the cap with /budget <usd>, clear it with /budget off, or end the session.",
-    budget80Pct: "‚ñ≤ budget 80% used ‚Äî ${spent} of ${cap}. Next turn or two likely trips the cap.",
-    proArmed: "‚áß /pro armed ‚Äî this turn runs on deepseek-v4-pro (one-shot ¬∑ disarms after turn)",
-    toolUploadStatus: "tool result uploaded ¬∑ model thinking before next response‚Ä¶",
-    turnStartFoldStatus: "turn start: context approaching limit, compacting history‚Ä¶",
+      "session budget exhausted ‚Ä?spent ${spent} ‚â?cap ${cap}. Bump the cap with /budget <usd>, clear it with /budget off, or end the session.",
+    budget80Pct: "‚ñ?budget 80% used ‚Ä?${spent} of ${cap}. Next turn or two likely trips the cap.",
+    proArmed: "‚á?/pro armed ‚Ä?this turn runs on deepseek-v4-pro (one-shot ¬∑ disarms after turn)",
+    toolUploadStatus: "tool result uploaded ¬∑ model thinking before next response‚Ä?,
+    turnStartFoldStatus: "turn start: context approaching limit, compacting history‚Ä?,
     turnStartFolded:
-      "turn start: request ~{estimate}/{ctxMax} tokens ({pct}%) ‚Äî compacted {beforeMessages} messages ‚Üí {afterMessages}. Sending.",
-    harvestStatus: "extracting plan state from reasoning‚Ä¶",
+      "turn start: request ~{estimate}/{ctxMax} tokens ({pct}%) ‚Ä?compacted {beforeMessages} messages ‚Ü?{afterMessages}. Sending.",
+    harvestStatus: "extracting plan state from reasoning‚Ä?,
     repeatToolCallWarning:
-      "Caught a repeated tool call ‚Äî let the model see the issue and retry with a different approach.",
+      "Caught a repeated tool call ‚Ä?let the model see the issue and retry with a different approach.",
     stormStuck:
-      "Stopped a stuck retry loop ‚Äî the model kept calling the same tool with identical args after a self-correction nudge. Try /retry, rephrase, or rule out the underlying blocker.",
-    stormSuppressed: "Suppressed {count} repeated tool call(s) ‚Äî same name + args fired 3+ times.",
-    compactingHistoryStatus: "compacting history{aggressiveTag}‚Ä¶",
+      "Stopped a stuck retry loop ‚Ä?the model kept calling the same tool with identical args after a self-correction nudge. Try /retry, rephrase, or rule out the underlying blocker.",
+    stormSuppressed: "Suppressed {count} repeated tool call(s) ‚Ä?same name + args fired 3+ times.",
+    compactingHistoryStatus: "compacting history{aggressiveTag}‚Ä?,
     aggressiveTag: " (aggressive)",
     foldedHistory:
-      "context {before}/{ctxMax} ({pct}%) ‚Äî folded {beforeMessages} messages ‚Üí {afterMessages} (summary {summaryChars} chars). Continuing.",
+      "context {before}/{ctxMax} ({pct}%) ‚Ä?folded {beforeMessages} messages ‚Ü?{afterMessages} (summary {summaryChars} chars). Continuing.",
     aggressivelyFoldedHistory:
-      "context {before}/{ctxMax} ({pct}%) ‚Äî aggressively folded {beforeMessages} messages ‚Üí {afterMessages} (summary {summaryChars} chars). Continuing.",
+      "context {before}/{ctxMax} ({pct}%) ‚Ä?aggressively folded {beforeMessages} messages ‚Ü?{afterMessages} (summary {summaryChars} chars). Continuing.",
     forcingSummary:
-      "context {before}/{ctxMax} ({pct}%) ‚Äî forcing summary from what was gathered. Run /compact, /clear, or /new to reset.",
+      "context {before}/{ctxMax} ({pct}%) ‚Ä?forcing summary from what was gathered. Run /compact, /clear, or /new to reset.",
   },
   errors: {
     contextOverflow:
-      "Context overflow (DeepSeek 400): session history is {requested}, past the model's prompt limit (V4: 1M tokens; legacy chat/reasoner: 131k). Usually a single tool result grew too big. Reasonix caps new tool results at 8k tokens and auto-heals oversized history on session load ‚Äî a restart often clears it. If it still overflows, run /new to start fresh, or open /sessions and press [d] to delete this session.",
+      "Context overflow (DeepSeek 400): session history is {requested}, past the model's prompt limit (V4: 1M tokens; legacy chat/reasoner: 131k). Usually a single tool result grew too big. DeepMiCode caps new tool results at 8k tokens and auto-heals oversized history on session load ‚Ä?a restart often clears it. If it still overflows, run /new to start fresh, or open /sessions and press [d] to delete this session.",
     contextOverflowTooMany: "too many tokens",
     auth401:
-      "Authentication failed (DeepSeek 401): {inner}. Your API key is rejected. Fix with `reasonix setup` or `export DEEPSEEK_API_KEY=sk-...`. Get one at https://platform.deepseek.com/api_keys.",
+      "Authentication failed (DeepSeek 401): {inner}. Your API key is rejected. Fix with `DeepMiCode setup` or `export DEEPSEEK_API_KEY=sk-...`. Get one at https://platform.deepseek.com/api_keys.",
     balance402:
-      "Out of balance (DeepSeek 402): {inner}. Top up at https://platform.deepseek.com/top_up ‚Äî the panel header shows your balance once it's non-zero.",
+      "Out of balance (DeepSeek 402): {inner}. Top up at https://platform.deepseek.com/top_up ‚Ä?the panel header shows your balance once it's non-zero.",
     badparam422: "Invalid parameter (DeepSeek 422): {inner}",
     badrequest400: "Bad request (DeepSeek 400): {inner}",
     concurrency429:
-      "DeepSeek concurrency limit hit (429): {inner}. The account has too many in-flight requests (cap: 500 for v4-pro, 2500 for v4-flash, summed across API keys account-wide). Usually means another Reasonix process is sharing the same key, or a parallel subagent fan-out overshot. Wait a few seconds and retry, reduce parallelism, or request a higher cap at https://platform.deepseek.com.",
+      "DeepSeek concurrency limit hit (429): {inner}. The account has too many in-flight requests (cap: 500 for v4-pro, 2500 for v4-flash, summed across API keys account-wide). Usually means another DeepMiCode process is sharing the same key, or a parallel subagent fan-out overshot. Wait a few seconds and retry, reduce parallelism, or request a higher cap at https://platform.deepseek.com.",
     deepseek5xxHead:
-      "DeepSeek service unavailable ({status}) ‚Äî this is a DeepSeek-side problem, not Reasonix. Already retried 4√ó with backoff.",
+      "DeepSeek service unavailable ({status}) ‚Ä?this is a DeepSeek-side problem, not DeepMiCode. Already retried 4√ó with backoff.",
     deepseek5xxReachable:
-      " DeepSeek's main API answered our health check, but /chat/completions is failing ‚Äî partial outage on their side.",
+      " DeepSeek's main API answered our health check, but /chat/completions is failing ‚Ä?partial outage on their side.",
     deepseek5xxUnreachable:
-      " DeepSeek API is unreachable from your network ‚Äî could be a wider DS outage or a local network issue.",
+      " DeepSeek API is unreachable from your network ‚Ä?could be a wider DS outage or a local network issue.",
     deepseek5xxActionNetwork:
       " Try: (1) check your network, (2) wait 30s and retry, (3) status page: https://status.deepseek.com.",
     deepseek5xxActionRetry:
       " Try: (1) wait 30s and retry, (2) /model to switch model, (3) status page: https://status.deepseek.com.",
     upstream5xxHead:
-      "Upstream service unavailable ({status}) at {host} ‚Äî the configured API endpoint returned a server error, not a Reasonix bug. Already retried 4√ó with backoff.",
+      "Upstream service unavailable ({status}) at {host} ‚Ä?the configured API endpoint returned a server error, not a DeepMiCode bug. Already retried 4√ó with backoff.",
     upstream5xxActionRetry:
       " Try: (1) check that the local/proxy model server is up, (2) wait and retry, (3) /model to switch model.",
     innerNoMessage: "(no message)",
-    reasonAborted: "[aborted by user (Esc) ‚Äî summarizing what I found so far]",
+    reasonAborted: "[aborted by user (Esc) ‚Ä?summarizing what I found so far]",
     reasonContextGuard:
-      "[context budget running low ‚Äî summarizing before the next call would overflow]",
+      "[context budget running low ‚Ä?summarizing before the next call would overflow]",
     reasonStuck:
-      "[stuck on a repeated tool call ‚Äî explaining what was tried and what's blocking progress]",
+      "[stuck on a repeated tool call ‚Ä?explaining what was tried and what's blocking progress]",
     labelAborted: "aborted by user",
     labelContextGuard: "context-guard triggered (prompt > 80% of window)",
     labelStuck: "stuck (repeated tool call suppressed by storm-breaker)",
@@ -741,33 +741,33 @@ export const EN: TranslationSchema = {
   handlers: {
     basic: {
       newInfo:
-        "‚ñ∏ new conversation ‚Äî dropped {count} message(s) from context. Same session, fresh slate.",
+        "‚ñ?new conversation ‚Ä?dropped {count} message(s) from context. Same session, fresh slate.",
       newInfoArchived:
-        '‚ñ∏ new conversation ‚Äî dropped {count} message(s) from context. Prior transcript archived as "{archived}" (visible under Sessions).',
+        '‚ñ?new conversation ‚Ä?dropped {count} message(s) from context. Prior transcript archived as "{archived}" (visible under Sessions).',
       newInfoSystemReloaded:
-        " ¬∑ REASONIX.md / project memory reloaded (next turn pays one cache miss)",
+        " ¬∑ DEEPMICODE.md / project memory reloaded (next turn pays one cache miss)",
       helpTitle: "Commands:",
       helpShellTitle: "Shell shortcut:",
       helpShell: "  !<cmd>                   run <cmd> in the sandbox root; output goes into",
       helpShellDetail:
         "                             the conversation so the model sees it next turn.",
       helpShellConsent:
-        "                             No allowlist gate ‚Äî user-typed = explicit consent.",
+        "                             No allowlist gate ‚Ä?user-typed = explicit consent.",
       helpShellExample: "                             Example: !git status   !ls src/   !npm test",
       helpShellGateTitle: "Model-invoked shell commands (per-call approval):",
       helpShellGate:
-        "  ‚Üë‚Üì + ‚èé                   each call shows a prompt with `allow once` / `allow always`",
+        "  ‚Üë‚Üì + ‚è?                  each call shows a prompt with `allow once` / `allow always`",
       helpShellGateDetail:
         "                             / `deny`. Pick `allow always` to whitelist that exact",
       helpShellGatePolicy:
         "                             command prefix for this project. No global allow-all flag.",
       helpMemoryTitle: "Quick memory:",
       helpMemoryPin:
-        "  #<note>                  append <note> to <project>/REASONIX.md (committable).",
+        "  #<note>                  append <note> to <project>/DEEPMICODE.md (committable).",
       helpMemoryPinEx:
         "                             Example: #findByEmail must be case-insensitive",
       helpMemoryGlobal:
-        "  #g <note>                append <note> to ~/.reasonix/REASONIX.md (global, never committed).",
+        "  #g <note>                append <note> to ~/.deepmicode/DEEPMICODE.md (global, never committed).",
       helpMemoryGlobalEx: "                             Example: #g always run pnpm not npm",
       helpMemoryPinBoth:
         "                             Both pin into every future session's prefix. Faster than /memory.",
@@ -785,35 +785,35 @@ export const EN: TranslationSchema = {
       helpUrlPunct:
         "                             Trailing sentence punctuation (./,/)) is stripped automatically.",
       helpSessionsTitle: "Sessions (auto-enabled by default, named 'default'):",
-      helpSessionCustom: "  reasonix chat --session <name>   use a different named session",
-      helpSessionNone: "  reasonix chat --no-session       disable persistence for this run",
-      retryNone: "nothing to retry ‚Äî no prior user message in this session's log.",
-      retryInfo: '‚ñ∏ retrying: "{preview}"',
+      helpSessionCustom: "  DeepMiCode chat --session <name>   use a different named session",
+      helpSessionNone: "  DeepMiCode chat --no-session       disable persistence for this run",
+      retryNone: "nothing to retry ‚Ä?no prior user message in this session's log.",
+      retryInfo: '‚ñ?retrying: "{preview}"',
       loopTuiOnly: "/loop is only available in the interactive TUI (not in run/replay).",
-      loopStopped: "‚ñ∏ loop stopped.",
+      loopStopped: "‚ñ?loop stopped.",
       loopNoActive: "no active loop to stop.",
       loopNoActiveHint:
         "no active loop. Start one with `/loop <interval> <prompt>` (e.g. /loop 30s npm test).\nCancels on: /loop stop ¬∑ Esc ¬∑ /clear /new ¬∑ any user-typed prompt.",
       loopStarted:
-        '‚ñ∏ loop started ‚Äî re-submitting "{prompt}" every {duration}. Type anything (or /loop stop) to cancel.',
+        '‚ñ?loop started ‚Ä?re-submitting "{prompt}" every {duration}. Type anything (or /loop stop) to cancel.',
       keysNeedsTui: "/keys needs a TUI context (postKeys wired).",
-      aboutHeader: "Reasonix v{version} ‚Äî a cache-first DeepSeek coding agent",
+      aboutHeader: "DeepMiCode v{version} ‚Ä?a cache-first DeepSeek coding agent",
       aboutWebsiteLabel: "Website",
       aboutRepoLabel: "GitHub ",
       aboutLicenseLabel: "License",
-      unknownCommand: "unknown command: /{cmd} ‚Äî did you mean {list}?",
+      unknownCommand: "unknown command: /{cmd} ‚Ä?did you mean {list}?",
       unknownCommandShort: "unknown command: /{cmd}  (try /help)",
     },
     sessions: {
       titleUnavailable: "/title is only available in an active persisted TUI session.",
-      titleStarted: "‚ñ∏ naming session‚Ä¶",
-      titleFailed: "‚ñ∏ session title failed: {reason}",
+      titleStarted: "‚ñ?naming session‚Ä?,
+      titleFailed: "‚ñ?session title failed: {reason}",
     },
     qq: {
       unavailable: "/qq is not available in this session.",
-      connecting: "QQ: connecting‚Ä¶",
+      connecting: "QQ: connecting‚Ä?,
       connectFailed: "QQ connect failed: {reason}",
-      disconnecting: "QQ: disconnecting‚Ä¶",
+      disconnecting: "QQ: disconnecting‚Ä?,
       disconnectFailed: "QQ disconnect failed: {reason}",
       usage: "Usage: /qq connect [appId appSecret [sandbox]] | /qq status | /qq disconnect",
       promptAppId:
@@ -829,7 +829,7 @@ export const EN: TranslationSchema = {
       disconnected: "QQ disconnected. Auto-start is disabled.",
       status:
         "QQ: {connected}, auto-start {enabled}, credentials {configured}, appId {appId}, {sandbox}, access {access}, current mode {mode}.",
-      statusSetup: "QQ: setup in progress ‚Äî {step}",
+      statusSetup: "QQ: setup in progress ‚Ä?{step}",
       stateConnected: "connected",
       stateDisconnected: "disconnected",
       stateEnabled: "enabled",
@@ -854,159 +854,159 @@ export const EN: TranslationSchema = {
         "QQ temporarily bound this run to first sender {openid}. Set `qq.ownerOpenId` in config to persist access.",
       missingAppId: "QQ App ID is required. Run `/qq connect` to configure.",
       missingAppSecret: "QQ App Secret is required. Run `/qq connect` to configure.",
-      authFailed: "QQ bot authentication failed ‚Äî check your App ID and App Secret.",
-      readyTimeout: "QQ bot did not receive READY within 15s ‚Äî check your App ID and App Secret.",
+      authFailed: "QQ bot authentication failed ‚Ä?check your App ID and App Secret.",
+      readyTimeout: "QQ bot did not receive READY within 15s ‚Ä?check your App ID and App Secret.",
     },
     admin: {
       doctorNeedsTui: "/doctor needs a TUI context (postDoctor wired).",
-      doctorRunning: "‚öï Doctor ‚Äî running health checks‚Ä¶",
+      doctorRunning: "‚ö?Doctor ‚Ä?running health checks‚Ä?,
       hooksReloadUnavailable:
         "/hooks reload is not available in this context (no reload callback wired).",
-      hooksReloaded: "‚ñ∏ reloaded hooks ¬∑ {count} active",
+      hooksReloaded: "‚ñ?reloaded hooks ¬∑ {count} active",
       hooksUsage:
         "usage: /hooks            list active hooks\n       /hooks reload     re-read settings.json files",
       hooksNone: "no hooks configured.",
       hooksDropHint: "drop a settings.json with a `hooks` key into either of:",
       hooksProject: "  ¬∑ {path} (project)",
-      hooksProjectFallback: "  ¬∑ <project>/.reasonix/settings.json (project)",
+      hooksProjectFallback: "  ¬∑ <project>/.deepmicode/settings.json (project)",
       hooksGlobal: "  ¬∑ {path} (global)",
       hooksEvents: "events: PreToolUse, PostToolUse, UserPromptSubmit, Stop",
       hooksExitCodes: "exit 0 = pass ¬∑ exit 2 = block (Pre*) ¬∑ other = warn",
-      hooksLoaded: "‚ñ∏ {count} hook(s) loaded",
+      hooksLoaded: "‚ñ?{count} hook(s) loaded",
       hooksSources: "sources: project={project} ¬∑ global={global}",
-      updateCurrent: "current: reasonix {version}",
-      updateLatestPending: "latest:  (not yet resolved ‚Äî background check in flight or offline)",
-      updateRetryHint: "triggered a fresh registry fetch ‚Äî retry `/update` in a few seconds,",
-      updateRetryHint2: "or run `reasonix update` in another terminal to force it synchronously.",
-      updateLatest: "latest:  reasonix {version}",
+      updateCurrent: "current: DeepMiCode {version}",
+      updateLatestPending: "latest:  (not yet resolved ‚Ä?background check in flight or offline)",
+      updateRetryHint: "triggered a fresh registry fetch ‚Ä?retry `/update` in a few seconds,",
+      updateRetryHint2: "or run `DeepMiCode update` in another terminal to force it synchronously.",
+      updateLatest: "latest:  DeepMiCode {version}",
       updateUpToDate: "you're on the latest. nothing to do.",
-      updateNpxHint: "you're running via npx ‚Äî the next `npx reasonix ...` launch will auto-fetch.",
+      updateNpxHint: "you're running via npx ‚Ä?the next `npx DeepMiCode ...` launch will auto-fetch.",
       updateNpxForce: "to force a refresh sooner: `npm cache clean --force`.",
       updateUpgradeHint: "to upgrade, exit this session and run:",
       updateUpgradeCmd1:
-        "  reasonix update           (interactive, dry-run supported via --dry-run)",
+        "  DeepMiCode update           (interactive, dry-run supported via --dry-run)",
       updateUpgradeCmd2: "  {command}   (direct)",
       updateInSessionDisabled:
-        "in-session install is deliberately disabled ‚Äî the install spawn would",
+        "in-session install is deliberately disabled ‚Ä?the install spawn would",
       updateInSessionDisabled2:
         "corrupt this TUI's rendering and Windows can lock the running binary.",
       statsNoData: "no usage data yet.",
-      statsEveryTurn: "every turn you run here appends one record ‚Äî this session's turns",
+      statsEveryTurn: "every turn you run here appends one record ‚Ä?this session's turns",
       statsWillAppear: "will show up in the dashboard once you send a message.",
     },
     edits: {
       undoCodeOnly:
-        "/undo is only available inside `reasonix code` ‚Äî chat mode doesn't apply edits.",
-      historyCodeOnly: "/history is only available inside `reasonix code`.",
-      showCodeOnly: "/show is only available inside `reasonix code`.",
-      applyCodeOnly: "/apply is only available inside `reasonix code` (nothing to apply here).",
-      discardCodeOnly: "/discard is only available inside `reasonix code`.",
+        "/undo is only available inside `DeepMiCode code` ‚Ä?chat mode doesn't apply edits.",
+      historyCodeOnly: "/history is only available inside `DeepMiCode code`.",
+      showCodeOnly: "/show is only available inside `DeepMiCode code`.",
+      applyCodeOnly: "/apply is only available inside `DeepMiCode code` (nothing to apply here).",
+      discardCodeOnly: "/discard is only available inside `DeepMiCode code`.",
       planCodeOnly:
-        "/plan is only available inside `reasonix code` ‚Äî chat mode doesn't gate tool writes.",
+        "/plan is only available inside `DeepMiCode code` ‚Ä?chat mode doesn't gate tool writes.",
       planOn:
-        "‚ñ∏ plan mode ON ‚Äî write tools are gated; the model MUST call `submit_plan` before anything executes. (The model can also call submit_plan on its own for big tasks even when plan mode is off ‚Äî this toggle is the stronger, explicit constraint.) Type /plan off to leave.",
+        "‚ñ?plan mode ON ‚Ä?write tools are gated; the model MUST call `submit_plan` before anything executes. (The model can also call submit_plan on its own for big tasks even when plan mode is off ‚Ä?this toggle is the stronger, explicit constraint.) Type /plan off to leave.",
       planOff:
-        "‚ñ∏ plan mode OFF ‚Äî write tools are live again. Model can still propose plans autonomously for large tasks.",
-      modeCodeOnly: "/mode is only available inside `reasonix code`.",
+        "‚ñ?plan mode OFF ‚Ä?write tools are live again. Model can still propose plans autonomously for large tasks.",
+      modeCodeOnly: "/mode is only available inside `DeepMiCode code`.",
       modeUsage: "usage: /mode <review|auto|yolo>   (Shift+Tab also cycles)",
       modeYolo:
-        "‚ñ∏ edit mode: YOLO ‚Äî edits AND shell commands auto-run with no prompt. /undo still rolls back edits. Use carefully.",
+        "‚ñ?edit mode: YOLO ‚Ä?edits AND shell commands auto-run with no prompt. /undo still rolls back edits. Use carefully.",
       modeAuto:
-        "‚ñ∏ edit mode: AUTO ‚Äî edits apply immediately; press u within 5s to undo, or /undo later. Shell commands still ask.",
-      modeReview: "‚ñ∏ edit mode: review ‚Äî edits queue for /apply (or y) / /discard (or n)",
-      commitCodeOnly: "/commit is only available inside `reasonix code` (needs a rooted git repo).",
+        "‚ñ?edit mode: AUTO ‚Ä?edits apply immediately; press u within 5s to undo, or /undo later. Shell commands still ask.",
+      modeReview: "‚ñ?edit mode: review ‚Ä?edits queue for /apply (or y) / /discard (or n)",
+      commitCodeOnly: "/commit is only available inside `DeepMiCode code` (needs a rooted git repo).",
       commitUsage:
-        'usage: /commit "your commit message"  ‚Äî runs `git add -A && git commit -m "‚Ä¶"` in {root}',
-      walkCodeOnly: "/walk is only available inside `reasonix code`.",
+        'usage: /commit "your commit message"  ‚Ä?runs `git add -A && git commit -m "‚Ä?` in {root}',
+      walkCodeOnly: "/walk is only available inside `DeepMiCode code`.",
       checkpointCodeOnly:
-        "/checkpoint is only available inside `reasonix code` ‚Äî chat mode doesn't apply edits.",
+        "/checkpoint is only available inside `DeepMiCode code` ‚Ä?chat mode doesn't apply edits.",
       checkpointNone:
-        "no checkpoints yet ‚Äî `/checkpoint <name>` snapshots every file the session has touched. Restore later with `/restore <name>`.",
-      checkpointHeader: "‚óà checkpoints ¬∑ {count} stored",
+        "no checkpoints yet ‚Ä?`/checkpoint <name>` snapshots every file the session has touched. Restore later with `/restore <name>`.",
+      checkpointHeader: "‚ó?checkpoints ¬∑ {count} stored",
       checkpointRestoreHint:
         "  /restore <name|id> ¬∑ /checkpoint forget <id> ¬∑ /checkpoint <name> to add",
       checkpointForgetUsage: "usage: /checkpoint forget <id|name>",
-      checkpointNoMatch: '‚ñ∏ no checkpoint matching "{name}" ‚Äî see /checkpoint list',
-      checkpointDeleted: "‚ñ∏ deleted checkpoint {id} ({name})",
-      checkpointDeleteFailed: "‚ñ∏ failed to delete {id} (already gone?)",
+      checkpointNoMatch: '‚ñ?no checkpoint matching "{name}" ‚Ä?see /checkpoint list',
+      checkpointDeleted: "‚ñ?deleted checkpoint {id} ({name})",
+      checkpointDeleteFailed: "‚ñ?failed to delete {id} (already gone?)",
       checkpointSaveUsage: "usage: /checkpoint <name>   (or /checkpoint list to see existing)",
       checkpointSavedEmpty:
-        '‚ñ∏ checkpoint "{name}" saved ({id}) ‚Äî but no files have been touched yet, so it\'s an empty baseline. Edits made after this point will be revertable.',
+        '‚ñ?checkpoint "{name}" saved ({id}) ‚Ä?but no files have been touched yet, so it\'s an empty baseline. Edits made after this point will be revertable.',
       checkpointSaved:
-        '‚ñ∏ checkpoint "{name}" saved ({id}) ‚Äî {files} file{s}, {size} KB. Restore: /restore {name}',
-      restoreCodeOnly: "/restore is only available inside `reasonix code`.",
+        '‚ñ?checkpoint "{name}" saved ({id}) ‚Ä?{files} file{s}, {size} KB. Restore: /restore {name}',
+      restoreCodeOnly: "/restore is only available inside `DeepMiCode code`.",
       restoreUsage: "usage: /restore <name|id>   (see /checkpoint list for ids)",
-      restoreNoMatch: '‚ñ∏ no checkpoint matching "{target}" ‚Äî try /checkpoint list',
-      restoreInfo: '‚ñ∏ restored "{name}" ({id}) from {when}',
+      restoreNoMatch: '‚ñ?no checkpoint matching "{target}" ‚Ä?try /checkpoint list',
+      restoreInfo: '‚ñ?restored "{name}" ({id}) from {when}',
       restoreWrote: "  ¬∑ wrote back {count} file{s}",
       restoreRemoved: "  ¬∑ removed {count} file{s} (didn't exist at checkpoint time)",
-      restoreSkipped: "  ‚úó {count} file{s} skipped:",
-      cwdCodeOnly: "/cwd is only available inside `reasonix code`.",
+      restoreSkipped: "  ‚ú?{count} file{s} skipped:",
+      cwdCodeOnly: "/cwd is only available inside `DeepMiCode code`.",
       cwdUsage:
         "usage: /cwd <path>   (current root: {current}). Re-points filesystem / shell / memory tools to <path>.",
       cwdUsageNoCurrent: "usage: /cwd <path>   re-points the workspace root to <path>.",
     },
     model: {
-      modelHint: "try deepseek-v4-flash or deepseek-v4-pro ‚Äî run /models to fetch the live list",
+      modelHint: "try deepseek-v4-flash or deepseek-v4-pro ‚Ä?run /models to fetch the live list",
       modelUsage: "usage: /model <id>   ({hint})",
       modelNotInCatalog:
-        "model ‚Üí {id}   (‚ö† not in the fetched catalog: {list}. If this is wrong the next call will 400 ‚Äî run /models to refresh.)",
-      modelSet: "model ‚Üí {id}",
-      effortStatus: "effort ‚Üí {current}   (pick: {list})",
+        "model ‚Ü?{id}   (‚ö?not in the fetched catalog: {list}. If this is wrong the next call will 400 ‚Ä?run /models to refresh.)",
+      modelSet: "model ‚Ü?{id}",
+      effortStatus: "effort ‚Ü?{current}   (pick: {list})",
       effortUsage:
         "usage: /effort <{list}>   (high is the safe default; max is a DeepSeek extension)",
       effortUsageNoMax: "usage: /effort <{list}>",
-      effortSet: "effort ‚Üí {effort}",
+      effortSet: "effort ‚Ü?{effort}",
       budgetNoCap:
-        "no session budget set ‚Äî Reasonix will keep going until you stop it. Set one with: /budget <usd>   (e.g. /budget 5)",
+        "no session budget set ‚Ä?DeepMiCode will keep going until you stop it. Set one with: /budget <usd>   (e.g. /budget 5)",
       budgetStatus:
         "budget: ${spent} of ${cap} ({pct}%) ¬∑ /budget off to clear, /budget <usd> to change",
-      budgetOff: "budget ‚Üí off (no cap)",
+      budgetOff: "budget ‚Ü?off (no cap)",
       budgetUsage:
-        'usage: /budget <usd>   (got "{arg}" ‚Äî must be a positive number, e.g. /budget 5 or /budget 12.50)',
+        'usage: /budget <usd>   (got "{arg}" ‚Ä?must be a positive number, e.g. /budget 5 or /budget 12.50)',
       budgetExhausted:
-        "‚ñ≤ budget ‚Üí ${cap} but already spent ${spent}. Next turn will be refused ‚Äî bump the cap higher to keep going, or end the session.",
+        "‚ñ?budget ‚Ü?${cap} but already spent ${spent}. Next turn will be refused ‚Ä?bump the cap higher to keep going, or end the session.",
       budgetSet:
-        "budget ‚Üí ${cap}  (so far: ${spent} ¬∑ warns at 80%, refuses next turn at 100% ¬∑ /budget off to clear)",
+        "budget ‚Ü?${cap}  (so far: ${spent} ¬∑ warns at 80%, refuses next turn at 100% ¬∑ /budget off to clear)",
     },
     permissions: {
       mutateCodeOnly:
-        "/permissions add / remove / clear are only available inside `reasonix code` ‚Äî they edit the project-scoped allowlist (`~/.reasonix/config.json` projects[<root>].shellAllowed).",
+        "/permissions add / remove / clear are only available inside `DeepMiCode code` ‚Ä?they edit the project-scoped allowlist (`~/.deepmicode/config.json` projects[<root>].shellAllowed).",
       addUsage:
         'usage: /permissions add <prefix>   (multi-token OK: /permissions add "git push origin")',
-      addAlready: "‚ñ∏ already allowed: {prefix}",
+      addAlready: "‚ñ?already allowed: {prefix}",
       addBuiltin:
-        "‚ñ∏ `{prefix}` is already in the builtin allowlist ‚Äî no per-project entry needed. (Builtin entries are always on.)",
+        "‚ñ?`{prefix}` is already in the builtin allowlist ‚Ä?no per-project entry needed. (Builtin entries are always on.)",
       addInfo:
-        "‚ñ∏ added: {prefix}\n  ‚Üí next `{prefix}` invocation runs without prompting in this project.",
+        "‚ñ?added: {prefix}\n  ‚Ü?next `{prefix}` invocation runs without prompting in this project.",
       removeUsage:
         "usage: /permissions remove <prefix-or-index>   (e.g. /permissions remove 3, or /permissions remove npm)",
-      removeEmpty: "‚ñ∏ no project allowlist entries to remove.",
-      removeIndexOob: "‚ñ∏ index out of range: {idx} (project list has {count} entries)",
-      removeNothing: "‚ñ∏ nothing to remove.",
+      removeEmpty: "‚ñ?no project allowlist entries to remove.",
+      removeIndexOob: "‚ñ?index out of range: {idx} (project list has {count} entries)",
+      removeNothing: "‚ñ?nothing to remove.",
       removeBuiltin:
-        "‚ñ∏ `{prefix}` is in the builtin allowlist (read-only). Builtin entries can't be removed at runtime ‚Äî they're baked into the binary.",
-      removeInfo: "‚ñ∏ removed: {prefix}",
+        "‚ñ?`{prefix}` is in the builtin allowlist (read-only). Builtin entries can't be removed at runtime ‚Ä?they're baked into the binary.",
+      removeInfo: "‚ñ?removed: {prefix}",
       removeNotFound:
-        "‚ñ∏ no such project entry: {prefix}   (try /permissions list to see what's stored)",
-      clearAlready: "‚ñ∏ project allowlist is already empty.",
+        "‚ñ?no such project entry: {prefix}   (try /permissions list to see what's stored)",
+      clearAlready: "‚ñ?project allowlist is already empty.",
       clearConfirm:
         "about to drop {count} project allowlist entr{plural} for {root}. Re-run with the word 'confirm' to proceed: /permissions clear confirm",
-      clearedNone: "‚ñ∏ project allowlist was already empty ‚Äî nothing changed.",
-      cleared: "‚ñ∏ cleared {count} project allowlist entr{plural}.",
+      clearedNone: "‚ñ?project allowlist was already empty ‚Ä?nothing changed.",
+      cleared: "‚ñ?cleared {count} project allowlist entr{plural}.",
       usage:
         'usage: /permissions [list]                   show current state\n       /permissions add <prefix>            persist (e.g. "npm run build")\n       /permissions remove <prefix-or-N>    drop one entry\n       /permissions clear confirm           wipe every project entry',
       modeYolo:
-        "‚ñ∏ edit mode: YOLO  ‚Äî every shell command auto-runs, allowlist is bypassed. /mode review to re-enable prompts.",
+        "‚ñ?edit mode: YOLO  ‚Ä?every shell command auto-runs, allowlist is bypassed. /mode review to re-enable prompts.",
       modeAuto:
-        "‚ñ∏ edit mode: auto  ‚Äî edits auto-apply, shell still gated by allowlist (or ShellConfirm prompt for non-allowlisted).",
+        "‚ñ?edit mode: auto  ‚Ä?edits auto-apply, shell still gated by allowlist (or ShellConfirm prompt for non-allowlisted).",
       modeReview:
-        "‚ñ∏ edit mode: review ‚Äî both edits and non-allowlisted shell commands ask before running.",
-      projectHeader: "Project allowlist ({count}) ‚Äî {root}",
-      projectNone1: '  (none ‚Äî pick "always allow" on a ShellConfirm prompt to add one,',
+        "‚ñ?edit mode: review ‚Ä?both edits and non-allowlisted shell commands ask before running.",
+      projectHeader: "Project allowlist ({count}) ‚Ä?{root}",
+      projectNone1: '  (none ‚Ä?pick "always allow" on a ShellConfirm prompt to add one,',
       projectNone2: "   or `/permissions add <prefix>` directly.)",
-      projectNoRoot: "Project allowlist ‚Äî (no project root; chat mode shows builtin entries only)",
-      builtinHeader: "Builtin allowlist ({count}) ‚Äî read-only, baked in",
+      projectNoRoot: "Project allowlist ‚Ä?(no project root; chat mode shows builtin entries only)",
+      builtinHeader: "Builtin allowlist ({count}) ‚Ä?read-only, baked in",
       subcommands:
         "Subcommands: /permissions add <prefix> ¬∑ /permissions remove <prefix-or-N> ¬∑ /permissions clear confirm",
     },
@@ -1014,33 +1014,33 @@ export const EN: TranslationSchema = {
       notAvailable:
         "/dashboard is not available in this context (no startDashboard callback wired).",
       stopNoCallback: "/dashboard stop: no stop callback wired.",
-      notRunning: "‚ñ∏ dashboard is not running.",
-      stopping: "‚ñ∏ dashboard stopping‚Ä¶",
-      alreadyRunning: "‚ñ∏ dashboard is already running:",
+      notRunning: "‚ñ?dashboard is not running.",
+      stopping: "‚ñ?dashboard stopping‚Ä?,
+      alreadyRunning: "‚ñ?dashboard is already running:",
       alreadyRunningHint: "Open it in any browser. Type `/dashboard stop` to tear it down.",
-      ready: "‚ñ∏ dashboard ready:",
+      ready: "‚ñ?dashboard ready:",
       readyHint: "127.0.0.1 only ¬∑ token-gated. Type `/dashboard stop` to shut down.",
-      failed: "‚ñ∏ dashboard failed to start: {reason}",
-      starting: "‚ñ∏ starting dashboard server‚Ä¶",
-      copied: "‚ñ∏ dashboard URL copied to clipboard: {url}",
-      tokenResetting: "‚ñ∏ rotating dashboard token ‚Äî restarting server‚Ä¶",
-      tokenReset: "‚ñ∏ dashboard token rotated. New URL:",
+      failed: "‚ñ?dashboard failed to start: {reason}",
+      starting: "‚ñ?starting dashboard server‚Ä?,
+      copied: "‚ñ?dashboard URL copied to clipboard: {url}",
+      tokenResetting: "‚ñ?rotating dashboard token ‚Ä?restarting server‚Ä?,
+      tokenReset: "‚ñ?dashboard token rotated. New URL:",
     },
     observability: {
       contextInfo: "context: ~{total} of {max} ({pct}%) ¬∑ system {sys} ¬∑ tools {tools} ¬∑ log {log}",
-      compactStarting: "‚ñ∏ folding older turns into a summary‚Ä¶",
-      compactNoop: "‚ñ∏ nothing to fold ‚Äî log already small or recent turns alone exceed the budget.",
-      compactDone: "‚ñ∏ folded {before} messages ‚Üí {after} (summary {chars} chars). Continuing.",
-      compactFailed: "‚ñ∏ fold failed: {reason}",
-      costNoTurn: "no turn yet ‚Äî `/cost` shows the most recent turn's token + spend breakdown.",
+      compactStarting: "‚ñ?folding older turns into a summary‚Ä?,
+      compactNoop: "‚ñ?nothing to fold ‚Ä?log already small or recent turns alone exceed the budget.",
+      compactDone: "‚ñ?folded {before} messages ‚Ü?{after} (summary {chars} chars). Continuing.",
+      compactFailed: "‚ñ?fold failed: {reason}",
+      costNoTurn: "no turn yet ‚Ä?`/cost` shows the most recent turn's token + spend breakdown.",
       costNeedsTui: "/cost needs a TUI context (postUsage wired).",
       costNoPricing:
-        '‚ñ∏ /cost: no pricing table for model "{model}". Add one to telemetry/stats.ts.',
+        '‚ñ?/cost: no pricing table for model "{model}". Add one to telemetry/stats.ts.',
       costEstimate:
-        "‚ñ∏ /cost estimate ¬∑ {model} ¬∑ {prompt} prompt tokens (sys {sys} + tools {tools} + log {log} + msg {msg})",
+        "‚ñ?/cost estimate ¬∑ {model} ¬∑ {prompt} prompt tokens (sys {sys} + tools {tools} + log {log} + msg {msg})",
       costWorstCase:
-        "  worst case (full miss): {input} input + ~{output} output ({avg} avg) ‚âà {total}",
-      costLikely: "  likely ({pct}% session cache hit): {input} input + ~{output} output ‚âà {total}",
+        "  worst case (full miss): {input} input + ~{output} output ({avg} avg) ‚â?{total}",
+      costLikely: "  likely ({pct}% session cache hit): {input} input + ~{output} output ‚â?{total}",
       costLikelyCold: "  likely: matches worst case until cache fills (no completed turns yet)",
       statusModel: "  model   {model}",
       statusFlags: "  flags   stream={stream} ¬∑ effort={effort}",
@@ -1050,73 +1050,73 @@ export const EN: TranslationSchema = {
       statusCostCold: "  cost    ${cost} ¬∑ turns {turns} (cache warming up)",
       statusBudget: "  budget  ${spent} / ${cap} ({pct}%){tag}",
       statusSession: '  session "{name}" ¬∑ {count} messages in log (resumed {resumed})',
-      statusSessionEphemeral: "  session (ephemeral ‚Äî no persistence)",
+      statusSessionEphemeral: "  session (ephemeral ‚Ä?no persistence)",
       statusWorkspace:
         "  workspace {path} ¬∑ pinned at launch (relaunch with --dir <path> to switch)",
       statusMcp: "  mcp     {servers} server(s), {tools} tool(s) in registry",
       statusEdits: "  edits   {count} pending (/apply to commit, /discard to drop)",
-      statusPlan: "  plan    ON ‚Äî writes gated (submit_plan + approval)",
+      statusPlan: "  plan    ON ‚Ä?writes gated (submit_plan + approval)",
       statusLifecycle: "  lifecycle {mode}/{state} ¬∑ {progress}{evidence}",
       lifecycleNoPlan: "no plan",
       lifecycleEvidencePending: "evidence pending",
-      lifecycleRejected: "lifecycle: {tool} blocked in {state} ‚Äî next: {next}",
-      lifecycleEvidenceRejected: "lifecycle: step {stepId} needs evidence ‚Äî next: {next}",
+      lifecycleRejected: "lifecycle: {tool} blocked in {state} ‚Ä?next: {next}",
+      lifecycleEvidenceRejected: "lifecycle: step {stepId} needs evidence ‚Ä?next: {next}",
       lifecycleRepeatedRejected:
-        "lifecycle: repeated {tool} rejection ‚Äî do not retry identical args",
+        "lifecycle: repeated {tool} rejection ‚Ä?do not retry identical args",
       statusModeYolo:
-        "  mode    YOLO ‚Äî edits + shell auto-run with no prompt (/undo still rolls back ¬∑ Shift+Tab to flip)",
+        "  mode    YOLO ‚Ä?edits + shell auto-run with no prompt (/undo still rolls back ¬∑ Shift+Tab to flip)",
       statusModeAuto:
-        "  mode    AUTO ‚Äî edits apply immediately (u to undo within 5s ¬∑ Shift+Tab to flip)",
-      statusModeReview: "  mode    review ‚Äî edits queue for /apply or y  (Shift+Tab to flip)",
+        "  mode    AUTO ‚Ä?edits apply immediately (u to undo within 5s ¬∑ Shift+Tab to flip)",
+      statusModeReview: "  mode    review ‚Ä?edits queue for /apply or y  (Shift+Tab to flip)",
       statusDash: "  dash    {url} (open in browser ¬∑ /dashboard stop)",
     },
     plans: {
       noSession:
-        "no session attached ‚Äî `/plans` is per-session. Run `reasonix code` in a project to get a session.",
-      activePlan: "‚ñ∏ active plan{label} ‚Äî {done}/{total} step{s} done ¬∑ last touched {when}",
-      activeNone: "‚ñ∏ active plan: (none)",
+        "no session attached ‚Ä?`/plans` is per-session. Run `DeepMiCode code` in a project to get a session.",
+      activePlan: "‚ñ?active plan{label} ‚Ä?{done}/{total} step{s} done ¬∑ last touched {when}",
+      activeNone: "‚ñ?active plan: (none)",
       noArchives:
-        "no archived plans yet for this session ‚Äî they auto-archive when every step is done",
+        "no archived plans yet for this session ‚Ä?they auto-archive when every step is done",
       archivedHeader: "Archived ({count}):",
       evidencePending:
-        "  ! evidence pending ‚Äî current step needs verification/diff/checkpoint/manual evidence",
+        "  ! evidence pending ‚Ä?current step needs verification/diff/checkpoint/manual evidence",
       evidenceLine: "  evidence {stepId}: {summary}",
       archivedEvidenceLine: "    evidence: {summary}",
       replayNoSession:
-        "no session attached ‚Äî `/replay` is per-session. Run `reasonix code` in a project to get a session.",
+        "no session attached ‚Ä?`/replay` is per-session. Run `DeepMiCode code` in a project to get a session.",
       replayNoArchives:
-        "no archived plans yet for this session ‚Äî `/replay` lights up once a plan completes (auto-archives when every step is done).",
+        "no archived plans yet for this session ‚Ä?`/replay` lights up once a plan completes (auto-archives when every step is done).",
       replayInvalidIndex:
-        "invalid index ‚Äî `/replay` takes 1..{max} (newest = 1). Use `/plans` to see the list.",
-      archivedRow: "  ‚úì {when}  {total} step{s} ¬∑ {completion}  {label}",
+        "invalid index ‚Ä?`/replay` takes 1..{max} (newest = 1). Use `/plans` to see the list.",
+      archivedRow: "  ‚ú?{when}  {total} step{s} ¬∑ {completion}  {label}",
       completionComplete: "complete",
       stopAborted:
-        "‚ñ∏ plan stopped ‚Äî model aborted; type a follow-up to continue or start a new task.",
+        "‚ñ?plan stopped ‚Ä?model aborted; type a follow-up to continue or start a new task.",
       doneUsage:
-        "usage: /plans done <stepId>  ¬∑  /plans done all ‚Äî manual override when the model forgot to call mark_step_complete",
+        "usage: /plans done <stepId>  ¬∑  /plans done all ‚Ä?manual override when the model forgot to call mark_step_complete",
       doneUnavailable: "/plans done is only available inside an active session.",
-      doneNoPlan: "no active plan ‚Äî nothing to mark done.",
+      doneNoPlan: "no active plan ‚Ä?nothing to mark done.",
       doneNotInPlan: "step `{id}` is not in the active plan. Run /plans to see the step ids.",
       doneAlready: "step `{id}` was already marked done.",
-      doneOk: "‚ñ∏ marked step `{id}` done.",
+      doneOk: "‚ñ?marked step `{id}` done.",
       doneAllNoop: "every step is already done.",
-      doneAllOk: "‚ñ∏ marked {count} step(s) done.",
+      doneAllOk: "‚ñ?marked {count} step(s) done.",
     },
     jobs: {
-      codeOnly: "/jobs is only available inside `reasonix code`.",
-      killCodeOnly: "/kill is only available inside `reasonix code`.",
-      logsCodeOnly: "/logs is only available inside `reasonix code`.",
+      codeOnly: "/jobs is only available inside `DeepMiCode code`.",
+      killCodeOnly: "/kill is only available inside `DeepMiCode code`.",
+      logsCodeOnly: "/logs is only available inside `DeepMiCode code`.",
       empty:
-        "‚óà jobs ¬∑ 0 running ¬∑ 0 total\n  (run_background spawns one ‚Äî dev servers, watchers, long-running scripts)",
-      header: "‚óà jobs ¬∑ {running} running ¬∑ {total} total",
-      footer: "  /logs <id> tail ¬∑ /kill <id> SIGTERM ‚Üí SIGKILL",
+        "‚ó?jobs ¬∑ 0 running ¬∑ 0 total\n  (run_background spawns one ‚Ä?dev servers, watchers, long-running scripts)",
+      header: "‚ó?jobs ¬∑ {running} running ¬∑ {total} total",
+      footer: "  /logs <id> tail ¬∑ /kill <id> SIGTERM ‚Ü?SIGKILL",
       killUsage: "usage: /kill <id>   (see /jobs for ids)",
       killNotFound: "job {id}: not found",
       killAlreadyExited: "job {id} already exited ({code})",
       killStopping:
-        "‚ñ∏ stopping job {id} (tree kill: SIGTERM ‚Üí SIGKILL after 2s grace; Windows: taskkill /T /F)",
-      killStatus: "‚ñ∏ job {id} {status}",
-      killStillAlive: "still alive after SIGKILL (!) ‚Äî report this as a bug",
+        "‚ñ?stopping job {id} (tree kill: SIGTERM ‚Ü?SIGKILL after 2s grace; Windows: taskkill /T /F)",
+      killStatus: "‚ñ?job {id} {status}",
+      killStillAlive: "still alive after SIGKILL (!) ‚Ä?report this as a bug",
       logsUsage: "usage: /logs <id> [lines]   (default last 80 lines)",
       logsNotFound: "job {id}: not found",
       logsStatus: "[job {id} ¬∑ {status}]\n$ {command}",
@@ -1127,11 +1127,11 @@ export const EN: TranslationSchema = {
     },
     memory: {
       disabled:
-        "memory is disabled (DEEPMICODE_MEMORY=off in env). Unset the var to re-enable ‚Äî no DEEPMICODE.md or ~/.reasonix/memory content will be pinned in the meantime.",
+        "memory is disabled (DEEPMICODE_MEMORY=off in env). Unset the var to re-enable ‚Ä?no DEEPMICODE.md or ~/.deepmicode/memory content will be pinned in the meantime.",
       noRoot:
-        "no working directory on this session ‚Äî `/memory` needs a root to resolve REASONIX.md from. (Running in a test harness?)",
+        "no working directory on this session ‚Ä?`/memory` needs a root to resolve DEEPMICODE.md from. (Running in a test harness?)",
       listEmpty:
-        "no user memories yet. The model can call `remember` to save one, or you can create files by hand in ~/.reasonix/memory/global/ or the per-project subdir.",
+        "no user memories yet. The model can call `remember` to save one, or you can create files by hand in ~/.deepmicode/memory/global/ or the per-project subdir.",
       listHeader: "User memories ({count}):",
       listFooter: "View body: /memory show <name>   Delete: /memory forget <name>",
       showUsage: "usage: /memory show <name>  or  /memory show <scope>/<name>",
@@ -1139,21 +1139,21 @@ export const EN: TranslationSchema = {
       showFailed: "show failed: {reason}",
       forgetUsage: "usage: /memory forget <name>  or  /memory forget <scope>/<name>",
       forgetNotFound: "no memory found: {target}",
-      forgetInfo: "‚ñ∏ forgot {scope}/{name}. Next /new or launch won't see it.",
+      forgetInfo: "‚ñ?forgot {scope}/{name}. Next /new or launch won't see it.",
       forgetFailed: "could not forget {scope}/{name} (already gone?)",
       forgetError: "forget failed: {reason}",
       clearUsage: "usage: /memory clear <global|project> confirm",
       clearConfirm:
         "about to delete every memory in scope={scope}. Re-run with the word 'confirm' to proceed: /memory clear {scope} confirm",
-      cleared: "‚ñ∏ cleared scope={scope} ‚Äî deleted {count} memory file(s).",
+      cleared: "‚ñ?cleared scope={scope} ‚Ä?deleted {count} memory file(s).",
       noMemory: "no memory pinned in {root}.",
       layers: "Three layers are available:",
-      layerProject: "  1. {file} ‚Äî committable team memory (in the repo).",
-      layerGlobal: "  2. ~/.reasonix/memory/global/ ‚Äî your cross-project private memory.",
-      layerProjectHash: "  3. ~/.reasonix/memory/<project-hash>/ ‚Äî this project's private memory.",
+      layerProject: "  1. {file} ‚Ä?committable team memory (in the repo).",
+      layerGlobal: "  2. ~/.deepmicode/memory/global/ ‚Ä?your cross-project private memory.",
+      layerProjectHash: "  3. ~/.deepmicode/memory/<project-hash>/ ‚Ä?this project's private memory.",
       askModel: "Ask the model to `remember` something, or hand-edit files directly.",
       changesNote:
-        "Changes take effect on next /new or launch ‚Äî the system prompt is hashed once per session to keep the prefix cache warm.",
+        "Changes take effect on next /new or launch ‚Ä?the system prompt is hashed once per session to keep the prefix cache warm.",
       subcommands:
         "Subcommands: /memory list | /memory show <name> | /memory forget <name> | /memory clear <scope> confirm",
       changesNoteShort:
@@ -1161,17 +1161,17 @@ export const EN: TranslationSchema = {
     },
     mcp: {
       noServers:
-        'no MCP servers attached. Run `reasonix setup` to pick some, or launch with --mcp "<spec>". `reasonix mcp list` shows the catalog. Note: model-invoked shell commands are gated per-call (allow once / allow always / deny) ‚Äî no global allow-all flag.',
+        'no MCP servers attached. Run `DeepMiCode setup` to pick some, or launch with --mcp "<spec>". `DeepMiCode mcp list` shows the catalog. Note: model-invoked shell commands are gated per-call (allow once / allow always / deny) ‚Ä?no global allow-all flag.',
       toolsLabel: "  tools     {count}",
       resourcesHint: "`/resource` to browse+read",
       promptsHint: "`/prompt` to browse+fetch",
       awarenessOnly:
         "Chat mode consumes tools today; resources+prompts are surfaced here for awareness.",
       catalogHint:
-        "Full catalog: `reasonix mcp list` ¬∑ deeper diagnosis: `reasonix mcp inspect <spec>`.",
+        "Full catalog: `DeepMiCode mcp list` ¬∑ deeper diagnosis: `DeepMiCode mcp inspect <spec>`.",
       fallbackServers: "MCP servers ({count}):",
       fallbackTools: "Tools in registry ({count}):",
-      fallbackChange: "To change this set, exit and run `reasonix setup`.",
+      fallbackChange: "To change this set, exit and run `DeepMiCode setup`.",
       usageDisableEnable:
         "usage: /mcp {action} <name>  ¬∑  pick a name shown in /mcp (anonymous servers can't be named-toggled).",
       usageReconnect: "usage: /mcp reconnect <name>  ¬∑  pick a name shown in /mcp.",
@@ -1184,12 +1184,12 @@ export const EN: TranslationSchema = {
     },
     init: {
       codeOnly:
-        "/init only works in code mode (it needs filesystem tools).\nRun `reasonix code [path]` to start a session rooted at the\nproject you want to initialize, then run /init.",
-      exists: "‚ñ∏ REASONIX.md already exists at {path}",
+        "/init only works in code mode (it needs filesystem tools).\nRun `DeepMiCode code [path]` to start a session rooted at the\nproject you want to initialize, then run /init.",
+      exists: "‚ñ?DEEPMICODE.md already exists at {path}",
       existsForce: "  /init force   regenerate from scratch (overwrites)",
-      existsEdit: "  Or edit it by hand ‚Äî it's just markdown. The current file is",
+      existsEdit: "  Or edit it by hand ‚Ä?it's just markdown. The current file is",
       existsPinned: "  pinned into the system prompt every launch as-is.",
-      info: "‚ñ∏ /init ‚Äî model will scan the project and synthesize REASONIX.md.\n  The result lands as a pending edit; review with /apply or /walk.",
+      info: "‚ñ?/init ‚Ä?model will scan the project and synthesize DEEPMICODE.md.\n  The result lands as a pending edit; review with /apply or /walk.",
     },
     webSearchEngine: {
       currentEngine: "Current web search engine: {engine}",
@@ -1202,15 +1202,15 @@ export const EN: TranslationSchema = {
       usageMetaso:
         "  /search-engine metaso              use Metaso API (100/d free, configure your own API key for more)",
       usageTavily:
-        "  /search-engine tavily              use Tavily API (LLM-friendly, free 1000/mo ‚Äî set TAVILY_API_KEY or tavilyApiKey in config; get one at https://tavily.com)",
+        "  /search-engine tavily              use Tavily API (LLM-friendly, free 1000/mo ‚Ä?set TAVILY_API_KEY or tavilyApiKey in config; get one at https://tavily.com)",
       usagePerplexity:
-        "  /search-engine perplexity          use Perplexity AI (AI-native answer + citations ‚Äî set PERPLEXITY_API_KEY or perplexityApiKey in config; get one at https://perplexity.ai/settings/api)",
+        "  /search-engine perplexity          use Perplexity AI (AI-native answer + citations ‚Ä?set PERPLEXITY_API_KEY or perplexityApiKey in config; get one at https://perplexity.ai/settings/api)",
       usageExa:
-        "  /search-engine exa                 use Exa API (AI-native answer + citations, free 1000/mo ‚Äî set EXA_API_KEY or exaApiKey in config; sign up at https://exa.ai)",
+        "  /search-engine exa                 use Exa API (AI-native answer + citations, free 1000/mo ‚Ä?set EXA_API_KEY or exaApiKey in config; sign up at https://exa.ai)",
       usageOllama:
-        "  /search-engine ollama              use Ollama cloud web search ‚Äî set OLLAMA_API_KEY or ollamaApiKey in config; get one at https://ollama.com/settings/keys",
+        "  /search-engine ollama              use Ollama cloud web search ‚Ä?set OLLAMA_API_KEY or ollamaApiKey in config; get one at https://ollama.com/settings/keys",
       usageBrave:
-        "  /search-engine brave               use Brave Search API (independent index, free 2000/mo ‚Äî set BRAVE_SEARCH_API_KEY or braveApiKey in config; get one at https://brave.com/search/api/)",
+        "  /search-engine brave               use Brave Search API (independent index, free 2000/mo ‚Ä?set BRAVE_SEARCH_API_KEY or braveApiKey in config; get one at https://brave.com/search/api/)",
       alias: "Alias: /se",
       searxngInfo:
         "SearXNG is a self-hosted metasearch engine (https://github.com/searxng/searxng).",
@@ -1229,32 +1229,32 @@ export const EN: TranslationSchema = {
       switchedBraveNote:
         " Set BRAVE_SEARCH_API_KEY (or BRAVE_API_KEY) or `braveApiKey` in config; free 2000/mo at https://brave.com/search/api/.",
       keyNeeded:
-        'No API key configured for "{engine}".\n\n  1. Set the {envVar} environment variable\n  2. Or provide one inline:  /search-engine {engine} <your-key>\n  3. Or add "{engine}ApiKey" to ~/.reasonix/config.json\n\nThen retry /search-engine {engine}.',
+        'No API key configured for "{engine}".\n\n  1. Set the {envVar} environment variable\n  2. Or provide one inline:  /search-engine {engine} <your-key>\n  3. Or add "{engine}ApiKey" to ~/.deepmicode/config.json\n\nThen retry /search-engine {engine}.',
       keySaved: " API key saved to config.",
       confirmed:
         'Web search engine set to "{engine}"{detail}. Next assistant turn will pick up the change.',
       confirmedDetail: " ({endpoint})",
     },
     skill: {
-      listEmpty: "no skills found. Reasonix reads skills from:",
+      listEmpty: "no skills found. DeepMiCode reads skills from:",
       listProjectScope:
-        "  ¬∑ <project>/.reasonix/skills/<name>/SKILL.md  (or <name>.md)  ‚Äî project scope",
-      listGlobalScope: "  ¬∑ ~/.reasonix/skills/<name>/SKILL.md  (or <name>.md)  ‚Äî global scope",
-      listProjectOnly: "  (project scope is only active in `reasonix code`)",
+        "  ¬∑ <project>/.deepmicode/skills/<name>/SKILL.md  (or <name>.md)  ‚Ä?project scope",
+      listGlobalScope: "  ¬∑ ~/.deepmicode/skills/<name>/SKILL.md  (or <name>.md)  ‚Ä?global scope",
+      listProjectOnly: "  (project scope is only active in `DeepMiCode code`)",
       listFrontmatter: "Each file's frontmatter needs at least `name` and `description`.",
       listInvoke:
         "Invoke a skill with `/skill <name> [args]` or by asking the model to call `run_skill`.",
       listHeader: "User skills ({count}):",
       listFooter: "View: /skill show <name>   Run: /skill <name> [args]   New: /skill new <name>",
       listEmptyNewHint:
-        "Scaffold one with: /skill new <name>  (project scope) ‚Äî there's no remote registry yet; you author skills directly.",
+        "Scaffold one with: /skill new <name>  (project scope) ‚Ä?there's no remote registry yet; you author skills directly.",
       showUsage: "usage: /skill show <name>",
       showNotFound: "no skill found: {name}",
       runNotFound: "no skill found: {name}  (try /skill list)",
-      runInfo: "‚ñ∏ running skill: {name}{args}",
+      runInfo: "‚ñ?running skill: {name}{args}",
       newUsage: "usage: /skill new <name> [--global]",
-      newCreated: "‚ñ∏ created skill: {name}\n  {path}\n  edit it, then `/skill {name}` to invoke",
-      newError: "‚ñ≤ /skill new failed: {reason}",
+      newCreated: "‚ñ?created skill: {name}\n  {path}\n  edit it, then `/skill {name}` to invoke",
+      newError: "‚ñ?/skill new failed: {reason}",
       pathsHeader: "Skill paths (priority order):",
       pathsPriority:
         "Priority: project > custom paths in config order > global > builtin. Changes affect the system prompt on next /new or new session.",
@@ -1262,10 +1262,10 @@ export const EN: TranslationSchema = {
         "usage: /skill paths [list]\n       /skill paths add <path>\n       /skill paths remove <path|N>",
       pathsAddUsage: "usage: /skill paths add <path>",
       pathsRemoveUsage: "usage: /skill paths remove <path|N>",
-      pathsAdded: "‚ñ∏ added custom skills path: {path}",
-      pathsAlready: "‚ñ∏ custom skills path already configured: {path}",
-      pathsRemoved: "‚ñ∏ removed custom skills path: {path}",
-      pathsRemoveNotFound: "‚ñ∏ no custom skills path matches: {target}",
+      pathsAdded: "‚ñ?added custom skills path: {path}",
+      pathsAlready: "‚ñ?custom skills path already configured: {path}",
+      pathsRemoved: "‚ñ?removed custom skills path: {path}",
+      pathsRemoveNotFound: "‚ñ?no custom skills path matches: {target}",
       pathsRestartHint:
         "The current session's system prompt is unchanged; run /new or start a new session to refresh the skills index.",
     },
@@ -1319,8 +1319,8 @@ export const EN: TranslationSchema = {
       "no $EDITOR / $VISUAL / $GIT_EDITOR set \u2014 export one (e.g. `export EDITOR=nano`) and retry",
     editorExited: "editor exited with code {code}",
     typeaheadStaged: "\u25b8 {count} line(s) staged \u00b7 esc recall",
-    steerPlaceholder: "type to steer the current task ‚Äî commands are disabled while busy",
-    steerHint: "send ‚Äî injected mid-turn",
+    steerPlaceholder: "type to steer the current task ‚Ä?commands are disabled while busy",
+    steerHint: "send ‚Ä?injected mid-turn",
     stashNothing: "Nothing to stash",
     stashSaved: "Stashed",
     stashRecall: "Recalled",
@@ -1339,7 +1339,7 @@ export const EN: TranslationSchema = {
     allowOnce: "allow once",
     allowOnceDesc: "permit this access; remember the directory for the rest of this session",
     allowAlways: "allow always",
-    allowAlwaysDesc: "remember `{prefix}` for this project (persisted in ~/.reasonix/config.json)",
+    allowAlwaysDesc: "remember `{prefix}` for this project (persisted in ~/.deepmicode/config.json)",
     deny: "deny",
     denyDesc: "press Tab to add context telling the model why",
     pathLabel: "path",
@@ -1373,8 +1373,8 @@ export const EN: TranslationSchema = {
     cwdLabel: "cwd",
     timeoutLabel: "timeout",
     waitLabel: "wait",
-    previewMore: "‚Ä¶ {n} more line hidden ‚Äî press esc, ask the model to split it",
-    previewMorePlural: "‚Ä¶ {n} more lines hidden ‚Äî press esc, ask the model to split it",
+    previewMore: "‚Ä?{n} more line hidden ‚Ä?press esc, ask the model to split it",
+    previewMorePlural: "‚Ä?{n} more lines hidden ‚Ä?press esc, ask the model to split it",
     promptTitleRunCommand: "Run command",
     promptTitleRunBackground: "Run background command",
     actionRunOnce: "Run once",
@@ -1401,12 +1401,12 @@ export const EN: TranslationSchema = {
   editPicker: {
     title: "edit a previous message",
     hint: "‚Üë‚Üì pick ¬∑ Enter to load into composer ¬∑ Esc to cancel",
-    empty: "no user turns yet ‚Äî nothing to edit",
+    empty: "no user turns yet ‚Ä?nothing to edit",
     dismiss: "Esc to dismiss",
-    forked: "‚ñ∏ forked at turn #{turn} ‚Äî buffer holds the original text",
+    forked: "‚ñ?forked at turn #{turn} ‚Ä?buffer holds the original text",
   },
   sessionPicker: {
-    header: " \u25c8 REASONIX \u00b7 pick a session ",
+    header: " \u25c8 DeepMiCode \u00b7 pick a session ",
     title: "pick a session \u2014 {workspace}",
     messages: "{count} message",
     messagesPlural: "{count} messages",
@@ -1428,19 +1428,19 @@ export const EN: TranslationSchema = {
     daysAgo: "{count} days ago",
   },
   workspacePicker: {
-    header: " ‚óà REASONIX ¬∑ pick a workspace ",
-    title: "pick a workspace ‚Äî {workspace}",
+    header: " ‚ó?DeepMiCode ¬∑ pick a workspace ",
+    title: "pick a workspace ‚Ä?{workspace}",
     sessions: "{count} session",
     sessionsPlural: "{count} sessions",
     current: "current",
-    pickerHint: "‚Üë‚Üì pick ¬∑ / search ¬∑ ‚èé switch + pick session ¬∑ esc quit ¬∑ /cwd <path> adds one",
-    empty: "  no known workspaces yet ‚Äî run /cwd <path> once to add one",
+    pickerHint: "‚Üë‚Üì pick ¬∑ / search ¬∑ ‚è?switch + pick session ¬∑ esc quit ¬∑ /cwd <path> adds one",
+    empty: "  no known workspaces yet ‚Ä?run /cwd <path> once to add one",
     searchPrompt: "  search workspaces: /",
-    searchHint: "  type to filter  ¬∑  ‚èé switch + pick session  ¬∑  esc clear",
+    searchHint: "  type to filter  ¬∑  ‚è?switch + pick session  ¬∑  esc clear",
     searchEmpty: "  no workspaces match this search",
   },
   modelPicker: {
-    header: " \u25c8 REASONIX \u00b7 pick a setup ",
+    header: " \u25c8 DeepMiCode \u00b7 pick a setup ",
     loading: "  \u00b7  loading catalog\u2026",
     catalogEmpty: "  \u00b7  catalog empty \u2014 using known fallbacks",
     modelsAvailable: "  \u00b7  {count} models available",
@@ -1522,7 +1522,7 @@ export const EN: TranslationSchema = {
   },
   startup: {
     codeRooted:
-      '\u25b8 reasonix code: rooted at {rootDir}, session "{session}" \u00b7 {tools} native tool(s){semantic}',
+      '\u25b8 DeepMiCode code: rooted at {rootDir}, session "{session}" \u00b7 {tools} native tool(s){semantic}',
     ephemeral: "(ephemeral)",
     semanticOn: " \u00b7 semantic_search on",
   },
@@ -1567,7 +1567,7 @@ export const EN: TranslationSchema = {
       "web_search: Metaso returned unparseable response (HTTP {status}) \u2014 try again later",
     metasoApiError: "web_search: Metaso API error (code {code}: {message}) \u2014 try again later",
     tavilyMissingKey:
-      "web_search: Tavily backend requires an API key \u2014 set TAVILY_API_KEY env var or `tavilyApiKey` in ~/.reasonix/config.json; free 1000/mo signup at https://tavily.com",
+      "web_search: Tavily backend requires an API key \u2014 set TAVILY_API_KEY env var or `tavilyApiKey` in ~/.deepmicode/config.json; free 1000/mo signup at https://tavily.com",
     tavilyUnauthorized:
       "web_search: Tavily API key rejected \u2014 check TAVILY_API_KEY or get one at https://tavily.com",
     tavilyRateLimit:
@@ -1577,7 +1577,7 @@ export const EN: TranslationSchema = {
     tavilyParseError:
       "web_search: Tavily returned unparseable response (HTTP {status}) \u2014 try again later",
     perplexityMissingKey:
-      "web_search: Perplexity backend requires an API key \u2014 set PERPLEXITY_API_KEY env var or `perplexityApiKey` in ~/.reasonix/config.json; get one at https://perplexity.ai/settings/api",
+      "web_search: Perplexity backend requires an API key \u2014 set PERPLEXITY_API_KEY env var or `perplexityApiKey` in ~/.deepmicode/config.json; get one at https://perplexity.ai/settings/api",
     perplexityUnauthorized:
       "web_search: Perplexity API key rejected \u2014 check PERPLEXITY_API_KEY or get one at https://perplexity.ai/settings/api",
     perplexityRateLimit:
@@ -1587,7 +1587,7 @@ export const EN: TranslationSchema = {
     perplexityParseError:
       "web_search: Perplexity returned unparseable response (HTTP {status}) \u2014 try again later",
     exaMissingKey:
-      "web_search: Exa backend requires an API key \u2014 set EXA_API_KEY env var or `exaApiKey` in ~/.reasonix/config.json; free 1000/mo signup at https://exa.ai",
+      "web_search: Exa backend requires an API key \u2014 set EXA_API_KEY env var or `exaApiKey` in ~/.deepmicode/config.json; free 1000/mo signup at https://exa.ai",
     exaUnauthorized:
       "web_search: Exa API key rejected \u2014 check EXA_API_KEY or get one at https://exa.ai",
     exaRateLimit:
@@ -1597,7 +1597,7 @@ export const EN: TranslationSchema = {
     exaParseError:
       "web_search: Exa returned unparseable response (HTTP {status}) \u2014 try again later",
     braveMissingKey:
-      "web_search: Brave Search requires an API key \u2014 set BRAVE_SEARCH_API_KEY (or BRAVE_API_KEY) env var or `braveApiKey` in ~/.reasonix/config.json; free 2000/mo signup at https://brave.com/search/api/",
+      "web_search: Brave Search requires an API key \u2014 set BRAVE_SEARCH_API_KEY (or BRAVE_API_KEY) env var or `braveApiKey` in ~/.deepmicode/config.json; free 2000/mo signup at https://brave.com/search/api/",
     braveUnauthorized:
       "web_search: Brave Search API key rejected \u2014 check BRAVE_SEARCH_API_KEY or get one at https://brave.com/search/api/",
     braveRateLimit:
@@ -1714,7 +1714,7 @@ export const EN: TranslationSchema = {
     verySlow: "very slow \u00b7 {ms}ms",
     slowToast: "\u26a0 MCP `{name}` slow \u00b7 {seconds}s p95 over the last {sampleSize} calls",
     emptyHint:
-      "\u2139 no MCP servers configured \u2014 try: `reasonix setup` to re-pick, or `reasonix mcp install filesystem` \u00b7 shell commands gate per-call (allow once / allow always / deny), no global allow-all",
+      "\u2139 no MCP servers configured \u2014 try: `DeepMiCode setup` to re-pick, or `DeepMiCode mcp install filesystem` \u00b7 shell commands gate per-call (allow once / allow always / deny), no global allow-all",
   },
   denyContextInput: {
     description:
@@ -1757,8 +1757,8 @@ export const EN: TranslationSchema = {
     bridged: "\u2713 installed {name} - bridged",
     bridgeFailed: "\u25b2 installed {name} - bridge failed: {reason}",
     bridgeReloadFailed:
-      "\u2713 installed {name} - restart `reasonix code` to bridge (reload failed: {message})",
-    restartBridge: "\u2713 installed {name} - restart `reasonix code` to bridge",
+      "\u2713 installed {name} - restart `DeepMiCode code` to bridge (reload failed: {message})",
+    restartBridge: "\u2713 installed {name} - restart `DeepMiCode code` to bridge",
     needsEnv: "  \u00b7  needs env: {env}",
     badgeOfficial: "[off]",
     badgeSmithery: "[smt]",
@@ -1771,7 +1771,7 @@ export const EN: TranslationSchema = {
   },
   mcpBrowser: {
     title: "\u25c8 MCP browser",
-    empty: "No MCP servers attached. Run `reasonix setup` to pick some, or launch with --mcp.",
+    empty: "No MCP servers attached. Run `DeepMiCode setup` to pick some, or launch with --mcp.",
     serverCount: "{count} server{s}",
     footer: "\u2191\u2193 pick \u00b7 [r] reconnect \u00b7 [d] disable \u00b7 esc quit",
   },
@@ -1800,17 +1800,17 @@ export const EN: TranslationSchema = {
     reconnectDetail: "tearing down \u00b7 re-handshake \u00b7 listing tools",
     disabledDetail: "via /mcp disable {name}",
     failedSetupHint:
-      "‚Üí run `reasonix setup` to remove this entry, or fix the underlying issue (missing npm package, network, etc.).",
+      "‚Ü?run `DeepMiCode setup` to remove this entry, or fix the underlying issue (missing npm package, network, etc.).",
     failedSetupConfigHint:
-      "‚Üí run `reasonix setup` to remove broken entries from your saved config.",
+      "‚Ü?run `DeepMiCode setup` to remove broken entries from your saved config.",
     abortedHint:
-      "MCP startup aborted ‚Äî {count} server(s) skipped. Run /mcp to retry once you've fixed the underlying issue.",
+      "MCP startup aborted ‚Ä?{count} server(s) skipped. Run /mcp to retry once you've fixed the underlying issue.",
     toolsReady: "tools ready",
     warnLabel: "warn",
   },
   checkpointPicker: {
     title: "restore a checkpoint \u2014 {workspace}",
-    header: " \u25c8 REASONIX \u00b7 pick a checkpoint ",
+    header: " \u25c8 DeepMiCode \u00b7 pick a checkpoint ",
     empty: "  no checkpoints in this workspace yet - see /checkpoint to make one",
     more: "     \u2026 {hidden} more",
     footer: "  \u2191\u2193 pick  \u00b7  \u23ce restore  \u00b7  [d] forget  \u00b7  esc quit",
@@ -1826,7 +1826,7 @@ export const EN: TranslationSchema = {
     rejectHint: "Drops the proposal. Model continues with the original remaining steps.",
   },
   diffApp: {
-    title: "reasonix diff",
+    title: "DeepMiCode diff",
     turnLabel: "turn {turn} ({current}/{total})",
     turnsAligned: "{count} turns aligned",
     paneEmpty: "(no records on this side for this turn)",
@@ -1902,18 +1902,18 @@ export const EN: TranslationSchema = {
     moreAvailable: "more available",
     allLoaded: "all loaded",
     morePagesAvailable:
-      "\u25b8 more pages available \u2014 `reasonix mcp list --pages <n>` or --all",
-    installHint: "Install:  reasonix mcp install <name>",
-    usageSearch: "usage: reasonix mcp search <query>",
-    usageInstall: "usage: reasonix mcp install <name>",
+      "\u25b8 more pages available \u2014 `DeepMiCode mcp list --pages <n>` or --all",
+    installHint: "Install:  DeepMiCode mcp install <name>",
+    usageSearch: "usage: DeepMiCode mcp search <query>",
+    usageInstall: "usage: DeepMiCode mcp install <name>",
     noMatchesFor: 'No matches for "{q}" across {count} loaded entries ({source})',
     matchCount: '{count} match(es) for "{q}" in {source} registry ({loaded} entries scanned):',
-    moreLoaded: "\u2026 {count} more loaded \u2014 use `reasonix mcp search <query>` to filter",
+    moreLoaded: "\u2026 {count} more loaded \u2014 use `DeepMiCode mcp search <query>` to filter",
     moreMatches: "\u2026 {count} more matches",
     installed: "Installed: {spec}",
     noServerFound:
       'No MCP server named "{target}" found after walking {pages} page(s) of the {source} registry.',
-    noServerTryMore: "Try: reasonix mcp install {target} --max-pages 100",
+    noServerTryMore: "Try: DeepMiCode mcp install {target} --max-pages 100",
     noInstallMeta:
       'Could not derive install metadata for "{name}" \u2014 try `npx -y @smithery/cli install {name}` directly.',
     buildSpecFailed: "Cannot build install spec for {name}: {message}",

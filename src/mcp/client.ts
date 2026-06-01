@@ -56,17 +56,17 @@ export class McpClient {
   private _serverInfo: InitializeResult["serverInfo"] = { name: "", version: "" };
   private _protocolVersion = "";
   private _instructions: string | undefined;
-  // Progress-token â†’ handler for notifications/progress routing. Tokens
+  // Progress-token â†?handler for notifications/progress routing. Tokens
   // are minted per call when the caller supplies an onProgress
   // callback; cleared when the final response lands (or the pending
-  // request rejects). No leaks â€” the `try/finally` in callTool
+  // request rejects). No leaks â€?the `try/finally` in callTool
   // guarantees cleanup even on timeout.
   private readonly progressHandlers = new Map<string | number, McpProgressHandler>();
   private nextProgressToken = 1;
 
   constructor(opts: McpClientOptions) {
     this.transport = opts.transport;
-    this.clientInfo = opts.clientInfo ?? { name: "reasonix", version: VERSION };
+    this.clientInfo = opts.clientInfo ?? { name: "deepmicode", version: VERSION };
     const workspaceDir = opts.workspaceDir?.trim();
     if (workspaceDir) {
       this.workspaceDir = resolve(workspaceDir);
@@ -203,7 +203,7 @@ export class McpClient {
   }
 
   private assertInitialized(): void {
-    if (!this.initialized) throw new Error("MCP client not initialized â€” call initialize() first");
+    if (!this.initialized) throw new Error("MCP client not initialized â€?call initialize() first");
   }
 
   private async request<R>(method: string, params: unknown, signal?: AbortSignal): Promise<R> {
@@ -225,7 +225,7 @@ export class McpClient {
       });
       // Wire up cancellation: when signal fires, send an MCP cancellation
       // notification to the server (so it can stop whatever it was doing)
-      // and reject the caller immediately â€” no need to wait for the
+      // and reject the caller immediately â€?no need to wait for the
       // subprocess to finish its in-flight work. Late responses from the
       // server are dropped by `dispatch` because the id is gone from
       // `pending`.
@@ -246,7 +246,7 @@ export class McpClient {
               params: { requestId: id, reason: "aborted by user" },
             })
             .catch(() => {
-              // Transport may already be closing â€” swallow; we still
+              // Transport may already be closing â€?swallow; we still
               // reject the caller below so they unblock.
             });
           reject(new Error(`MCP request ${method} (id=${id}) aborted by user`));
@@ -255,7 +255,7 @@ export class McpClient {
       }
     });
     promise.catch(() => undefined);
-    // Swallow rejection on the race-leg derivative too â€” if `send` wins the race,
+    // Swallow rejection on the race-leg derivative too â€?if `send` wins the race,
     // a late-rejecting `promise.then(...)` would otherwise be orphaned (#742).
     const promiseSettled = promise.then(
       () => undefined,

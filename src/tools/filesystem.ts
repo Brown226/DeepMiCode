@@ -1,4 +1,4 @@
-/** Native FS tools â€” sandbox enforced here, not delegated. `edit_file` takes a single SEARCH/REPLACE string. */
+/** Native FS tools â€?sandbox enforced here, not delegated. `edit_file` takes a single SEARCH/REPLACE string. */
 
 import { promises as fs } from "node:fs";
 import * as pathMod from "node:path";
@@ -25,11 +25,11 @@ export { lineDiff } from "./fs/edit.js";
 export interface FilesystemToolsOptions {
   /** Absolute directory the tools may read/write. Paths outside this are refused. */
   rootDir: string;
-  /** false â†’ register only read-side tools. Default true. */
+  /** false â†?register only read-side tools. Default true. */
   allowWriting?: boolean;
   /** Files at or under this size get full content; larger go to outline mode. Default 64 KiB. */
   outlineThresholdBytes?: number;
-  /** Cap on total bytes from listing/grep tools â€” bounds tree-as-one-string accidents. */
+  /** Cap on total bytes from listing/grep tools â€?bounds tree-as-one-string accidents. */
   maxListBytes?: number;
 }
 
@@ -44,11 +44,11 @@ const HARD_MAX_FILE_BYTES = 32 * 1024 * 1024;
 const OUTLINE_HEAD_LINES = 80;
 
 // Skipped unless `include_deps:true`. Derived from the semantic indexer's exclude
-// list, minus `.reasonix` â€” the indexer shouldn't embed session logs / cache, but
-// user skills live at `<root>/.reasonix/skills/` (and `~/.reasonix/skills/`) and
+// list, minus `.deepmicode` â€?the indexer shouldn't embed session logs / cache, but
+// user skills live at `<root>/.deepmicode/skills/` (and `~/.deepmicode/skills/`) and
 // must stay reachable to read_file / search_files / search_content (#1357).
 const SKIP_DIR_NAMES: ReadonlySet<string> = new Set(
-  DEFAULT_INDEX_EXCLUDES.dirs.filter((d) => d !== ".reasonix"),
+  DEFAULT_INDEX_EXCLUDES.dirs.filter((d) => d !== ".deepmicode"),
 );
 
 /** First line of binary defense; NUL-byte sniff is the second (catches mislabeled `.txt`). */
@@ -73,7 +73,7 @@ export function pathIsUnder(child: string, parent: string): boolean {
 
 const GLOB_METACHARS = /[*?{[]/;
 
-/** Glob via picomatch when metachars present, else case-insensitive substring â€” keeps `.ts` / `test` callers working. Slash in pattern â†’ match rel-path; otherwise basename. */
+/** Glob via picomatch when metachars present, else case-insensitive substring â€?keeps `.ts` / `test` callers working. Slash in pattern â†?match rel-path; otherwise basename. */
 export function compileNameFilter(
   filter: string | null | undefined,
 ): ((name: string, rel: string) => boolean) | null {
@@ -93,7 +93,7 @@ function isLikelyBinaryByName(name: string): boolean {
   return BINARY_EXTENSIONS.has(name.slice(dot).toLowerCase());
 }
 
-/** Sniff first 8 KiB for a NUL byte â€” catches binary files whose extension lied. UTF-16 (rare in source) is an accepted false positive. */
+/** Sniff first 8 KiB for a NUL byte â€?catches binary files whose extension lied. UTF-16 (rare in source) is an accepted false positive. */
 function looksBinary(buf: Buffer): boolean {
   const end = Math.min(buf.length, 8192);
   for (let i = 0; i < end; i++) {
@@ -119,16 +119,16 @@ export function registerFilesystemTools(
   const maxListBytes = opts.maxListBytes ?? DEFAULT_MAX_LIST_BYTES;
 
   const normRoot = pathMod.resolve(rootDir);
-  /** Approved-this-session directory prefixes â€” `run_once` keeps the user from being asked twice for follow-up reads in the same dir. Wiped on process exit, not persisted. */
+  /** Approved-this-session directory prefixes â€?`run_once` keeps the user from being asked twice for follow-up reads in the same dir. Wiped on process exit, not persisted. */
   const sessionApproved = new Set<string>();
-  /** Subdir REASONIX.md paths already injected this session (#1033). Reset per toolset, so each tab/session re-injects on first relevant read. */
+  /** Subdir DEEPMICODE.md paths already injected this session (#1033). Reset per toolset, so each tab/session re-injects on first relevant read. */
   const shownSubdirMemory = new Set<string>();
 
-  /** Prepend any not-yet-shown ancestor REASONIX.md (between absPath's dir and rootDir) to a read_file body. Outer dirs first so broad rules read before specific overrides. */
+  /** Prepend any not-yet-shown ancestor DEEPMICODE.md (between absPath's dir and rootDir) to a read_file body. Outer dirs first so broad rules read before specific overrides. */
   function withSubdirMemory(absPath: string, body: string): string {
     return prependMemorySections(findSubdirMemoryAncestors(absPath, rootDir), body);
   }
-  /** Same idea as withSubdirMemory but for list_directory â€” includes the listed dir's own REASONIX.md, not just ancestors. */
+  /** Same idea as withSubdirMemory but for list_directory â€?includes the listed dir's own DEEPMICODE.md, not just ancestors. */
   function withDirMemory(absDir: string, body: string): string {
     return prependMemorySections(findDirMemory(absDir, rootDir), body);
   }
@@ -175,7 +175,7 @@ export function registerFilesystemTools(
     const choice = await pending;
     if (choice.type === "deny") {
       throw new Error(
-        `user denied access to ${abs}${choice.denyContext ? ` â€” ${choice.denyContext}` : ""}`,
+        `user denied access to ${abs}${choice.denyContext ? ` â€?${choice.denyContext}` : ""}`,
       );
     }
     if (choice.type === "always_allow") {
@@ -211,7 +211,7 @@ export function registerFilesystemTools(
     const resolved = pathMod.resolve(rootDir, normalized);
     if (!pathIsUnder(resolved, normRoot)) {
       throw new Error(
-        `path escapes sandbox root (${normRoot}): ${raw} â€” use an absolute system path like /Users/foo or C:\\Users\\foo to request approved outside-sandbox access`,
+        `path escapes sandbox root (${normRoot}): ${raw} â€?use an absolute system path like /Users/foo or C:\\Users\\foo to request approved outside-sandbox access`,
       );
     }
     return resolved;
@@ -230,7 +230,7 @@ export function registerFilesystemTools(
     name: "read_file",
     parallelSafe: true,
     skipTruncationSave: true,
-    description: `Read a file under the sandbox root. Default returns FULL CONTENT for files â‰¤ ${Math.round(DEFAULT_OUTLINE_THRESHOLD_BYTES / 1024)} KiB. Optional scoping: head/tail (N lines), range "A-B" (1-indexed inclusive). Larger files auto-switch to outline mode (metadata + head + symbol outline for TS/JS/Python/Go/Rust/Markdown/Protobuf/text) â€” drill in with range or search_content. Files over ${Math.round(HARD_MAX_FILE_BYTES / (1024 * 1024))} MiB and binaries are refused â€” use get_file_info for stat.`,
+    description: `Read a file under the sandbox root. Default returns FULL CONTENT for files â‰?${Math.round(DEFAULT_OUTLINE_THRESHOLD_BYTES / 1024)} KiB. Optional scoping: head/tail (N lines), range "A-B" (1-indexed inclusive). Larger files auto-switch to outline mode (metadata + head + symbol outline for TS/JS/Python/Go/Rust/Markdown/Protobuf/text) â€?drill in with range or search_content. Files over ${Math.round(HARD_MAX_FILE_BYTES / (1024 * 1024))} MiB and binaries are refused â€?use get_file_info for stat.`,
     readOnly: true,
     stormExempt: true,
     parameters: {
@@ -254,7 +254,7 @@ export function registerFilesystemTools(
       const abs = await safePath(args.path, "read_file", ctx);
       const rel = displayRel(rootDir, abs);
       // Open once and reuse the fd so the directory check and the read
-      // bind to the same inode â€” closes the statâ†’read TOCTOU race.
+      // bind to the same inode â€?closes the statâ†’read TOCTOU race.
       const fh = await fs.open(abs, "r");
       let raw: Buffer;
       let sizeBytes: number;
@@ -266,11 +266,11 @@ export function registerFilesystemTools(
         sizeBytes = stat.size;
         if (sizeBytes > HARD_MAX_FILE_BYTES) {
           return [
-            `[refused: ${rel} is ${formatBytes(sizeBytes)} (> ${formatBytes(HARD_MAX_FILE_BYTES)} hard ceiling) â€” too large to load]`,
+            `[refused: ${rel} is ${formatBytes(sizeBytes)} (> ${formatBytes(HARD_MAX_FILE_BYTES)} hard ceiling) â€?too large to load]`,
             "Use one of:",
-            `  - search_content path:"${rel}" pattern:"<your regex>"  â€” grep within the file`,
-            `  - read_file path:"${rel}" range:"A-B"                   â€” read a specific 1-indexed line range`,
-            `  - read_file path:"${rel}" head:N  /  tail:N             â€” read N lines at the start or end`,
+            `  - search_content path:"${rel}" pattern:"<your regex>"  â€?grep within the file`,
+            `  - read_file path:"${rel}" range:"A-B"                   â€?read a specific 1-indexed line range`,
+            `  - read_file path:"${rel}" head:N  /  tail:N             â€?read N lines at the start or end`,
           ].join("\n");
         }
         raw = await fh.readFile();
@@ -279,7 +279,7 @@ export function registerFilesystemTools(
       }
 
       if (looksBinary(raw)) {
-        return `[refused: ${rel} appears to be binary (${formatBytes(sizeBytes)}) â€” read_file returns text only. Use get_file_info for stat.]`;
+        return `[refused: ${rel} appears to be binary (${formatBytes(sizeBytes)}) â€?read_file returns text only. Use get_file_info for stat.]`;
       }
 
       const { text } = decodeFileBuffer(raw);
@@ -294,7 +294,7 @@ export function registerFilesystemTools(
       if (lines.length > 0 && lines[lines.length - 1] === "") lines = lines.slice(0, -1);
       const totalLines = lines.length;
 
-      // range wins over head/tail when set â€” the most precise ask
+      // range wins over head/tail when set â€?the most precise ask
       // should dominate. Parse "A-B" strictly; bad formats fall through
       // to head/tail / outline-mode instead of erroring.
       if (typeof args.range === "string" && /^\d+\s*-\s*\d+$/.test(args.range)) {
@@ -310,7 +310,7 @@ export function registerFilesystemTools(
         const slice = lines.slice(0, count);
         const marker =
           count < totalLines
-            ? `\n\n[â€¦head ${count} of ${totalLines} lines â€” call again with range / tail for more]`
+            ? `\n\n[â€¦head ${count} of ${totalLines} lines â€?call again with range / tail for more]`
             : "";
         return withSubdirMemory(abs, slice.join("\n") + marker);
       }
@@ -319,24 +319,24 @@ export function registerFilesystemTools(
         const slice = lines.slice(totalLines - count);
         const marker =
           count < totalLines
-            ? `[â€¦tail ${count} of ${totalLines} lines â€” call again with range / head for more]\n\n`
+            ? `[â€¦tail ${count} of ${totalLines} lines â€?call again with range / head for more]\n\n`
             : "";
         return withSubdirMemory(abs, marker + slice.join("\n"));
       }
 
-      // No explicit scope + file fits the threshold â†’ full content.
+      // No explicit scope + file fits the threshold â†?full content.
       // Trust the prompt cache: a 100K-token file read once amortizes
       // across every turn of the same conversation.
       if (sizeBytes <= outlineThresholdBytes) return withSubdirMemory(abs, lines.join("\n"));
 
-      // No explicit scope + file is over the threshold â†’ outline mode.
+      // No explicit scope + file is over the threshold â†?outline mode.
       // Return enough for the model to orient (head + symbol map) plus
       // concrete next-step commands. Avoids dumping a 5 MB proto into
       // every cached prefix while still surfacing what's inside.
       const head = lines.slice(0, Math.min(OUTLINE_HEAD_LINES, totalLines)).join("\n");
       const outline = formatOutline(extractOutline(abs, lines));
       const parts: string[] = [
-        `[large file: ${formatBytes(sizeBytes)}, ${totalLines} lines â€” outline mode (threshold ${formatBytes(outlineThresholdBytes)})]`,
+        `[large file: ${formatBytes(sizeBytes)}, ${totalLines} lines â€?outline mode (threshold ${formatBytes(outlineThresholdBytes)})]`,
         "",
         `[head ${Math.min(OUTLINE_HEAD_LINES, totalLines)} lines for orientation]`,
         head,
@@ -345,9 +345,9 @@ export function registerFilesystemTools(
       parts.push(
         "",
         "[to read more, call one of:",
-        `  - read_file path:"${rel}" range:"A-B"          â€” 1-indexed line range`,
-        `  - read_file path:"${rel}" head:N  /  tail:N    â€” first/last N lines`,
-        `  - search_content path:"${rel}" pattern:"..."   â€” grep within this file]`,
+        `  - read_file path:"${rel}" range:"A-B"          â€?1-indexed line range`,
+        `  - read_file path:"${rel}" head:N  /  tail:N    â€?first/last N lines`,
+        `  - search_content path:"${rel}" pattern:"..."   â€?grep within this file]`,
       );
       return withSubdirMemory(abs, parts.join("\n"));
     },
@@ -358,7 +358,7 @@ export function registerFilesystemTools(
     parallelSafe: true,
     skipTruncationSave: true,
     description:
-      "List entries in a directory under the sandbox root. Returns one line per entry, marking directories with a trailing slash. Not recursive â€” use directory_tree for that.",
+      "List entries in a directory under the sandbox root. Returns one line per entry, marking directories with a trailing slash. Not recursive â€?use directory_tree for that.",
     readOnly: true,
     stormExempt: true,
     parameters: {
@@ -382,7 +382,7 @@ export function registerFilesystemTools(
     name: "directory_tree",
     parallelSafe: true,
     skipTruncationSave: true,
-    description: `Recursively list entries with indented tree structure (dirs marked '/'). Budget-aware: maxDepth defaults to 2, large subtrees (>50 children) auto-collapse to "[N hidden â€” list_directory to inspect]", and ${[...SKIP_DIR_NAMES].sort().join(" / ")} are skipped unless include_deps:true. For single-level use list_directory; for path lookups use search_files; for code lookups use search_content.`,
+    description: `Recursively list entries with indented tree structure (dirs marked '/'). Budget-aware: maxDepth defaults to 2, large subtrees (>50 children) auto-collapse to "[N hidden â€?list_directory to inspect]", and ${[...SKIP_DIR_NAMES].sort().join(" / ")} are skipped unless include_deps:true. For single-level use list_directory; for path lookups use search_files; for code lookups use search_content.`,
     readOnly: true,
     parameters: {
       type: "object",
@@ -396,7 +396,7 @@ export function registerFilesystemTools(
         include_deps: {
           type: "boolean",
           description:
-            "When true, also traverse node_modules / .git / dist / build / etc. Off by default â€” most exploration questions are about the user's own code.",
+            "When true, also traverse node_modules / .git / dist / build / etc. Off by default â€?most exploration questions are about the user's own code.",
         },
       },
     },
@@ -410,7 +410,7 @@ export function registerFilesystemTools(
       const lines: string[] = [];
       let totalBytes = 0;
       let truncated = false;
-      // Per-directory child cap â€” long fixture / asset folders (200+
+      // Per-directory child cap â€?long fixture / asset folders (200+
       // snapshots) would otherwise dominate; the collapse keeps the
       // overall shape visible. Modest: normal source dirs have <50
       // entries.
@@ -443,16 +443,16 @@ export function registerFilesystemTools(
             }
             const indent = "  ".repeat(depth);
             lines.push(
-              `${indent}[â€¦ ${remaining} entries hidden (${restDirs} dirs, ${restFiles} files) â€” list_directory on this path to see all]`,
+              `${indent}[â€?${remaining} entries hidden (${restDirs} dirs, ${restFiles} files) â€?list_directory on this path to see all]`,
             );
             return;
           }
           const indent = "  ".repeat(depth);
-          const suffix = skip ? " (skipped â€” pass include_deps:true to traverse)" : "";
+          const suffix = skip ? " (skipped â€?pass include_deps:true to traverse)" : "";
           const line = e.isDirectory() ? `${indent}${e.name}/${suffix}` : `${indent}${e.name}`;
           totalBytes += line.length + 1;
           if (totalBytes > maxListBytes) {
-            lines.push(`  [â€¦ tree truncated at ${maxListBytes} bytes â€¦]`);
+            lines.push(`  [â€?tree truncated at ${maxListBytes} bytes â€¦]`);
             truncated = true;
             return;
           }
@@ -486,7 +486,7 @@ export function registerFilesystemTools(
         include_deps: {
           type: "boolean",
           description:
-            "When true, also walk node_modules / .git / dist / build / etc. Off by default â€” most filename searches are about the user's own code.",
+            "When true, also walk node_modules / .git / dist / build / etc. Off by default â€?most filename searches are about the user's own code.",
         },
       },
       required: ["pattern"],
@@ -504,7 +504,7 @@ export function registerFilesystemTools(
     parallelSafe: true,
     skipTruncationSave: true,
     description:
-      "Recursively grep file CONTENTS for a substring or regex â€” 'where is X called', 'what files contain Y'. Returns one match per line as `path:line: text`. Per-file hit cap 30; when the byte budget is mostly spent, remaining files switch to a `rel: N matches` histogram. Pass `summary_only:true` for just the histogram. Skips dependency / VCS / build dirs and binary files. For file NAMES use search_files.",
+      "Recursively grep file CONTENTS for a substring or regex â€?'where is X called', 'what files contain Y'. Returns one match per line as `path:line: text`. Per-file hit cap 30; when the byte budget is mostly spent, remaining files switch to a `rel: N matches` histogram. Pass `summary_only:true` for just the histogram. Skips dependency / VCS / build dirs and binary files. For file NAMES use search_files.",
     readOnly: true,
     parameters: {
       type: "object",
@@ -591,7 +591,7 @@ export function registerFilesystemTools(
           type: "string",
           enum: ["mtime", "name"],
           description:
-            "Sort order. 'mtime' (default) shows most-recently-modified first â€” useful for 'what did I change today'. 'name' is alphabetical.",
+            "Sort order. 'mtime' (default) shows most-recently-modified first â€?useful for 'what did I change today'. 'name' is alphabetical.",
         },
         include_deps: {
           type: "boolean",
@@ -669,7 +669,7 @@ export function registerFilesystemTools(
       try {
         encoding = decodeFileBuffer(await fs.readFile(abs)).encoding;
       } catch {
-        // New file or unreadable â€” fall back to utf8.
+        // New file or unreadable â€?fall back to utf8.
       }
       await fs.writeFile(abs, encodeFile(args.content, encoding));
       // Just wrote the content; the model knows what's on disk, so a
@@ -682,7 +682,7 @@ export function registerFilesystemTools(
   registry.register({
     name: "edit_file",
     description:
-      "Apply a SEARCH/REPLACE edit to an existing file. Call `read_file` on this path first this session â€” the tool refuses otherwise, since SEARCH must match on-disk bytes exactly. `search` is whitespace-sensitive plain text (no regex) and must be unique in the file; otherwise the edit is refused to avoid surprise rewrites.",
+      "Apply a SEARCH/REPLACE edit to an existing file. Call `read_file` on this path first this session â€?the tool refuses otherwise, since SEARCH must match on-disk bytes exactly. `search` is whitespace-sensitive plain text (no regex) and must be unique in the file; otherwise the edit is refused to avoid surprise rewrites.",
     parameters: {
       type: "object",
       properties: {
@@ -704,13 +704,13 @@ export function registerFilesystemTools(
   registry.register({
     name: "multi_edit",
     description:
-      "Apply N SEARCH/REPLACE edits across ONE OR MORE files in one call. Every target file must have been `read_file`'d this session â€” the tool refuses the whole batch otherwise. Edits validate across the full batch before writing. Validation failures leave all files untouched; disk write failures trigger best-effort rollback of files that may have been modified. Per-file edits run in array order, so a later edit can match text inserted by an earlier one. Same per-edit rules as edit_file: `search` is exact text (whitespace sensitive, no regex) and must be unique in its target file at the moment that edit applies. Use this for renames spanning multiple files, cross-file refactors, or any batch where you'd otherwise loop edit_file.",
+      "Apply N SEARCH/REPLACE edits across ONE OR MORE files in one call. Every target file must have been `read_file`'d this session â€?the tool refuses the whole batch otherwise. Edits validate across the full batch before writing. Validation failures leave all files untouched; disk write failures trigger best-effort rollback of files that may have been modified. Per-file edits run in array order, so a later edit can match text inserted by an earlier one. Same per-edit rules as edit_file: `search` is exact text (whitespace sensitive, no regex) and must be unique in its target file at the moment that edit applies. Use this for renames spanning multiple files, cross-file refactors, or any batch where you'd otherwise loop edit_file.",
     parameters: {
       type: "object",
       properties: {
         edits: {
           type: "array",
-          description: "Edits to apply in order. Length â‰¥ 1. Each edit names its own target file.",
+          description: "Edits to apply in order. Length â‰?1. Each edit names its own target file.",
           items: {
             type: "object",
             properties: {
@@ -780,14 +780,14 @@ export function registerFilesystemTools(
       const dst = await safePath(args.destination, "move_file", ctx, "write");
       await fs.mkdir(pathMod.dirname(dst), { recursive: true });
       await fs.rename(src, dst);
-      return `moved ${displayRel(rootDir, src)} â†’ ${displayRel(rootDir, dst)}`;
+      return `moved ${displayRel(rootDir, src)} â†?${displayRel(rootDir, dst)}`;
     },
   });
 
   registry.register({
     name: "delete_file",
     description:
-      "Delete one file under the sandbox root. Refuses directories â€” use delete_directory for those. Errors if the path doesn't exist.",
+      "Delete one file under the sandbox root. Refuses directories â€?use delete_directory for those. Errors if the path doesn't exist.",
     parameters: {
       type: "object",
       properties: { path: { type: "string" } },
@@ -798,7 +798,7 @@ export function registerFilesystemTools(
       const st = await fs.lstat(abs);
       if (st.isDirectory()) {
         throw new Error(
-          `delete_file: ${args.path} is a directory â€” use delete_directory to remove it`,
+          `delete_file: ${args.path} is a directory â€?use delete_directory to remove it`,
         );
       }
       await fs.unlink(abs);
@@ -817,7 +817,7 @@ export function registerFilesystemTools(
         recursive: {
           type: "boolean",
           description:
-            "When true (default) deletes the directory and all its contents. When false, only removes empty directories â€” non-empty refuses with an error.",
+            "When true (default) deletes the directory and all its contents. When false, only removes empty directories â€?non-empty refuses with an error.",
         },
       },
       required: ["path"],
@@ -826,7 +826,7 @@ export function registerFilesystemTools(
       const abs = await safePath(args.path, "delete_directory", ctx, "write");
       const st = await fs.lstat(abs);
       if (!st.isDirectory()) {
-        throw new Error(`delete_directory: ${args.path} is a file â€” use delete_file to remove it`);
+        throw new Error(`delete_directory: ${args.path} is a file â€?use delete_file to remove it`);
       }
       const recursive = args.recursive !== false;
       // `fs.rm({recursive:false})` rejects every directory regardless of contents;
@@ -843,7 +843,7 @@ export function registerFilesystemTools(
   registry.register({
     name: "copy_file",
     description:
-      "Copy a file or directory under the sandbox root. Both source and destination resolve under the sandbox. Parent directories of the destination are created as needed. Refuses to overwrite an existing destination â€” delete it first if you want to replace it.",
+      "Copy a file or directory under the sandbox root. Both source and destination resolve under the sandbox. Parent directories of the destination are created as needed. Refuses to overwrite an existing destination â€?delete it first if you want to replace it.",
     parameters: {
       type: "object",
       properties: {
@@ -857,7 +857,7 @@ export function registerFilesystemTools(
       const dst = await safePath(args.destination, "copy_file", ctx, "write");
       await fs.mkdir(pathMod.dirname(dst), { recursive: true });
       await fs.cp(src, dst, { recursive: true, force: false, errorOnExist: true });
-      return `copied ${displayRel(rootDir, src)} â†’ ${displayRel(rootDir, dst)}`;
+      return `copied ${displayRel(rootDir, src)} â†?${displayRel(rootDir, dst)}`;
     },
   });
 

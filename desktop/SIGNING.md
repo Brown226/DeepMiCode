@@ -1,12 +1,12 @@
-# Reasonix Desktop â€” code signing & notarization
+# DeepMiCode Desktop â€?code signing & notarization
 
-Walkthrough for shipping a signed Reasonix Desktop bundle.
+Walkthrough for shipping a signed DeepMiCode Desktop bundle.
 
 The release workflow at `.github/workflows/release.yml` reads everything
-below from repository **Secrets** â€” nothing in this repo holds keys.
+below from repository **Secrets** â€?nothing in this repo holds keys.
 Without these secrets set the workflow still builds, but installers come
 out unsigned (Windows shows SmartScreen warnings; macOS marks the app
-"damaged" until the user right-clicks â†’ Open).
+"damaged" until the user right-clicks â†?Open).
 
 ## Tauri updater signing (all platforms)
 
@@ -16,27 +16,27 @@ in the app. Generate once and commit the **public** half to
 
 ```bash
 cd desktop
-npx @tauri-apps/cli signer generate -w ~/.tauri/reasonix.key
+npx @tauri-apps/cli signer generate -w ~/.tauri/deepmicode.key
 ```
 
 Outputs:
-- `~/.tauri/reasonix.key` â€” the **private** key. Never commit. Add a
+- `~/.tauri/deepmicode.key` â€?the **private** key. Never commit. Add a
   passphrase when prompted.
-- `~/.tauri/reasonix.key.pub` â€” paste into `tauri.conf.json` under
+- `~/.tauri/deepmicode.key.pub` â€?paste into `tauri.conf.json` under
   `plugins.updater.pubkey`, replacing `REPLACE_ME_RUN_tauri_signer_generate`.
 
 Set repo secrets:
-- `TAURI_SIGNING_PRIVATE_KEY` â€” full contents of `~/.tauri/reasonix.key`
-- `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` â€” the passphrase
+- `TAURI_SIGNING_PRIVATE_KEY` â€?full contents of `~/.tauri/deepmicode.key`
+- `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` â€?the passphrase
 
 The workflow exports both as env vars; `tauri-action` picks them up and
 signs the per-platform update bundle (`*.tar.gz.sig`, `*.zip.sig`,
-`*.msi.zip.sig`, â€¦) automatically.
+`*.msi.zip.sig`, â€? automatically.
 
-## Windows â€” Authenticode
+## Windows â€?Authenticode
 
 You need a **code signing certificate** from a CA Microsoft trusts
-(DigiCert, Sectigo, SSL.com, â€¦). EV certs avoid SmartScreen reputation
+(DigiCert, Sectigo, SSL.com, â€?. EV certs avoid SmartScreen reputation
 ramp; OV certs work but warn until enough installs build trust.
 
 ### One-time: export the cert as PFX
@@ -46,13 +46,13 @@ get the latter, combine with `openssl`:
 
 ```bash
 openssl pkcs12 -export \
-  -inkey reasonix.key \
-  -in reasonix.cer \
-  -out reasonix.pfx \
-  -name "Reasonix Code Signing"
+  -inkey deepmicode.key \
+  -in deepmicode.cer \
+  -out deepmicode.pfx \
+  -name "DeepMiCode Code Signing"
 ```
 
-Set a strong export password â€” needed below.
+Set a strong export password â€?needed below.
 
 ### Wire into the release workflow
 
@@ -60,19 +60,19 @@ Tauri v2 reads three env vars on Windows:
 
 | Secret | What it is |
 |---|---|
-| `WINDOWS_CERTIFICATE` | base64-encoded contents of `reasonix.pfx` |
+| `WINDOWS_CERTIFICATE` | base64-encoded contents of `deepmicode.pfx` |
 | `WINDOWS_CERTIFICATE_PASSWORD` | the PFX export password |
 
 Encode the cert before adding the secret:
 
 ```bash
-base64 -w0 reasonix.pfx > reasonix.pfx.b64
+base64 -w0 deepmicode.pfx > deepmicode.pfx.b64
 ```
 
 Then add a step to the matrix' Windows job that imports the cert and
 points Tauri at it. The simplest approach uses the [Azure trusted
 signing action] or the older `@tauri-apps/action`'s built-in
-Authenticode path â€” set the secrets and `tauri-action` will pick them
+Authenticode path â€?set the secrets and `tauri-action` will pick them
 up via `tauri-plugin-windows-installer`.
 
 For the workflow already in this repo, add to the env block of the
@@ -89,7 +89,7 @@ WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
 ### Verify locally before pushing the tag
 
 ```powershell
-signtool verify /pa /v Reasonix_0.40.0_x64-setup.exe
+signtool verify /pa /v DeepMiCode_0.40.0_x64-setup.exe
 ```
 
 Output should include `Successfully verified` and the certificate's
@@ -97,30 +97,29 @@ common name.
 
 [Azure trusted signing action]: https://github.com/Azure/trusted-signing-action
 
-## macOS â€” Developer ID + notarization
+## macOS â€?Developer ID + notarization
 
 Two separate signatures are required for a non-warning install:
 
-1. **Code signing** with a Developer ID Application certificate â€” proves
+1. **Code signing** with a Developer ID Application certificate â€?proves
    the bundle came from a paid Apple Developer account.
-2. **Notarization** â€” Apple's automated malware scan, returns a ticket
+2. **Notarization** â€?Apple's automated malware scan, returns a ticket
    that gets stapled into the `.dmg` / `.app`.
 
 ### One-time: certificate
 
-Enroll in the [Apple Developer Program] ($99/yr). In Xcode â†’ Settings â†’
-Accounts â†’ Manage Certificates, create a `Developer ID Application`
+Enroll in the [Apple Developer Program] ($99/yr). In Xcode â†?Settings â†?Accounts â†?Manage Certificates, create a `Developer ID Application`
 cert. Export from Keychain as a `.p12` with a passphrase.
 
 ```bash
-base64 -i ReasonixDeveloperID.p12 -o cert.p12.b64
+base64 -i DeepMiCodeDeveloperID.p12 -o cert.p12.b64
 ```
 
 ### One-time: app-specific password for notarytool
 
 Notarization uses the Apple ID, not the cert. At
-<https://appleid.apple.com> â†’ Sign-In and Security â†’ App-Specific
-Passwords, generate one labelled "reasonix notarytool". Save it â€” Apple
+<https://appleid.apple.com> â†?Sign-In and Security â†?App-Specific
+Passwords, generate one labelled "deepmicode notarytool". Save it â€?Apple
 only shows it once.
 
 ### Repository secrets
@@ -132,7 +131,7 @@ only shows it once.
 | `APPLE_SIGNING_IDENTITY` | the Common Name, e.g. `Developer ID Application: Your Name (TEAMID)` |
 | `APPLE_ID` | your Apple ID email |
 | `APPLE_PASSWORD` | the app-specific password from the previous step |
-| `APPLE_TEAM_ID` | 10-character team identifier, visible in Apple Developer â†’ Membership |
+| `APPLE_TEAM_ID` | 10-character team identifier, visible in Apple Developer â†?Membership |
 
 The release workflow already passes all six to `tauri-action`. Once
 they're set, builds for both `macos-13` (Intel) and `macos-14` (Apple
@@ -143,12 +142,12 @@ Silicon) produce a signed + notarized `.dmg`.
 After downloading the artifact:
 
 ```bash
-spctl -a -t open --context context:primary-signature -vvv Reasonix_0.40.0_aarch64.dmg
+spctl -a -t open --context context:primary-signature -vvv DeepMiCode_0.40.0_aarch64.dmg
 # expected: source=Notarized Developer ID
 ```
 
 ```bash
-codesign --verify --deep --strict --verbose=2 /Applications/Reasonix.app
+codesign --verify --deep --strict --verbose=2 /Applications/DeepMiCode.app
 # expected: valid on disk + satisfies its Designated Requirement
 ```
 
@@ -156,7 +155,7 @@ codesign --verify --deep --strict --verbose=2 /Applications/Reasonix.app
 
 ## Linux
 
-No signing required â€” `.deb` and `.AppImage` ship plain. If the project
+No signing required â€?`.deb` and `.AppImage` ship plain. If the project
 ever publishes a Flatpak or Snap, the respective store handles signing
 on upload.
 
@@ -174,14 +173,14 @@ leaked. If it must happen:
 
 ## Troubleshooting
 
-- **"errSecInternalComponent" on macOS runners** â€” Apple's `notarytool`
+- **"errSecInternalComponent" on macOS runners** â€?Apple's `notarytool`
   needs the keychain unlocked. `tauri-action` handles this when the six
   Apple secrets are present; if you've inlined custom steps, add a
   keychain-unlock step before signing.
 - **"The signature of the application is invalid"** on Windows after
-  an update â€” almost always means the updater's `pubkey` in
+  an update â€?almost always means the updater's `pubkey` in
   `tauri.conf.json` doesn't match the private key used by the workflow.
   Confirm both halves come from the same `signer generate` run.
-- **`xcrun: error: unable to find utility "altool"`** â€” runner is on
+- **`xcrun: error: unable to find utility "altool"`** â€?runner is on
   Xcode older than 13. Pin `xcode-select` or upgrade the runner image;
   `notarytool` (the replacement) is what Tauri v2 uses.
