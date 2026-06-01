@@ -105,7 +105,7 @@ export class SseTransport implements McpTransport {
     });
     const decoder = new TextDecoder();
     try {
-      for await (const chunk of res.body as AsyncIterable<Uint8Array>) {
+      for await (const chunk of res.body as unknown as AsyncIterable<Uint8Array>) {
         parser.feed(decoder.decode(chunk, { stream: true }));
       }
     } catch (err) {

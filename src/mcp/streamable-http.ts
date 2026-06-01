@@ -107,7 +107,7 @@ export class StreamableHttpTransport implements McpTransport {
       if (!res.body) {
         throw new Error("MCP Streamable HTTP SSE response had no body");
       }
-      const stream = this.consumeStream(res.body as AsyncIterable<Uint8Array>);
+      const stream = this.consumeStream(res.body as unknown as AsyncIterable<Uint8Array>);
       this.streams.add(stream);
       stream.finally(() => this.streams.delete(stream));
       return;
