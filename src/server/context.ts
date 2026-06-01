@@ -17,7 +17,7 @@ export interface DashboardContext {
   loop?: CacheFirstLoop;
   tools?: ToolRegistry;
   getMcpServers?: () => McpServerSummary[];
-  /** Per-spec bridge failures â€?drives the "æœªæ¡¥æŽ? reason shown in the dashboard. */
+  /** Per-spec bridge failures â€” drives the "æœªæ¡¥æŽ¥" reason shown in the dashboard. */
   getMcpFailures?: () => Array<{ spec: string; name: string; reason: string; at: number }>;
   jobs?: JobRegistry;
 
@@ -35,15 +35,15 @@ export interface DashboardContext {
 
   setEditMode?: (mode: EditMode) => EditMode;
   setPlanMode?: (on: boolean) => void;
-  /** Side-channel to live loop â€?settings POST persists, this flips the running session. */
+  /** Side-channel to live loop â€” settings POST persists, this flips the running session. */
   applyEffortLive?: (effort: import("../config.js").ReasoningEffort) => void;
-  /** Same model swap path /model <id> takes â€?live + persisted. */
+  /** Same model swap path /model <id> takes â€” live + persisted. */
   applyModelLive?: (model: string) => void;
   /** Cached model catalog. Null = in flight / failed; `[]` = API answered empty. */
   getModels?: () => string[] | null;
   /** Session USD cap; null disables. Re-arms the 80% warning latch. */
   setBudgetUsdLive?: (usd: number | null) => void;
-  /** Auto-resubmit timer status â€?same shape `useLoopMode` exposes to slash handlers. */
+  /** Auto-resubmit timer status â€” same shape `useLoopMode` exposes to slash handlers. */
   getLoopRunStatus?: () => {
     prompt: string;
     intervalMs: number;
@@ -58,7 +58,7 @@ export interface DashboardContext {
   audit?: (entry: AuditEntry) => void;
 
   getMessages?: () => DashboardMessage[];
-  /** Events are JSON-serializable subsets â€?raw `LoopEvent` carries React-only state. */
+  /** Events are JSON-serializable subsets â€” raw `LoopEvent` carries React-only state. */
   subscribeEvents?: (handler: (event: DashboardEvent) => void) => () => void;
   /** Routes through the TUI's `handleSubmit` so slashes, `!cmd`, `@path`, plan-mode gating all match. */
   submitPrompt?: (text: string) => SubmitResult;
@@ -75,14 +75,14 @@ export interface DashboardContext {
   resolveEditReview?: (choice: "apply" | "reject" | "apply-rest-of-turn" | "flip-to-auto") => void;
   resolveCheckpointConfirm?: (choice: "continue" | "revise" | "stop", text?: string) => void;
   resolveReviseConfirm?: (choice: "accept" | "reject") => void;
-  /** Active picker (sessions / checkpoints / mcp marketplace / â€? resolves into the live TUI component via a runtime ref. */
+  /** Active picker (sessions / checkpoints / mcp marketplace / â€¦) resolves into the live TUI component via a runtime ref. */
   resolvePicker?: (resolution: PickerResolution) => void;
-  /** Active read-only viewer (replay-plan / â€? â€?only `close` is meaningful since the viewer carries no selection state. */
+  /** Active read-only viewer (replay-plan / â€¦) â€” only `close` is meaningful since the viewer carries no selection state. */
   resolveViewer?: (resolution: { action: "close" }) => void;
 
   reloadHooks?: () => number;
   reloadMcp?: () => Promise<number>;
-  /** Live session swap â€?pass a name to switch into an existing session, or `undefined` to mint a fresh one. Available only in attached mode (an active CLI session to swap inside of). */
+  /** Live session swap â€” pass a name to switch into an existing session, or `undefined` to mint a fresh one. Available only in attached mode (an active CLI session to swap inside of). */
   switchSession?: (name: string | undefined) => { ok: true } | { ok: false; reason: string };
   invokeMcpTool?: (
     serverLabel: string,
@@ -115,11 +115,11 @@ export type PickerAction = PickerResolution["action"];
 export interface PickerItem {
   id: string;
   title: string;
-  /** Secondary line â€?relative timestamp, branch, description. */
+  /** Secondary line â€” relative timestamp, branch, description. */
   subtitle?: string;
-  /** Right-aligned tag â€?installed / active / source. */
+  /** Right-aligned tag â€” installed / active / source. */
   badge?: string;
-  /** Trailing meta â€?file count, popularity, cost. */
+  /** Trailing meta â€” file count, popularity, cost. */
   meta?: string;
 }
 
@@ -130,7 +130,7 @@ export interface DashboardStats {
   totalCostUsd: number;
   /** Cost of the most recent turn. */
   lastTurnCostUsd: number;
-  /** Input + output split â€?drives "in $X Â· out $Y" rendering. */
+  /** Input + output split â€” drives "in $X Â· out $Y" rendering. */
   totalInputCostUsd: number;
   totalOutputCostUsd: number;
   /** Cache hit ratio across the session, 0..1. */
@@ -141,11 +141,11 @@ export interface DashboardStats {
   cacheMissTokens?: number;
   /** Cumulative output tokens across the live session. */
   totalCompletionTokens?: number;
-  /** Prompt tokens of the most recent turn â€?feeds the ctx gauge. */
+  /** Prompt tokens of the most recent turn â€” feeds the ctx gauge. */
   lastPromptTokens: number;
   /** Per-model context cap in tokens (1_000_000 for V4). */
   contextCapTokens: number;
-  /** Null while background fetch pending OR on offline/auth failure â€?SPA renders first entry. */
+  /** Null while background fetch pending OR on offline/auth failure â€” SPA renders first entry. */
   balance: Array<{
     currency: string;
     total_balance: string;
@@ -154,7 +154,7 @@ export interface DashboardStats {
   }> | null;
 }
 
-/** Active modal snapshot â€?same shape as a `modal-*-up` SSE event payload. */
+/** Active modal snapshot â€” same shape as a `modal-*-up` SSE event payload. */
 export type ActiveModal =
   | {
       kind: "shell";
@@ -207,7 +207,7 @@ export type ActiveModal =
     }
   | {
       kind: "picker";
-      /** Discriminator for the underlying picker (sessions / checkpoints / mcp-marketplace / â€?. Drives empty-state copy + icon on the SPA. */
+      /** Discriminator for the underlying picker (sessions / checkpoints / mcp-marketplace / â€¦). Drives empty-state copy + icon on the SPA. */
       pickerKind: string;
       title: string;
       query?: string;
@@ -218,7 +218,7 @@ export type ActiveModal =
     }
   | {
       kind: "viewer";
-      /** Discriminator for the underlying viewer (replay-plan / â€?. */
+      /** Discriminator for the underlying viewer (replay-plan / â€¦). */
       viewerKind: string;
       title: string;
       /** Markdown / plain text body. */
@@ -233,9 +233,9 @@ export interface DashboardMessage {
   id: string;
   role: "user" | "assistant" | "info" | "warning" | "tool";
   text: string;
-  /** When `role === "tool"` â€?name of the tool that produced this result. */
+  /** When `role === "tool"` â€” name of the tool that produced this result. */
   toolName?: string;
-  /** Raw JSON args (role=tool) â€?lets SPA render tool-specific cards instead of a generic blob. */
+  /** Raw JSON args (role=tool) â€” lets SPA render tool-specific cards instead of a generic blob. */
   toolArgs?: string;
   /** Optional reasoning content for assistant messages (R1 / V4 thinking). */
   reasoning?: string;
@@ -282,7 +282,7 @@ export interface SubmitResult {
   reason?: string;
 }
 
-/** Append-only â€?same rules as `usage.jsonl`, never rewritten. */
+/** Append-only â€” same rules as `usage.jsonl`, never rewritten. */
 export interface AuditEntry {
   ts: number;
   /** `add-allowlist`, `remove-allowlist`, `set-edit-mode`, etc. */

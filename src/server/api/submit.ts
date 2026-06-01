@@ -29,7 +29,7 @@ export async function handleSubmit(
       status: 503,
       body: {
         error:
-          "submit requires an attached dashboard session â€?open `/dashboard` from inside `deepmicode code` or `deepmicode chat`.",
+          "submit requires an attached dashboard session â€” open `/dashboard` from inside `deepmicode code` or `deepmicode chat`.",
       },
     };
   }

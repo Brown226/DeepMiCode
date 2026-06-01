@@ -1,11 +1,11 @@
-// Node's built-in fetch ignores HTTPS_PROXY env vars ??undici's ProxyAgent has to
+// Node's built-in fetch ignores HTTPS_PROXY env vars — undici's ProxyAgent has to
 // be wired in explicitly. A custom dispatcher routes around the proxy for hosts
 // matched by NO_PROXY (curl-style) so DeepSeek API stays direct while user-set
 // HTTPS_PROXY still routes everything else through the user's proxy.
 
 import { Agent, type Dispatcher, ProxyAgent, setGlobalDispatcher } from "undici";
 
-/** Env-var precedence matches curl: HTTPS_PROXY ??HTTP_PROXY ??ALL_PROXY, upper-case first then lower. */
+/** Env-var precedence matches curl: HTTPS_PROXY → HTTP_PROXY → ALL_PROXY, upper-case first then lower. */
 const PROXY_ENV_KEYS = [
   "HTTPS_PROXY",
   "https_proxy",
@@ -50,7 +50,7 @@ export function detectNoProxyRaw(env: NodeJS.ProcessEnv = process.env): string |
   return null;
 }
 
-/** Auto-prefix `http://` when the env value is bare `host:port` (issue #1034 ??Windows users routinely set `HTTPS_PROXY=127.0.0.1:10888` without a scheme, and undici's ProxyAgent ctor calls `new URL(...)` which throws and kills startup). */
+/** Auto-prefix `http://` when the env value is bare `host:port` (issue #1034 — Windows users routinely set `HTTPS_PROXY=127.0.0.1:10888` without a scheme, and undici's ProxyAgent ctor calls `new URL(...)` which throws and kills startup). */
 export function normalizeProxyUrl(raw: string): string | null {
   const trimmed = raw.trim();
   if (!trimmed) return null;
@@ -81,7 +81,7 @@ export function parseNoProxy(raw: string | null | undefined): NoProxyPattern[] {
 }
 
 function buildPattern(raw: string): NoProxyPattern {
-  // Strip optional :port ??we route by host only.
+  // Strip optional :port — we route by host only.
   const colon = raw.lastIndexOf(":");
   const hostPart = colon !== -1 && /^\d+$/.test(raw.slice(colon + 1)) ? raw.slice(0, colon) : raw;
   const normalized = hostPart.toLowerCase();
@@ -145,7 +145,7 @@ class SelectiveProxyDispatcher {
         host = origin.hostname;
       }
     } catch {
-      // Fall through with empty host ??won't match patterns, will route via proxy.
+      // Fall through with empty host — won't match patterns, will route via proxy.
     }
     const target = host && matchesNoProxy(host, this.patterns) ? this.direct : this.proxied;
     return (target as unknown as Dispatcher).dispatch(opts, handler);
@@ -163,7 +163,7 @@ class SelectiveProxyDispatcher {
 let installed = false;
 
 export interface InstallProxyOptions {
-  /** Skip proxy install entirely ??for `--no-proxy` / `cfg.proxy.disabled` / env-driven kill-switch. */
+  /** Skip proxy install entirely — for `--no-proxy` / `cfg.proxy.disabled` / env-driven kill-switch. */
   disabled?: boolean;
   /** Config-supplied proxy URL. Wins over env detection so desktop-GUI users who can't reliably set HTTPS_PROXY can still route via `cfg.proxy.url` (issue #1868). */
   url?: string;
@@ -247,7 +247,7 @@ export function installProxyIfConfigured(
   if (!url) {
     const origin = configRaw ? "config value" : "env value";
     process.stderr.write(
-      `??ignoring proxy ${origin} ${JSON.stringify(raw)} ??not a valid URL. Expected something like \`http://host:port\` or \`socks5://host:port\`.\n`,
+      `▲ ignoring proxy ${origin} ${JSON.stringify(raw)} — not a valid URL. Expected something like \`http://host:port\` or \`socks5://host:port\`.\n`,
     );
     return null;
   }
@@ -270,7 +270,7 @@ export function installProxyIfConfigured(
     return { url, source, reinstalled, noProxy: patterns };
   } catch (err) {
     process.stderr.write(
-      `??proxy install failed (${(err as Error).message}); continuing without proxy.\n`,
+      `▲ proxy install failed (${(err as Error).message}); continuing without proxy.\n`,
     );
     return null;
   }

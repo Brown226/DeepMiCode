@@ -1,4 +1,4 @@
-/** `deepmicode index` â€?progress writes go to stderr so stdout stays pipeable. */
+/** `deepmicode index` â€” progress writes go to stderr so stdout stays pipeable. */
 
 import { resolve } from "node:path";
 import { loadIndexConfig, resolveSemanticEmbeddingConfig } from "../../config.js";
@@ -95,7 +95,7 @@ interface ProgressWriter {
   clear(): void;
 }
 
-const SPINNER_FRAMES = ["â ?, "â ?, "â ?, "â ?, "â ?, "â ?, "â ?, "â ?, "â ?, "â ?];
+const SPINNER_FRAMES = ["â ‹", "â ™", "â ¹", "â ¸", "â ¼", "â ´", "â ¦", "â §", "â ‡", "â "];
 const SPINNER_INTERVAL_MS = 120;
 
 function makeProgressWriter(tty: boolean): ProgressWriter {

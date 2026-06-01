@@ -1,4 +1,4 @@
-/** Persists `mcpDisabled` to ~/.deepmicode/config.json â€?shared between `/mcp disable / enable` slash and the McpBrowser `d` keybind. */
+/** Persists `mcpDisabled` to ~/.deepmicode/config.json â€” shared between `/mcp disable / enable` slash and the McpBrowser `d` keybind. */
 
 import { readConfig, writeConfig } from "../../config.js";
 
@@ -11,16 +11,16 @@ export function toggleMcpDisabled(action: "disable" | "enable", name: string): s
   const current = new Set(cfg.mcpDisabled ?? []);
   if (action === "disable") {
     if (current.has(trimmed)) {
-      return `â–?${trimmed} is already disabled â€?restart to apply, or /mcp enable ${trimmed}.`;
+      return `â–¸ ${trimmed} is already disabled â€” restart to apply, or /mcp enable ${trimmed}.`;
     }
     current.add(trimmed);
     writeConfig({ ...cfg, mcpDisabled: [...current].sort() });
-    return `â–?${trimmed} disabled â€?takes effect on next launch. /mcp enable ${trimmed} to revert.`;
+    return `â–¸ ${trimmed} disabled â€” takes effect on next launch. /mcp enable ${trimmed} to revert.`;
   }
   if (!current.has(trimmed)) {
-    return `â–?${trimmed} is not disabled.`;
+    return `â–¸ ${trimmed} is not disabled.`;
   }
   current.delete(trimmed);
   writeConfig({ ...cfg, mcpDisabled: current.size > 0 ? [...current].sort() : undefined });
-  return `â–?${trimmed} re-enabled â€?takes effect on next launch.`;
+  return `â–¸ ${trimmed} re-enabled â€” takes effect on next launch.`;
 }

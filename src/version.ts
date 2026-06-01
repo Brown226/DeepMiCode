@@ -13,7 +13,7 @@ const REGISTRY_URL = "https://registry.npmjs.org/deepmicode/latest";
  * `force: true`. */
 export const LATEST_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
-/** Network timeout. Short â€?we never block the UI waiting on this. */
+/** Network timeout. Short â€” we never block the UI waiting on this. */
 export const LATEST_FETCH_TIMEOUT_MS = 2_000;
 
 /** `name === "deepmicode"` guard avoids picking up an outer package.json when loaded as a dep. */
@@ -24,7 +24,10 @@ function readPackageVersion(): string {
       const p = join(dir, "package.json");
       if (existsSync(p)) {
         const pkg = JSON.parse(readFileSync(p, "utf8"));
-        if ((pkg?.name === "deepmicode" || pkg?.name === "deepmicode") && typeof pkg.version === "string") {
+        if (
+          (pkg?.name === "deepmicode" || pkg?.name === "deepmicode") &&
+          typeof pkg.version === "string"
+        ) {
           return pkg.version;
         }
       }
@@ -58,7 +61,7 @@ function readCache(homeDirOverride?: string): VersionCacheEntry | null {
       return parsed;
     }
   } catch {
-    /* missing or malformed â†?no cached entry */
+    /* missing or malformed â†’ no cached entry */
   }
   return null;
 }
@@ -69,7 +72,7 @@ function writeCache(entry: VersionCacheEntry, homeDirOverride?: string): void {
     mkdirSync(dirname(p), { recursive: true });
     writeFileSync(p, JSON.stringify(entry), "utf8");
   } catch {
-    /* cache is best-effort â€?a failed write just means we'll re-fetch
+    /* cache is best-effort â€” a failed write just means we'll re-fetch
      * next launch. No reason to surface this to the user. */
   }
 }
@@ -120,7 +123,7 @@ export async function getLatestVersion(opts: GetLatestVersionOptions = {}): Prom
   }
 }
 
-/** Pre-release with same core sorts BELOW the bare version â€?matches npm `latest` dist-tag semantics. */
+/** Pre-release with same core sorts BELOW the bare version â€” matches npm `latest` dist-tag semantics. */
 export function compareVersions(a: string, b: string): number {
   const [aCore = "0", aPre = ""] = a.split("-", 2);
   const [bCore = "0", bPre = ""] = b.split("-", 2);

@@ -1,4 +1,4 @@
-/** Plain-text (not Ink) ??must work when everything else is broken. fail ??exit 1; warn ??exit 0. */
+/** Plain-text (not Ink) — must work when everything else is broken. fail → exit 1; warn → exit 0. */
 
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { homedir } from "node:os";
@@ -38,7 +38,7 @@ type Level = DoctorLevel;
 type Check = DoctorCheck;
 
 export async function runDoctorChecks(projectRoot: string): Promise<DoctorCheck[]> {
-  // No descriptive names for the destructured slots ??CodeQL's clear-text-logging
+  // No descriptive names for the destructured slots — CodeQL's clear-text-logging
   // heuristic taints any variable name matching `*key*`/`*auth*`/`*cred*`/etc and
   // would trip on `apiKeyCheck`. The slots map 1:1 to the Promise.all array below.
   const r = await Promise.all([
@@ -68,7 +68,7 @@ function checkProxy(): Check[] {
         label: "http proxy   ",
         level: "ok",
         detail:
-          "no proxy configured (cfg.proxy.url / HTTPS_PROXY / HTTP_PROXY / ALL_PROXY unset) ??direct connection",
+          "no proxy configured (cfg.proxy.url / HTTPS_PROXY / HTTP_PROXY / ALL_PROXY unset) — direct connection",
       },
     ];
   }
@@ -81,7 +81,7 @@ function checkProxy(): Check[] {
       redacted = u.toString();
     }
   } catch {
-    /* not a URL ??leave raw */
+    /* not a URL — leave raw */
   }
   const urlSource = cfg.url ? "cfg.proxy.url" : "HTTPS_PROXY";
   if (cfg.disabled) {
@@ -90,7 +90,7 @@ function checkProxy(): Check[] {
         id: "proxy",
         label: "http proxy   ",
         level: "ok",
-        detail: `${urlSource}=${redacted} is set but cfg.proxy.disabled ??DeepMiCode routes direct`,
+        detail: `${urlSource}=${redacted} is set but cfg.proxy.disabled — DeepMiCode routes direct`,
       },
     ];
   }
@@ -111,10 +111,10 @@ function checkProxy(): Check[] {
     id: "proxy",
     label: "http proxy   ",
     level: "ok",
-    detail: `routing fetch through ${redacted} via ${urlSource} (NO_PROXY: ${total} pattern${total === 1 ? "" : "s"} ??${sourceSummary})`,
+    detail: `routing fetch through ${redacted} via ${urlSource} (NO_PROXY: ${total} pattern${total === 1 ? "" : "s"} — ${sourceSummary})`,
   };
   const probes = PROXY_PROBE_HOSTS.map(
-    (h) => `${h} ??${matchesNoProxy(h, resolved.all) ? "direct" : "via proxy"}`,
+    (h) => `${h} → ${matchesNoProxy(h, resolved.all) ? "direct" : "via proxy"}`,
   );
   const routingCheck: Check = {
     id: "proxy-routing",
@@ -133,9 +133,9 @@ function color(text: string, code: string): string {
 }
 
 function badge(level: Level): string {
-  if (level === "ok") return color("??, "32");
-  if (level === "warn") return color("??, "33");
-  return color("??, "31");
+  if (level === "ok") return color("✓", "32");
+  if (level === "warn") return color("⚠", "33");
+  return color("✗", "31");
 }
 
 function fmtBytes(n: number): string {
@@ -172,7 +172,7 @@ async function checkApiKey(): Promise<Check> {
     label: "api key      ",
     level: "fail",
     detail:
-      "not set ??`deepmicode setup` to save one, or export DEEPSEEK_API_KEY. Get a key at https://platform.deepseek.com/api_keys",
+      "not set — `deepmicode setup` to save one, or export DEEPSEEK_API_KEY. Get a key at https://platform.deepseek.com/api_keys",
   };
 }
 
@@ -183,7 +183,7 @@ async function checkConfig(): Promise<Check> {
       id: "config",
       label: "config       ",
       level: "warn",
-      detail: "missing ??running with library defaults. `deepmicode setup` writes one.",
+      detail: "missing — running with library defaults. `deepmicode setup` writes one.",
     };
   }
   try {
@@ -217,7 +217,7 @@ async function checkApiReach(): Promise<Check> {
       id: "api-reach",
       label: "api reach    ",
       level: "warn",
-      detail: "skipped ??no api key to test with",
+      detail: "skipped — no api key to test with",
     };
   }
   try {
@@ -233,7 +233,7 @@ async function checkApiReach(): Promise<Check> {
           id: "api-reach",
           label: "api reach    ",
           level: "ok",
-          detail: `/models ok ??${summarizeModels(models.data)}`,
+          detail: `/models ok — ${summarizeModels(models.data)}`,
         };
       }
       balance = await client.getBalance({ signal: ctl.signal });
@@ -245,7 +245,7 @@ async function checkApiReach(): Promise<Check> {
         id: "api-reach",
         label: "api reach    ",
         level: "fail",
-        detail: "/models and /user/balance returned null ??auth failed or network blocked",
+        detail: "/models and /user/balance returned null — auth failed or network blocked",
       };
     }
     const summary = summarizeBalances(balance.balance_infos);
@@ -254,14 +254,14 @@ async function checkApiReach(): Promise<Check> {
         id: "api-reach",
         label: "api reach    ",
         level: "warn",
-        detail: `account flagged not-available${summary ? ` (${summary})` : ""} ??top up or check your dashboard`,
+        detail: `account flagged not-available${summary ? ` (${summary})` : ""} — top up or check your dashboard`,
       };
     }
     return {
       id: "api-reach",
       label: "api reach    ",
       level: "ok",
-      detail: summary ? `/user/balance ok ??${summary}` : "/user/balance ok",
+      detail: summary ? `/user/balance ok — ${summary}` : "/user/balance ok",
     };
   } catch (err) {
     return {
@@ -294,7 +294,7 @@ function summarizeBalances(
 
 async function checkTokenizer(): Promise<Check> {
   // Reuse the runtime's resolver so the doctor never disagrees with what
-  // the tokenizer actually loads ??three candidates including a global
+  // the tokenizer actually loads — three candidates including a global
   // npm install probe via createRequire.
   const path = resolveDataPath();
   if (existsSync(path)) {
@@ -315,7 +315,7 @@ async function checkTokenizer(): Promise<Check> {
     label: "tokenizer    ",
     level: "warn",
     detail:
-      "data/deepseek-tokenizer.json.gz not found ??token counts will fall back to char heuristics",
+      "data/deepseek-tokenizer.json.gz not found — token counts will fall back to char heuristics",
   };
 }
 
@@ -336,13 +336,13 @@ async function checkSessions(): Promise<Check> {
     const stale = list.filter(
       (e) => Date.now() - e.mtime.getTime() >= 90 * 24 * 60 * 60 * 1000,
     ).length;
-    const detail = `${list.length} saved � ${fmtBytes(totalBytes)} � oldest ${ageDays}d`;
+    const detail = `${list.length} saved · ${fmtBytes(totalBytes)} · oldest ${ageDays}d`;
     if (stale > 0) {
       return {
         id: "sessions",
         label: "sessions     ",
         level: "warn",
-        detail: `${detail} � ${stale} idle ??0d (run \`deepmicode prune-sessions\`)`,
+        detail: `${detail} · ${stale} idle ≥90d (run \`deepmicode prune-sessions\`)`,
       };
     }
     return { id: "sessions", label: "sessions     ", level: "ok", detail };
@@ -400,14 +400,14 @@ async function checkOllama(projectRoot: string): Promise<Check> {
         id: "semantic",
         label: "semantic     ",
         level: "warn",
-        detail: `index uses openai-compat/${meta.model} but current config resolves to ${resolved.provider}/${resolved.model} ??rebuild before searching`,
+        detail: `index uses openai-compat/${meta.model} but current config resolves to ${resolved.provider}/${resolved.model} — rebuild before searching`,
       };
     }
     return {
       id: "semantic",
       label: "semantic     ",
       level: "ok",
-      detail: `openai-compat � ${resolved.baseUrl} � model ${resolved.model} � api key configured`,
+      detail: `openai-compat · ${resolved.baseUrl} · model ${resolved.model} · api key configured`,
     };
   }
   try {
@@ -419,7 +419,7 @@ async function checkOllama(projectRoot: string): Promise<Check> {
         label: "semantic     ",
         level: "warn",
         detail:
-          "ollama binary not on PATH ??semantic_search will fail; install from https://ollama.com",
+          "ollama binary not on PATH — semantic_search will fail; install from https://ollama.com",
       };
     }
     if (!status.daemonRunning) {
@@ -428,7 +428,7 @@ async function checkOllama(projectRoot: string): Promise<Check> {
         label: "semantic     ",
         level: "warn",
         detail:
-          "ollama daemon not running ??`ollama serve` (or call /semantic in TUI to auto-start)",
+          "ollama daemon not running — `ollama serve` (or call /semantic in TUI to auto-start)",
       };
     }
     if (!status.modelPulled) {
@@ -436,14 +436,14 @@ async function checkOllama(projectRoot: string): Promise<Check> {
         id: "semantic",
         label: "semantic     ",
         level: "warn",
-        detail: `model ${status.modelName} not pulled ??\`ollama pull ${status.modelName}\``,
+        detail: `model ${status.modelName} not pulled — \`ollama pull ${status.modelName}\``,
       };
     }
     return {
       id: "semantic",
       label: "semantic     ",
       level: "ok",
-      detail: `ollama daemon up � model ${status.modelName} ready`,
+      detail: `ollama daemon up · model ${status.modelName} ready`,
     };
   } catch (err) {
     return {
@@ -459,7 +459,10 @@ function readSemanticMeta(
   projectRoot: string,
 ): { provider: "ollama" | "openai-compat"; model: string } | null {
   try {
-    const raw = readFileSync(join(projectRoot, ".deepmicode", "semantic", "index.meta.json"), "utf8");
+    const raw = readFileSync(
+      join(projectRoot, ".deepmicode", "semantic", "index.meta.json"),
+      "utf8",
+    );
     const parsed = JSON.parse(raw) as { provider?: string; model?: string };
     return {
       provider: parsed.provider === "openai-compat" ? "openai-compat" : "ollama",
@@ -474,14 +477,21 @@ async function checkProject(projectRoot: string): Promise<Check> {
   // Heuristic: a "real" project has either .git, DEEPMICODE.md, or
   // package.json. Lacking all three, `deepmicode code` still works but
   // @-mentions and the project-memory pin won't surface much.
-  const markers = [".git", "DEEPMICODE.md", "package.json", "pyproject.toml", "Cargo.toml", "go.mod"];
+  const markers = [
+    ".git",
+    "DEEPMICODE.md",
+    "package.json",
+    "pyproject.toml",
+    "Cargo.toml",
+    "go.mod",
+  ];
   const found = markers.filter((m) => existsSync(join(projectRoot, m)));
   if (found.length === 0) {
     return {
       id: "project",
       label: "project      ",
       level: "warn",
-      detail: `${projectRoot} has none of: ${markers.slice(0, 3).join(", ")} ????\`deepmicode code\` will still run, but @-mentions and project memory have nothing to anchor`,
+      detail: `${projectRoot} has none of: ${markers.slice(0, 3).join(", ")} … — \`deepmicode code\` will still run, but @-mentions and project memory have nothing to anchor`,
     };
   }
   return {
@@ -510,12 +520,12 @@ export async function doctorCommand(opts: DoctorOptions = {}): Promise<void> {
   const json = !!opts.json;
 
   if (!json) {
-    console.log(`${color(`deepmicode ${VERSION}  �  doctor`, "1")}  (cwd: ${projectRoot})`);
+    console.log(`${color(`deepmicode ${VERSION}  ·  doctor`, "1")}  (cwd: ${projectRoot})`);
     console.log(`  home: ${homedir()}`);
     console.log("");
   }
 
-  // Run independent checks in parallel ??saves ~5s when api-reach has
+  // Run independent checks in parallel — saves ~5s when api-reach has
   // to time out. Each handler swallows its own throws into a `fail`
   // result so a thrown promise can't kill the whole report.
   const checks = await runDoctorChecks(projectRoot);
@@ -535,7 +545,7 @@ export async function doctorCommand(opts: DoctorOptions = {}): Promise<void> {
   }
 
   console.log("");
-  const summary = `${ok} ok � ${warn} warn � ${fail} fail`;
+  const summary = `${ok} ok · ${warn} warn · ${fail} fail`;
   if (fail > 0) {
     console.log(color(summary, "31"));
     process.exit(1);

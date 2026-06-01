@@ -10,29 +10,29 @@ export type { McpServerSummary } from "../../../mcp/summary.js";
 export interface SlashResult {
   /** Text to display back to the user as a system/info line. */
   info?: string;
-  /** Open the SessionPicker modal mid-chat â€?used by `/sessions` slash. */
+  /** Open the SessionPicker modal mid-chat â€” used by `/sessions` slash. */
   openSessionsPicker?: boolean;
-  /** Open the WorkspacePicker modal mid-chat â€?bare `/cwd` in code mode. */
+  /** Open the WorkspacePicker modal mid-chat â€” bare `/cwd` in code mode. */
   openWorkspacePicker?: boolean;
-  /** Open the CheckpointPicker modal â€?bare `/restore` (no name argument). */
+  /** Open the CheckpointPicker modal â€” bare `/restore` (no name argument). */
   openCheckpointPicker?: boolean;
-  /** Open the ModelPicker modal â€?bare `/model` (no id) opens it. */
+  /** Open the ModelPicker modal â€” bare `/model` (no id) opens it. */
   openModelPicker?: boolean;
-  /** Open the ThemePicker modal â€?bare `/theme` opens it. */
+  /** Open the ThemePicker modal â€” bare `/theme` opens it. */
   openThemePicker?: boolean;
-  /** Open the unified MCP hub â€?`/mcp` defaults to "live", `/mcp browse` to "marketplace". */
+  /** Open the unified MCP hub â€” `/mcp` defaults to "live", `/mcp browse` to "marketplace". */
   openMcpHub?: { tab: "live" | "marketplace" };
-  /** Open the arg-completer picker for this command (e.g. `/language` â†?language picker). */
+  /** Open the arg-completer picker for this command (e.g. `/language` â†’ language picker). */
   openArgPickerFor?: string;
   /** Exit the app. */
   exit?: boolean;
   /** Clear the visible history. */
   clear?: boolean;
-  /** Unknown command â€?display usage hint. */
+  /** Unknown command â€” display usage hint. */
   unknown?: boolean;
-  /** `/retry` re-submit text â€?pushed back through the normal submit flow after log truncation. */
+  /** `/retry` re-submit text â€” pushed back through the normal submit flow after log truncation. */
   resubmit?: string;
-  /** Structured `/context` payload â€?`info` text can't carry per-segment color for the stacked bar. */
+  /** Structured `/context` payload â€” `info` text can't carry per-segment color for the stacked bar. */
   ctxBreakdown?: {
     systemTokens: number;
     toolsTokens: number;
@@ -43,7 +43,7 @@ export interface SlashResult {
     logMessages: number;
     topTools: Array<{ name: string; tokens: number; turn: number }>;
   };
-  /** `/replay [N]` archived-plan payload â€?display-only, NEVER executed. */
+  /** `/replay [N]` archived-plan payload â€” display-only, NEVER executed. */
   replayPlan?: {
     summary?: string;
     body?: string;
@@ -52,7 +52,7 @@ export interface SlashResult {
     completedAt: string;
     relativeTime: string;
     archiveBasename: string;
-    /** 1-based index in `/plans` listing â€?surfaced in the header. */
+    /** 1-based index in `/plans` listing â€” surfaced in the header. */
     index: number;
     /** Total archives at the time of the lookup; helps the user navigate. */
     total: number;
@@ -73,9 +73,9 @@ export interface SlashContext {
   getEngineeringLifecycleSnapshot?: () => EngineeringLifecycleSnapshot | null;
   pendingEditCount?: number;
   mcpServers?: McpServerSummary[];
-  /** Absent â†?tests context; `/memory` MUST reply "root unknown" rather than silently reading wrong dir. */
+  /** Absent â†’ tests context; `/memory` MUST reply "root unknown" rather than silently reading wrong dir. */
   memoryRoot?: string;
-  /** Override `~/.deepmicode` lookup root â€?production leaves this absent (defaults to `os.homedir()`); tests inject a tmpdir so they don't read the dev's real global memory. */
+  /** Override `~/.deepmicode` lookup root â€” production leaves this absent (defaults to `os.homedir()`); tests inject a tmpdir so they don't read the dev's real global memory. */
   homeDir?: string;
   planMode?: boolean;
   editMode?: EditMode;
@@ -88,7 +88,7 @@ export interface SlashContext {
   postDoctor?: (
     checks: ReadonlyArray<{ label: string; level: "ok" | "warn" | "fail"; detail: string }>,
   ) => void;
-  /** Push a verbose Usage card (full bars) â€?used by `/cost`; auto-emitted per-turn cards stay compact. */
+  /** Push a verbose Usage card (full bars) â€” used by `/cost`; auto-emitted per-turn cards stay compact. */
   postUsage?: (args: {
     turn: number;
     promptTokens: number;
@@ -113,25 +113,25 @@ export interface SlashContext {
   }) => void;
   dispatch?: (event: import("../state/events.js").AgentEvent) => void;
   setPlanMode?: (on: boolean, source?: PlanModeToggleSource) => void;
-  /** Manual escape valve when the model forgot to call `mark_step_complete` â€?used by `/plans done <id>`. */
+  /** Manual escape valve when the model forgot to call `mark_step_complete` â€” used by `/plans done <id>`. */
   markPlanStepDone?: (stepId: string) => "ok" | "not-in-plan" | "already-done" | "no-plan";
-  /** Mark every still-queued step done â€?used by `/plans done all`. Returns the count newly marked. */
+  /** Mark every still-queued step done â€” used by `/plans done all`. Returns the count newly marked. */
   markAllPlanStepsDone?: () => number;
 
   reloadHooks?: () => number;
-  /** Switch the workspace root mid-session â€?re-targets filesystem/shell/memory tools, hooks, at-mention walker. Code mode only. `clear` mirrors `/new` (drops in-memory history + UI cards) so the previous workspace's chat doesn't contaminate the new one. */
+  /** Switch the workspace root mid-session â€” re-targets filesystem/shell/memory tools, hooks, at-mention walker. Code mode only. `clear` mirrors `/new` (drops in-memory history + UI cards) so the previous workspace's chat doesn't contaminate the new one. */
   switchCwd?: (newPath: string) => { ok: boolean; info: string; clear?: boolean };
-  /** Diff config.mcp[] vs live bridges â†?add/close clients accordingly. Wired from chat.tsx mcpRuntime. */
+  /** Diff config.mcp[] vs live bridges â†’ add/close clients accordingly. Wired from chat.tsx mcpRuntime. */
   reloadMcp?: () => Promise<{
     added: string[];
     removed: string[];
     failed: Array<{ spec: string; reason: string }>;
     summaries: McpServerSummary[];
   }>;
-  /** `null` â†?still in flight OR offline; consumers can't distinguish, so always offer `refreshLatestVersion`. */
+  /** `null` â†’ still in flight OR offline; consumers can't distinguish, so always offer `refreshLatestVersion`. */
   latestVersion?: string | null;
   refreshLatestVersion?: () => void;
-  /** `null` â†?in flight / failed; `[]` â†?API answered empty. `/model <id>` warn-only since list can lag. */
+  /** `null` â†’ in flight / failed; `[]` â†’ API answered empty. `/model <id>` warn-only since list can lag. */
   models?: string[] | null;
   refreshModels?: () => void;
   /** Ask the current model to summarize the active session into a short title and rename it. */
@@ -155,7 +155,7 @@ export interface SlashContext {
     disconnect: () => Promise<string>;
     status: () => string;
   };
-  /** Current session id â€?included in `/feedback`'s diagnostic block when present. */
+  /** Current session id â€” included in `/feedback`'s diagnostic block when present. */
   sessionId?: string;
 }
 
@@ -179,7 +179,7 @@ export interface SlashCommandSpec {
   argsHint?: string;
   /** First-arg picker source. `"path"` async-lists the filesystem for directory completion (used by `/cwd`). */
   argCompleter?: "models" | "mcp-resources" | "mcp-prompts" | "skills" | "path" | readonly string[];
-  /** Alternate names â€?typing any of these resolves to `cmd` for dispatch / suggestion / arg-context. */
+  /** Alternate names â€” typing any of these resolves to `cmd` for dispatch / suggestion / arg-context. */
   aliases?: readonly string[];
 }
 

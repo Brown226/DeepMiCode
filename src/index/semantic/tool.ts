@@ -27,7 +27,7 @@ export async function registerSemanticSearchTool(
   registry.register({
     name: "semantic_search",
     description:
-      "FIRST CHOICE for descriptive queries. Use this BEFORE search_content (grep) when the user describes WHAT code does ('where do we handle X', 'which file owns Y', 'how does Z work', 'find the logic that â€?). Returns ranked snippets ordered by semantic relevance â€?finds the right file even when your description shares no words with the code. Falls back to search_content / search_files only for: exact identifiers, regex patterns, or counting occurrences of a known token. If your first instinct is grep on a paraphrased question, you are wrong â€?try semantic_search first.",
+      "FIRST CHOICE for descriptive queries. Use this BEFORE search_content (grep) when the user describes WHAT code does ('where do we handle X', 'which file owns Y', 'how does Z work', 'find the logic that â€¦'). Returns ranked snippets ordered by semantic relevance â€” finds the right file even when your description shares no words with the code. Falls back to search_content / search_files only for: exact identifiers, regex patterns, or counting occurrences of a known token. If your first instinct is grep on a paraphrased question, you are wrong â€” try semantic_search first.",
     readOnly: true,
     parallelSafe: true,
     parameters: {
@@ -36,7 +36,7 @@ export async function registerSemanticSearchTool(
         query: {
           type: "string",
           description:
-            "Natural-language description, phrased as a question or noun phrase: 'where do we validate the session cookie?' / 'retry backoff logic' / 'code that prevents user changes from immediately landing on disk'. Do NOT pass exact identifiers â€?those are search_content's job.",
+            "Natural-language description, phrased as a question or noun phrase: 'where do we validate the session cookie?' / 'retry backoff logic' / 'code that prevents user changes from immediately landing on disk'. Do NOT pass exact identifiers â€” those are search_content's job.",
         },
         topK: {
           type: "integer",
@@ -87,7 +87,7 @@ export function formatHits(query: string, hits: readonly SearchHit[]): string {
     lines.push(indentBlock(preview, "   "));
     if (entry.text.split("\n").length > 8) {
       lines.push(
-        `   â€?${entry.text.split("\n").length - 8} more lines â€?read_file ${entry.path}:${entry.startLine} for the full chunk)`,
+        `   â€¦(${entry.text.split("\n").length - 8} more lines â€” read_file ${entry.path}:${entry.startLine} for the full chunk)`,
       );
     }
   });
@@ -101,7 +101,7 @@ function indentBlock(text: string, prefix: string): string {
     .join("\n");
 }
 
-/** Silent: register if index exists, else skip â€?no Ollama probe, no setup prompt. */
+/** Silent: register if index exists, else skip â€” no Ollama probe, no setup prompt. */
 export async function bootstrapSemanticSearchInCodeMode(
   registry: ToolRegistry,
   rootDir: string,

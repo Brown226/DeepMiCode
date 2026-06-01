@@ -8,7 +8,7 @@ import { resolveProjectMemoryWritePath } from "../../memory/project.js";
 const PROJECT_HEADER = `# DeepMiCode project memory
 
 Notes the user pinned via the \`#\` prompt prefix. The whole file is
-loaded into the immutable system prefix every session â€?keep it terse.
+loaded into the immutable system prefix every session â€” keep it terse.
 
 `;
 
@@ -16,7 +16,7 @@ const GLOBAL_HEADER = `# DeepMiCode global memory
 
 Cross-project notes the user pinned via the \`#g\` prompt prefix. Loaded
 into every DeepMiCode session's prefix regardless of working directory.
-Private to this machine â€?not committed anywhere.
+Private to this machine â€” not committed anywhere.
 
 `;
 
@@ -36,9 +36,9 @@ export function detectHashMemory(text: string): HashMemoryParse | null {
   // resolve that ambiguity in favor of memory write and document the
   // `\#` escape for users who want a literal H1 in the prompt.
   if (text.startsWith("##")) return null;
-  // `#g <note>` â€?global memory. The space after `g` is mandatory so
+  // `#g <note>` â€” global memory. The space after `g` is mandatory so
   // notes like `#golang preference` route to project memory, not global.
-  // `#g` alone (or `#g` + only whitespace) is treated as null â€?the
+  // `#g` alone (or `#g` + only whitespace) is treated as null â€” the
   // user clearly wanted the global form but typed no body, so we don't
   // silently fall back to project memory with body=`g`.
   if (/^#g\s*$/.test(text)) return null;
@@ -85,7 +85,7 @@ function appendBulletToFile(path: string, note: string, newFileHeader: string): 
   // bullets), O_CREAT creates the file when it's missing, and we use
   // `fstat().size === 0` as the "we just created it" signal to decide
   // whether to emit the file header. Single fd from open through
-  // write â€?no path-based check between (CodeQL js/file-system-race).
+  // write â€” no path-based check between (CodeQL js/file-system-race).
   const fd = openSync(path, "a+");
   try {
     const stat = fstatSync(fd);
@@ -93,8 +93,8 @@ function appendBulletToFile(path: string, note: string, newFileHeader: string): 
       writeSync(fd, `${newFileHeader}${bullet}`);
       return { path, created: true };
     }
-    // Existing file â€?peek the trailing byte to decide whether to
-    // insert a leading newline. Same fd â†?no separate statâ†’read race.
+    // Existing file â€” peek the trailing byte to decide whether to
+    // insert a leading newline. Same fd â†’ no separate statâ†’read race.
     const tail = Buffer.alloc(1);
     readSync(fd, tail, 0, 1, stat.size - 1);
     const prefix = tail[0] !== 0x0a ? "\n" : "";

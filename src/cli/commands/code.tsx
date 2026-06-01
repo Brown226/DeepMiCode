@@ -1,4 +1,4 @@
-/** `deepmicode code [dir]` â€?native filesystem tools + code system prompt, wraps `chat`. */
+/** `deepmicode code [dir]` â€” native filesystem tools + code system prompt, wraps `chat`. */
 
 import { readFileSync } from "node:fs";
 import { basename, resolve } from "node:path";
@@ -27,9 +27,9 @@ export interface CodeOptions {
   noSession?: boolean;
   /** Transcript file for replay/diff. */
   transcript?: string;
-  /** Skip the session picker â€?always resume prior messages. */
+  /** Skip the session picker â€” always resume prior messages. */
   forceResume?: boolean;
-  /** Skip the session picker â€?always wipe prior messages and start fresh. */
+  /** Skip the session picker â€” always wipe prior messages and start fresh. */
   forceNew?: boolean;
   /**
    * Soft USD spend cap. Off by default. Same semantics as `chat`:
@@ -61,7 +61,7 @@ export async function codeCommand(opts: CodeOptions = {}): Promise<void> {
   // Bridge .env + ~/.deepmicode/config.json into process.env so buildCodeToolset's
   // eager DeepSeekClient constructions (subagent client; semantic embedder) can
   // pick up a key the user already configured via `deepmicode setup`. chatCommand
-  // does the same dance â€?code.tsx wraps chatCommand but must also seed env
+  // does the same dance â€” code.tsx wraps chatCommand but must also seed env
   // before buildCodeToolset runs, which is BEFORE chatCommand.
   loadDotenv();
   bridgeEndpointEnv();
@@ -97,7 +97,7 @@ export async function codeCommand(opts: CodeOptions = {}): Promise<void> {
   // Belt-and-suspenders cleanup: even though spawn(detached:false)
   // should tie child processes to the parent's lifetime, Windows cmd.exe
   // wrappers occasionally leak. We DON'T install SIGINT/SIGTERM
-  // handlers here â€?that overrode Node's default "exit on Ctrl+C" with
+  // handlers here â€” that overrode Node's default "exit on Ctrl+C" with
   // a silent no-op, which made Ctrl+C feel broken in the TUI. App.tsx
   // owns the SIGINT path now (it shows the quit-armed banner and calls
   // exit() on confirmation); this 'exit' hook just guarantees the job

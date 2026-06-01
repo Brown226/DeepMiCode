@@ -52,10 +52,7 @@ export function detectProvider(model?: string, baseUrl?: string): ProviderKind {
  * Resolve the MiMo base URL from configuration.
  * Priority: explicit baseUrl > MIMO_BASE_URL env > region preference > international default
  */
-export function resolveMimoBaseUrl(
-  baseUrl?: string,
-  region?: "international" | "china",
-): string {
+export function resolveMimoBaseUrl(baseUrl?: string, region?: "international" | "china"): string {
   if (baseUrl) return baseUrl;
   if (process.env.MIMO_BASE_URL) return process.env.MIMO_BASE_URL;
   if (region === "china") return MIMO_ENDPOINTS.china;
@@ -103,9 +100,7 @@ export function createProviderFromEnv(model?: string): LLMProvider {
   // If model is explicitly MiMo, use MiMo provider
   if (model && isMimoModel(model)) {
     if (!mimoKey) {
-      throw new Error(
-        "MIMO_API_KEY is not set. Please set it in .env or environment variables.",
-      );
+      throw new Error("MIMO_API_KEY is not set. Please set it in .env or environment variables.");
     }
     return createProvider({
       provider: "mimo",

@@ -1,4 +1,4 @@
-/** Names sanitized via SAFE_NAME on every write â€?guards against path traversal. */
+/** Names sanitized via SAFE_NAME on every write â€” guards against path traversal. */
 
 import { createHash } from "node:crypto";
 import {
@@ -82,7 +82,7 @@ export async function handleMemory(
   const globalDir = globalMemoryDir();
   const projectMemDir = cwd ? projectMemoryDir(cwd) : "";
 
-  // Browser shape â€?matches the $memory event payload emitted by desktop.ts
+  // Browser shape â€” matches the $memory event payload emitted by desktop.ts
   // so the web dashboard's memory panel (project file + global file +
   // structured entries with `kind`/`path`/`type`) renders the same as Tauri.
   if (method === "GET" && rest[0] === "entries") {

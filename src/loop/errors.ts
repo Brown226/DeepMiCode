@@ -1,6 +1,6 @@
 import type { DeepSeekClient } from "../client.js";
-import type { LLMProvider } from "../providers/types.js";
 import { t } from "../i18n/index.js";
+import type { LLMProvider } from "../providers/types.js";
 
 export interface DeepSeekProbeResult {
   reachable: boolean;

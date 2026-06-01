@@ -100,7 +100,9 @@ describe("/permissions slash handler", () => {
     });
     expect(result.info).toMatch(/builtin allowlist/i);
     // Should NOT have written a redundant project entry.
-    expect(loadProjectShellAllowed(projectRoot, join(dir, ".deepmicode", "config.json"))).toEqual([]);
+    expect(loadProjectShellAllowed(projectRoot, join(dir, ".deepmicode", "config.json"))).toEqual(
+      [],
+    );
   });
 
   it("/permissions remove drops by exact prefix", () => {

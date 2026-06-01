@@ -1,5 +1,5 @@
 /**
- * KeystrokeContext â€?React surface in front of the raw stdin reader.
+ * KeystrokeContext â€” React surface in front of the raw stdin reader.
  *
  * Replaces Ink's `useInput` chain. DeepMiCode's components no longer
  * import `useInput` from "ink"; they call `useKeystroke(handler,
@@ -17,7 +17,7 @@
  * 100 ms intra-CSI timeout that's too short for Windows ConPTY,
  * leaking arrow-key bytes / paste markers into the buffer. Our
  * reader uses 250 ms and recognises the ESC-stripped variants too
- * â€?see `stdin-reader.ts`.
+ * â€” see `stdin-reader.ts`.
  */
 
 import { useInput } from "ink";
@@ -26,7 +26,7 @@ import React, { createContext, useContext, useEffect, useRef } from "react";
 import { type KeyEvent, type StdinReader, getStdinReader } from "./stdin-reader.js";
 
 interface KeystrokeBus {
-  /** Subscribe â€?returns an unsubscribe function. */
+  /** Subscribe â€” returns an unsubscribe function. */
   subscribe(handler: KeystrokeHandler): () => void;
 }
 
@@ -51,7 +51,8 @@ export function KeystrokeProvider({
   reader: providedReader,
 }: KeystrokeProviderProps): React.ReactElement {
   const handlersRef = useRef<Set<KeystrokeHandler>>(new Set());
-  // Ref so the bus value's identity is stable across re-renders â€?  // consumers don't accidentally re-subscribe every render.
+  // Ref so the bus value's identity is stable across re-renders â€”
+  // consumers don't accidentally re-subscribe every render.
   const busRef = useRef<KeystrokeBus | null>(null);
   if (busRef.current === null) {
     busRef.current = {
@@ -69,12 +70,12 @@ export function KeystrokeProvider({
     reader.start();
     const unsubscribe = reader.subscribe((ev) => {
       // Snapshot the handler set so handlers added/removed during
-      // dispatch don't perturb iteration. Cheap â€?typical N=1-3.
+      // dispatch don't perturb iteration. Cheap â€” typical N=1-3.
       for (const fn of [...handlersRef.current]) fn(ev);
     });
     return () => {
       unsubscribe();
-      // Don't `stop()` the singleton on every unmount â€?multiple
+      // Don't `stop()` the singleton on every unmount â€” multiple
       // mounts (test reruns, hot-reload) must not tear down stdin.
       // The singleton's own start() is idempotent; stop() is the
       // process-exit handler's job.
@@ -129,7 +130,7 @@ export function useKeystrokeBus(): KeystrokeBus | null {
   return useContext(KeystrokeContext);
 }
 
-/** Test helper â€?assemble a KeyEvent with sensible defaults. */
+/** Test helper â€” assemble a KeyEvent with sensible defaults. */
 export function makeKeyEvent(overrides: Partial<KeyEvent> = {}): KeyEvent {
   return { input: "", ...overrides };
 }

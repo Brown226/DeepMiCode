@@ -4,9 +4,9 @@
  */
 
 import { describe, expect, it } from "vitest";
+import { MIMO_ENDPOINTS, detectProvider, resolveMimoBaseUrl } from "../src/providers/factory.js";
+import { isMimoEndpoint, isMimoModel } from "../src/providers/mimo-client.js";
 import { Usage } from "../src/providers/types.js";
-import { isMimoModel, isMimoEndpoint } from "../src/providers/mimo-client.js";
-import { detectProvider, resolveMimoBaseUrl, MIMO_ENDPOINTS } from "../src/providers/factory.js";
 
 describe("MiMo Usage Normalization", () => {
   it("should parse MiMo-style nested usage format", () => {
@@ -108,7 +108,9 @@ describe("Provider Factory", () => {
   it("should prefer model name over URL", () => {
     // Model name takes priority
     expect(detectProvider("mimo-v2.5-pro", "https://api.deepseek.com")).toBe("mimo");
-    expect(detectProvider("deepseek-v4-flash", "https://token-plan-ams.xiaomimimo.com/v1")).toBe("deepseek");
+    expect(detectProvider("deepseek-v4-flash", "https://token-plan-ams.xiaomimimo.com/v1")).toBe(
+      "deepseek",
+    );
   });
 
   it("should resolve MiMo base URL", () => {
@@ -191,6 +193,8 @@ describe("MiMo Host Detection", () => {
 
     expect(detectProviderFromError("MiMo 401: Unauthorized")).toBe("MiMo");
     expect(detectProviderFromError("DeepSeek 401: Unauthorized")).toBe("DeepSeek");
-    expect(detectProviderFromError("Unknown error", "https://token-plan-ams.xiaomimimo.com/v1")).toBe("MiMo");
+    expect(
+      detectProviderFromError("Unknown error", "https://token-plan-ams.xiaomimimo.com/v1"),
+    ).toBe("MiMo");
   });
 });

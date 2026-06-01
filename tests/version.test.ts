@@ -105,7 +105,9 @@ describe("detectInstallSource", () => {
 
   it("identifies bun via .bun install dir", () => {
     expect(
-      detectInstallSource("/Users/me/.bun/install/global/node_modules/deepmicode/dist/cli/index.js"),
+      detectInstallSource(
+        "/Users/me/.bun/install/global/node_modules/deepmicode/dist/cli/index.js",
+      ),
     ).toBe("bun");
   });
 
@@ -127,7 +129,9 @@ describe("detectInstallSource", () => {
 
   it("identifies yarn via yarn/global", () => {
     expect(
-      detectInstallSource("/Users/me/.config/yarn/global/node_modules/deepmicode/dist/cli/index.js"),
+      detectInstallSource(
+        "/Users/me/.config/yarn/global/node_modules/deepmicode/dist/cli/index.js",
+      ),
     ).toBe("yarn");
   });
 

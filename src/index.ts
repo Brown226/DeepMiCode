@@ -1,4 +1,4 @@
-/** DeepMiCode â€?DeepSeek + Mimo AI coding agent. Library entry point. */
+/** DeepMiCode â€” DeepSeek + Mimo AI coding agent. Library entry point. */
 
 export { DeepSeekClient, Usage } from "./client.js";
 export type { ChatResponse, StreamChunk, DeepSeekClientOptions } from "./client.js";

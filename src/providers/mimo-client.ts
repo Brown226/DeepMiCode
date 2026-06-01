@@ -56,14 +56,10 @@ export class MimoClient implements LLMProvider {
   constructor(opts: MimoClientOptions = {}) {
     const apiKey = opts.apiKey ?? process.env.MIMO_API_KEY;
     if (!apiKey) {
-      throw new Error(
-        "MIMO_API_KEY is not set. Put it in .env or pass apiKey to MimoClient.",
-      );
+      throw new Error("MIMO_API_KEY is not set. Put it in .env or pass apiKey to MimoClient.");
     }
     this.apiKey = apiKey;
-    let url = opts.baseUrl
-      ?? process.env.MIMO_BASE_URL
-      ?? MIMO_DEFAULT_ENDPOINTS.international;
+    let url = opts.baseUrl ?? process.env.MIMO_BASE_URL ?? MIMO_DEFAULT_ENDPOINTS.international;
     // Trim trailing slashes
     while (url.endsWith("/")) url = url.slice(0, -1);
     this.baseUrl = url;

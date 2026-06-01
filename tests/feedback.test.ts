@@ -137,6 +137,8 @@ describe("buildFeedbackIssueUrl", () => {
     const huge = `${"x".repeat(20000)}`;
     const url = buildFeedbackIssueUrl(huge);
     expect(url.length).toBeLessThan(20000);
-    expect(url).toMatch(/^https:\/\/github\.com\/esengine\/DeepSeek-deepmicode\/issues\/new\?body=/);
+    expect(url).toMatch(
+      /^https:\/\/github\.com\/esengine\/DeepSeek-deepmicode\/issues\/new\?body=/,
+    );
   });
 });

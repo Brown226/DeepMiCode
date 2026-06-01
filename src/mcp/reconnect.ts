@@ -1,4 +1,4 @@
-/** `/mcp reconnect` â€?open a fresh client, accept identity (always) and append (opt-in), refuse the rest cleanly. */
+/** `/mcp reconnect` â€” open a fresh client, accept identity (always) and append (opt-in), refuse the rest cleanly. */
 
 import { McpClient } from "./client.js";
 import { classifyToolListDrift } from "./drift.js";
@@ -16,7 +16,7 @@ export interface ReconnectArgs {
   beforeTools: readonly McpTool[];
   /** Drift kinds the caller is willing to accept. Default: ["identity"]. */
   accept?: ReadonlyArray<"identity" | "append">;
-  /** Stdio env overlay â€?same lookup that produced the live client's env. */
+  /** Stdio env overlay â€” same lookup that produced the live client's env. */
   env?: Record<string, string>;
   /** SSE / Streamable-HTTP headers overlay. */
   headers?: Record<string, string>;
@@ -69,7 +69,7 @@ export async function reconnectMcpServer(args: ReconnectArgs): Promise<Reconnect
     await next.initialize();
     const listed = await next.listTools();
     const drift = classifyToolListDrift(toolsToSpecs(args.beforeTools), toolsToSpecs(listed.tools));
-    // Identity is always free â€?accept it regardless of `accept`. The opt-in
+    // Identity is always free â€” accept it regardless of `accept`. The opt-in
     // controls only whether append-drift also gets through.
     const acceptedKind: "identity" | "append" | null =
       drift.kind === "identity"
@@ -130,7 +130,7 @@ function driftMessage(drift: ReturnType<typeof classifyToolListDrift>): string {
   if (drift.kind === "remove") {
     return `tool(s) removed: ${drift.removed.join(", ")}. Restart DeepMiCode to drop them from the registry.`;
   }
-  return "tool list reordered or restructured â€?cache prefix would be invalidated. Restart DeepMiCode.";
+  return "tool list reordered or restructured â€” cache prefix would be invalidated. Restart DeepMiCode.";
 }
 
 function toolsToSpecs(tools: readonly McpTool[]): import("../types.js").ToolSpec[] {

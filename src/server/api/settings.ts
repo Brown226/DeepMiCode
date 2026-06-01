@@ -32,9 +32,6 @@ interface SettingsBody {
   budgetUsd?: unknown;
   skillPaths?: unknown;
   subagentModels?: unknown;
-  mimoApiKey?: unknown;
-  mimoBaseUrl?: unknown;
-  mimoRegion?: unknown;
 }
 
 function parseBody(raw: string): SettingsBody {
@@ -98,10 +95,6 @@ export async function handleSettings(
           cfg.skills?.paths ?? [],
           ctx.getCurrentCwd?.() ?? process.cwd(),
         ),
-        mimoApiKey: cfg.mimoApiKey ? redactKey(cfg.mimoApiKey) : null,
-        mimoApiKeySet: Boolean(cfg.mimoApiKey),
-        mimoBaseUrl: cfg.mimoBaseUrl ?? null,
-        mimoRegion: cfg.mimoRegion ?? null,
         subagentModels: cfg.subagentModels ?? {},
         appliesAt: {
           apiKey: "next-session",
@@ -113,9 +106,6 @@ export async function handleSettings(
           budgetUsd: "live",
           skillPaths: "next-session",
           subagentModels: "next-skill-run",
-          mimoApiKey: "next-session",
-          mimoBaseUrl: "next-session",
-          mimoRegion: "next-session",
         },
       },
     };
@@ -271,33 +261,6 @@ export async function handleSettings(
       }
       cfg.subagentModels = sanitized.size > 0 ? Object.fromEntries(sanitized) : undefined;
       changed.push("subagentModels");
-    }
-
-    if (fields.mimoApiKey !== undefined) {
-      if (typeof fields.mimoApiKey !== "string") {
-        return { status: 400, body: { error: "mimoApiKey must be a string" } };
-      }
-      const trimmed = fields.mimoApiKey.trim();
-      cfg.mimoApiKey = trimmed.length > 0 ? trimmed : undefined;
-      changed.push("mimoApiKey");
-    }
-    if (fields.mimoBaseUrl !== undefined) {
-      if (typeof fields.mimoBaseUrl !== "string") {
-        return { status: 400, body: { error: "mimoBaseUrl must be a string" } };
-      }
-      const trimmed = fields.mimoBaseUrl.trim();
-      cfg.mimoBaseUrl = trimmed.length > 0 ? trimmed : undefined;
-      changed.push("mimoBaseUrl");
-    }
-    if (fields.mimoRegion !== undefined) {
-      if (
-        typeof fields.mimoRegion !== "string" ||
-        (fields.mimoRegion !== "international" && fields.mimoRegion !== "china")
-      ) {
-        return { status: 400, body: { error: 'mimoRegion must be "international" or "china"' } };
-      }
-      cfg.mimoRegion = fields.mimoRegion;
-      changed.push("mimoRegion");
     }
 
     if (changed.length > 0) {

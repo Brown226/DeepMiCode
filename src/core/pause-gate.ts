@@ -1,4 +1,4 @@
-/** Generic pause gate â€?bridges tool functions and the App's modals via Promises. */
+/** Generic pause gate â€” bridges tool functions and the App's modals via Promises. */
 // Tools call gate.ask(kind, payload) and await the result; the App subscribes
 // with gate.on() to show the right modal, then calls gate.resolve() on user pick.
 
@@ -49,11 +49,11 @@ interface PausePayloadMap {
   path_access: {
     /** Absolute path the tool wants to touch. */
     path: string;
-    /** Why we're being asked â€?read leaks content, write mutates files. */
+    /** Why we're being asked â€” read leaks content, write mutates files. */
     intent: "read" | "write";
-    /** The filesystem tool calling in â€?surfaced so users can see what's about to happen. */
+    /** The filesystem tool calling in â€” surfaced so users can see what's about to happen. */
     toolName: string;
-    /** Sandbox root the path is escaping â€?surfaced for context. */
+    /** Sandbox root the path is escaping â€” surfaced for context. */
     sandboxRoot: string;
     /** Directory prefix that would be persisted if the user picks "always allow". */
     allowPrefix: string;
@@ -79,7 +79,7 @@ export type PauseRequest = {
 type GateListener = (request: PauseRequest) => void;
 type AuditListener = (event: ToolConfirmationAuditEvent) => void;
 
-/** Named options for PauseGate.ask() â€?makes it obvious which field is kind vs payload. */
+/** Named options for PauseGate.ask() â€” makes it obvious which field is kind vs payload. */
 export interface PauseAskOpts<K extends PauseKind = PauseKind> {
   kind: K;
   payload: PausePayloadMap[K];
@@ -97,7 +97,7 @@ export class PauseGate {
     const { kind, payload } = opts;
     if (this._listeners.size === 0) {
       throw new Error(
-        `${kind}: no confirmation listener registered â€?cannot prompt the user. This tool can only be used inside an interactive DeepMiCode session.`,
+        `${kind}: no confirmation listener registered â€” cannot prompt the user. This tool can only be used inside an interactive DeepMiCode session.`,
       );
     }
     return new Promise((resolve) => {
@@ -123,7 +123,7 @@ export class PauseGate {
     p.resolve(data);
   }
 
-  /** Safe-cancel every outstanding request â€?frees stranded tool fns on Esc / /new. */
+  /** Safe-cancel every outstanding request â€” frees stranded tool fns on Esc / /new. */
   cancelAll(): void {
     const ids = [...this._pending.keys()];
     for (const id of ids) {
@@ -134,7 +134,7 @@ export class PauseGate {
     }
   }
 
-  /** Cancel one pending request â€?used by multi-tab hosts that need per-scope abort. */
+  /** Cancel one pending request â€” used by multi-tab hosts that need per-scope abort. */
   cancel(id: number): boolean {
     const p = this._pending.get(id);
     if (!p) return false;

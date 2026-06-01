@@ -1,4 +1,4 @@
-/** Dashboard HTTP server â€?defaults to 127.0.0.1 with an ephemeral per-boot token; mutations require the token in the header (CSRF). Host + token can be pinned for LAN / mobile access (#968). */
+/** Dashboard HTTP server â€” defaults to 127.0.0.1 with an ephemeral per-boot token; mutations require the token in the header (CSRF). Host + token can be pinned for LAN / mobile access (#968). */
 
 import { randomBytes } from "node:crypto";
 import { type IncomingMessage, type ServerResponse, createServer } from "node:http";
@@ -8,13 +8,13 @@ import { renderIndexHtml, serveAsset } from "./assets.js";
 import type { DashboardContext } from "./context.js";
 import { handleApi } from "./router.js";
 
-/** Strict loopback set â€?anything outside this gets the LAN-exposure warning. */
+/** Strict loopback set â€” anything outside this gets the LAN-exposure warning. */
 const LOOPBACK_HOSTS = new Set(["127.0.0.1", "::1", "localhost"]);
 
 export interface StartDashboardOptions {
   /** Force a specific port. 0 = ephemeral. Default: 0. */
   port?: number;
-  /** Host to bind. Default 127.0.0.1. Set to 0.0.0.0 / :: / a LAN IP to expose to other devices (#968) â€?the URL token then becomes the only auth. */
+  /** Host to bind. Default 127.0.0.1. Set to 0.0.0.0 / :: / a LAN IP to expose to other devices (#968) â€” the URL token then becomes the only auth. */
   host?: string;
   /** Pin a token across boots (#968). When unset, mintToken() generates a fresh 32-byte hex string. Min 16 chars; the caller enforces. */
   token?: string;
@@ -34,7 +34,7 @@ function mintToken(): string {
   return randomBytes(32).toString("hex");
 }
 
-/** `===` short-circuits on first mismatch â€?leaks position via timing even on localhost. */
+/** `===` short-circuits on first mismatch â€” leaks position via timing even on localhost. */
 export function constantTimeEquals(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
   let mismatch = 0;
@@ -65,7 +65,7 @@ export function checkAuth(
         status: 403,
         body: JSON.stringify({
           error:
-            "mutation requires X-DeepMiCode-Token header (CSRF defence â€?query token alone is rejected for POST/DELETE).",
+            "mutation requires X-DeepMiCode-Token header (CSRF defence â€” query token alone is rejected for POST/DELETE).",
         }),
       };
     }
@@ -118,14 +118,14 @@ export async function dispatch(
   const method = (req.method ?? "GET").toUpperCase();
   const isMutation = method === "POST" || method === "DELETE" || method === "PUT";
 
-  // SPA routes â€?token-gate the HTML so a stranger can't even see the
+  // SPA routes â€” token-gate the HTML so a stranger can't even see the
   // shell without the token. This also means the user MUST come in
   // through the token-bearing URL we print to the TUI.
   if (path === "/" || path === "/index.html") {
     const fail = checkAuth(req, expectedToken, false);
     if (fail) {
       res.writeHead(fail.status, { "content-type": "text/plain" });
-      res.end("unauthorized â€?open the URL printed by /dashboard, including ?token=â€?);
+      res.end("unauthorized â€” open the URL printed by /dashboard, including ?token=â€¦");
       return;
     }
     const html = renderIndexHtml(expectedToken, ctx.mode);
@@ -152,7 +152,7 @@ export async function dispatch(
     return;
   }
 
-  // SSE event stream â€?special-cased BEFORE the normal `/api/*` branch
+  // SSE event stream â€” special-cased BEFORE the normal `/api/*` branch
   // because it keeps the response open and writes its own frames; the
   // normal path would try to JSON-encode and end the response.
   if (path === "/api/events") {
@@ -221,7 +221,7 @@ export function startDashboardServer(
       const url = `http://${host}:${finalPort}/?token=${token}`;
       if (!LOOPBACK_HOSTS.has(host)) {
         process.stderr.write(
-          `â–?Dashboard bound to ${host}:${finalPort} (non-loopback). The URL token is the only auth â€?keep it secret.\n`,
+          `â–² Dashboard bound to ${host}:${finalPort} (non-loopback). The URL token is the only auth â€” keep it secret.\n`,
         );
       }
 

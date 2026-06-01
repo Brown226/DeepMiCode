@@ -37,13 +37,13 @@ export const MANUAL_UPDATE_COMMANDS: readonly string[] = [
   "yarn global add deepmicode@latest",
 ];
 
-/** Pure decision â€?split out so tests don't need to spawn child processes or hit the network. */
+/** Pure decision â€” split out so tests don't need to spawn child processes or hit the network. */
 export function planUpdate(input: PlanUpdateInput): UpdatePlan {
   const diff = compareVersions(input.current, input.latest);
   if (diff > 0) {
     return {
       action: "newer-local",
-      message: `current (${input.current}) is newer than the published ${input.latest} â€?nothing to do.`,
+      message: `current (${input.current}) is newer than the published ${input.latest} â€” nothing to do.`,
     };
   }
   if (diff === 0) {
@@ -54,7 +54,7 @@ export function planUpdate(input: PlanUpdateInput): UpdatePlan {
       action: "npx-hint",
       message: [
         `deepmicode ${input.latest} is available.`,
-        "you're running via npx â€?the next `npx deepmicode ...` launch will auto-fetch",
+        "you're running via npx â€” the next `npx deepmicode ...` launch will auto-fetch",
         "the latest (npx caches packages for a short window). to force a refresh",
         "sooner, clear the cache: `npm cache clean --force`.",
       ].join("\n"),
@@ -73,7 +73,7 @@ export function planUpdate(input: PlanUpdateInput): UpdatePlan {
   const command = buildUpdateCommand(input.installSource, input.npmPrefix ?? null);
   return {
     action: "run-install",
-    message: `upgrading deepmicode ${input.current} â†?${input.latest} (via ${input.installSource})`,
+    message: `upgrading deepmicode ${input.current} â†’ ${input.latest} (via ${input.installSource})`,
     command,
   };
 }
@@ -109,7 +109,7 @@ export interface UpdateCommandOptions {
   spawnInstall?: (argv: string[]) => Promise<number>;
   /** Test seam: stdout writer. */
   write?: (msg: string) => void;
-  /** Test seam: process exit â€?tests don't want to tear down vitest. */
+  /** Test seam: process exit â€” tests don't want to tear down vitest. */
   exit?: (code: number) => void;
 }
 
@@ -117,7 +117,7 @@ function defaultSpawn(argv: string[]): Promise<number> {
   return new Promise((resolve, reject) => {
     // `shell: true` on Windows is what lets `npm` resolve to `npm.cmd`
     // without routing through our `prepareSpawn` helper. The args here
-    // are literal strings under our control â€?no user input flows in,
+    // are literal strings under our control â€” no user input flows in,
     // so injection is not a concern. Avoiding `prepareSpawn` keeps
     // this command free of a dep on the shell tools module.
     const child = spawn(argv[0]!, argv.slice(1), {
@@ -140,7 +140,7 @@ export async function updateCommand(opts: UpdateCommandOptions = {}): Promise<vo
   write(`current: deepmicode ${VERSION}\n`);
   const latest = await fetchLatest();
   if (!latest) {
-    write("could not reach registry.npmjs.org â€?check your network.\n");
+    write("could not reach registry.npmjs.org â€” check your network.\n");
     exit(1);
     return;
   }

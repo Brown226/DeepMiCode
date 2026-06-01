@@ -20,7 +20,6 @@ import {
   type DesktopOpenTab,
   type EditMode,
   bridgeEndpointEnv,
-  bridgeMimoEndpointEnv,
   isPlausibleKey,
   isReasoningEffort,
   loadApiKey,
@@ -29,7 +28,6 @@ import {
   loadEditMode,
   loadEditor,
   loadEndpoint,
-  loadMimoEndpoint,
   loadExaApiKey,
   loadMetasoApiKey,
   loadModel,
@@ -58,6 +56,7 @@ import {
   saveWorkspaceDir,
   writeConfig,
 } from "../../config.js";
+import { loadMimoEndpoint } from "../../config.js";
 import { Eventizer } from "../../core/eventize.js";
 import type { Event as KernelEvent } from "../../core/events.js";
 import {
@@ -98,10 +97,6 @@ import {
   ImmutablePrefix,
   type LoopAbortOptions,
 } from "../../index.js";
-import { createProvider } from "../../providers/factory.js";
-import { isMimoModel } from "../../providers/mimo-client.js";
-import type { LLMProvider } from "../../providers/types.js";
-import { loadMimoEndpoint } from "../../config.js";
 import { parseMcpSpec } from "../../mcp/spec.js";
 import {
   deleteSession,
@@ -113,6 +108,9 @@ import {
   sessionPath,
   timestampSuffix,
 } from "../../memory/session.js";
+import { createProvider } from "../../providers/factory.js";
+import { isMimoModel } from "../../providers/mimo-client.js";
+import type { LLMProvider } from "../../providers/types.js";
 import { QQChannel } from "../../qq/channel.js";
 import {
   type ExternalSessionSource,
@@ -157,7 +155,6 @@ type InMessage = { tabId?: string } & (
   | { cmd: "memory_read"; path: string }
   | { cmd: "new_chat" }
   | { cmd: "setup_save_key"; key: string }
-  | { cmd: "setup_save_mimo_key"; key: string }
   | { cmd: "settings_get" }
   | {
       cmd: "settings_save";
@@ -186,9 +183,6 @@ type InMessage = { tabId?: string } & (
       braveApiKey?: string | null;
       subagentModels?: Record<string, "flash" | "pro">;
       showSystemEvents?: boolean;
-      mimoApiKey?: string;
-      mimoBaseUrl?: string;
-      mimoRegion?: "international" | "china";
     }
   | { cmd: "qq_status_get" }
   | { cmd: "qq_connect" }
@@ -233,9 +227,6 @@ interface SettingsEvent {
   apiKeyPrefix?: string;
   workspaceDir: string;
   recentWorkspaces: string[];
-  mimoApiKeyPrefix?: string;
-  mimoBaseUrl?: string;
-  mimoRegion?: "international" | "china";
   model: string;
   editor?: string;
   webSearchEngine?:
@@ -471,7 +462,7 @@ interface McpSpecsEvent {
 interface CtxBreakdownEvent {
   type: "$ctx_breakdown";
   reservedTokens: number;
-  /** Current log token count (real-time) â€?sent after /compact to refresh the meter. */
+  /** Current log token count (real-time) â€” sent after /compact to refresh the meter. */
   logTokens?: number;
 }
 
@@ -535,7 +526,7 @@ interface BtwResultEvent {
   answer: string;
 }
 
-/** Direct fd write â€?bypasses Node's stream layer (and its piped-output
+/** Direct fd write â€” bypasses Node's stream layer (and its piped-output
  *  block buffering) so every JSON line reaches Rust the moment it's
  *  produced, not whenever the next 8 KB flushes. */
 type EmittableEvent =
@@ -625,7 +616,7 @@ function tailLines(s: string, n: number): string {
 
 const LOADED_RECENT_MESSAGE_WINDOW = 200;
 const LOADED_MIN_ELIDE_CHARS = 4096;
-const LOADED_ELIDED_PREFIX = "[elided â€?older than the last ";
+const LOADED_ELIDED_PREFIX = "[elided â€” older than the last ";
 
 function elideLoadedField(value: string): string {
   if (value.length <= LOADED_MIN_ELIDE_CHARS) return value;
@@ -710,7 +701,7 @@ export function buildLoadedMessages(records: ChatMessage[]): LoadedMessage[] {
 function maskApiKey(key: string | undefined): string | undefined {
   if (!key) return undefined;
   if (key.length <= 7) return `${key.slice(0, 2)}â€¦`;
-  return `${key.slice(0, 6)}â€?{key.slice(-3)}`;
+  return `${key.slice(0, 6)}â€¦${key.slice(-3)}`;
 }
 
 function collectWebSearchApiKeyPrefixes(): {
@@ -733,8 +724,6 @@ function collectWebSearchApiKeyPrefixes(): {
 
 function emitSettings(tab: Tab): void {
   const ep = loadEndpoint();
-  const mimoEp = loadMimoEndpoint();
-  const cfg = readConfig();
   const editMode = loadEditMode();
   if (tab.toolset) applyPlanMode(tab.toolset.tools, editMode);
   const recent = loadRecentWorkspaces().filter((p) => p !== tab.rootDir);
@@ -745,7 +734,7 @@ function emitSettings(tab: Tab): void {
       editMode,
       budgetUsd: tab.runtime?.loop.budgetUsd ?? null,
       baseUrl: ep.baseUrl,
-      apiKeyPrefix: ep.apiKey ? `${ep.apiKey.slice(0, 6)}â€?{ep.apiKey.slice(-3)}` : undefined,
+      apiKeyPrefix: ep.apiKey ? `${ep.apiKey.slice(0, 6)}â€¦${ep.apiKey.slice(-3)}` : undefined,
       workspaceDir: tab.rootDir,
       recentWorkspaces: recent,
       model: tab.currentModel,
@@ -756,11 +745,6 @@ function emitSettings(tab: Tab): void {
       subagentModels: loadSubagentModels(),
       showSystemEvents: loadShowSystemEvents(),
       version: VERSION,
-      mimoApiKeyPrefix: mimoEp.apiKey
-        ? `${mimoEp.apiKey.slice(0, 6)}â€?{mimoEp.apiKey.slice(-3)}`
-        : undefined,
-      mimoBaseUrl: mimoEp.baseUrl,
-      mimoRegion: cfg.mimoRegion,
     },
     tab.id,
   );
@@ -830,7 +814,8 @@ function loadSessionIntoTab(
   const records = loadSessionMessages(name);
   const backfilledWorkspace = patchSessionWorkspaceIfMissing(name, tab.rootDir);
   const meta = loadSessionMeta(name);
-  // Only set switching flag when there's a live turn to abort â€?  // otherwise the flag stays true and suppresses the first turn's events (#1217).
+  // Only set switching flag when there's a live turn to abort â€”
+  // otherwise the flag stays true and suppresses the first turn's events (#1217).
   if (tab.aborter) tab.switching = true;
   actions.abortTurn(tab);
   actions.cancelPendingGates(tab);
@@ -846,7 +831,7 @@ function loadSessionIntoTab(
       /* file may not exist */
     }
     process.stderr.write(
-      `session_load: "${name}" returned 0 messages (file size=${sizeBytes}B) â€?empty or unreadable jsonl\n`,
+      `session_load: "${name}" returned 0 messages (file size=${sizeBytes}B) â€” empty or unreadable jsonl\n`,
     );
     emit({ type: "$session_empty", name, sizeBytes }, tab.id);
   }
@@ -990,7 +975,7 @@ interface Tab {
   currentSession: string;
   currentModel: string;
   budgetUsd: number | undefined;
-  /** null while the tab is bootstrapping â€?see `initTabToolset`. UI gates input on `$ready`, which only fires once this is set. */
+  /** null while the tab is bootstrapping â€” see `initTabToolset`. UI gates input on `$ready`, which only fires once this is set. */
   toolset: Awaited<ReturnType<typeof buildCodeToolset>> | null;
   /** Empty while bootstrapping; populated together with `toolset`. */
   system: string;
@@ -1002,15 +987,15 @@ interface Tab {
   symbolIndex: SymbolEntry[] | null;
   symbolBuilding: Promise<SymbolEntry[]> | null;
   recentMentions: string[];
-  /** Pause-gate ids waiting on this tab â€?abort uses these to free stranded plan_checkpoint / plan_revision / shell-confirm callers. */
+  /** Pause-gate ids waiting on this tab â€” abort uses these to free stranded plan_checkpoint / plan_revision / shell-confirm callers. */
   pendingGateIds: Set<number>;
-  /** Step ids already marked complete in the in-flight plan â€?also tells UI when a plan is "active". */
+  /** Step ids already marked complete in the in-flight plan â€” also tells UI when a plan is "active". */
   completedStepIds: Set<string>;
   /** Total steps in the in-flight plan (0 = no active plan / steps not provided). */
   planTotalSteps: number;
   mcpRuntime: McpRuntime | null;
   mcpStatuses: Map<string, { kind: McpSpecStatus; reason?: string; toolCount?: number }>;
-  /** True while a session switch is in progress â€?prevents stale events from the old turn. */
+  /** True while a session switch is in progress â€” prevents stale events from the old turn. */
   switching: boolean;
   hooks: ResolvedHook[];
 }
@@ -1026,7 +1011,7 @@ function mintSessionFor(rootDir: string): string {
   try {
     patchSessionMeta(name, { workspace: rootDir });
   } catch {
-    // session meta is for filtering only â€?failure shouldn't block chat
+    // session meta is for filtering only â€” failure shouldn't block chat
   }
   return name;
 }
@@ -1075,7 +1060,7 @@ function buildRuntimeFor(tab: Tab): RuntimeState {
 const TS_EXPORT_RE =
   /^export\s+(?:default\s+)?(?:async\s+)?(function|class|const|let|var|interface|type|enum)\s+\*?\s*(\w+)/;
 
-/** TTL on the in-memory file index â€?without this, files deleted / renamed since the last @ popup still show up as candidates. 10s balances "fresh enough for typical edit-then-mention flows" against "don't re-scan 5000 files on every keystroke". */
+/** TTL on the in-memory file index â€” without this, files deleted / renamed since the last @ popup still show up as candidates. 10s balances "fresh enough for typical edit-then-mention flows" against "don't re-scan 5000 files on every keystroke". */
 const FILE_INDEX_TTL_MS = 10_000;
 
 async function getFileIndexFor(tab: Tab): Promise<FileWithStats[]> {
@@ -1120,7 +1105,7 @@ async function getSymbolIndexFor(tab: Tab): Promise<SymbolEntry[]> {
               if (m) out.push({ kind: m[1]!, name: m[2]!, path: entry.path, line: li + 1 });
             }
           } catch {
-            // unreadable / binary â€?skip
+            // unreadable / binary â€” skip
           }
         }),
       );
@@ -1159,7 +1144,7 @@ function pushMentionRecent(tab: Tab, path: string): void {
   if (tab.recentMentions.length > MAX) tab.recentMentions.length = MAX;
 }
 
-/** The desktop sidecar is a long-running daemon â€?Tauri spawns this Node process once per app launch and pipes JSON over stdin/stdout. Without these handlers, any orphaned promise rejection (e.g. from an aborted turn whose cleanup races a session-switch â€?#1074) crashes the process with exit code 1, which the Tauri host surfaces as "deepmicode exited (code 1)" and a full reconnect cycle. Log loudly so we can find the underlying bug, but don't take the daemon down. */
+/** The desktop sidecar is a long-running daemon â€” Tauri spawns this Node process once per app launch and pipes JSON over stdin/stdout. Without these handlers, any orphaned promise rejection (e.g. from an aborted turn whose cleanup races a session-switch â€” #1074) crashes the process with exit code 1, which the Tauri host surfaces as "deepmicode exited (code 1)" and a full reconnect cycle. Log loudly so we can find the underlying bug, but don't take the daemon down. */
 export function installDesktopCrashGuards(
   stderr: { write: (s: string) => unknown } = process.stderr,
 ): void {
@@ -1177,7 +1162,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
   // Tauri spawns the bundled Node from the GUI process, which never runs the
   // user's shell init (`.bashrc` / `.zshrc` / profile). Probe the login shell
   // once so nvm / asdf / fnm / volta / mise PATH entries reach `run_command`
-  // children too (#1252). No-op on Windows â€?system PATH already covers GUI apps.
+  // children too (#1252). No-op on Windows â€” system PATH already covers GUI apps.
   const augmented = augmentProcessPath();
   if (augmented.added.length > 0) {
     process.stderr.write(
@@ -1188,7 +1173,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
 
   const tabs = new Map<string, Tab>();
   const tabContext = new AsyncLocalStorage<string>();
-  // Frontend-reported focused tab â€?persisted so a restart reopens on it (#1244).
+  // Frontend-reported focused tab â€” persisted so a restart reopens on it (#1244).
   let lastActiveTabId = "";
 
   function activeRunningTab(): Tab | undefined {
@@ -1488,7 +1473,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
     setQQRuntimeState("disconnected");
   }
 
-  /** Synchronous tab construction â€?no I/O. All cheap, disk-only events (`$settings`, `$sessions`, `$memory`, `$skills`, `$mcp_specs`) can fire against this immediately. The heavy bits (`buildCodeToolset`, MCP probes, runtime construction) happen in `initTabToolset` so the UI shell paints without waiting for them. */
+  /** Synchronous tab construction â€” no I/O. All cheap, disk-only events (`$settings`, `$sessions`, `$memory`, `$skills`, `$mcp_specs`) can fire against this immediately. The heavy bits (`buildCodeToolset`, MCP probes, runtime construction) happen in `initTabToolset` so the UI shell paints without waiting for them. */
   function createTabSkeleton(initialDir?: string): Tab {
     const dir = resolve(initialDir ?? opts.dir ?? loadWorkspaceDir() ?? process.cwd());
     pushRecentWorkspace(dir);
@@ -1544,7 +1529,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
   function bridgeTabMcp(tab: Tab): Promise<void> {
     if (!tab.runtime || !tab.toolset) return Promise.resolve();
     if (tab.mcpRuntime) {
-      // Already constructed â€?reload so new/removed specs settle without restart.
+      // Already constructed â€” reload so new/removed specs settle without restart.
       return tab.mcpRuntime
         .reloadFromConfig(tab.runtime.loop)
         .then(() => emitMcpSpecs(tab))
@@ -1595,7 +1580,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
       });
   }
 
-  /** Snapshot of every open tab â€?workspace dir, loaded session and focus, in tab order. Persisted after open/close/switch so a restart restores the full tab set and each conversation (issues #933, #1244). */
+  /** Snapshot of every open tab â€” workspace dir, loaded session and focus, in tab order. Persisted after open/close/switch so a restart restores the full tab set and each conversation (issues #933, #1244). */
   function persistOpenTabs(): void {
     try {
       saveDesktopOpenTabs(
@@ -1606,7 +1591,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
         })),
       );
     } catch {
-      // best-effort â€?disk / perms shouldn't break tab management
+      // best-effort â€” disk / perms shouldn't break tab management
     }
   }
 
@@ -1647,7 +1632,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
           try {
             patchSessionMeta(tab.currentSession, { summary });
           } catch {
-            // meta is for display only â€?failure shouldn't block the turn
+            // meta is for display only â€” failure shouldn't block the turn
           }
         }
       }
@@ -1683,7 +1668,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
           if (ev.role === "assistant_final" || ev.role === "tool") {
             emitCtxBreakdown(tab);
           }
-          // Memory tools mutate disk state behind the loop's back â€?the UI
+          // Memory tools mutate disk state behind the loop's back â€” the UI
           // panel won't know until we re-emit. Without this the right-hand
           // panel only updates on tab reopen.
           if (ev.role === "tool" && (ev.toolName === "remember" || ev.toolName === "forget")) {
@@ -1803,7 +1788,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
         const summary = loadSessionMeta(tab.currentSession).summary?.trim();
         if (summary) return summary;
       } catch {
-        // session file unreadable â€?fall through to workspace basename
+        // session file unreadable â€” fall through to workspace basename
       }
     }
     return tab.rootDir.split(/[\\/]/).filter(Boolean).pop() ?? tab.rootDir;
@@ -1898,7 +1883,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
     const tab = activeRunningTab();
     const tabId = tab?.id;
     if (tab) tab.pendingGateIds.add(req.id);
-    // Shared auto-resolve policy (e.g. plan_checkpoint in auto/yolo) â€?must
+    // Shared auto-resolve policy (e.g. plan_checkpoint in auto/yolo) â€” must
     // still run BEFORE we emit any UI event, otherwise the surface flickers
     // a card that we'd immediately tear down.
     const auto = autoResolveVerdict(req, loadEditMode());
@@ -2079,12 +2064,12 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
       if (tab) handleQQPauseRequest(tab, req.kind, payload as Record<string, unknown>);
       return;
     }
-    // Unknown PauseKind â€?`never` makes a new kind without a handler a compile
+    // Unknown PauseKind â€” `never` makes a new kind without a handler a compile
     // error; the runtime cancel is the last-mile defense so the agent loop
     // doesn't hang waiting on a request no one will resolve.
     const exhaustive: never = req.kind;
     process.stderr.write(
-      `[desktop] no handler for pause kind "${String(exhaustive)}" â€?auto-cancelling gate id=${req.id}\n`,
+      `[desktop] no handler for pause kind "${String(exhaustive)}" â€” auto-cancelling gate id=${req.id}\n`,
     );
     if (tab) tab.pendingGateIds.delete(req.id);
     pauseGate.cancel(req.id);
@@ -2093,7 +2078,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
   // Fast-path: emit disk-only events immediately so the UI shell renders
   // before the toolset finishes building. Heavy work (semantic bootstrap,
   // MCP probes, runtime construction) runs in initTabToolset which fires
-  // `$ready` when it completes â€?until then `state.ready` keeps the
+  // `$ready` when it completes â€” until then `state.ready` keeps the
   // composer disabled, so users can't send a message before the runtime
   // exists. emitBalance was already fire-and-forget.
   function bootstrapTab(
@@ -2113,7 +2098,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
           }
         }
       } catch {
-        // unreadable jsonl â€?fall back to the freshly minted session
+        // unreadable jsonl â€” fall back to the freshly minted session
       }
     }
     emit({ type: "$tab_opened", workspaceDir: tab.rootDir, active: restore?.active }, tab.id);
@@ -2153,9 +2138,9 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
     return tab;
   }
 
-  // Restore the full tab set from the previous session â€?workspace dir,
+  // Restore the full tab set from the previous session â€” workspace dir,
   // loaded session and focused tab (issues #933, #1244). Missing dirs
-  // are silently skipped â€?a deleted workspace shouldn't break boot.
+  // are silently skipped â€” a deleted workspace shouldn't break boot.
   const savedTabs = loadDesktopOpenTabs().filter((t) => {
     try {
       return existsSync(t.dir) && statSync(t.dir).isDirectory();
@@ -2253,7 +2238,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
       if (!isPlausibleKey(key)) {
         emit({
           type: "$error",
-          message: "Key looks too short â€?paste the full token (16+ chars, no spaces).",
+          message: "Key looks too short â€” paste the full token (16+ chars, no spaces).",
         });
         return;
       }
@@ -2261,6 +2246,9 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
         saveApiKey(key);
         bridgeEndpointEnv();
         for (const tab of tabs.values()) {
+          // Skeleton tabs still mid-bootstrap pick up the new key inside
+          // initTabToolset's tail when buildCodeToolset settles â€” don't
+          // try to construct a runtime against a null toolset here.
           if (!tab.toolset) {
             emitSettings(tab);
             void emitBalance(tab);
@@ -2273,29 +2261,6 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
         }
       } catch (err) {
         emit({ type: "$error", message: `saveApiKey failed: ${(err as Error).message}` });
-      }
-      return;
-    }
-
-    if (msg.cmd === "setup_save_mimo_key") {
-      const key = msg.key?.trim();
-      if (!key || !isPlausibleKey(key)) {
-        emit({
-          type: "$error",
-          message: "MiMo key looks too short â€?paste the full token (16+ chars, no spaces).",
-        });
-        return;
-      }
-      try {
-        const cfg = readConfig();
-        cfg.mimoApiKey = key;
-        writeConfig(cfg);
-        bridgeMimoEndpointEnv();
-        for (const tab of tabs.values()) {
-          emitSettings(tab);
-        }
-      } catch (err) {
-        emit({ type: "$error", message: `saveMimoApiKey failed: ${(err as Error).message}` });
       }
       return;
     }
@@ -2340,7 +2305,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
               t.id,
             );
           } catch {
-            // unreadable jsonl â€?skip re-emit
+            // unreadable jsonl â€” skip re-emit
           }
         }
         emitCtxBreakdown(t);
@@ -2362,11 +2327,11 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
 
     const tab = msg.tabId ? tabs.get(msg.tabId) : first;
     if (!tab) {
-      // No tabId on the emit â‡?the renderer's per-tab router drops it
+      // No tabId on the emit â‡’ the renderer's per-tab router drops it
       // silently. Surface to stderr instead so it's at least visible
       // when the desktop is launched from a terminal.
       process.stderr.write(
-        `rpc dispatch: unknown tabId=${msg.tabId} for cmd=${msg.cmd} â€?dropping\n`,
+        `rpc dispatch: unknown tabId=${msg.tabId} for cmd=${msg.cmd} â€” dropping\n`,
       );
       return;
     }
@@ -2433,7 +2398,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
     if (msg.cmd === "skill_run") {
       if (!tab.runtime) {
         emit(
-          { type: "$error", message: "Not configured yet â€?paste your DeepSeek API key first." },
+          { type: "$error", message: "Not configured yet â€” paste your DeepSeek API key first." },
           tab.id,
         );
         return;
@@ -2552,7 +2517,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
           persistOpenTabs,
         });
       } catch (err) {
-        process.stderr.write(`session_load: "${msg.name}" threw â€?${(err as Error).message}\n`);
+        process.stderr.write(`session_load: "${msg.name}" threw â€” ${(err as Error).message}\n`);
         emit({ type: "$error", message: `session_load failed: ${(err as Error).message}` }, tab.id);
       }
       return;
@@ -2567,7 +2532,8 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
       return;
     }
     if (msg.cmd === "new_chat") {
-      // Only set switching flag when there's a live turn to abort â€?      // otherwise the flag stays true and suppresses the first turn's events (#1217).
+      // Only set switching flag when there's a live turn to abort â€”
+      // otherwise the flag stays true and suppresses the first turn's events (#1217).
       if (tab.aborter) tab.switching = true;
       abortTurn(tab);
       cancelPendingGates(tab);
@@ -2658,20 +2624,6 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
               if (tab.runtime) tab.runtime = buildRuntimeFor(tab);
             }
           }
-        }
-        if (msg.mimoApiKey !== undefined || msg.mimoBaseUrl !== undefined || msg.mimoRegion !== undefined) {
-          const cfg = readConfig();
-          if (msg.mimoApiKey !== undefined) {
-            cfg.mimoApiKey = msg.mimoApiKey?.trim() || undefined;
-          }
-          if (msg.mimoBaseUrl !== undefined) {
-            cfg.mimoBaseUrl = msg.mimoBaseUrl?.trim() || undefined;
-          }
-          if (msg.mimoRegion !== undefined) {
-            cfg.mimoRegion = msg.mimoRegion || undefined;
-          }
-          writeConfig(cfg);
-          bridgeMimoEndpointEnv();
         }
         emitSettings(tab);
       } catch (err) {
@@ -2777,7 +2729,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
       const nonce = msg.nonce;
       const query = msg.query;
       const parsed = parseAtQuery(query);
-      // Empty query â†?list workspace root's top-level entries (tree
+      // Empty query â†’ list workspace root's top-level entries (tree
       // style). Without this, bare `@` floods with all 5000 files; the
       // TUI's @+Tab pattern already shows the tree top.
       const treeWalk = parsed.trailingSlash || query.length === 0;
@@ -2899,7 +2851,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
     if (msg.cmd === "user_input") {
       if (!tab.runtime) {
         emit(
-          { type: "$error", message: "Not configured yet â€?paste your DeepSeek API key first." },
+          { type: "$error", message: "Not configured yet â€” paste your DeepSeek API key first." },
           tab.id,
         );
         return;

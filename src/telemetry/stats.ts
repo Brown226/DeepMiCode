@@ -12,11 +12,11 @@ export const DEEPSEEK_PRICING: Record<
   "deepseek-chat": { inputCacheHit: 0.0028, inputCacheMiss: 0.14, output: 0.28 },
   "deepseek-reasoner": { inputCacheHit: 0.0028, inputCacheMiss: 0.14, output: 0.28 },
   // MiMo models — placeholder pricing (verify against Mimo's published rates)
-  "mimo-v2.5-pro": { inputCacheHit: 0.002, inputCacheMiss: 0.10, output: 0.20 },
-  "mimo-v2.5": { inputCacheHit: 0.002, inputCacheMiss: 0.10, output: 0.20 },
-  "mimo-v2-flash": { inputCacheHit: 0.001, inputCacheMiss: 0.05, output: 0.10 },
-  "mimo-v2-omni": { inputCacheHit: 0.002, inputCacheMiss: 0.10, output: 0.20 },
-  "mimo-v2-pro": { inputCacheHit: 0.001, inputCacheMiss: 0.05, output: 0.10 },
+  "mimo-v2.5-pro": { inputCacheHit: 0.002, inputCacheMiss: 0.1, output: 0.2 },
+  "mimo-v2.5": { inputCacheHit: 0.002, inputCacheMiss: 0.1, output: 0.2 },
+  "mimo-v2-flash": { inputCacheHit: 0.001, inputCacheMiss: 0.05, output: 0.1 },
+  "mimo-v2-omni": { inputCacheHit: 0.002, inputCacheMiss: 0.1, output: 0.2 },
+  "mimo-v2-pro": { inputCacheHit: 0.001, inputCacheMiss: 0.05, output: 0.1 },
 };
 
 export type ModelPricing = (typeof DEEPSEEK_PRICING)[string];
@@ -48,7 +48,7 @@ export const DEEPSEEK_CONTEXT_TOKENS: Record<string, number> = {
   // MiMo models
   "mimo-v2.5-pro": 1_000_000,
   "mimo-v2.5": 1_000_000,
-  "mimo-v2-flash": 262_144,  // 256K context
+  "mimo-v2-flash": 262_144, // 256K context
   "mimo-v2-omni": 1_000_000,
   "mimo-v2-pro": 262_144,
 };

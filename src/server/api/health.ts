@@ -47,7 +47,7 @@ function dirSize(path: string): DirStat {
           }
         }
       } catch {
-        /* skip â€?file might have been deleted between readdir + stat */
+        /* skip â€” file might have been deleted between readdir + stat */
       }
     }
   } catch {

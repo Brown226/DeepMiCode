@@ -1,4 +1,4 @@
-/** ACP (Agent Client Protocol) agent â€?drives the cache-first loop over stdio NDJSON JSON-RPC. */
+/** ACP (Agent Client Protocol) agent â€” drives the cache-first loop over stdio NDJSON JSON-RPC. */
 
 import { AsyncLocalStorage } from "node:async_hooks";
 import { type WriteStream, existsSync, statSync } from "node:fs";
@@ -59,7 +59,7 @@ export interface AcpOptions {
   yolo?: boolean;
   /** Zero or more MCP server specs. Each: `"name=cmd args..."` or `"cmd args..."`. */
   mcpSpecs?: string[];
-  /** Global prefix â€?only honored when a single anonymous server is given. */
+  /** Global prefix â€” only honored when a single anonymous server is given. */
   mcpPrefix?: string;
 }
 
@@ -137,7 +137,7 @@ export async function loadMcpServers(
     } catch (err) {
       await mcp?.close().catch(() => undefined);
       process.stderr.write(
-        `${formatMcpLifecycleEvent({ state: "failed", name: label, reason: (err as Error).message })}\n  â†?${t("mcpLifecycle.failedSetupConfigHint")}\n`,
+        `${formatMcpLifecycleEvent({ state: "failed", name: label, reason: (err as Error).message })}\n  â†’ ${t("mcpLifecycle.failedSetupConfigHint")}\n`,
       );
     }
   }

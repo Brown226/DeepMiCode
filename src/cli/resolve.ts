@@ -1,7 +1,7 @@
 import {
   DEFAULT_MODEL,
-  type ReasoningEffort,
   type DeepMiCodeConfig,
+  type ReasoningEffort,
   isReasoningEffort,
   loadReasoningEffort,
   normalizeMcpConfig,
@@ -78,7 +78,7 @@ export function resolveContinueFlag(
   if (!flag) return { session: fallbackSession, forceResume: false };
   const latest = getLatestSession();
   if (!latest) {
-    warn("â–?-c/--continue: no saved sessions yet â€?starting a fresh one.");
+    warn("â–¸ -c/--continue: no saved sessions yet â€” starting a fresh one.");
     return { session: fallbackSession, forceResume: false };
   }
   return { session: latest.name, forceResume: true };

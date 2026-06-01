@@ -20,7 +20,7 @@ export const SKILLS_DIRNAME = "skills";
 export const SKILL_FILE = "SKILL.md";
 /** Cap on the pinned skills-index block, mirrors memory-index cap. */
 export const SKILLS_INDEX_MAX_CHARS = 4000;
-/** Skill identifier shape â€?alnum + `_` + `-` + interior `.`, 1-64 chars. */
+/** Skill identifier shape â€” alnum + `_` + `-` + interior `.`, 1-64 chars. */
 const VALID_SKILL_NAME = /^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/;
 
 export type SkillScope = "project" | "custom" | "global" | "builtin";
@@ -31,7 +31,7 @@ export type SkillPathStatus = "ok" | "missing" | "not-directory" | "unreadable";
 export type SkillRunAs = "inline" | "subagent";
 
 export interface Skill {
-  /** Canonical name â€?sanitized, matches the directory / filename stem. */
+  /** Canonical name â€” sanitized, matches the directory / filename stem. */
   name: string;
   /** One-line description shown in the pinned index. */
   description: string;
@@ -41,7 +41,7 @@ export interface Skill {
   scope: SkillScope;
   /** Absolute path to the SKILL.md (or {name}.md) file, or "(builtin)" for shipped defaults. */
   path: string;
-  /** Parsed `allowed-tools` frontmatter â€?when present, the spawned subagent's registry is scoped to these literal tool names. */
+  /** Parsed `allowed-tools` frontmatter â€” when present, the spawned subagent's registry is scoped to these literal tool names. */
   allowedTools?: readonly string[];
   runAs: SkillRunAs;
   /** Subagent model override; only meaningful when `runAs === "subagent"`. */
@@ -56,25 +56,25 @@ export interface SkillRoot {
 }
 
 export interface SkillStoreOptions {
-  /** Override `$HOME` â€?tests point this at a tmpdir. */
+  /** Override `$HOME` â€” tests point this at a tmpdir. */
   homeDir?: string;
   /** Required for project-scope skills; omit to read only the global scope. */
   projectRoot?: string;
   customSkillPaths?: readonly string[];
-  /** Suppress bundled built-ins â€?for tests asserting exact list contents. */
+  /** Suppress bundled built-ins â€” for tests asserting exact list contents. */
   disableBuiltins?: boolean;
   /** Per-skill model override applied to `runAs: subagent` skills (overrides frontmatter `model:`). */
   subagentModels?: Record<string, "flash" | "pro">;
 }
 
-/** Reject skill files that would silently disappear from the prefix index â€?`description:` is what `applySkillsIndex` keys on. */
+/** Reject skill files that would silently disappear from the prefix index â€” `description:` is what `applySkillsIndex` keys on. */
 export function validateSkillFrontmatter(raw: string): { ok: true } | { error: string } {
   const { data } = parseFrontmatter(raw);
   const desc = (data.description ?? "").trim();
   if (!desc) {
     return {
       error:
-        'skill frontmatter is missing a non-empty "description:" line â€?without it the skill will not appear in the model\'s skills index',
+        'skill frontmatter is missing a non-empty "description:" line â€” without it the skill will not appear in the model\'s skills index',
     };
   }
   return { ok: true };
@@ -93,7 +93,7 @@ function parseAllowedTools(raw: string | undefined): readonly string[] | undefin
   return names.length > 0 ? Object.freeze(names) : undefined;
 }
 
-/** flash/pro preset â†?concrete deepseek model id. Kept local so this file doesn't import the CLI preset bundle. */
+/** flash/pro preset â†’ concrete deepseek model id. Kept local so this file doesn't import the CLI preset bundle. */
 function subagentModelForPreset(preset: "flash" | "pro"): string {
   return preset === "pro" ? "deepseek-v4-pro" : "deepseek-v4-flash";
 }
@@ -129,13 +129,13 @@ export class SkillStore {
         dir: join(this.projectRoot, ".deepmicode", SKILLS_DIRNAME),
         scope: "project",
       });
-      // #870: pick up `.agents/skills` automatically â€?common convention shared
+      // #870: pick up `.agents/skills` automatically â€” common convention shared
       // by skills.sh-style tooling, no config required.
       out.push({
         dir: join(this.projectRoot, ".agents", SKILLS_DIRNAME),
         scope: "project",
       });
-      // Claude Code compatibility â€?a user's `.claude/skills/` folder works as-is.
+      // Claude Code compatibility â€” a user's `.claude/skills/` folder works as-is.
       out.push({
         dir: join(this.projectRoot, ".claude", SKILLS_DIRNAME),
         scope: "project",
@@ -193,17 +193,17 @@ export class SkillStore {
     return this.createWithContent(name, scope, skillStubBody(name));
   }
 
-  /** Like `create` but writes caller-supplied file contents instead of the stub â€?used by the scaffold tool. */
+  /** Like `create` but writes caller-supplied file contents instead of the stub â€” used by the scaffold tool. */
   createWithContent(
     name: string,
     scope: "project" | "global",
     content: string,
   ): { path: string } | { error: string } {
     if (!isValidSkillName(name)) {
-      return { error: `invalid skill name: "${name}" â€?use letters, digits, _, -, .` };
+      return { error: `invalid skill name: "${name}" â€” use letters, digits, _, -, .` };
     }
     if (scope === "project" && !this.projectRoot) {
-      return { error: "project scope requires a workspace â€?run from `deepmicode code`" };
+      return { error: "project scope requires a workspace â€” run from `deepmicode code`" };
     }
     const root =
       scope === "project"
@@ -277,7 +277,7 @@ export class SkillStore {
     // a description so user-authored files are the only ones that hit this.
     if (!description) {
       console.warn(
-        `[skills] "${name}" at ${path} has no description: â€?it will be loaded but won't appear in the skills index.`,
+        `[skills] "${name}" at ${path} has no description: â€” it will be loaded but won't appear in the skills index.`,
       );
     }
     return {
@@ -342,11 +342,11 @@ function parseRunAs(
   return "inline";
 }
 
-/** Stub markdown for `/skill new` â€?minimal frontmatter + scaffolding the user fills in. */
+/** Stub markdown for `/skill new` â€” minimal frontmatter + scaffolding the user fills in. */
 function skillStubBody(name: string): string {
   return `---
 name: ${name}
-description: One-liner â€?what does this skill do?
+description: One-liner â€” what does this skill do?
 ---
 
 # ${name}
@@ -366,19 +366,19 @@ function skillDescription(s: Pick<Skill, "name" | "description" | "scope">): str
   return t(`builtinSkills.${key}`);
 }
 
-/** Subagent tag goes AFTER the name in brackets â€?leading-marker tags get copied into `name` arg verbatim. */
+/** Subagent tag goes AFTER the name in brackets â€” leading-marker tags get copied into `name` arg verbatim. */
 function skillIndexLine(s: Pick<Skill, "name" | "description" | "runAs" | "scope">): string {
   const safeDesc = skillDescription(s).replace(/\n/g, " ").trim();
   const tag = s.runAs === "subagent" ? " [ðŸ§¬ subagent]" : "";
   const max = 130 - s.name.length - tag.length;
   const clipped = safeDesc.length > max ? `${safeDesc.slice(0, Math.max(1, max - 1))}â€¦` : safeDesc;
-  return clipped ? `- ${s.name}${tag} â€?${clipped}` : `- ${s.name}${tag}`;
+  return clipped ? `- ${s.name}${tag} â€” ${clipped}` : `- ${s.name}${tag}`;
 }
 
 const MISSING_DESCRIPTION_PLACEHOLDER =
-  '(no description â€?frontmatter is missing a "description:" line; tell the user to add one)';
+  '(no description â€” frontmatter is missing a "description:" line; tell the user to add one)';
 
-/** Bodies stay out â€?prefix must stay short + cacheable; bodies load on demand. */
+/** Bodies stay out â€” prefix must stay short + cacheable; bodies load on demand. */
 export function applySkillsIndex(basePrompt: string, opts: SkillStoreOptions = {}): string {
   const store = new SkillStore(opts);
   const skills = store.list();
@@ -389,16 +389,16 @@ export function applySkillsIndex(basePrompt: string, opts: SkillStoreOptions = {
   const joined = lines.join("\n");
   const truncated =
     joined.length > SKILLS_INDEX_MAX_CHARS
-      ? `${joined.slice(0, SKILLS_INDEX_MAX_CHARS)}\nâ€?(truncated ${
+      ? `${joined.slice(0, SKILLS_INDEX_MAX_CHARS)}\nâ€¦ (truncated ${
           joined.length - SKILLS_INDEX_MAX_CHARS
         } chars)`
       : joined;
   return [
     basePrompt,
     "",
-    "# Skills â€?playbooks you can invoke",
+    "# Skills â€” playbooks you can invoke",
     "",
-    'One-liner index. Each entry is either a built-in or a user-authored playbook. Call `run_skill({ name: "<skill-name>", arguments: "<task>" })` â€?the `name` is JUST the skill identifier (e.g. `"explore"`), NOT the `[ðŸ§¬ subagent]` tag that appears after it. Entries tagged `[ðŸ§¬ subagent]` spawn an **isolated subagent** â€?its tool calls and reasoning never enter your context, only its final answer does. Use subagent skills for tasks that would otherwise flood your context (deep exploration, multi-step research, anything where you only need the conclusion). Plain skills are inlined: their body becomes a tool result you read and act on directly. The user can also invoke a skill via `/skill <name>`.',
+    'One-liner index. Each entry is either a built-in or a user-authored playbook. Call `run_skill({ name: "<skill-name>", arguments: "<task>" })` â€” the `name` is JUST the skill identifier (e.g. `"explore"`), NOT the `[ðŸ§¬ subagent]` tag that appears after it. Entries tagged `[ðŸ§¬ subagent]` spawn an **isolated subagent** â€” its tool calls and reasoning never enter your context, only its final answer does. Use subagent skills for tasks that would otherwise flood your context (deep exploration, multi-step research, anything where you only need the conclusion). Plain skills are inlined: their body becomes a tool result you read and act on directly. The user can also invoke a skill via `/skill <name>`.',
     "",
     "```",
     truncated,
@@ -410,9 +410,9 @@ const BUILTIN_EXPLORE_BODY = `You are running as an exploration subagent. Your j
 
 How to operate:
 - Use read_file, search_files, search_content, directory_tree, list_directory, get_file_info as your primary tools. Stay read-only.
-- For "find all places that call / reference / use X" questions, use \`search_content\` (content grep) â€?NOT \`search_files\` (which only matches file names). This is the most common subagent mistake; using the wrong tool gives empty results and you waste your iter budget chasing a phantom.
+- For "find all places that call / reference / use X" questions, use \`search_content\` (content grep) â€” NOT \`search_files\` (which only matches file names). This is the most common subagent mistake; using the wrong tool gives empty results and you waste your iter budget chasing a phantom.
 - Cast a wide net first (search_content for symbol references, directory_tree for structure) to map the territory; then read the 3-10 most relevant files in full.
-- Don't read every file â€?be selective. Aim for breadth on the first pass, depth only where the question demands it.
+- Don't read every file â€” be selective. Aim for breadth on the first pass, depth only where the question demands it.
 - Stop exploring as soon as you can answer the question. The parent doesn't see your tool calls, so over-exploration is pure waste.
 
 Your final answer:
@@ -438,7 +438,7 @@ How to operate:
 Your final answer:
 - One paragraph (or short bullets). Lead with the conclusion.
 - Cite both code (file:line) AND web sources (URL) when they back the answer.
-- Distinguish "I verified this in code" from "I read this on a docs page" â€?the parent will trust the former more.
+- Distinguish "I verified this in code" from "I read this on a docs page" â€” the parent will trust the former more.
 - If the answer is uncertain, say so. Don't invent confidence.
 
 ${NEGATIVE_CLAIM_RULE}
@@ -447,22 +447,22 @@ ${TUI_FORMATTING_RULES}
 
 The 'task' the parent gave you is the research question. Stay on it.`;
 
-const BUILTIN_REVIEW_BODY = `You are running as a code-review subagent. Your job is to inspect the changes the user is about to ship â€?usually the current git branch vs its upstream â€?and produce a focused review the parent can hand back to the user.
+const BUILTIN_REVIEW_BODY = `You are running as a code-review subagent. Your job is to inspect the changes the user is about to ship â€” usually the current git branch vs its upstream â€” and produce a focused review the parent can hand back to the user.
 
 How to operate:
 - Default scope: the current branch's diff vs the default branch. If the user's task names a specific commit range or files, honor that instead.
 - Discover scope first: \`run_command git status\`, \`git diff --stat\`, \`git log --oneline\` to see what changed. Then \`git diff\` (or \`git diff <base>...HEAD\`) for the actual hunks.
-- Read the touched files (\`read_file\`) when the diff alone doesn't carry enough context â€?function signatures, surrounding invariants, callers.
+- Read the touched files (\`read_file\`) when the diff alone doesn't carry enough context â€” function signatures, surrounding invariants, callers.
 - For "any callers depending on this?" questions: \`search_content\` against the symbol BEFORE asserting impact.
 - Stay read-only. Never \`run_command git commit\`, never write files, never propose SEARCH/REPLACE blocks. The parent decides whether to act on your findings.
 - Cap yourself at ~12 tool calls. If the diff is too big to review in one pass, pick the riskiest 2-3 files and say so explicitly.
 
 What to look for, in priority order:
-1. **Correctness bugs** â€?off-by-one, null/undefined handling, race conditions, wrong sign / wrong operator, edge cases the code doesn't handle.
-2. **Security** â€?injection (SQL, shell, path traversal), secrets in code, missing authz checks, unsafe deserialization.
-3. **Behavior changes the diff hides** â€?renames that miss callers, removed branches that were load-bearing, error-handling that now swallows what used to surface.
-4. **Tests** â€?does the change have tests for the new behavior? Are existing tests still meaningful, or did the change make them tautological?
-5. **Style + consistency** â€?only flag deviations that matter (unsafe \`any\`, missing types in TypeScript, inconsistent error shape). Don't pile on cosmetic nits if the substance is clean.
+1. **Correctness bugs** â€” off-by-one, null/undefined handling, race conditions, wrong sign / wrong operator, edge cases the code doesn't handle.
+2. **Security** â€” injection (SQL, shell, path traversal), secrets in code, missing authz checks, unsafe deserialization.
+3. **Behavior changes the diff hides** â€” renames that miss callers, removed branches that were load-bearing, error-handling that now swallows what used to surface.
+4. **Tests** â€” does the change have tests for the new behavior? Are existing tests still meaningful, or did the change make them tautological?
+5. **Style + consistency** â€” only flag deviations that matter (unsafe \`any\`, missing types in TypeScript, inconsistent error shape). Don't pile on cosmetic nits if the substance is clean.
 
 Your final answer:
 - Lead with a one-sentence verdict: "ship as-is" / "minor nits, OK to ship after" / "blocking issues, do not ship".
@@ -476,45 +476,45 @@ ${TUI_FORMATTING_RULES}
 
 The 'task' the parent gave you describes WHAT to review (a branch, a file set, or "the pending changes"). Stay on it; don't redesign the feature.`;
 
-const BUILTIN_SECURITY_REVIEW_BODY = `You are running as a security-review subagent. Your job is to inspect the changes the user is about to ship â€?usually the current git branch vs its upstream â€?through a security lens specifically, and report exploitable issues.
+const BUILTIN_SECURITY_REVIEW_BODY = `You are running as a security-review subagent. Your job is to inspect the changes the user is about to ship â€” usually the current git branch vs its upstream â€” through a security lens specifically, and report exploitable issues.
 
 How to operate:
 - Default scope: the current branch's diff vs the default branch. If the user names a different range or a directory, honor that.
-- Discover scope first: \`git status\`, \`git diff --stat\`, \`git diff <base>...HEAD\`. Read touched files (\`read_file\`) when the diff alone doesn't carry security context â€?auth checks, input validation, the actual handler that calls into the changed function.
+- Discover scope first: \`git status\`, \`git diff --stat\`, \`git diff <base>...HEAD\`. Read touched files (\`read_file\`) when the diff alone doesn't carry security context â€” auth checks, input validation, the actual handler that calls into the changed function.
 - Use \`search_content\` to verify "is this user-controlled input ever sanitized later?" / "are there other call sites that depend on this validation?" before asserting impact.
 - Stay read-only. Never write, never run destructive commands, never propose SEARCH/REPLACE blocks. The parent decides what to act on.
 - Cap yourself at ~12 tool calls. If the diff is too big, focus on the riskiest 2-3 files and say so explicitly.
 
-Threat model â€?flag with severity:
+Threat model â€” flag with severity:
 
 **CRITICAL** (do-not-ship):
-- SQL / NoSQL / shell / template injection â€?user input concatenated into a query, command, or template without parameterization.
-- Path traversal â€?user-controlled filenames touching the filesystem without canonicalization + sandbox check.
-- Authentication / authorization missing â€?endpoints / actions that should require a session check but don't.
-- Hardcoded secrets â€?API keys, passwords, signing tokens visible in the diff.
-- Deserialization of untrusted input â€?\`pickle.loads\`, \`yaml.load\` (non-safe), \`eval\`, \`Function()\`, \`unserialize()\`.
-- Cryptographic mistakes â€?homemade crypto, weak hashes (MD5/SHA-1) for passwords, missing IVs, ECB mode, predictable nonces.
+- SQL / NoSQL / shell / template injection â€” user input concatenated into a query, command, or template without parameterization.
+- Path traversal â€” user-controlled filenames touching the filesystem without canonicalization + sandbox check.
+- Authentication / authorization missing â€” endpoints / actions that should require a session check but don't.
+- Hardcoded secrets â€” API keys, passwords, signing tokens visible in the diff.
+- Deserialization of untrusted input â€” \`pickle.loads\`, \`yaml.load\` (non-safe), \`eval\`, \`Function()\`, \`unserialize()\`.
+- Cryptographic mistakes â€” homemade crypto, weak hashes (MD5/SHA-1) for passwords, missing IVs, ECB mode, predictable nonces.
 
 **HIGH**:
-- XSS â€?user input rendered into HTML without escaping (or wrong escaping context).
-- SSRF â€?fetching URLs from user input without an allowlist.
-- Race conditions in security-relevant code â€?TOCTOU on auth/file checks.
-- Open redirects â€?user-controlled URL passed to a redirect helper.
-- Insufficient logging on security events (login failure, permission denial) â€?only flag if the codebase clearly DOES log elsewhere.
+- XSS â€” user input rendered into HTML without escaping (or wrong escaping context).
+- SSRF â€” fetching URLs from user input without an allowlist.
+- Race conditions in security-relevant code â€” TOCTOU on auth/file checks.
+- Open redirects â€” user-controlled URL passed to a redirect helper.
+- Insufficient logging on security events (login failure, permission denial) â€” only flag if the codebase clearly DOES log elsewhere.
 
 **MEDIUM**:
 - Verbose error messages leaking internal paths / stack traces / SQL.
 - Missing rate limiting on a credential / token endpoint.
 - Cross-origin / cookie-flag issues (missing \`Secure\` / \`HttpOnly\` / \`SameSite\`).
 
-Things to NOT pile on (out of scope here â€?the regular /review covers them):
+Things to NOT pile on (out of scope here â€” the regular /review covers them):
 - Style, formatting, naming.
 - Performance, refactor opportunities, test coverage gaps that aren't security-relevant.
-- "Should be a constant" / "extract this helper" â€?irrelevant to ship-blocking.
+- "Should be a constant" / "extract this helper" â€” irrelevant to ship-blocking.
 
 Your final answer:
 - Lead with a one-sentence verdict: "no security issues found", "minor concerns", or "blocking issues".
-- Then a list grouped by severity. Each item: file:line + 1-sentence threat + 1-sentence fix direction (no full SEARCH/REPLACE â€?the user / parent agent will write that).
+- Then a list grouped by severity. Each item: file:line + 1-sentence threat + 1-sentence fix direction (no full SEARCH/REPLACE â€” the user / parent agent will write that).
 - If clean, say so plainly. Don't manufacture findings.
 
 ${NEGATIVE_CLAIM_RULE}
@@ -523,43 +523,43 @@ ${TUI_FORMATTING_RULES}
 
 The 'task' the parent gave you names what to review. Stay on it; don't redesign the feature.`;
 
-const BUILTIN_TEST_BODY = `You are running as the parent agent â€?this skill is INLINED, not a subagent. The user invoked /test (or asked you to "run the tests and fix failures"). Your job: run the project's test suite, diagnose any failure, propose fixes as SEARCH/REPLACE edit blocks, then re-run. Repeat until green or you hit a wall you should escalate.
+const BUILTIN_TEST_BODY = `You are running as the parent agent â€” this skill is INLINED, not a subagent. The user invoked /test (or asked you to "run the tests and fix failures"). Your job: run the project's test suite, diagnose any failure, propose fixes as SEARCH/REPLACE edit blocks, then re-run. Repeat until green or you hit a wall you should escalate.
 
 How to operate:
 
 1. **Detect the test command**.
-   - Look for \`package.json\` â†?\`scripts.test\` first (most common: \`npm test\`, \`pnpm test\`, \`yarn test\`).
-   - If no package.json or no test script: try \`pytest\`, \`go test ./...\`, \`cargo test\` based on what files exist (pyproject.toml/requirements.txt â†?pytest; go.mod â†?go test; Cargo.toml â†?cargo test).
-   - If you can't tell, ASK the user for the command â€?don't guess. One question, one tool call to confirm.
+   - Look for \`package.json\` â†’ \`scripts.test\` first (most common: \`npm test\`, \`pnpm test\`, \`yarn test\`).
+   - If no package.json or no test script: try \`pytest\`, \`go test ./...\`, \`cargo test\` based on what files exist (pyproject.toml/requirements.txt â†’ pytest; go.mod â†’ go test; Cargo.toml â†’ cargo test).
+   - If you can't tell, ASK the user for the command â€” don't guess. One question, one tool call to confirm.
 
 2. **Run it via run_command** (typical timeout 120s, bigger if the suite is large). Capture stdout + stderr.
 
-3. **Read the failures**. Pull out: which test names failed, the actual error/traceback, the file + line that threw. Don't just paraphrase â€?locate the exact assertion or stack frame.
+3. **Read the failures**. Pull out: which test names failed, the actual error/traceback, the file + line that threw. Don't just paraphrase â€” locate the exact assertion or stack frame.
 
 4. **Propose fixes**. For each distinct failure:
-   - If the failure is in PRODUCTION code (test catches a real bug) â†?propose a SEARCH/REPLACE that fixes the production code.
-   - If the failure is in TEST code (test is wrong, codebase is right) â†?propose a SEARCH/REPLACE that updates the test, AND say so explicitly: "This is a test bug, not a production bug â€?updating the assertion."
-   - If the failure is environmental (missing dep, wrong node version, missing fixture file) â†?say so and stop. Don't try to install packages or change config without checking with the user.
+   - If the failure is in PRODUCTION code (test catches a real bug) â†’ propose a SEARCH/REPLACE that fixes the production code.
+   - If the failure is in TEST code (test is wrong, codebase is right) â†’ propose a SEARCH/REPLACE that updates the test, AND say so explicitly: "This is a test bug, not a production bug â€” updating the assertion."
+   - If the failure is environmental (missing dep, wrong node version, missing fixture file) â†’ say so and stop. Don't try to install packages or change config without checking with the user.
 
 5. **Apply + re-run**. After the user accepts the edit blocks, run the test command again. Iterate.
 
 6. **Stop conditions**:
-   - All tests pass â†?report green, summarize what changed.
-   - Same test still failing after 2 fix attempts on the same line â†?STOP. Tell the user "I've tried twice, it's still failing â€?here's what I think is happening, want me to try a different angle?". Don't loop indefinitely.
-   - 3+ unrelated failures â†?fix one at a time, smallest first, so each pass narrows the surface.
+   - All tests pass â†’ report green, summarize what changed.
+   - Same test still failing after 2 fix attempts on the same line â†’ STOP. Tell the user "I've tried twice, it's still failing â€” here's what I think is happening, want me to try a different angle?". Don't loop indefinitely.
+   - 3+ unrelated failures â†’ fix one at a time, smallest first, so each pass narrows the surface.
 
 Don't:
-- Run \`npm install\` / \`pip install\` / \`cargo update\` without asking â€?those mutate lockfiles and have global effects.
+- Run \`npm install\` / \`pip install\` / \`cargo update\` without asking â€” those mutate lockfiles and have global effects.
 - Disable, skip, or delete failing tests to "make it green". If a test seems wrong, update its assertion with a one-sentence explanation, but never add \`.skip\` / \`it.skip\` / \`@pytest.mark.skip\`.
 - Modify the test runner config (vitest.config, jest.config, etc.) to silence failures.
 
-Lead each turn with a one-line status: "â–?running \`npm test\` ..." â†?"â–?2 failures in tests/foo.test.ts â€?first is â€? â†?so the user always knows where you are without scrolling tool output.`;
+Lead each turn with a one-line status: "â–¸ running \`npm test\` ..." â†’ "â–¸ 2 failures in tests/foo.test.ts â€” first is â€¦" â†’ so the user always knows where you are without scrolling tool output.`;
 
 const BUILTIN_SKILLS: readonly Skill[] = Object.freeze([
   Object.freeze<Skill>({
     name: "explore",
     description:
-      "Explore the codebase in an isolated subagent â€?wide-net read-only investigation that returns one distilled answer. Best for: 'find all places that...', 'how does X work across the project', 'survey the code for Y'.",
+      "Explore the codebase in an isolated subagent â€” wide-net read-only investigation that returns one distilled answer. Best for: 'find all places that...', 'how does X work across the project', 'survey the code for Y'.",
     body: BUILTIN_EXPLORE_BODY,
     scope: "builtin",
     path: "(builtin)",
@@ -577,7 +577,7 @@ const BUILTIN_SKILLS: readonly Skill[] = Object.freeze([
   Object.freeze<Skill>({
     name: "review",
     description:
-      "Review the pending changes (current branch diff by default) in an isolated subagent â€?flags correctness, security, missing tests, hidden behavior changes; reports verdict + per-issue file:line. Read-only; the parent decides what to act on.",
+      "Review the pending changes (current branch diff by default) in an isolated subagent â€” flags correctness, security, missing tests, hidden behavior changes; reports verdict + per-issue file:line. Read-only; the parent decides what to act on.",
     body: BUILTIN_REVIEW_BODY,
     scope: "builtin",
     path: "(builtin)",
@@ -586,7 +586,7 @@ const BUILTIN_SKILLS: readonly Skill[] = Object.freeze([
   Object.freeze<Skill>({
     name: "security-review",
     description:
-      "Security-focused review of the current branch diff in an isolated subagent â€?flags injection/authz/secrets/deserialization/path-traversal/crypto issues, severity-tagged. Read-only. Use when shipping changes that touch auth, input parsing, file IO, or external requests.",
+      "Security-focused review of the current branch diff in an isolated subagent â€” flags injection/authz/secrets/deserialization/path-traversal/crypto issues, severity-tagged. Read-only. Use when shipping changes that touch auth, input parsing, file IO, or external requests.",
     body: BUILTIN_SECURITY_REVIEW_BODY,
     scope: "builtin",
     path: "(builtin)",
@@ -595,7 +595,7 @@ const BUILTIN_SKILLS: readonly Skill[] = Object.freeze([
   Object.freeze<Skill>({
     name: "test",
     description:
-      "Run the project's test suite, diagnose failures, propose SEARCH/REPLACE fixes, re-run until green (or stop after 2 fix attempts on the same failure). Inlined â€?runs in the parent loop so you see the edit blocks and can /apply them. Detects npm/pnpm/yarn/pytest/go/cargo.",
+      "Run the project's test suite, diagnose failures, propose SEARCH/REPLACE fixes, re-run until green (or stop after 2 fix attempts on the same failure). Inlined â€” runs in the parent loop so you see the edit blocks and can /apply them. Detects npm/pnpm/yarn/pytest/go/cargo.",
     body: BUILTIN_TEST_BODY,
     scope: "builtin",
     path: "(builtin)",

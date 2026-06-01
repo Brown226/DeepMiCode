@@ -41,7 +41,7 @@ function persist(counts: Record<string, number>): void {
     writeFileSync(tmp, JSON.stringify(payload), "utf8");
     renameSync(tmp, path);
   } catch {
-    /* disk full / perms â€?non-fatal, in-memory state still increments */
+    /* disk full / perms â€” non-fatal, in-memory state still increments */
   }
 }
 

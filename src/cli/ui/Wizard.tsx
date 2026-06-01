@@ -1,4 +1,4 @@
-/** First-run / re-configure wizard �?saves to `~/.deepmicode/config.json`. */
+/** First-run / re-configure wizard — saves to `~/.deepmicode/config.json`. */
 
 import { mkdirSync, statSync } from "node:fs";
 import { Box, Text, useApp, useInput } from "ink";
@@ -67,7 +67,7 @@ const CATALOG_BY_NAME = new Map(MCP_CATALOG.map((e) => [e.name, e]));
 
 const LANGUAGE_LABELS: Record<LanguageCode, string> = {
   EN: "English",
-  "zh-CN": "简体中�?,
+  "zh-CN": "简体中文",
   de: "Deutsch",
   ru: "Русский",
 };
@@ -316,12 +316,12 @@ function ThemeStep({
         {THEME_NAMES.map((name, i) => (
           <Box key={name}>
             <Text color={i === index ? theme.tone.brand : undefined}>
-              {i === index ? "�?" : "  "}
+              {i === index ? "▸ " : "  "}
             </Text>
             <Text bold={i === index} color={i === index ? theme.fg.strong : theme.fg.body}>
               {name}
             </Text>
-            <Text color={theme.fg.meta}>{" �?"}</Text>
+            <Text color={theme.fg.meta}>{" — "}</Text>
             <Text color={theme.fg.meta}>{t(`wizard.themeCaption.${name}`)}</Text>
           </Box>
         ))}
@@ -335,11 +335,11 @@ function ThemeStep({
       >
         <Text color={theme.fg.meta}>{t("wizard.themeSampleHeading")}</Text>
         <Box marginTop={1}>
-          <Text color={theme.tone.accent}>{"�?"}</Text>
+          <Text color={theme.tone.accent}>{"◆ "}</Text>
           <Text color={theme.tone.accent}>{t("wizard.themeSampleReasoning")}</Text>
         </Box>
         <Box>
-          <Text color={theme.tone.info}>{"�?"}</Text>
+          <Text color={theme.tone.info}>{"▣ "}</Text>
           <Text color={theme.fg.body}>{"fs.readFile("}</Text>
           <Text color={theme.tone.ok}>{'"main.ts"'}</Text>
           <Text color={theme.fg.body}>{")"}</Text>
@@ -454,7 +454,7 @@ function ApiKeyStep({
               onSubmit(trimmed);
             });
           }}
-          mask="�?
+          mask="•"
           placeholder="sk-..."
         />
       </Box>
@@ -477,7 +477,7 @@ function ApiKeyStep({
 
 // Hit `/models` instead of DeepSeek's `/user/balance`: the OpenAI-compat
 // listing endpoint exists on every provider that pretends to be OpenAI
-// (DeepSeek, DashScope/Tongyi, Moonshot, Zhipu, �?, and 401/403 there
+// (DeepSeek, DashScope/Tongyi, Moonshot, Zhipu, …), and 401/403 there
 // still means "key bad" the same way.
 export async function validateDeepSeekApiKey(
   apiKey: string,
@@ -583,7 +583,7 @@ function McpArgsStep({
         <Box marginTop={1}>
           <Text bold color="ansi:cyan">
             {entry.userArgs}
-            {" �?"}
+            {" › "}
           </Text>
           <TextInput
             value={value}
@@ -714,7 +714,7 @@ function deriveInitialCatalog(existingSpecs: string[]): string[] {
 /**
  * Build the `--mcp` spec string for a catalog entry. Same format
  * `mcpCommandFor` produces for `deepmicode mcp list`, minus the leading
- * `--mcp "..."` wrapper �?we store the inner spec directly.
+ * `--mcp "..."` wrapper — we store the inner spec directly.
  */
 export function buildSpec(name: string, argsByName: Record<string, string>): string {
   const entry = CATALOG_BY_NAME.get(name);
@@ -725,7 +725,7 @@ export function buildSpec(name: string, argsByName: Record<string, string>): str
 }
 
 function quoteIfNeeded(s: string): string {
-  // Escape backslashes BEFORE quotes �?otherwise a trailing `\` in the
+  // Escape backslashes BEFORE quotes — otherwise a trailing `\` in the
   // input would consume the closing quote when a downstream parser
   // un-escapes the output (CodeQL js/incomplete-sanitization).
   return /\s|"/.test(s) ? `"${s.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"` : s;

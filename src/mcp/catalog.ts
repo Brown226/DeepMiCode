@@ -1,4 +1,4 @@
-/** Hardcoded â€?fetching this list at runtime would make `mcp list` flaky offline / behind proxies. */
+/** Hardcoded â€” fetching this list at runtime would make `mcp list` flaky offline / behind proxies. */
 
 export interface CatalogEntry {
   /** Short name, used as the namespace prefix when suggested. */
@@ -9,12 +9,12 @@ export interface CatalogEntry {
   package: string;
   /** Extra args the user must supply (e.g. a directory path). */
   userArgs?: string;
-  /** Notes the user needs to know â€?shown dimmed. */
+  /** Notes the user needs to know â€” shown dimmed. */
   note?: string;
 }
 
 // Every entry below is verified to exist on npm as of this release.
-// `fetch` and `sqlite` are deliberately *absent* â€?their reference
+// `fetch` and `sqlite` are deliberately *absent* â€” their reference
 // servers are Python-only (`pip install mcp-server-fetch`), so a Node
 // user running `npx -y @modelcontextprotocol/server-fetch` hits a 404
 // from the npm registry. We'd rather ship a smaller list that always
@@ -25,7 +25,7 @@ export const MCP_CATALOG: CatalogEntry[] = [
     summary: "read/write/search files inside a sandboxed directory",
     package: "@modelcontextprotocol/server-filesystem",
     userArgs: "<dir>",
-    note: "the directory is a hard sandbox â€?the server refuses access outside it",
+    note: "the directory is a hard sandbox â€” the server refuses access outside it",
   },
   {
     name: "memory",
@@ -40,13 +40,13 @@ export const MCP_CATALOG: CatalogEntry[] = [
   },
   {
     name: "puppeteer",
-    summary: "browser automation â€?take screenshots, click, type",
+    summary: "browser automation â€” take screenshots, click, type",
     package: "@modelcontextprotocol/server-puppeteer",
     note: "downloads Chromium on first run (~200 MB)",
   },
   {
     name: "everything",
-    summary: "official test server â€?exercises every MCP feature",
+    summary: "official test server â€” exercises every MCP feature",
     package: "@modelcontextprotocol/server-everything",
     note: "useful for debugging your DeepMiCode setup",
   },

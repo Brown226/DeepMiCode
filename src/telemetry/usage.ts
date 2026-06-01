@@ -25,7 +25,7 @@ import {
   costUsd,
 } from "./stats.js";
 
-/** One turn's snapshot â€?serialized verbatim as a JSONL line. */
+/** One turn's snapshot â€” serialized verbatim as a JSONL line. */
 export interface UsageRecord {
   /** Epoch millis when the record was written. */
   ts: number;
@@ -41,13 +41,13 @@ export interface UsageRecord {
   costUsd: number;
   /** What the same turn would have cost at Claude Sonnet 4.6 rates. */
   claudeEquivUsd: number;
-  /** Absent on legacy records â€?treat as "turn" when missing. */
+  /** Absent on legacy records â€” treat as "turn" when missing. */
   kind?: "turn" | "subagent";
   /** Present when `kind === "subagent"`. Attribution metadata for the /stats roll-up. */
   subagent?: {
     /** Skill that spawned it, when the spawn came from a `runAs: subagent` skill. */
     skillName?: string;
-    /** First ~60 chars of the task prompt â€?enough context to recognize a run, never the full text. */
+    /** First ~60 chars of the task prompt â€” enough context to recognize a run, never the full text. */
     taskPreview: string;
     /** Tool calls the child loop dispatched before returning. */
     toolIters: number;
@@ -114,9 +114,9 @@ function compactUsageLogIfLarge(path: string, now: number): void {
       /* skip malformed */
     }
   }
-  // No-op when nothing aged out â€?avoids rewrite storms on fresh logs.
+  // No-op when nothing aged out â€” avoids rewrite storms on fresh logs.
   if (kept.length === lines.filter((l) => l.trim()).length) return;
-  // Write to a sibling tmp path then rename â€?atomic from a reader's
+  // Write to a sibling tmp path then rename â€” atomic from a reader's
   // POV and severs CodeQL's statâ†’write taint chain. Concurrent
   // appenders during the compaction window lose their entries; we
   // accept that for a best-effort usage log.
@@ -128,7 +128,7 @@ function compactUsageLogIfLarge(path: string, now: number): void {
     try {
       unlinkSync(tmp);
     } catch {
-      /* tmp may not exist â€?ignore */
+      /* tmp may not exist â€” ignore */
     }
   }
 }
@@ -155,7 +155,7 @@ export function appendUsage(input: AppendUsageInput): UsageRecord {
     appendFileSync(path, `${JSON.stringify(record)}\n`, "utf8");
     compactUsageLogIfLarge(path, record.ts);
   } catch {
-    /* best-effort â€?disk failure shouldn't break the chat */
+    /* best-effort â€” disk failure shouldn't break the chat */
   }
   return record;
 }
@@ -196,7 +196,7 @@ function isValidRecord(rec: unknown): rec is UsageRecord {
   );
 }
 
-/** One row of the `deepmicode stats` dashboard â€?a rolled-up window. */
+/** One row of the `deepmicode stats` dashboard â€” a rolled-up window. */
 export interface UsageBucket {
   label: string;
   /** Start of the window as epoch millis. `0` = unbounded (all-time). */
@@ -208,11 +208,11 @@ export interface UsageBucket {
   cacheMissTokens: number;
   costUsd: number;
   claudeEquivUsd: number;
-  /** Recomputed from current pricing each aggregate â€?intentionally NOT frozen with `costUsd`. */
+  /** Recomputed from current pricing each aggregate â€” intentionally NOT frozen with `costUsd`. */
   cacheSavingsUsd: number;
 }
 
-/** Cache hit ratio for a bucket â€?zero denominator returns 0. */
+/** Cache hit ratio for a bucket â€” zero denominator returns 0. */
 export function bucketCacheHitRatio(b: UsageBucket): number {
   const denom = b.cacheHitTokens + b.cacheMissTokens;
   return denom > 0 ? b.cacheHitTokens / denom : 0;
@@ -257,9 +257,9 @@ export interface AggregateOptions {
 export interface UsageAggregate {
   /** Fixed-order rolling windows: today, week, month, all-time. */
   buckets: UsageBucket[];
-  /** Model id â†?turn count. Sorted descending; top entry is the "most used." */
+  /** Model id â†’ turn count. Sorted descending; top entry is the "most used." */
   byModel: Array<{ model: string; turns: number }>;
-  /** Session name â†?turn count. Sorted descending. Null sessions are grouped under `"(ephemeral)"`. */
+  /** Session name â†’ turn count. Sorted descending. Null sessions are grouped under `"(ephemeral)"`. */
   bySession: Array<{ session: string; turns: number }>;
   /** Earliest record's ts, or `null` when the log is empty. Drives "saved $X since <date>". */
   firstSeen: number | null;
@@ -278,7 +278,7 @@ export interface SubagentAggregate {
   bySkill: Array<{ skillName: string; count: number; costUsd: number; durationMs: number }>;
 }
 
-/** Rolling 24h/7d/30d windows â€?avoids "it's 00:03, 'today' is empty" surprises. */
+/** Rolling 24h/7d/30d windows â€” avoids "it's 00:03, 'today' is empty" surprises. */
 export function aggregateUsage(
   records: UsageRecord[],
   opts: AggregateOptions = {},
@@ -355,7 +355,7 @@ export function aggregateUsage(
   };
 }
 
-/** File-size helper for the stats header â€?"1.2 MB" etc. Returns "" if missing. */
+/** File-size helper for the stats header â€” "1.2 MB" etc. Returns "" if missing. */
 export function formatLogSize(path: string = defaultUsageLogPath()): string {
   if (!existsSync(path)) return "";
   try {

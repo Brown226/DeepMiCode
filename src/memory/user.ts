@@ -42,14 +42,14 @@ export interface MemoryEntry {
   body: string;
   /** ISO date string (YYYY-MM-DD). */
   createdAt: string;
-  /** Explicit per-entry priority; absent â†?resolve from config default for `type`, else "medium". */
+  /** Explicit per-entry priority; absent â†’ resolve from config default for `type`, else "medium". */
   priority?: MemoryPriority;
-  /** Lifecycle hint. `project_end` â†?cleared by `/memory clear project`. */
+  /** Lifecycle hint. `project_end` â†’ cleared by `/memory clear project`. */
   expires?: MemoryExpires;
 }
 
 export interface MemoryStoreOptions {
-  /** Override `~/.deepmicode` â€?tests set this to a tmpdir. */
+  /** Override `~/.deepmicode` â€” tests set this to a tmpdir. */
   homeDir?: string;
   /** Absolute sandbox root. Required to use `scope: "project"`. */
   projectRoot?: string;
@@ -72,7 +72,7 @@ export function sanitizeMemoryName(raw: string): string {
   const trimmed = String(raw ?? "").trim();
   if (!VALID_NAME.test(trimmed)) {
     throw new Error(
-      `invalid memory name: ${JSON.stringify(raw)} â€?must be 3-40 chars, alnum/_/-, no path separators`,
+      `invalid memory name: ${JSON.stringify(raw)} â€” must be 3-40 chars, alnum/_/-, no path separators`,
     );
   }
   return trimmed;
@@ -130,7 +130,7 @@ function indexLine(e: Pick<MemoryEntry, "name" | "description">): string {
   const safeDesc = e.description.replace(/\n/g, " ").trim();
   const max = 130 - e.name.length;
   const clipped = safeDesc.length > max ? `${safeDesc.slice(0, Math.max(1, max - 1))}â€¦` : safeDesc;
-  return `- [${e.name}](${e.name}.md) â€?${clipped}`;
+  return `- [${e.name}](${e.name}.md) â€” ${clipped}`;
 }
 
 export class MemoryStore {
@@ -179,7 +179,7 @@ export class MemoryStore {
     const originalChars = trimmed.length;
     const truncated = originalChars > MEMORY_INDEX_MAX_CHARS;
     const content = truncated
-      ? `${trimmed.slice(0, MEMORY_INDEX_MAX_CHARS)}\nâ€?(truncated ${originalChars - MEMORY_INDEX_MAX_CHARS} chars)`
+      ? `${trimmed.slice(0, MEMORY_INDEX_MAX_CHARS)}\nâ€¦ (truncated ${originalChars - MEMORY_INDEX_MAX_CHARS} chars)`
       : trimmed;
     return { content, originalChars, truncated };
   }
@@ -207,7 +207,7 @@ export class MemoryStore {
     return entry;
   }
 
-  /** Skips malformed files â€?index stays queryable even if one file is hand-edited into nonsense. */
+  /** Skips malformed files â€” index stays queryable even if one file is hand-edited into nonsense. */
   list(): MemoryEntry[] {
     const out: MemoryEntry[] = [];
     const scopes: MemoryScope[] = this.projectRoot ? ["global", "project"] : ["global"];
@@ -227,7 +227,7 @@ export class MemoryStore {
         try {
           out.push(this.read(scope, name));
         } catch {
-          // malformed file â€?skip rather than fail the whole list
+          // malformed file â€” skip rather than fail the whole list
         }
       }
     }
@@ -272,7 +272,7 @@ export class MemoryStore {
     return true;
   }
 
-  /** Sorted by name â€?same file set must produce byte-identical MEMORY.md for stable prefix hashing. */
+  /** Sorted by name â€” same file set must produce byte-identical MEMORY.md for stable prefix hashing. */
   private regenerateIndex(scope: MemoryScope): void {
     const dir = scopeDir({ homeDir: this.homeDir, scope, projectRoot: this.projectRoot });
     if (!existsSync(dir)) return;
@@ -298,7 +298,7 @@ export class MemoryStore {
         lines.push(indexLine({ name: entry.name || name, description: entry.description }));
       } catch {
         // Malformed: still surface it in the index so the user notices.
-        lines.push(`- [${name}](${name}.md) â€?(malformed, check frontmatter)`);
+        lines.push(`- [${name}](${name}.md) â€” (malformed, check frontmatter)`);
       }
     }
     writeFileSync(indexPath, `${lines.join("\n")}\n`, "utf8");
@@ -321,11 +321,11 @@ export function readGlobalDeepMiCodeMemory(
   if (!trimmed) return null;
   const originalChars = trimmed.length;
   // Reuse the project-memory cap so both freeform files have the same
-  // headroom (8000 chars â‰?2k tokens). They serve the same purpose at
+  // headroom (8000 chars â‰ˆ 2k tokens). They serve the same purpose at
   // different scopes.
   const truncated = originalChars > 8000;
   const content = truncated
-    ? `${trimmed.slice(0, 8000)}\nâ€?(truncated ${originalChars - 8000} chars)`
+    ? `${trimmed.slice(0, 8000)}\nâ€¦ (truncated ${originalChars - 8000} chars)`
     : trimmed;
   return { path, content, originalChars, truncated };
 }
@@ -340,7 +340,7 @@ export function applyGlobalDeepMiCodeMemory(basePrompt: string, homeDir?: string
     "",
     "# Global memory (~/.deepmicode/DEEPMICODE.md)",
     "",
-    "Cross-project notes the user pinned via the `#g` prompt prefix. Treat as authoritative â€?same level of trust as project memory.",
+    "Cross-project notes the user pinned via the `#g` prompt prefix. Treat as authoritative â€” same level of trust as project memory.",
     "",
     "```",
     mem.content,
@@ -348,7 +348,7 @@ export function applyGlobalDeepMiCodeMemory(basePrompt: string, homeDir?: string
   ].join("\n");
 }
 
-/** Read ~/.claude/CLAUDE.md â€?cross-project notes from Claude Code migration.
+/** Read ~/.claude/CLAUDE.md â€” cross-project notes from Claude Code migration.
  *  Same cap as global DeepMiCode memory (8000 chars). */
 export function readGlobalClaudeMemory(
   homeDir: string = homedir(),
@@ -366,7 +366,7 @@ export function readGlobalClaudeMemory(
   const originalChars = trimmed.length;
   const truncated = originalChars > 8000;
   const content = truncated
-    ? `${trimmed.slice(0, 8000)}\nâ€?(truncated ${originalChars - 8000} chars)`
+    ? `${trimmed.slice(0, 8000)}\nâ€¦ (truncated ${originalChars - 8000} chars)`
     : trimmed;
   return { path, content, originalChars, truncated };
 }
@@ -380,7 +380,7 @@ export function applyGlobalClaudeMemory(basePrompt: string): string {
     "",
     "# Global memory (~/.claude/CLAUDE.md)",
     "",
-    "Cross-project notes from your Claude Code configuration. Treat as authoritative â€?same level of trust as project memory.",
+    "Cross-project notes from your Claude Code configuration. Treat as authoritative â€” same level of trust as project memory.",
     "",
     "```",
     mem.content,
@@ -403,7 +403,7 @@ function highPriorityBlock(entries: MemoryEntry[], cfg?: DeepMiCodeConfig): stri
   const lines: string[] = [
     "# HIGH PRIORITY constraints (must observe)",
     "",
-    "These memories were declared `priority: high` (via config.memory.customTypes or the memory file itself). Treat them as hard rules â€?violations override any other guidance below.",
+    "These memories were declared `priority: high` (via config.memory.customTypes or the memory file itself). Treat them as hard rules â€” violations override any other guidance below.",
     "",
   ];
   for (const e of high) {
@@ -415,7 +415,7 @@ function highPriorityBlock(entries: MemoryEntry[], cfg?: DeepMiCodeConfig): stri
   return lines.join("\n").trimEnd();
 }
 
-/** Empty index â†?omit the whole block (otherwise we'd add bytes to the prefix hash for nothing). */
+/** Empty index â†’ omit the whole block (otherwise we'd add bytes to the prefix hash for nothing). */
 export function applyUserMemory(
   basePrompt: string,
   opts: { homeDir?: string; projectRoot?: string; cfg?: DeepMiCodeConfig } = {},
@@ -431,9 +431,9 @@ export function applyUserMemory(
   if (global) {
     parts.push(
       "",
-      "# User memory â€?global (~/.deepmicode/memory/global/MEMORY.md)",
+      "# User memory â€” global (~/.deepmicode/memory/global/MEMORY.md)",
       "",
-      "Cross-project facts and preferences the user has told you in prior sessions. TREAT AS AUTHORITATIVE â€?don't re-verify via filesystem or web. One-liners index detail files; call `recall_memory` for full bodies only when the one-liner isn't enough.",
+      "Cross-project facts and preferences the user has told you in prior sessions. TREAT AS AUTHORITATIVE â€” don't re-verify via filesystem or web. One-liners index detail files; call `recall_memory` for full bodies only when the one-liner isn't enough.",
       "",
       "```",
       global.content,
@@ -443,7 +443,7 @@ export function applyUserMemory(
   if (project) {
     parts.push(
       "",
-      "# User memory â€?this project",
+      "# User memory â€” this project",
       "",
       "Per-project facts the user established in prior sessions (not committed to the repo). TREAT AS AUTHORITATIVE. Same recall pattern as global memory.",
       "",

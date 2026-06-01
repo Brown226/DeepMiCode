@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { stdin, stdout } from "node:process";
 import { createInterface } from "node:readline/promises";
-import { DeepSeekClient } from "../../client.js";
+import type { DeepSeekClient } from "../../client.js";
 import { loadEndpoint, loadMimoEndpoint } from "../../config.js";
 import { loadDotenv } from "../../env.js";
 import { createProvider } from "../../providers/factory.js";
@@ -16,7 +16,7 @@ import type { LLMProvider } from "../../providers/types.js";
 export interface CommitOptions {
   /** Override the default model (deepseek-v4-flash). */
   model?: string;
-  /** Skip the confirmation step â€?useful in scripts where the diff has been pre-reviewed. */
+  /** Skip the confirmation step â€” useful in scripts where the diff has been pre-reviewed. */
   yes?: boolean;
 }
 
@@ -26,13 +26,13 @@ const LOG_COUNT = 10;
 
 const SYSTEM_PROMPT = `You draft git commit messages.
 
-Output ONLY the commit message â€?no preamble, no \`\`\` fences, no "Here's a commit message:" lead-in. The first line of your output IS the commit subject.
+Output ONLY the commit message â€” no preamble, no \`\`\` fences, no "Here's a commit message:" lead-in. The first line of your output IS the commit subject.
 
 Match the project's existing style:
 - Look at the recent commits provided. Mirror their voice, conventional-commit prefix usage (or absence), tense, length, body structure.
 - If recent commits use a "type(scope): summary" prefix, use it. If they don't, don't invent one.
-- Subject line: one line, â‰?2 chars, imperative mood, no trailing period.
-- Body (optional): explain WHY when the diff isn't self-evident. Wrap at ~72 chars. Skip the body for trivial changes â€?repeating the subject in the body is noise.
+- Subject line: one line, â‰¤72 chars, imperative mood, no trailing period.
+- Body (optional): explain WHY when the diff isn't self-evident. Wrap at ~72 chars. Skip the body for trivial changes â€” repeating the subject in the body is noise.
 
 The diff is the source of truth for what changed; describe THAT, not your guesses about the broader project. If the diff includes a deletion you can't explain from the surrounding context, name it but don't speculate about why.
 
@@ -93,7 +93,7 @@ function capDiff(raw: string, source: "staged" | "working-tree"): DiffResult {
   const head = raw.slice(0, Math.floor(DIFF_BYTE_CAP * 0.7));
   const tail = raw.slice(-Math.floor(DIFF_BYTE_CAP * 0.3));
   return {
-    diff: `${head}\n\n[â€?${raw.length - DIFF_BYTE_CAP} bytes of diff truncated â€¦]\n\n${tail}`,
+    diff: `${head}\n\n[â€¦ ${raw.length - DIFF_BYTE_CAP} bytes of diff truncated â€¦]\n\n${tail}`,
     source,
     truncated: true,
   };
@@ -103,7 +103,7 @@ function readRecentCommits(): string {
   const r = runGit(["log", `-${LOG_COUNT}`, "--no-merges", "--format=%s%n%b%n---END---"]);
   if (r.status !== 0) {
     // Repo may not have any commits yet (initial commit case). Don't
-    // fail â€?let the model work from the diff alone.
+    // fail â€” let the model work from the diff alone.
     return "";
   }
   return r.stdout.trim();
@@ -121,7 +121,7 @@ async function draftMessage(
   }
   if (diff.source === "working-tree") {
     userParts.push(
-      "(NOTE: diff is from the working tree, not the staging area â€?nothing is staged yet. The user will stage selectively after seeing the draft.)",
+      "(NOTE: diff is from the working tree, not the staging area â€” nothing is staged yet. The user will stage selectively after seeing the draft.)",
     );
   }
   userParts.push(`Diff to summarize:\n\n${diff.diff}`);
@@ -140,7 +140,7 @@ async function draftMessage(
 function stripCodeFences(s: string): string {
   // Some models still wrap output in ``` despite the system prompt
   // telling them not to. Strip a single leading + trailing fence pair
-  // if present. Only operates on a wrapping pair â€?internal fences
+  // if present. Only operates on a wrapping pair â€” internal fences
   // (a code block inside the body) stay.
   const trimmed = s.trim();
   const fenceOpen = /^```[a-zA-Z]*\n/;
@@ -174,7 +174,7 @@ function editInExternal(initial: string): string | null {
   const editor = process.env.GIT_EDITOR ?? process.env.VISUAL ?? process.env.EDITOR;
   if (!editor) {
     process.stderr.write(
-      "deepmicode commit: no $EDITOR / $VISUAL / $GIT_EDITOR set â€?can't open editor. Pick [a]ccept and `git commit --amend` afterwards.\n",
+      "deepmicode commit: no $EDITOR / $VISUAL / $GIT_EDITOR set â€” can't open editor. Pick [a]ccept and `git commit --amend` afterwards.\n",
     );
     return null;
   }
@@ -182,7 +182,7 @@ function editInExternal(initial: string): string | null {
   const path = join(dir, "COMMIT_EDITMSG");
   writeFileSync(path, initial, "utf8");
   // spawnSync with shell:true is required so $EDITOR strings like
-  // `code --wait` work â€?they're shell command lines, not argv tuples.
+  // `code --wait` work â€” they're shell command lines, not argv tuples.
   // The trust boundary is the user's own env var; matches how git
   // itself launches editors.
   const result = spawnSync(`${editor} "${path}"`, {
@@ -196,7 +196,7 @@ function editInExternal(initial: string): string | null {
       /* ignore */
     }
     process.stderr.write(
-      `deepmicode commit: editor exited ${result.status} â€?keeping prior draft.\n`,
+      `deepmicode commit: editor exited ${result.status} â€” keeping prior draft.\n`,
     );
     return null;
   }
@@ -213,7 +213,7 @@ function editInExternal(initial: string): string | null {
     }
   }
   // Strip git's standard `# â€¦` comment lines, even though we didn't
-  // emit any â€?a user habituated to `git commit` may add `#`-prefixed
+  // emit any â€” a user habituated to `git commit` may add `#`-prefixed
   // notes by reflex.
   const cleaned = edited
     .split(/\r?\n/)
@@ -255,18 +255,18 @@ export async function commitCommand(opts: CommitOptions = {}): Promise<void> {
   const diff = readDiff();
   if (!diff) {
     process.stderr.write(
-      "deepmicode commit: no staged changes and working tree is clean â€?nothing to commit.\n",
+      "deepmicode commit: no staged changes and working tree is clean â€” nothing to commit.\n",
     );
     process.exit(1);
   }
   if (diff.source === "working-tree") {
     process.stderr.write(
-      "deepmicode commit: nothing staged â€?drafting from working-tree diff. Stage your changes and re-run, or use the draft as a starting point.\n",
+      "deepmicode commit: nothing staged â€” drafting from working-tree diff. Stage your changes and re-run, or use the draft as a starting point.\n",
     );
   }
   if (diff.truncated) {
     process.stderr.write(
-      "deepmicode commit: diff exceeded 80KB; head + tail sent to the model. Large diffs often produce vague drafts â€?consider committing in smaller chunks.\n",
+      "deepmicode commit: diff exceeded 80KB; head + tail sent to the model. Large diffs often produce vague drafts â€” consider committing in smaller chunks.\n",
     );
   }
 
@@ -303,7 +303,7 @@ export async function commitCommand(opts: CommitOptions = {}): Promise<void> {
     try {
       message = await draftMessage(client, model, diff, recentCommits);
     } catch (err) {
-      process.stderr.write(`deepmicode commit: model call failed â€?${(err as Error).message}\n`);
+      process.stderr.write(`deepmicode commit: model call failed â€” ${(err as Error).message}\n`);
       process.exit(1);
     }
     if (!message) {
@@ -314,11 +314,11 @@ export async function commitCommand(opts: CommitOptions = {}): Promise<void> {
 
     if (opts.yes) break;
     if (diff.source === "working-tree") {
-      // Refuse to commit a working-tree-derived draft â€?the staging
+      // Refuse to commit a working-tree-derived draft â€” the staging
       // area is empty so `git commit` would fail anyway. Print the
       // draft so the user can copy it; exit 0 because we did our job.
       process.stdout.write(
-        "(no staged changes â€?draft printed above for you to copy. Stage with `git add` and re-run to commit.)\n",
+        "(no staged changes â€” draft printed above for you to copy. Stage with `git add` and re-run to commit.)\n",
       );
       return;
     }
@@ -341,12 +341,12 @@ export async function commitCommand(opts: CommitOptions = {}): Promise<void> {
           process.stderr.write("commit cancelled.\n");
           return;
         }
-        // next is "regen" or another "edit" â€?fall through to the
+        // next is "regen" or another "edit" â€” fall through to the
         // loop top to re-draft (regen) or land back at this branch.
       }
-      // editor returned no edit â€?loop top will regen by default.
+      // editor returned no edit â€” loop top will regen by default.
     }
-    // Anything else (regen, or unsuccessful edit) â†?loop top redraws.
+    // Anything else (regen, or unsuccessful edit) â†’ loop top redraws.
   }
 
   commitWithMessage(message);

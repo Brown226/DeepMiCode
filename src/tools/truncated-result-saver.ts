@@ -94,7 +94,7 @@ export function cleanupOldResults(rootDir: string, maxAgeMs: number = DEFAULT_MA
         rmSync(abs);
       }
     } catch {
-      // Stale symlink / race â€?skip.
+      // Stale symlink / race â€” skip.
     }
   }
 }

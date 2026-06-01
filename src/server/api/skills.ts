@@ -1,4 +1,4 @@
-/** `/api/skills` â€?edits files only; loop reloads on /new or restart. `builtin` scope is read-only. */
+/** `/api/skills` â€” edits files only; loop reloads on /new or restart. `builtin` scope is read-only. */
 
 import {
   closeSync,
@@ -74,7 +74,7 @@ function readSkillListEntry(
 ): SkillListEntry | null {
   try {
     // Open once and reuse the fd so size/mtime/content all bind to
-    // the same inode â€?closes the existsâ†’statâ†’read TOCTOU races.
+    // the same inode â€” closes the existsâ†’statâ†’read TOCTOU races.
     const fd = openSync(skillPath, "r");
     let stat: ReturnType<typeof fstatSync>;
     let raw: string;
@@ -194,13 +194,13 @@ export async function handleSkills(
           {
             name: "explore",
             scope: "builtin",
-            description: "subagent â€?broad codebase survey",
+            description: "subagent â€” broad codebase survey",
             runs7d: runs7d.get("explore") ?? 0,
           },
           {
             name: "research",
             scope: "builtin",
-            description: "subagent â€?deep web + repo research",
+            description: "subagent â€” deep web + repo research",
             runs7d: runs7d.get("research") ?? 0,
           },
         ],
@@ -230,7 +230,7 @@ export async function handleSkills(
     if (!cwd) {
       return {
         status: 503,
-        body: { error: "no active project â€?open `/dashboard` from `deepmicode code`" },
+        body: { error: "no active project â€” open `/dashboard` from `deepmicode code`" },
       };
     }
     dir = projectSkillsDir(cwd);

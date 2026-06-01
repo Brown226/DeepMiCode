@@ -1,4 +1,4 @@
-/** MCP types (spec 2024-11-05). Stdio wire format is NDJSON â€?one JSON-RPC message per line, no Content-Length framing. */
+/** MCP types (spec 2024-11-05). Stdio wire format is NDJSON â€” one JSON-RPC message per line, no Content-Length framing. */
 
 export type JsonRpcId = string | number;
 
@@ -50,7 +50,7 @@ export interface McpClientCapabilities {
   prompts?: Record<string, never>;
   /** Advertised when the client can answer `roots/list`. */
   roots?: { listChanged?: boolean };
-  // sampling would go here â€?deferred.
+  // sampling would go here â€” deferred.
 }
 
 export interface McpRoot {
@@ -76,7 +76,7 @@ export interface InitializeResult {
 }
 
 export interface McpToolSchema {
-  /** JSON Schema â€?compatible with DeepMiCode's tools.ts JSONSchema shape. */
+  /** JSON Schema â€” compatible with DeepMiCode's tools.ts JSONSchema shape. */
   type?: string;
   properties?: Record<string, unknown>;
   required?: string[];
@@ -108,7 +108,7 @@ export interface ProgressNotificationParams {
   message?: string;
 }
 
-/** Values a `ProgressHandler` receives â€?`progressToken` is already matched away. */
+/** Values a `ProgressHandler` receives â€” `progressToken` is already matched away. */
 export interface McpProgressInfo {
   progress: number;
   total?: number;
@@ -128,7 +128,7 @@ export interface McpContentBlockImage {
   mimeType: string;
 }
 
-/** MCP result content is an array of typed blocks. DeepMiCode consumes only text for now â€?image blocks get stringified with a placeholder. */
+/** MCP result content is an array of typed blocks. DeepMiCode consumes only text for now â€” image blocks get stringified with a placeholder. */
 export type McpContentBlock = McpContentBlockText | McpContentBlockImage;
 
 export interface CallToolResult {
@@ -222,7 +222,7 @@ export interface GetPromptResult {
 /** Current MCP protocol version DeepMiCode is coded against. */
 export const MCP_PROTOCOL_VERSION = "2024-11-05";
 
-/** Type guard â€?success vs error response. */
+/** Type guard â€” success vs error response. */
 export function isJsonRpcError(msg: JsonRpcResponse): msg is JsonRpcError {
   return "error" in msg;
 }

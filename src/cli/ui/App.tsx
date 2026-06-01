@@ -52,6 +52,7 @@ import {
   saveReasoningEffort,
   saveTheme,
 } from "../../config.js";
+import { loadMimoEndpoint } from "../../config.js";
 import { Eventizer } from "../../core/eventize.js";
 import { pauseGate } from "../../core/pause-gate.js";
 import { autoResolveVerdict, shouldAutoResolveCheckpoint } from "../../core/pause-policy.js";
@@ -59,10 +60,6 @@ import { formatHookOutcomeMessage, runHooks } from "../../hooks.js";
 import { t, tObj } from "../../i18n/index.js";
 import { CacheFirstLoop, DeepSeekClient, ImmutablePrefix } from "../../index.js";
 import type { LoopEvent } from "../../loop.js";
-import { createProvider } from "../../providers/factory.js";
-import { isMimoModel } from "../../providers/mimo-client.js";
-import type { LLMProvider } from "../../providers/types.js";
-import { loadMimoEndpoint } from "../../config.js";
 import {
   deleteSession,
   detectGitBranch,
@@ -75,6 +72,9 @@ import {
   renameSession,
   sanitizeName,
 } from "../../memory/session.js";
+import { createProvider } from "../../providers/factory.js";
+import { isMimoModel } from "../../providers/mimo-client.js";
+import type { LLMProvider } from "../../providers/types.js";
 import type { QQChannel } from "../../qq/channel.js";
 import { useQQChannel } from "../../qq/use-qq-channel.js";
 import type {
@@ -305,7 +305,7 @@ export interface AppProps {
   dashboardHost?: string;
   /** Stable dashboard URL token (#968). `undefined` mints a fresh per-boot token. */
   dashboardToken?: string;
-  /** Mid-chat session swap â€?Root remounts App with the new session via key. */
+  /** Mid-chat session swap â€” Root remounts App with the new session via key. */
   onSwitchSession?: (name: string | undefined) => void;
   /** One-time startup info rows injected by chatCommand. */
   startupInfoHints?: string[];
@@ -322,7 +322,7 @@ export interface AppProps {
 // Module-level so the embedded dashboard server survives App remounts (chat.tsx
 // uses `<App key={activeSession}>`, so every session swap unmounts the whole
 // tree). Without this, the cleanup useEffect closed the server and the new App
-// mount raced its `listen()` against the OS still releasing the port â€?Windows
+// mount raced its `listen()` against the OS still releasing the port â€” Windows
 // in particular held the port long enough for the rebind to fall back to a fresh
 // ephemeral one, so the dashboard URL changed every time the user clicked a
 // session in the sidebar. Now we keep the same handle and just hand it the new
@@ -515,7 +515,7 @@ function AppInner({
       });
     }
   }, []);
-  // ctrl-r toggles verbose mode â€?ReasoningCard / ToolCard skip elision while on.
+  // ctrl-r toggles verbose mode â€” ReasoningCard / ToolCard skip elision while on.
   // Survives turn boundaries; resets on session restart.
   const [verboseMode, setVerboseMode] = useState(false);
   const languageVersion = useLanguageReload();
@@ -678,7 +678,7 @@ function AppInner({
   const [pendingReviseEditor, setPendingReviseEditor] = useState<string | null>(null);
   /** True while the SessionPicker is open mid-chat (triggered by `/sessions`). */
   const [pendingSessionsPicker, setPendingSessionsPicker] = useState(false);
-  /** Open by double-Esc â€?lists user turns; picking forks the session at that turn. */
+  /** Open by double-Esc â€” lists user turns; picking forks the session at that turn. */
   const [pendingEditPicker, setPendingEditPicker] = useState<ReadonlyArray<UserTurnEntry> | null>(
     null,
   );
@@ -782,7 +782,8 @@ function AppInner({
     !!pendingCheckpoint;
   // Truthy when the live activity rows (ongoing tool, subagent stack, thinking
   // row, plan live row) can render. Hidden whenever a take-over modal is up so
-  // they don't fight the picker for visual attention. Tighter than `modalOpen` â€?  // doesn't include model/theme/copy-mode pickers that overlay without owning
+  // they don't fight the picker for visual attention. Tighter than `modalOpen` â€”
+  // doesn't include model/theme/copy-mode pickers that overlay without owning
   // the bottom rows.
   const noTakeoverOverlay =
     !pendingShell &&
@@ -840,7 +841,7 @@ function AppInner({
   // Disambiguates <Static> keys when a single turn yields multiple assistant_final events.
   const assistantIterCounter = useRef<number>(0);
   // Per-session @url fetch cache. Keyed by stripped URL; same URL
-  // referenced twice in one session fetches once. Not persisted â€? // we deliberately re-fetch on session resume since the page may
+  // referenced twice in one session fetches once. Not persisted â€”  // we deliberately re-fetch on session resume since the page may
   // have changed. Shape mirrors AtUrlExpansion + an optional `body`
   // so the trailing block can be reconstructed from cache alone.
   const atUrlCache = useRef<Map<string, AtUrlExpansion & { body?: string }>>(new Map());
@@ -872,7 +873,7 @@ function AppInner({
   // Aliases the module-level Set so subscriptions registered by an
   // earlier App instance survive a session-swap remount. Without this,
   // the browser's SSE connection stayed wired to the dead App's Set
-  // while the new App broadcast into a fresh empty one â€?every assistant
+  // while the new App broadcast into a fresh empty one â€” every assistant
   // turn after a switch silently dropped on the floor.
   const eventSubscribersRef = useRef(persistentEventSubscribers);
   /** Only one picker mounts at a time; snapshot feeds `getActiveModal` for late SSE clients. */
@@ -1183,7 +1184,7 @@ function AppInner({
   }, [loop, session, tools]);
 
   // Keep the loop's hook list in sync after a `/hooks reload`. The
-  // loop's field is intentionally mutable for exactly this case â€? // construction happens once, hook edits are picked up live.
+  // loop's field is intentionally mutable for exactly this case â€”  // construction happens once, hook edits are picked up live.
   useEffect(() => {
     loop.hooks = hookList;
   }, [loop, hookList]);
@@ -1489,7 +1490,7 @@ function AppInner({
     };
   }, [pendingCheckpoint, broadcastDashboardEvent]);
 
-  // `max` is a DeepSeek-only reasoning extension â€?drop it from /effort
+  // `max` is a DeepSeek-only reasoning extension â€” drop it from /effort
   // suggestions + picker when the active endpoint is third-party (#1794).
   const effortChoices = React.useMemo(() => effortChoicesForBaseUrl(loop.client.baseUrl), [loop]);
 
@@ -1535,7 +1536,7 @@ function AppInner({
 
   // Ctrl+P / Ctrl+N from PromptInput route here. When any input-prefix
   // picker is open (slash / @ / slash-arg), the keys navigate that picker
-  // â€?consistent with â†?â†? Otherwise they walk prompt history (issue #647).
+  // â€” consistent with â†‘/â†“. Otherwise they walk prompt history (issue #647).
   const handleHistoryPrev = useCallback(() => {
     if (atState && atState.entries.length > 0) {
       setAtSelected((i) => Math.max(0, i - 1));
@@ -1680,7 +1681,7 @@ function AppInner({
   const quitProcess = useQuit(transcriptRef);
 
   // Ctrl+D = standard TUI exit (matches the boot-banner hint). Always-on
-  // â€?no modal / picker should swallow it.
+  // â€” no modal / picker should swallow it.
   useKeystroke((ev) => {
     if (ev.ctrl && ev.input === "d") quitProcess();
   });
@@ -1718,7 +1719,7 @@ function AppInner({
     }
   }, historyScrollMode === "app");
 
-  // Double-Esc â€?opens the rewind/edit picker when idle with an empty
+  // Double-Esc â€” opens the rewind/edit picker when idle with an empty
   // composer. Tracks the prior Esc timestamp; a second Esc inside 500 ms
   // collects user turns and dispatches the picker. First Esc just records.
   const lastEscAtRef = useRef(0);
@@ -1951,11 +1952,11 @@ function AppInner({
     }
     if (busy) return;
     // ShellConfirm owns the full keyboard while it's showing. If we
-    // kept handling â†?â†?/ Tab here they'd race with its SingleSelect
-    // â€?the picker would move AND history recall would fire into the
+    // kept handling â†‘/â†“ / Tab here they'd race with its SingleSelect
+    // â€” the picker would move AND history recall would fire into the
     // (hidden) prompt buffer. Bail early.
     if (pendingShell || pendingPath) return;
-    // Alt+S â€?stash / recall the composer buffer. Ctrl+U clearing
+    // Alt+S â€” stash / recall the composer buffer. Ctrl+U clearing
     // is a one-way delete; stash gives the user a reversible "save
     // for later" so an accidental hotkey doesn't lose input.
     if (
@@ -1988,8 +1989,9 @@ function AppInner({
       return;
     }
 
-    // Picker arrow nav lives on the PromptInput â†?historyHandoff â†?    // handleHistoryPrev/Next path (which checks pickers before recall).
-    // Tab stays here â€?multiline-keys treats Tab as parent-owned.
+    // Picker arrow nav lives on the PromptInput â†’ historyHandoff â†’
+    // handleHistoryPrev/Next path (which checks pickers before recall).
+    // Tab stays here â€” multiline-keys treats Tab as parent-owned.
     if (atState && atState.entries.length > 0) {
       if (key.tab) {
         const entries = atState.entries;
@@ -2468,7 +2470,7 @@ function AppInner({
 
     // Reuse the surviving handle across session-swap remounts. The new App
     // owns a fresh loop/refs, so we hand them off via updateContext rather
-    // than rebinding the port â€?which would race the OS-level release and
+    // than rebinding the port â€” which would race the OS-level release and
     // fall back to a new ephemeral port (= URL change the user hates).
     if (persistentDashboardHandle) {
       persistentDashboardHandle.updateContext(buildCtx());
@@ -2492,10 +2494,10 @@ function AppInner({
       } catch (err) {
         const code = (err as NodeJS.ErrnoException)?.code;
         if (dashboardPort && (code === "EADDRINUSE" || code === "EACCES")) {
-          // Pinned port collided â€?fall back to ephemeral, then re-persist so
+          // Pinned port collided â€” fall back to ephemeral, then re-persist so
           // the next boot tries the new port first.
           process.stderr.write(
-            `â–?dashboard port ${dashboardPort} taken (${code}) â€?falling back to ephemeral\n`,
+            `â–² dashboard port ${dashboardPort} taken (${code}) â€” falling back to ephemeral\n`,
           );
           handle = await tryStart(undefined);
         } else {
@@ -2572,7 +2574,7 @@ function AppInner({
   // opted out with --no-dashboard. The whole point is discoverability:
   // most users had no idea /dashboard existed, so the URL needs to be
   // visible from the first render. startDashboard updates the React
-  // state itself, so we just fire-and-forget. Failures stay silent â€? // a missing dashboard never blocks the TUI.
+  // state itself, so we just fire-and-forget. Failures stay silent â€”  // a missing dashboard never blocks the TUI.
   useEffect(() => {
     if (noDashboard) return;
     if (dashboardRef.current) return;
@@ -2580,7 +2582,7 @@ function AppInner({
       .then((url) => {
         if (!url) return;
         const sessionUrl = getDashboardUrl() ?? url;
-        log.pushInfo(`/dashboard  â†? ${sessionUrl}`);
+        log.pushInfo(`/dashboard  â†’  ${sessionUrl}`);
         if (openDashboard) openUrl(sessionUrl);
       })
       .catch((err) => {
@@ -2589,7 +2591,7 @@ function AppInner({
       });
   }, [noDashboard, openDashboard, startDashboard, log, getDashboardUrl]);
 
-  // Drop the local handle on unmount but DON'T close the server â€?chat.tsx
+  // Drop the local handle on unmount but DON'T close the server â€” chat.tsx
   // remounts App on every session swap, so closing here would force a port
   // rebind (and a new URL) for each switch. The persistent handle survives
   // the swap and gets rewired via updateContext() in the next startDashboard().
@@ -2838,7 +2840,7 @@ function AppInner({
       }
       if (hashParse?.kind === "escape") {
         // Replace the working buffer with the de-escaped form. We don't
-        // recurse into handleSubmit to avoid the "still busy" race â€?       // just rewrite `text` and let the rest of the pipeline (bang /
+        // recurse into handleSubmit to avoid the "still busy" race â€”        // just rewrite `text` and let the rest of the pipeline (bang /
         // slash / model) see the literal prompt.
         text = hashParse.text;
       }
@@ -3211,7 +3213,7 @@ function AppInner({
       // new prompt to start with the normal review gate re-armed.
       turnEditPolicyRef.current = "ask";
       // Pro badge state: if /pro was armed, this turn consumes it; the
-      // loop emits a "â€?pro armed" warning we'll catch below. Clear
+      // loop emits a "â€”/pro armed" warning we'll catch below. Clear
       // the armed mirror so the badge flips to "escalated" (via the
       // warning handler) rather than staying at "armed" during the
       // actual run.
@@ -3294,7 +3296,7 @@ function AppInner({
         let lastAssistantText = "";
         for await (const ev of loop.step(modelInput)) {
           writeTranscript(ev);
-          // Mirror to the kernel event log sidecar. Pure passthrough â€?         // Eventizer holds the small state (turn boundary detection +
+          // Mirror to the kernel event log sidecar. Pure passthrough â€”          // Eventizer holds the small state (turn boundary detection +
           // tool callId correlation) needed to translate LoopEvent
           // shape into typed Event variants. Sink + eventizer share the
           // App's lifetime; nothing reads the artifact yet (future
@@ -3690,12 +3692,12 @@ function AppInner({
         if (pendingPlan) {
           const questions = extractOpenQuestionsSection(pendingPlan) ?? undefined;
           if (questions) {
-            // Plan flagged open questions â€?keep the staged input so the user
+            // Plan flagged open questions â€” keep the staged input so the user
             // can answer them before approve goes through.
             setStagedInput({ plan: pendingPlan, mode: "approve", questions });
             setPendingPlan(null);
           } else {
-            // No open questions â†?Accept should execute the plan, not stop
+            // No open questions â†’ Accept should execute the plan, not stop
             // for an optional-guidance step. Resolve the gate directly via the
             // same path handleStagedInputSubmit uses for explicit-feedback
             // approvals so plan-card setup and lifecycle hooks stay in sync.
@@ -3709,7 +3711,7 @@ function AppInner({
           }
           return;
         }
-        // `/apply-plan` slash fallback â€?model wrote a plan in assistant text
+        // `/apply-plan` slash fallback â€” model wrote a plan in assistant text
         // instead of calling submit_plan, so there's no pending gate to resolve.
         // Surface the staged input so we still capture the implement-now intent.
         setStagedInput({ plan: "", mode: "approve" });
@@ -3978,7 +3980,7 @@ function AppInner({
           if (p.completion?.kind === "step_completed") {
             pendingStepCompletionsRef.current.set(p.stepId, p.completion);
           }
-          // completed/total come from planStepsRef â€?don't have them via gate.
+          // completed/total come from planStepsRef â€” don't have them via gate.
           const total = planStepsRef.current?.length ?? 0;
           const completed = completedCountIncludingStep(
             completedStepIdsRef.current,
@@ -4246,7 +4248,7 @@ function AppInner({
       planStepsRef.current = merged;
       engineeringLifecycleRef.current?.recordPlanRevised(snap.remainingSteps);
       persistPlanState();
-      // Replace the live active card so PlanLiveRow shows the new tail â€?     // existing card's stale ids would fail subsequent step completes.
+      // Replace the live active card so PlanLiveRow shows the new tail â€”      // existing card's stale ids would fail subsequent step completes.
       agentStore.dispatch({ type: "plan.drop" });
       log.showPlan({
         title: planSummaryRef.current ?? "plan",
@@ -4545,7 +4547,7 @@ function AppInner({
                       try {
                         saveModel(outcome.id);
                       } catch {
-                        /* disk full / perms â€?runtime change still took effect */
+                        /* disk full / perms â€” runtime change still took effect */
                       }
                       log.pushInfo(`model: ${outcome.id}`);
                       return;
@@ -4559,7 +4561,7 @@ function AppInner({
                       try {
                         saveReasoningEffort(outcome.effort);
                       } catch {
-                        /* disk full / perms â€?runtime change still took effect */
+                        /* disk full / perms â€” runtime change still took effect */
                       }
                       log.pushInfo(`effort: ${outcome.effort}`);
                     }

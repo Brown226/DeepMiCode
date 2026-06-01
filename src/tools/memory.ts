@@ -1,4 +1,4 @@
-/** Writes are eager but the prefix is NOT re-loaded mid-session â€?keeps prompt-cache stable. */
+/** Writes are eager but the prefix is NOT re-loaded mid-session â€” keeps prompt-cache stable. */
 
 import { loadMemoryTypeRegistry } from "../config.js";
 import {
@@ -39,7 +39,7 @@ export function registerMemoryTools(
   registry.register({
     name: "remember",
     description:
-      "Save a memory for future sessions â€?preferences, corrections, non-obvious project facts. Not for transient task state. Loads into the system prompt on next `/new` or launch.",
+      "Save a memory for future sessions â€” preferences, corrections, non-obvious project facts. Not for transient task state. Loads into the system prompt on next `/new` or launch.",
     parameters: {
       type: "object",
       properties: {
@@ -60,7 +60,7 @@ export function registerMemoryTools(
         },
         description: {
           type: "string",
-          description: "â‰?50 char one-liner shown in MEMORY.md.",
+          description: "â‰¤150 char one-liner shown in MEMORY.md.",
         },
         content: {
           type: "string",
@@ -70,7 +70,7 @@ export function registerMemoryTools(
         priority: {
           type: "string",
           enum: ["low", "medium", "high"],
-          description: "`high` injects entry into HIGH PRIORITY block â€?use sparingly.",
+          description: "`high` injects entry into HIGH PRIORITY block â€” use sparingly.",
         },
         expires: {
           type: "string",
@@ -109,13 +109,13 @@ export function registerMemoryTools(
         // The return text is load-bearing: it's the ONLY thing keeping
         // the fact visible within the current session, because the
         // prefix isn't re-hashed mid-session (Pillar 1). R1 reads this
-        // on its next turn â€?the wording is deliberately imperative so
+        // on its next turn â€” the wording is deliberately imperative so
         // it doesn't get ignored in favor of explore-first behavior.
         return [
-          `âœ?REMEMBERED (${args.scope}/${key}): ${args.description}`,
+          `âœ“ REMEMBERED (${args.scope}/${key}): ${args.description}`,
           "",
           "TREAT THIS AS ESTABLISHED FACT for the rest of this session.",
-          "The user just told you â€?don't re-explore the filesystem to re-derive it.",
+          "The user just told you â€” don't re-explore the filesystem to re-derive it.",
           `(Saved to ${path}; pins into the system prompt on next /new or launch.)`,
         ].join("\n");
       } catch (err) {
@@ -127,7 +127,7 @@ export function registerMemoryTools(
   registry.register({
     name: "forget",
     description:
-      "Delete a memory file and remove it from MEMORY.md. Use when the user explicitly asks to forget something, or when a previously-remembered fact has become wrong. Irreversible â€?no tombstone.",
+      "Delete a memory file and remove it from MEMORY.md. Use when the user explicitly asks to forget something, or when a previously-remembered fact has become wrong. Irreversible â€” no tombstone.",
     parameters: {
       type: "object",
       properties: {
@@ -156,7 +156,7 @@ export function registerMemoryTools(
   registry.register({
     name: "recall_memory",
     description:
-      "Read the full body of a memory file when its MEMORY.md one-liner (already in the system prompt) isn't enough detail. Most of the time the index suffices â€?only call this when the user's question genuinely requires the full context.",
+      "Read the full body of a memory file when its MEMORY.md one-liner (already in the system prompt) isn't enough detail. Most of the time the index suffices â€” only call this when the user's question genuinely requires the full context.",
     readOnly: true,
     parallelSafe: true,
     parameters: {

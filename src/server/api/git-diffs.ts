@@ -1,7 +1,7 @@
 import { execSync } from "node:child_process";
 import type { ApiResult } from "../router.js";
 
-// TODO(#618): Source is git diff HEAD â€?includes user's pre-DeepMiCode
+// TODO(#618): Source is git diff HEAD â€” includes user's pre-DeepMiCode
 // uncommitted changes. Read-only safe, but any "restore working tree to
 // HEAD" feature must route through CheckpointStore so it doesn't clobber
 // user's own changes.

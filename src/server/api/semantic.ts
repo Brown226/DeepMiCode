@@ -148,7 +148,7 @@ async function getStatus(ctx: DashboardContext): Promise<ApiResult> {
       body: {
         attached: false,
         reason:
-          "Semantic indexing requires a code-mode session â€?run `/dashboard` from inside `deepmicode code` instead of standalone `deepmicode dashboard`.",
+          "Semantic indexing requires a code-mode session â€” run `/dashboard` from inside `deepmicode code` instead of standalone `deepmicode dashboard`.",
       },
     };
   }
@@ -356,7 +356,7 @@ async function startJob(body: string, ctx: DashboardContext): Promise<ApiResult>
   if (!root) {
     return {
       status: 400,
-      body: { error: "no project root â€?only available in attached (code-mode) dashboards" },
+      body: { error: "no project root â€” only available in attached (code-mode) dashboards" },
     };
   }
   const existing = JOBS.get(root);

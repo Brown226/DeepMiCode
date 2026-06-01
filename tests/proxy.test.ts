@@ -368,7 +368,9 @@ describe("resolveBypassDeepSeekDirect (#1497)", () => {
 
   it("env truthy values force the bypass back on (override config false)", () => {
     for (const v of ["1", "true", "yes", "on", "TRUE", "Yes"]) {
-      expect(resolveBypassDeepSeekDirect({ deepmicode_PROXY_DEEPSEEK_DIRECT: v }, false)).toBe(true);
+      expect(resolveBypassDeepSeekDirect({ deepmicode_PROXY_DEEPSEEK_DIRECT: v }, false)).toBe(
+        true,
+      );
     }
   });
 

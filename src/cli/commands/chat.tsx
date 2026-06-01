@@ -53,7 +53,7 @@ export interface ChatOptions {
   rebuildSystem?: () => string;
   transcript?: string;
   /**
-   * Soft USD cap on session spend. Undefined â†?no cap (default).
+   * Soft USD cap on session spend. Undefined â†’ no cap (default).
    * The loop warns once at 80% and refuses to start a new turn at
    * 100%. Users can bump or clear via `/budget <usd>` / `/budget off`
    * mid-session.
@@ -62,7 +62,7 @@ export interface ChatOptions {
   session?: string;
   /** Zero or more MCP server specs. Each: `"name=cmd args..."` or `"cmd args..."`. */
   mcp?: string[];
-  /** Global prefix â€?only used when a single anonymous server is given. */
+  /** Global prefix â€” only used when a single anonymous server is given. */
   mcpPrefix?: string;
   /**
    * Pre-built ToolRegistry used as a seed. MCP bridges (if any) are
@@ -79,20 +79,20 @@ export interface ChatOptions {
     rootDir: string;
     jobs?: import("../../tools/jobs.js").JobRegistry;
     /**
-     * `/cwd <path>` callback â€?re-registers every rootDir-dependent
+     * `/cwd <path>` callback â€” re-registers every rootDir-dependent
      * native tool against the new path. Optional so embedders that
      * don't want live cwd switching can omit it (the slash command
      * then falls back to non-tool updates only).
      */
     reregisterTools?: (rootDir: string) => void;
-    /** Async tail of `/cwd` â€?re-probe the new dir for a semantic index. */
+    /** Async tail of `/cwd` â€” re-probe the new dir for a semantic index. */
     reBootstrapSemantic?: (rootDir: string) => Promise<{ enabled: boolean }>;
-    /** Notify the launcher that the workspace root just changed â€?lets the rebuildSystem closure see the new dir. */
+    /** Notify the launcher that the workspace root just changed â€” lets the rebuildSystem closure see the new dir. */
     onRootChange?: (newRoot: string) => void;
   };
-  /** Skip the session picker â€?assume "Resume" (backwards-compatible auto-continue). */
+  /** Skip the session picker â€” assume "Resume" (backwards-compatible auto-continue). */
   forceResume?: boolean;
-  /** Skip the session picker â€?assume "New" (wipe the session file and start fresh). */
+  /** Skip the session picker â€” assume "New" (wipe the session file and start fresh). */
   forceNew?: boolean;
   /**
    * When true, suppress auto-launch of the embedded web dashboard.
@@ -121,7 +121,7 @@ interface RootProps extends ChatOptions {
   progressSink: { current: ((info: ProgressInfo) => void) | null };
   /** Show the SessionPicker (full list) when no --session was specified and saved sessions exist. */
   showPicker: boolean;
-  /** Hot-reload runtime â€?passed through to App so /mcp browse + dashboard can bridge after install. */
+  /** Hot-reload runtime â€” passed through to App so /mcp browse + dashboard can bridge after install. */
   mcpRuntime: McpRuntime;
   /** One-time startup info rows shown after App mounts. */
   startupInfoHints: string[];
@@ -267,7 +267,7 @@ export async function chatCommand(opts: ChatOptions): Promise<void> {
   // the App has mounted) are dropped rather than buffered.
   const progressSink: { current: ((info: ProgressInfo) => void) | null } = { current: null };
   // Seed registry from the caller (e.g. deepmicode code's native
-  // filesystem tools) â€?MCP bridges layer on top rather than
+  // filesystem tools) â€” MCP bridges layer on top rather than
   // replacing. When no seed AND no MCP, tools stays undefined and
   // the loop runs as a bare chat.
   let tools: ToolRegistry | undefined = opts.seedTools;
@@ -294,7 +294,7 @@ export async function chatCommand(opts: ChatOptions): Promise<void> {
     progressSink,
   });
 
-  // MCP bridging deferred to App.tsx mount â€?handshakes are 100msâ€?s each
+  // MCP bridging deferred to App.tsx mount â€” handshakes are 100msâ€“2s each
   // and we don't want the alt-screen UI to block on the slowest one.
   const mcpSpecs = [...requestedSpecs];
   const mcpServers: McpServerSummary[] = [];
@@ -317,7 +317,7 @@ export async function chatCommand(opts: ChatOptions): Promise<void> {
     registerWebTools(tools);
   }
 
-  // Memory tools â€?available in every session, not just code mode.
+  // Memory tools â€” available in every session, not just code mode.
   // Chat-mode callers get global scope only; project scope requires
   // the seedTools path from `deepmicode code` (which registers its own
   // MemoryStore bound to rootDir before chatCommand runs).
@@ -327,7 +327,7 @@ export async function chatCommand(opts: ChatOptions): Promise<void> {
   if (!opts.seedTools) {
     if (!tools) tools = new ToolRegistry({ rateLimit: loadToolRateLimit() });
     registerMemoryTools(tools, {});
-    // `ask_choice` â€?branching primitive, useful in chat too (stylistic
+    // `ask_choice` â€” branching primitive, useful in chat too (stylistic
     // preferences, doc language, library picks). Independent of plan
     // mode, which chat doesn't have anyway.
     registerChoiceTool(tools);
@@ -368,7 +368,7 @@ export async function chatCommand(opts: ChatOptions): Promise<void> {
     }
   }
 
-  // Before render() â€?shims Ink's per-card useBoxMetrics resize subscribe
+  // Before render() â€” shims Ink's per-card useBoxMetrics resize subscribe
   // path so N cards don't accumulate N native stdout listeners.
   installResizeBroadcaster();
 

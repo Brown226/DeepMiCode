@@ -24,7 +24,7 @@ export interface ReplayAppProps {
 export function ReplayApp({ meta, pages }: ReplayAppProps) {
   const { exit } = useApp();
   const maxIdx = Math.max(0, pages.length - 1);
-  // Start at the last page �?more useful than "start from the beginning"
+  // Start at the last page — more useful than "start from the beginning"
   // in practice: users mostly want to see the summary + last turn first.
   const [idx, setIdx] = useState(maxIdx);
 
@@ -58,7 +58,7 @@ export function ReplayApp({ meta, pages }: ReplayAppProps) {
     claudeEquivalentUsd: cumStats.claudeEquivalentUsd,
     savingsVsClaudePct: cumStats.savingsVsClaudePct,
     cacheHitRatio: cumStats.cacheHitRatio,
-    // Replay is read-only �?no live last-turn prompt tokens to show.
+    // Replay is read-only — no live last-turn prompt tokens to show.
     lastPromptTokens: 0,
     lastTurnCostUsd: 0,
   };
@@ -107,8 +107,8 @@ export function ReplayApp({ meta, pages }: ReplayAppProps) {
 
       <Box marginTop={1} paddingX={1} borderStyle="single" borderColor="ansi:blackBright">
         <Text dim>
-          <Text bold>j</Text>/<Text bold>�?/Text>/<Text bold>space</Text> next · <Text bold>k</Text>
-          /<Text bold>�?/Text> prev · <Text bold>g</Text> first · <Text bold>G</Text> last ·{" "}
+          <Text bold>j</Text>/<Text bold>↓</Text>/<Text bold>space</Text> next · <Text bold>k</Text>
+          /<Text bold>↑</Text> prev · <Text bold>g</Text> first · <Text bold>G</Text> last ·{" "}
           <Text bold>q</Text> quit
         </Text>
       </Box>
