@@ -110,7 +110,7 @@ function readRecentCommits(): string {
 }
 
 async function draftMessage(
-  client: DeepSeekClient,
+  client: LLMProvider,
   model: string,
   diff: DiffResult,
   recentCommits: string,

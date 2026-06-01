@@ -10,6 +10,7 @@ import {
   TUI_FORMATTING_RULES,
   escalationContract,
 } from "../prompt-fragments.js";
+import type { LLMProvider } from "../providers/types.js";
 import { ToolRegistry } from "../tools.js";
 import { SUBAGENT_TYPE_NAMES, getSubagentType } from "./subagent-types.js";
 
@@ -52,7 +53,7 @@ export interface SubagentSink {
 export const SHARED_SUBAGENT_SINK: SubagentSink = { current: null };
 
 export interface SpawnSubagentOptions {
-  client: DeepSeekClient;
+  client: LLMProvider;
   parentRegistry: ToolRegistry;
   system: string;
   task: string;

@@ -32,7 +32,7 @@ export function useSessionInfo(loop: CacheFirstLoop): UseSessionInfoResult {
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const bal = await loop.client.getBalance().catch(() => null);
+      const bal = await loop.client.getBalance?.().catch(() => null);
       if (cancelled || !bal) return;
       const primary = pickPrimaryBalance(bal.balance_infos);
       if (!primary) return;
@@ -49,7 +49,7 @@ export function useSessionInfo(loop: CacheFirstLoop): UseSessionInfoResult {
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const list = await loop.client.listModels().catch(() => null);
+      const list = await loop.client.listModels?.().catch(() => null);
       if (cancelled || !list) return;
       setModels(list.data.map((m) => m.id));
     })();
@@ -80,7 +80,7 @@ export function useSessionInfo(loop: CacheFirstLoop): UseSessionInfoResult {
 
   const refreshBalance = useCallback(() => {
     void (async () => {
-      const bal = await loop.client.getBalance().catch(() => null);
+      const bal = await loop.client.getBalance?.().catch(() => null);
       const primary = bal ? pickPrimaryBalance(bal.balance_infos) : null;
       if (primary) {
         setBalance({ currency: primary.currency, total: Number(primary.total_balance) });
@@ -90,7 +90,7 @@ export function useSessionInfo(loop: CacheFirstLoop): UseSessionInfoResult {
 
   const refreshModels = useCallback(() => {
     void (async () => {
-      const list = await loop.client.listModels().catch(() => null);
+      const list = await loop.client.listModels?.().catch(() => null);
       if (list) setModels(list.data.map((m) => m.id));
     })();
   }, [loop]);

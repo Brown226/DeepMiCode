@@ -765,7 +765,7 @@ function emitQQSettings(tab: Tab): void {
 
 async function emitBalance(tab: Tab): Promise<void> {
   if (!tab.runtime) return;
-  const bal = await tab.runtime.loop.client.getBalance().catch(() => null);
+  const bal = await tab.runtime.loop.client.getBalance?.().catch(() => null);
   if (!bal) return;
   const primary = pickPrimaryBalance(bal.balance_infos);
   if (!primary) return;
