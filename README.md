@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
   <img src="docs/logo.svg" alt="DeepMiCode" width="640"/>
 </p>
 
@@ -31,29 +31,29 @@
 </p>
 
 <p align="center">
-  <a href="https://oosmetrics.com/repo/esengine/reasonix"><img src="https://api.oosmetrics.com/api/v1/badge/achievement/9e931d80-2050-4b10-902e-44970cc133ad.svg" alt="oosmetrics — Top 2 in Agents by velocity"/></a>
-  <a href="https://oosmetrics.com/repo/esengine/reasonix"><img src="https://api.oosmetrics.com/api/v1/badge/achievement/556d94b3-61b7-486b-baf2-888b9327deab.svg" alt="oosmetrics — Top 3 in LLMs by velocity"/></a>
-  <a href="https://oosmetrics.com/repo/esengine/reasonix"><img src="https://api.oosmetrics.com/api/v1/badge/achievement/0f457d4c-efca-4d15-ad2b-139691ff342c.svg" alt="oosmetrics — Top 3 in CLI by velocity"/></a>
+  <a href="https://oosmetrics.com/repo/esengine/deepmicode"><img src="https://api.oosmetrics.com/api/v1/badge/achievement/9e931d80-2050-4b10-902e-44970cc133ad.svg" alt="oosmetrics — Top 2 in Agents by velocity"/></a>
+  <a href="https://oosmetrics.com/repo/esengine/deepmicode"><img src="https://api.oosmetrics.com/api/v1/badge/achievement/556d94b3-61b7-486b-baf2-888b9327deab.svg" alt="oosmetrics — Top 3 in LLMs by velocity"/></a>
+  <a href="https://oosmetrics.com/repo/esengine/deepmicode"><img src="https://api.oosmetrics.com/api/v1/badge/achievement/0f457d4c-efca-4d15-ad2b-139691ff342c.svg" alt="oosmetrics — Top 3 in CLI by velocity"/></a>
 </p>
 
 <br/>
 
 <h3 align="center">DeepMiCode — DeepSeek + Mimo AI coding agent for your terminal.</h3>
-<p align="center">Built on DeepSeek-Reasonix, engineered around prefix-cache stability — so token costs stay low across long sessions.</p>
+<p align="center">Built on DeepSeek-deepmicode, engineered around prefix-cache stability — so token costs stay low across long sessions.</p>
 
 <br/>
 
 <p align="center">
-  <img src="docs/assets/hero-terminal.svg" alt="Reasonix code mode — assistant proposes a SEARCH/REPLACE edit; nothing on disk until /apply" width="860"/>
+  <img src="docs/assets/hero-terminal.svg" alt="deepmicode code mode — assistant proposes a SEARCH/REPLACE edit; nothing on disk until /apply" width="860"/>
 </p>
 
 <br/>
 
 > [!TIP]
-> **Cache stability isn't a feature you turn on; it's an invariant the loop is designed around.** That's the whole reason Reasonix is DeepSeek-only — every layer is tuned to the byte-stable prefix-cache mechanic.
+> **Cache stability isn't a feature you turn on; it's an invariant the loop is designed around.** That's the whole reason deepmicode is DeepSeek-only — every layer is tuned to the byte-stable prefix-cache mechanic.
 
 > [!NOTE]
-> **Real user, single day (2026-05-01):** 435M input tokens, **99.82% cache hit**, ~$12 instead of the ~$61 the same workload would cost with no cache on `v4-flash` — see the [case study](./benchmarks/real-world-cache/README.md). DeepSeek provides the cacheable bytes; the four mechanisms in [Pillar 1](./docs/ARCHITECTURE.md#pillar-1--cache-first-loop) are how Reasonix keeps them cacheable across long sessions.
+> **Real user, single day (2026-05-01):** 435M input tokens, **99.82% cache hit**, ~$12 instead of the ~$61 the same workload would cost with no cache on `v4-flash` — see the [case study](./benchmarks/real-world-cache/README.md). DeepSeek provides the cacheable bytes; the four mechanisms in [Pillar 1](./docs/ARCHITECTURE.md#pillar-1--cache-first-loop) are how deepmicode keeps them cacheable across long sessions.
 
 > [!IMPORTANT]
 > **Community · 加入社区** — bilingual Discord with channels for setup help (`#help` / `#求助`), workflow showcases, feature ideas, and contributor-only PR coordination. Verify your GitHub in-server to get the **Contributor** role automatically. → **<https://discord.gg/XF78rEME2D>**
@@ -64,41 +64,41 @@
 
 Requires Node ≥ 22. Works on macOS · Linux · Windows (PowerShell · Git Bash · Windows Terminal).
 
-Install Reasonix globally if you want the `reasonix` command available on your `PATH`:
+Install deepmicode globally if you want the `deepmicode` command available on your `PATH`:
 
 ~~~bash
-npm install -g reasonix
-reasonix code my-project   # paste a DeepSeek API key on first run; persists after
+npm install -g deepmicode
+deepmicode code my-project   # paste a DeepSeek API key on first run; persists after
 ~~~
 
 Or run it once without installing globally:
 
 ~~~bash
 cd my-project
-npx reasonix code          # always uses the latest package by default
+npx deepmicode code          # always uses the latest package by default
 ~~~
 
-Grab a [DeepSeek API key →](https://platform.deepseek.com/api_keys) · `reasonix code --help` for flags.
+Grab a [DeepSeek API key →](https://platform.deepseek.com/api_keys) · `deepmicode code --help` for flags.
 
-If you use Reasonix daily, global install is the simplest path. If you just want to try it, use `npx`.
+If you use deepmicode daily, global install is the simplest path. If you just want to try it, use `npx`.
 
 **Prefer fewer keystrokes?** The shorter `dsnix` alias resolves to the same CLI:
 
 ~~~bash
-npm install -g dsnix       # exposes `dsnix` on PATH, depends on reasonix
+npm install -g dsnix       # exposes `dsnix` on PATH, depends on deepmicode
 npx dsnix@latest code      # one-shot via the shorter command
 ~~~
 
-A global `npm install -g reasonix` also drops a `dsnix` shim on PATH, so the two are interchangeable.
+A global `npm install -g deepmicode` also drops a `dsnix` shim on PATH, so the two are interchangeable.
 
-Bare `reasonix` (no subcommand) launches `code` in the current directory — typing `reasonix` and `reasonix code` are equivalent.
+Bare `deepmicode` (no subcommand) launches `code` in the current directory — typing `deepmicode` and `deepmicode code` are equivalent.
 
 | Command | When |
 |---|---|
-| `reasonix` / `reasonix code [dir]` | The coding agent. **Start here.** |
-| `reasonix chat` | Plain chat — no filesystem or shell tools. |
-| `reasonix run "task"` | One-shot, streams to stdout. Good for pipes. |
-| `reasonix doctor` | Health check: Node, API key, MCP wiring. |
+| `deepmicode` / `deepmicode code [dir]` | The coding agent. **Start here.** |
+| `deepmicode chat` | Plain chat — no filesystem or shell tools. |
+| `deepmicode run "task"` | One-shot, streams to stdout. Good for pipes. |
+| `deepmicode doctor` | Health check: Node, API key, MCP wiring. |
 | `deepmicode update` | Upgrade DeepMiCode itself. |
 
 Other subcommands (`replay` · `diff` · `events` · `stats` · `index` · `mcp` · `prune-sessions`) are in `deepmicode --help`.
@@ -129,10 +129,10 @@ The CLI remains the canonical surface. Anything that lands in the CLI is also av
 <details>
 <summary><strong>Working in another folder · chat vs. code · author a skill</strong></summary>
 
-**Working in a different folder.** Reasonix scopes filesystem tools to the launch directory; pass `--dir` to retarget. Mid-session switching isn't supported by design (memory paths would tangle with stale roots) — quit and relaunch.
+**Working in a different folder.** deepmicode scopes filesystem tools to the launch directory; pass `--dir` to retarget. Mid-session switching isn't supported by design (memory paths would tangle with stale roots) — quit and relaunch.
 
 ~~~bash
-npx reasonix code --dir /path/to/project
+npx deepmicode code --dir /path/to/project
 ~~~
 
 **Picking `chat` vs `code`.** `code` is the default and the only mode with filesystem / shell tools and SEARCH/REPLACE review. `chat` is the lighter, tools-off shell — reach for it when you want a thinking partner with MCP attached but no disk access.
@@ -151,15 +151,15 @@ npx reasonix code --dir /path/to/project
 **Author your first skill.** No remote registry — write them directly. Edit the file (`description:` frontmatter + body), then `/skill list`. Add `runAs: subagent` to spawn an isolated subagent loop instead of inlining the body.
 
 ~~~bash
-/skill new my-skill              # <project>/.reasonix/skills/my-skill.md
-/skill new my-skill --global     # ~/.reasonix/skills for cross-project use
+/skill new my-skill              # <project>/.deepmicode/skills/my-skill.md
+/skill new my-skill --global     # ~/.deepmicode/skills for cross-project use
 ~~~
 
-**Claude-format skills also load.** `<project>/.claude/skills/<name>/SKILL.md` and `~/.claude/skills/` are read alongside Reasonix's native paths, so tooling that emits Claude-format skills works out of the box. Example — drop OpenSpec workflows in without an upstream adapter:
+**Claude-format skills also load.** `<project>/.claude/skills/<name>/SKILL.md` and `~/.claude/skills/` are read alongside deepmicode's native paths, so tooling that emits Claude-format skills works out of the box. Example — drop OpenSpec workflows in without an upstream adapter:
 
 ~~~bash
 npx openspec init --tools claude    # writes .claude/skills/openspec-*/SKILL.md
-/skill openspec-propose <task>      # then invoke from Reasonix
+/skill openspec-propose <task>      # then invoke from deepmicode
 ~~~
 
 </details>
@@ -182,7 +182,7 @@ One JSON file at `~/.deepmicode/config.json` plus per-project overrides under `<
 
 <br/>
 
-## What makes Reasonix different
+## What makes deepmicode different
 
 The loop is organized around three pillars. Each one solves a problem generic agent frameworks don't even see — because they were designed for a different cache mechanic.
 
@@ -197,14 +197,14 @@ Click through to the full architecture writeup → [Pillar 1 — Cache-first loo
 ## Capabilities
 
 <p align="center">
-  <img src="docs/assets/feature-grid.svg" alt="Reasonix capabilities — cell-diff renderer, MCP, plan mode, permissions, dashboard, persistent sessions, hooks/skills/memory, semantic search, auto-checkpoints, /effort knob, transcript replay, event log" width="880"/>
+  <img src="docs/assets/feature-grid.svg" alt="deepmicode capabilities — cell-diff renderer, MCP, plan mode, permissions, dashboard, persistent sessions, hooks/skills/memory, semantic search, auto-checkpoints, /effort knob, transcript replay, event log" width="880"/>
 </p>
 
 <br/>
 
 ## How it compares
 
-|                                   | Reasonix         | Claude Code       | Cursor              | Aider              |
+|                                   | deepmicode         | Claude Code       | Cursor              | Aider              |
 |-----------------------------------|------------------|-------------------|---------------------|--------------------|
 | Backend                           | DeepSeek         | Anthropic         | OpenAI / Anthropic  | any (OpenRouter)   |
 | License                           | **MIT**          | closed            | closed              | Apache 2           |
@@ -254,12 +254,12 @@ Scoped starter tickets — each with background, code pointers, acceptance crite
 ## Non-goals
 
 > [!IMPORTANT]
-> Reasonix is opinionated. Some things it deliberately *doesn't* do — listed here so you can pick the right tool for your work.
+> deepmicode is opinionated. Some things it deliberately *doesn't* do — listed here so you can pick the right tool for your work.
 
 - **Multi-provider flexibility.** DeepSeek-only on purpose. Coupling to one backend is the feature, not a limitation.
 - **IDE integration.** Terminal-first. The diff lives in `git diff`, the file tree in `ls`. The dashboard is a companion, not a Cursor replacement.
 - **Hardest-leaderboard reasoning.** Claude Opus still wins some benchmarks. DeepSeek is competitive on coding; if your work is "solve this PhD proof" rather than "fix this auth bug," start with Claude.
-- **Air-gapped / fully-free.** Reasonix needs a paid DeepSeek API key. For air-gapped or zero-cost runs see Aider + Ollama or [Continue](https://continue.dev).
+- **Air-gapped / fully-free.** deepmicode needs a paid DeepSeek API key. For air-gapped or zero-cost runs see Aider + Ollama or [Continue](https://continue.dev).
 
 <br/>
 
@@ -288,10 +288,10 @@ If DeepMiCode has been useful and you'd like to say thanks, you can. It stays a 
 
 ## Acknowledgments
 
-A small list of folks whose work has shaped Reasonix the most — measured
+A small list of folks whose work has shaped deepmicode the most — measured
 by both commit count and code volume. **Listed alphabetically, no ordering
 of importance.** The full contributor graph is on
-[GitHub](https://github.com/esengine/DeepSeek-Reasonix/graphs/contributors).
+[GitHub](https://github.com/esengine/DeepSeek-deepmicode/graphs/contributors).
 
 - [**ctharvey**](https://github.com/ctharvey)
 - [**dimasd-angga**](https://github.com/dimasd-angga) (Dimas D. Angga)
