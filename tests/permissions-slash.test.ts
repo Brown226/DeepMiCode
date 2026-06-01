@@ -1,4 +1,4 @@
-import { existsSync, mkdtempSync, rmSync } from "node:fs";
+﻿import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -25,10 +25,10 @@ describe("/permissions slash handler", () => {
   const originalUserProfile = process.env.USERPROFILE;
 
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-perms-slash-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-perms-slash-"));
     cfgPath = join(dir, "config.json");
     projectRoot = join(dir, "project");
-    // Redirect ~/.reasonix → temp dir so the handler's calls (which use
+    // Redirect ~/.deepmicode → temp dir so the handler's calls (which use
     // defaultConfigPath) land in `cfgPath`. config.test.ts skips this by
     // passing `path` explicitly to every helper, but the slash handler
     // hardcodes the default — so we have to redirect HOME instead.
@@ -69,8 +69,8 @@ describe("/permissions slash handler", () => {
   });
 
   it("bare /permissions lists project entries with 1-based indices", () => {
-    addProjectShellAllowed(projectRoot, "npm run build", join(dir, ".reasonix", "config.json"));
-    addProjectShellAllowed(projectRoot, "deploy.sh", join(dir, ".reasonix", "config.json"));
+    addProjectShellAllowed(projectRoot, "npm run build", join(dir, ".deepmicode", "config.json"));
+    addProjectShellAllowed(projectRoot, "deploy.sh", join(dir, ".deepmicode", "config.json"));
     const result = handleSlash("permissions", [], makeLoop(), {
       codeRoot: projectRoot,
       editMode: "review",
@@ -84,7 +84,7 @@ describe("/permissions slash handler", () => {
       codeRoot: projectRoot,
     });
     expect(result.info).toMatch(/added.*npm run build/);
-    expect(loadProjectShellAllowed(projectRoot, join(dir, ".reasonix", "config.json"))).toContain(
+    expect(loadProjectShellAllowed(projectRoot, join(dir, ".deepmicode", "config.json"))).toContain(
       "npm run build",
     );
   });
@@ -100,11 +100,11 @@ describe("/permissions slash handler", () => {
     });
     expect(result.info).toMatch(/builtin allowlist/i);
     // Should NOT have written a redundant project entry.
-    expect(loadProjectShellAllowed(projectRoot, join(dir, ".reasonix", "config.json"))).toEqual([]);
+    expect(loadProjectShellAllowed(projectRoot, join(dir, ".deepmicode", "config.json"))).toEqual([]);
   });
 
   it("/permissions remove drops by exact prefix", () => {
-    const cfgFile = join(dir, ".reasonix", "config.json");
+    const cfgFile = join(dir, ".deepmicode", "config.json");
     addProjectShellAllowed(projectRoot, "npm run build", cfgFile);
     addProjectShellAllowed(projectRoot, "deploy.sh", cfgFile);
     const result = handleSlash("permissions", ["remove", "deploy.sh"], makeLoop(), {
@@ -115,7 +115,7 @@ describe("/permissions slash handler", () => {
   });
 
   it("/permissions remove drops by 1-based project index", () => {
-    const cfgFile = join(dir, ".reasonix", "config.json");
+    const cfgFile = join(dir, ".deepmicode", "config.json");
     addProjectShellAllowed(projectRoot, "alpha", cfgFile);
     addProjectShellAllowed(projectRoot, "beta", cfgFile);
     addProjectShellAllowed(projectRoot, "gamma", cfgFile);
@@ -127,7 +127,7 @@ describe("/permissions slash handler", () => {
   });
 
   it("/permissions remove flags an out-of-range index", () => {
-    const cfgFile = join(dir, ".reasonix", "config.json");
+    const cfgFile = join(dir, ".deepmicode", "config.json");
     addProjectShellAllowed(projectRoot, "alpha", cfgFile);
     const result = handleSlash("permissions", ["remove", "5"], makeLoop(), {
       codeRoot: projectRoot,
@@ -151,7 +151,7 @@ describe("/permissions slash handler", () => {
   });
 
   it("/permissions clear without 'confirm' asks for confirmation", () => {
-    const cfgFile = join(dir, ".reasonix", "config.json");
+    const cfgFile = join(dir, ".deepmicode", "config.json");
     addProjectShellAllowed(projectRoot, "alpha", cfgFile);
     addProjectShellAllowed(projectRoot, "beta", cfgFile);
     const result = handleSlash("permissions", ["clear"], makeLoop(), { codeRoot: projectRoot });
@@ -160,7 +160,7 @@ describe("/permissions slash handler", () => {
   });
 
   it("/permissions clear confirm wipes the project list", () => {
-    const cfgFile = join(dir, ".reasonix", "config.json");
+    const cfgFile = join(dir, ".deepmicode", "config.json");
     addProjectShellAllowed(projectRoot, "alpha", cfgFile);
     addProjectShellAllowed(projectRoot, "beta", cfgFile);
     const result = handleSlash("permissions", ["clear", "confirm"], makeLoop(), {
@@ -172,11 +172,11 @@ describe("/permissions slash handler", () => {
 
   it("mutating subcommands refuse without a codeRoot", () => {
     const r1 = handleSlash("permissions", ["add", "lint"], makeLoop(), {});
-    expect(r1.info).toMatch(/only available inside `reasonix code`/);
+    expect(r1.info).toMatch(/only available inside `deepmicode code`/);
     const r2 = handleSlash("permissions", ["remove", "lint"], makeLoop(), {});
-    expect(r2.info).toMatch(/only available inside `reasonix code`/);
+    expect(r2.info).toMatch(/only available inside `deepmicode code`/);
     const r3 = handleSlash("permissions", ["clear", "confirm"], makeLoop(), {});
-    expect(r3.info).toMatch(/only available inside `reasonix code`/);
+    expect(r3.info).toMatch(/only available inside `deepmicode code`/);
   });
 
   it("'perms' is registered as an alias for 'permissions'", () => {

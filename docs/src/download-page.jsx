@@ -1,4 +1,4 @@
-// Dedicated /download page — hero + smart mirror grid + platform notes
+﻿// Dedicated /download page — hero + smart mirror grid + platform notes
 
 function buildPlatformNotes(version) { return {
   mac: {
@@ -9,7 +9,7 @@ function buildPlatformNotes(version) { return {
       en: 'Installers are not yet code-signed, so Gatekeeper blocks the first launch. Pick one:',
     },
     steps: [
-      { cmd: 'xattr -dr com.apple.quarantine /Applications/Reasonix.app', note: { zh: '终端一行解除隔离属性', en: 'One-liner to clear the quarantine attribute' } },
+      { cmd: 'xattr -dr com.apple.quarantine /Applications/deepmicode.app', note: { zh: '终端一行解除隔离属性', en: 'One-liner to clear the quarantine attribute' } },
       { cmd: 'right-click → Open → confirm', note: { zh: '在 Finder 中右键打开，确认一次后续不再询问', en: 'Right-click → Open → confirm once; macOS remembers afterwards' } },
     ],
   },
@@ -22,7 +22,7 @@ function buildPlatformNotes(version) { return {
     },
     steps: [
       { cmd: 'More info → Run anyway', note: { zh: '点 "更多信息" 然后 "仍要运行" 即可', en: 'Click "More info", then "Run anyway"' } },
-      { cmd: 'Get-AuthenticodeSignature .\\Reasonix_setup.exe', note: { zh: '可在 PowerShell 中校验文件 hash', en: 'Verify the file hash in PowerShell if you want' } },
+      { cmd: 'Get-AuthenticodeSignature .\\deepmicode_setup.exe', note: { zh: '可在 PowerShell 中校验文件 hash', en: 'Verify the file hash in PowerShell if you want' } },
     ],
   },
   linux: {
@@ -33,7 +33,7 @@ function buildPlatformNotes(version) { return {
       en: 'AppImages need an executable bit; some distros also need libfuse2:',
     },
     steps: [
-      { cmd: `chmod +x Reasonix_${version}_amd64.AppImage`, note: { zh: '赋予可执行权限', en: 'Mark it executable' } },
+      { cmd: `chmod +x deepmicode_${version}_amd64.AppImage`, note: { zh: '赋予可执行权限', en: 'Mark it executable' } },
       { cmd: 'sudo apt install libfuse2 # debian/ubuntu', note: { zh: 'AppImage 运行时依赖', en: 'AppImage runtime dependency' } },
     ],
   },
@@ -71,8 +71,8 @@ function DownloadHero() {
   const { version: rxVersion, status: rxStatus } = useVersion();
   const heroBadge =
     rxStatus === "ok" && rxVersion
-      ? `Reasonix Desktop · ${rxVersion}`
-      : t({ zh: "Reasonix Desktop · 正在获取版本…", en: "Reasonix Desktop · fetching version…" }, lang);
+      ? `deepmicode Desktop · ${rxVersion}`
+      : t({ zh: "deepmicode Desktop · 正在获取版本…", en: "deepmicode Desktop · fetching version…" }, lang);
   return (
     <section className="dl-hero">
       <div className="hero-head">
@@ -88,8 +88,8 @@ function DownloadHero() {
           }, lang) }}/>
           <p className="lede">
             {t({
-              zh: <>原生 <b>Tauri</b> 客户端 · 自带 Node runtime · 共享 <b>~/.reasonix</b> 配置与会话。多 tab 并行，右侧栏列出当前会话读过和改过的文件，底部 cost / cache / token 实时表盘。</>,
-              en: <>Native <b>Tauri</b> client · bundled Node runtime · shares <b>~/.reasonix</b> config + history with the CLI. Multi-tab sessions, side panel listing files read / edited this session, live cost / cache / token meters along the bottom.</>,
+              zh: <>原生 <b>Tauri</b> 客户端 · 自带 Node runtime · 共享 <b>~/.deepmicode</b> 配置与会话。多 tab 并行，右侧栏列出当前会话读过和改过的文件，底部 cost / cache / token 实时表盘。</>,
+              en: <>Native <b>Tauri</b> client · bundled Node runtime · shares <b>~/.deepmicode</b> config + history with the CLI. Multi-tab sessions, side panel listing files read / edited this session, live cost / cache / token meters along the bottom.</>,
             }, lang)}
           </p>
           <p className="lede-foot">
@@ -128,13 +128,13 @@ function CliAlt() {
         </div>
         <p className="section-sub">
           {t({
-            zh: '桌面端只是 CLI 的可视化伴侣。如果你日常就在终端里，直接 npx 拉起 reasonix code 即可，缓存策略、工具协议、记忆路径完全一致。',
+            zh: '桌面端只是 CLI 的可视化伴侣。如果你日常就在终端里，直接 npx 拉起 deepmicode code 即可，缓存策略、工具协议、记忆路径完全一致。',
             en: 'The desktop is just a visual front-end. If you live in the terminal, npx the CLI directly — same cache strategy, same tool protocol, same memory paths.',
           }, lang)}
         </p>
       </div>
       <div className="copy-block" style={{maxWidth: 640}}>
-        <span className="cmd"><span className="tok-cmt">$ </span>cd /path/to/my-project &amp;&amp; npx reasonix code</span>
+        <span className="cmd"><span className="tok-cmt">$ </span>cd /path/to/my-project &amp;&amp; npx deepmicode code</span>
       </div>
       <a className="btn btn-ghost" href="index.html#install" style={{marginTop: 22}}>
         {t({ zh: '查看完整安装指引 →', en: 'Full install guide →' }, lang)}

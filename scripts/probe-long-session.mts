@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Long-session probe — drives CacheFirstLoop through 20 real turns
  * with oversized tool results (each ~4k tokens, the size that USED to
  * trigger the old turn-end auto-compaction every turn).
@@ -6,7 +6,7 @@
  * Reports per-turn: prompt size, cache hit %, miss tokens, USD cost.
  * Surfaces: cache trajectory, cost shape, anything degrading over time.
  *
- * Run: REASONIX_LOG_LEVEL=ERROR npx tsx scripts/probe-long-session.mts
+ * Run: deepmicode_LOG_LEVEL=ERROR npx tsx scripts/probe-long-session.mts
  */
 
 import { readFileSync } from "node:fs";

@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+﻿import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -16,7 +16,7 @@ describe("transcript writer / reader round-trip", () => {
   let tmpDir: string;
 
   beforeAll(() => {
-    tmpDir = mkdtempSync(join(tmpdir(), "reasonix-test-"));
+    tmpDir = mkdtempSync(join(tmpdir(), "deepmicode-test-"));
   });
 
   afterAll(() => {
@@ -30,7 +30,7 @@ describe("transcript writer / reader round-trip", () => {
       source: "test",
       model: "deepseek-chat",
       task: "t01",
-      mode: "reasonix",
+      mode: "deepmicode",
       repeat: 1,
       startedAt: "2026-04-21T00:00:00Z",
     });

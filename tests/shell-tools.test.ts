@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+﻿import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -60,13 +60,13 @@ describe("tokenizeCommand", () => {
   });
 
   // Issue #265 — `\` was eaten as a generic escape inside `"..."`, so
-  // Windows path separators got dropped (`thron\.reasonix` → `thron.reasonix`).
+  // Windows path separators got dropped (`thron\.deepmicode` → `thron.deepmicode`).
   // Only `\"` and `\\` are escapes now; everything else is literal.
   it("preserves Windows path backslashes inside double quotes", () => {
-    expect(tokenizeCommand('dir /b "C:\\Users\\thron\\.reasonix"')).toEqual([
+    expect(tokenizeCommand('dir /b "C:\\Users\\thron\\.deepmicode"')).toEqual([
       "dir",
       "/b",
-      "C:\\Users\\thron\\.reasonix",
+      "C:\\Users\\thron\\.deepmicode",
     ]);
   });
 
@@ -147,7 +147,7 @@ describe("detectShellOperator", () => {
 describe("runCommand syntax rejection", () => {
   let tmp: string;
   beforeEach(() => {
-    tmp = mkdtempSync(join(tmpdir(), "reasonix-shell-pipe-"));
+    tmp = mkdtempSync(join(tmpdir(), "deepmicode-shell-pipe-"));
   });
   afterEach(() => {
     rmSync(tmp, { recursive: true, force: true });
@@ -397,7 +397,7 @@ describe("isAllowed", () => {
 describe("runCommand", () => {
   let tmp: string;
   beforeEach(() => {
-    tmp = mkdtempSync(join(tmpdir(), "reasonix-shell-"));
+    tmp = mkdtempSync(join(tmpdir(), "deepmicode-shell-"));
   });
   afterEach(() => {
     rmSync(tmp, { recursive: true, force: true });
@@ -457,7 +457,7 @@ describe("runCommand", () => {
 describe("registerShellTools — dispatch integration", () => {
   let tmp: string;
   beforeEach(() => {
-    tmp = mkdtempSync(join(tmpdir(), "reasonix-shell-"));
+    tmp = mkdtempSync(join(tmpdir(), "deepmicode-shell-"));
   });
   afterEach(async () => {
     for (let i = 0; i < 5; i++) {
@@ -966,7 +966,7 @@ describe("prepareSpawn", () => {
   });
 
   it("preserves Windows path backslashes through tokenize → prepareSpawn (issue #265)", () => {
-    const argv = tokenizeCommand('dir /b "C:\\Users\\thron\\.reasonix"');
+    const argv = tokenizeCommand('dir /b "C:\\Users\\thron\\.deepmicode"');
     const out = prepareSpawn(argv, {
       platform: "win32",
       env: { PATH: "C:\\nope", PATHEXT: ".EXE" },
@@ -974,7 +974,7 @@ describe("prepareSpawn", () => {
       isFile: () => false,
     });
     expect(out.bin).toBe("cmd.exe");
-    expect(out.args[3]).toBe("chcp 65001 >nul & dir /b C:\\Users\\thron\\.reasonix");
+    expect(out.args[3]).toBe("chcp 65001 >nul & dir /b C:\\Users\\thron\\.deepmicode");
   });
 
   it("routes bare unresolved Windows commands through cmd.exe (builtins)", () => {
@@ -983,14 +983,14 @@ describe("prepareSpawn", () => {
     // direct spawn ENOENTs. Wrapping in cmd.exe lets them resolve,
     // and gives unknown commands a proper "'x' is not recognized"
     // exit code instead of a raw spawn failure.
-    const out = prepareSpawn(["dir", ".reasonix"], {
+    const out = prepareSpawn(["dir", ".deepmicode"], {
       platform: "win32",
       env: { PATH: "C:\\nope", PATHEXT: ".EXE" },
       pathDelimiter: ";",
       isFile: () => false,
     });
     expect(out.bin).toBe("cmd.exe");
-    expect(out.args).toEqual(["/d", "/s", "/c", "chcp 65001 >nul & dir .reasonix"]);
+    expect(out.args).toEqual(["/d", "/s", "/c", "chcp 65001 >nul & dir .deepmicode"]);
     expect(out.spawnOverrides.windowsVerbatimArguments).toBe(true);
   });
 

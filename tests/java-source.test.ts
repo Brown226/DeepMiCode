@@ -1,4 +1,4 @@
-import { execFile } from "node:child_process";
+﻿import { execFile } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -37,7 +37,7 @@ vi.mock("node:child_process", () => ({
 let tmpDirs: string[] = [];
 
 async function tmpDir(): Promise<string> {
-  const d = await mkdtemp(join(tmpdir(), "reasonix-java-test-"));
+  const d = await mkdtemp(join(tmpdir(), "deepmicode-java-test-"));
   tmpDirs.push(d);
   return d;
 }

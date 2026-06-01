@@ -1,4 +1,4 @@
-import { promises as fs } from "node:fs";
+﻿import { promises as fs } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -90,7 +90,7 @@ describe("chunker", () => {
     let root: string;
 
     beforeEach(async () => {
-      root = await mkdtemp(join(tmpdir(), "reasonix-chunk-"));
+      root = await mkdtemp(join(tmpdir(), "deepmicode-chunk-"));
     });
 
     afterEach(async () => {

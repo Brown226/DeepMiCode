@@ -1,4 +1,4 @@
-/** Skills store + prefix-index composer — temp homeDir / projectRoot per test, no real skill dirs touched. */
+﻿/** Skills store + prefix-index composer — temp homeDir / projectRoot per test, no real skill dirs touched. */
 
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -20,9 +20,9 @@ function writeSkillDir(
 ): string {
   const parent =
     which === "global"
-      ? join(homeOrProject, ".reasonix", "skills")
+      ? join(homeOrProject, ".deepmicode", "skills")
       : which === "project"
-        ? join(root, ".reasonix", "skills")
+        ? join(root, ".deepmicode", "skills")
         : homeOrProject;
   const dir = join(parent, name);
   mkdirSync(dir, { recursive: true });
@@ -40,7 +40,7 @@ function writeFlatSkill(
   frontmatter: Record<string, string>,
   body: string,
 ): string {
-  const skills = join(dir, ".reasonix", "skills");
+  const skills = join(dir, ".deepmicode", "skills");
   mkdirSync(skills, { recursive: true });
   const fmLines = ["---"];
   for (const [k, v] of Object.entries(frontmatter)) fmLines.push(`${k}: ${v}`);
@@ -55,8 +55,8 @@ describe("SkillStore", () => {
   let projectRoot: string;
 
   beforeEach(() => {
-    home = mkdtempSync(join(tmpdir(), "reasonix-skills-home-"));
-    projectRoot = mkdtempSync(join(tmpdir(), "reasonix-skills-proj-"));
+    home = mkdtempSync(join(tmpdir(), "deepmicode-skills-home-"));
+    projectRoot = mkdtempSync(join(tmpdir(), "deepmicode-skills-proj-"));
   });
 
   afterEach(() => {
@@ -99,7 +99,7 @@ describe("SkillStore", () => {
     expect(skills[0]?.description).toBe("Commit and push changes");
   });
 
-  it("surfaces project-scope skills from <projectRoot>/.reasonix/skills", () => {
+  it("surfaces project-scope skills from <projectRoot>/.deepmicode/skills", () => {
     writeSkillDir(
       projectRoot,
       "project",
@@ -163,14 +163,14 @@ describe("SkillStore", () => {
 
   it("skips dotfiles that would masquerade as skills", () => {
     writeSkillDir(projectRoot, "global", "ok", { description: "fine" }, "body", home);
-    const dotDir = join(home, ".reasonix", "skills");
+    const dotDir = join(home, ".deepmicode", "skills");
     writeFileSync(join(dotDir, ".hidden.md"), "---\ndescription: x\n---\nbody\n", "utf8");
     const list = new SkillStore({ homeDir: home, projectRoot, disableBuiltins: true }).list();
     expect(list.map((s) => s.name)).toEqual(["ok"]);
   });
 
   it("reads custom flat and dir-layout skills directly from configured roots", () => {
-    const custom = mkdtempSync(join(tmpdir(), "reasonix-skills-custom-"));
+    const custom = mkdtempSync(join(tmpdir(), "deepmicode-skills-custom-"));
     try {
       writeSkillDir(
         projectRoot,
@@ -199,7 +199,7 @@ describe("SkillStore", () => {
   });
 
   it("deduplicates custom roots and preserves first priority", () => {
-    const custom = mkdtempSync(join(tmpdir(), "reasonix-skills-custom-"));
+    const custom = mkdtempSync(join(tmpdir(), "deepmicode-skills-custom-"));
     try {
       const roots = new SkillStore({
         homeDir: home,
@@ -228,7 +228,7 @@ describe("SkillStore", () => {
   });
 
   it("keeps priority project > custom > global on same-name collisions", () => {
-    const custom = mkdtempSync(join(tmpdir(), "reasonix-skills-custom-"));
+    const custom = mkdtempSync(join(tmpdir(), "deepmicode-skills-custom-"));
     try {
       writeSkillDir(projectRoot, "global", "same", { description: "global" }, "G", home);
       writeSkillDir(projectRoot, "custom", "same", { description: "custom" }, "C", custom);
@@ -379,8 +379,8 @@ describe("applySkillsIndex", () => {
   let projectRoot: string;
 
   beforeEach(() => {
-    home = mkdtempSync(join(tmpdir(), "reasonix-skills-idx-"));
-    projectRoot = mkdtempSync(join(tmpdir(), "reasonix-skills-idx-proj-"));
+    home = mkdtempSync(join(tmpdir(), "deepmicode-skills-idx-"));
+    projectRoot = mkdtempSync(join(tmpdir(), "deepmicode-skills-idx-proj-"));
   });
 
   afterEach(() => {
@@ -498,7 +498,7 @@ describe("Skill frontmatter — runAs", () => {
   let home: string;
 
   beforeEach(() => {
-    home = mkdtempSync(join(tmpdir(), "reasonix-skills-runas-"));
+    home = mkdtempSync(join(tmpdir(), "deepmicode-skills-runas-"));
   });
 
   afterEach(() => {
@@ -611,7 +611,7 @@ describe("Skill frontmatter — runAs", () => {
     });
 
     it("reads skills from <project>/.claude/skills/", () => {
-      const project = mkdtempSync(join(tmpdir(), "reasonix-skills-proj-"));
+      const project = mkdtempSync(join(tmpdir(), "deepmicode-skills-proj-"));
       try {
         writeClaudeSkill(project, "project", "proj-skill", { description: "from project" }, "go");
         const store = new SkillStore({
@@ -671,7 +671,7 @@ describe("Built-in skills", () => {
   let home: string;
 
   beforeEach(() => {
-    home = mkdtempSync(join(tmpdir(), "reasonix-skills-builtins-"));
+    home = mkdtempSync(join(tmpdir(), "deepmicode-skills-builtins-"));
   });
 
   afterEach(() => {

@@ -1,11 +1,11 @@
-// Lang context + t() helper. `t({zh, en})` returns the active-lang string.
+﻿// Lang context + t() helper. `t({zh, en})` returns the active-lang string.
 
 // Version is pulled from the R2 mirror's `latest/latest.json` on every page
 // load. Empty until the fetch resolves so consumers can render a loading
 // state instead of a stale literal — pre-empts the "docs version is wrong"
 // drift that hardcoding caused. Each release just overwrites latest.json.
-window.REASONIX_VERSION = window.REASONIX_VERSION || "";
-window.REASONIX_VERSION_STATUS = window.REASONIX_VERSION
+window.deepmicode_VERSION = window.deepmicode_VERSION || "";
+window.deepmicode_VERSION_STATUS = window.deepmicode_VERSION
   ? "ok"
   : "loading";
 
@@ -22,33 +22,33 @@ window.REASONIX_VERSION_STATUS = window.REASONIX_VERSION
     .then(function (j) {
       clearTimeout(timer);
       if (j && j.version) {
-        window.REASONIX_VERSION = String(j.version).replace(/^v/, "");
-        window.REASONIX_VERSION_STATUS = "ok";
+        window.deepmicode_VERSION = String(j.version).replace(/^v/, "");
+        window.deepmicode_VERSION_STATUS = "ok";
       } else {
-        window.REASONIX_VERSION_STATUS = "failed";
+        window.deepmicode_VERSION_STATUS = "failed";
       }
-      window.dispatchEvent(new Event("reasonix:version"));
+      window.dispatchEvent(new Event("deepmicode:version"));
     })
     .catch(function () {
       clearTimeout(timer);
-      window.REASONIX_VERSION_STATUS = "failed";
-      window.dispatchEvent(new Event("reasonix:version"));
+      window.deepmicode_VERSION_STATUS = "failed";
+      window.dispatchEvent(new Event("deepmicode:version"));
     });
 })();
 
 function useVersion() {
   const [v, setV] = React.useState({
-    version: window.REASONIX_VERSION,
-    status: window.REASONIX_VERSION_STATUS,
+    version: window.deepmicode_VERSION,
+    status: window.deepmicode_VERSION_STATUS,
   });
   React.useEffect(() => {
     const handler = () =>
       setV({
-        version: window.REASONIX_VERSION,
-        status: window.REASONIX_VERSION_STATUS,
+        version: window.deepmicode_VERSION,
+        status: window.deepmicode_VERSION_STATUS,
       });
-    window.addEventListener("reasonix:version", handler);
-    return () => window.removeEventListener("reasonix:version", handler);
+    window.addEventListener("deepmicode:version", handler);
+    return () => window.removeEventListener("deepmicode:version", handler);
   }, []);
   return v;
 }
@@ -59,7 +59,7 @@ function detectInitialLang() {
   try {
     const url = new URLSearchParams(location.search).get("lang");
     if (url === "en" || url === "zh") return url;
-    const stored = localStorage.getItem("reasonix.lang");
+    const stored = localStorage.getItem("deepmicode.lang");
     if (stored === "en" || stored === "zh") return stored;
     const nav = (navigator.language || "").toLowerCase();
     return nav.startsWith("zh") ? "zh" : "en";
@@ -73,7 +73,7 @@ function LangProvider({ children }) {
   const setLang = React.useCallback((v) => {
     setLangState(v);
     try {
-      localStorage.setItem("reasonix.lang", v);
+      localStorage.setItem("deepmicode.lang", v);
       const url = new URL(window.location.href);
       url.searchParams.set("lang", v);
       window.history.replaceState({}, "", url.toString());

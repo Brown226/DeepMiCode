@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import {
   HEAP_HEADROOM_MB,
   TARGET_HEAP_MB_CEILING,
@@ -73,7 +73,7 @@ describe("decideHeapTargetMb (issue #1011)", () => {
     ).toBeNull();
   });
 
-  it("returns null after a successful re-exec (REASONIX_HEAP_REEXEC=1 set)", () => {
+  it("returns null after a successful re-exec (deepmicode_HEAP_REEXEC=1 set)", () => {
     expect(
       decideHeapTargetMb({
         ...base,

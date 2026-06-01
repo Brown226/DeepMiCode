@@ -1,4 +1,4 @@
-/** MCP client + bridge — in-process fake transport answering initialize / tools/list / tools/call. */
+﻿/** MCP client + bridge — in-process fake transport answering initialize / tools/list / tools/call. */
 
 import { pathToFileURL } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -199,7 +199,7 @@ describe("McpClient: initialize handshake", () => {
 
   it("advertises the roots capability when a workspace is configured", async () => {
     const received: JsonRpcRequest[] = [];
-    const workspaceDir = "/tmp/reasonix-workspace";
+    const workspaceDir = "/tmp/deepmicode-workspace";
     const transport = new FakeMcpTransport({ tools: [], received });
     const client = new McpClient({ transport, workspaceDir });
     await client.initialize();
@@ -215,7 +215,7 @@ describe("McpClient: initialize handshake", () => {
 
   it("answers roots/list with the configured workspace root", async () => {
     const responses: JsonRpcMessage[] = [];
-    const workspaceDir = "/tmp/reasonix-workspace";
+    const workspaceDir = "/tmp/deepmicode-workspace";
     const workspaceUri = pathToFileURL(workspaceDir).href;
     const transport = new FakeMcpTransport({ tools: [], responses });
     const client = new McpClient({ transport, workspaceDir });
@@ -227,7 +227,7 @@ describe("McpClient: initialize handshake", () => {
     expect(responses[0]).toMatchObject({
       jsonrpc: "2.0",
       id: "roots-1",
-      result: { roots: [{ uri: workspaceUri, name: "reasonix-workspace" }] },
+      result: { roots: [{ uri: workspaceUri, name: "deepmicode-workspace" }] },
     });
     await client.close();
   });

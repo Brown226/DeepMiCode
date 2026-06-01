@@ -1,4 +1,4 @@
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+﻿import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -14,7 +14,7 @@ describe("dashboard token + port persistence", () => {
   let dir: string;
   let cfgPath: string;
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-dash-persist-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-dash-persist-"));
     cfgPath = join(dir, "config.json");
   });
   afterEach(() => {
@@ -91,7 +91,7 @@ describe("loadDashboardEnabled", () => {
   let dir: string;
   let cfgPath: string;
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-dash-enabled-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-dash-enabled-"));
     cfgPath = join(dir, "config.json");
   });
   afterEach(() => {

@@ -1,4 +1,4 @@
-/** Render behavior-stability results.json → markdown report. */
+﻿/** Render behavior-stability results.json → markdown report. */
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
@@ -27,10 +27,10 @@ function parseArgs(argv: string[]): CliArgs {
 }
 
 function renderHeader(report: EvalReport): string {
-  return `# Reasonix Behavior-Stability Evaluation
+  return `# deepmicode Behavior-Stability Evaluation
 
 **Date:** ${report.meta.date}
-**Version:** ${report.meta.reasonixVersion}
+**Version:** ${report.meta.deepmicodeVersion}
 `;
 }
 

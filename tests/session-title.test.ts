@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import {
   buildSessionTitleMessages,
   makeSessionNameFromTitle,
@@ -37,7 +37,7 @@ describe("session title generation", () => {
 
   it("builds a no-tools prompt from the conversation head and tail", () => {
     const messages = buildSessionTitleMessages({
-      workspace: "/work/reasonix",
+      workspace: "/work/deepmicode",
       userText: "Please fix the session corruption bug",
       assistantText: "Implemented safer JSONL rewriting and recovery tests.",
     });

@@ -1,4 +1,4 @@
-import { promises as fs } from "node:fs";
+﻿import { promises as fs } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -12,7 +12,7 @@ describe("filesystem tools (built-in, sandbox-enforced)", () => {
   let tools: ToolRegistry;
 
   beforeEach(async () => {
-    root = await mkdtemp(join(tmpdir(), "reasonix-fs-"));
+    root = await mkdtemp(join(tmpdir(), "deepmicode-fs-"));
     tools = new ToolRegistry();
     registerFilesystemTools(tools, { rootDir: root });
     await fs.writeFile(join(root, "hello.txt"), "line 1\nline 2\nline 3\n");
@@ -387,11 +387,11 @@ describe("filesystem tools (built-in, sandbox-enforced)", () => {
       expect(out).toContain("node_modules/lib/marker.ts");
     });
 
-    it("walks .reasonix/ by default so user skills stay reachable (#1357)", async () => {
-      await fs.mkdir(join(root, ".reasonix", "skills"), { recursive: true });
-      await fs.writeFile(join(root, ".reasonix", "skills", "my-skill.md"), "# my-skill\n");
+    it("walks .deepmicode/ by default so user skills stay reachable (#1357)", async () => {
+      await fs.mkdir(join(root, ".deepmicode", "skills"), { recursive: true });
+      await fs.writeFile(join(root, ".deepmicode", "skills", "my-skill.md"), "# my-skill\n");
       const out = await tools.dispatch("search_files", JSON.stringify({ pattern: "my-skill" }));
-      expect(out).toContain(".reasonix/skills/my-skill.md");
+      expect(out).toContain(".deepmicode/skills/my-skill.md");
     });
 
     it("honors AbortSignal during recursive search", async () => {

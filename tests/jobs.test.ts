@@ -1,4 +1,4 @@
-/** JobRegistry — real spawn/pipe/kill via inline `node -e` scripts. */
+﻿/** JobRegistry — real spawn/pipe/kill via inline `node -e` scripts. */
 
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -19,7 +19,7 @@ describe("JobRegistry", () => {
   let registry: JobRegistry;
 
   beforeEach(() => {
-    cwd = mkdtempSync(join(tmpdir(), "reasonix-job-"));
+    cwd = mkdtempSync(join(tmpdir(), "deepmicode-job-"));
     registry = new JobRegistry();
   });
   afterEach(async () => {

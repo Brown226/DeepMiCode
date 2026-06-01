@@ -1,7 +1,7 @@
-{
+﻿{
   "name": "dsnix",
   "version": "0.52.0",
-  "description": "Short alias for reasonix — DeepSeek-native coding agent. Forwards to the reasonix CLI.",
+  "description": "Short alias for deepmicode — DeepSeek-native coding agent. Forwards to the deepmicode CLI.",
   "bin": {
     "dsnix": "bin.cjs"
   },
@@ -10,27 +10,27 @@
     "README.md"
   ],
   "keywords": [
-    "reasonix",
+    "deepmicode",
     "deepseek",
     "coding-agent",
     "cli",
     "ai",
     "alias"
   ],
-  "homepage": "https://github.com/esengine/DeepSeek-Reasonix",
+  "homepage": "https://github.com/esengine/DeepSeek-deepmicode",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/esengine/DeepSeek-Reasonix.git",
+    "url": "git+https://github.com/esengine/DeepSeek-deepmicode.git",
     "directory": "packages/dsnix"
   },
   "bugs": {
-    "url": "https://github.com/esengine/DeepSeek-Reasonix/issues"
+    "url": "https://github.com/esengine/DeepSeek-deepmicode/issues"
   },
   "license": "MIT",
   "engines": {
     "node": ">=22"
   },
   "dependencies": {
-    "reasonix": "0.52.0"
+    "deepmicode": "0.52.0"
   }
 }

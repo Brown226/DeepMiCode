@@ -1,4 +1,4 @@
-import { promises as fs } from "node:fs";
+﻿import { promises as fs } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -18,9 +18,9 @@ describe("filesystem outside-sandbox gate (#684)", () => {
   let gateRequests: Array<{ kind: string; payload: unknown }>;
 
   beforeEach(async () => {
-    root = await mkdtemp(join(tmpdir(), "reasonix-sandbox-"));
-    outside = await mkdtemp(join(tmpdir(), "reasonix-outside-"));
-    configDir = await mkdtemp(join(tmpdir(), "reasonix-cfg-"));
+    root = await mkdtemp(join(tmpdir(), "deepmicode-sandbox-"));
+    outside = await mkdtemp(join(tmpdir(), "deepmicode-outside-"));
+    configDir = await mkdtemp(join(tmpdir(), "deepmicode-cfg-"));
     configPath = join(configDir, "config.json");
     writeConfig({}, configPath);
     tools = new ToolRegistry();

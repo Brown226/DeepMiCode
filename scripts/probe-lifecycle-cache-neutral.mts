@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Live DeepSeek cache probe for the runtime-only Engineering Lifecycle design.
  *
  * This is intentionally NOT wired into CI. It needs DEEPSEEK_API_KEY and the
@@ -32,7 +32,7 @@ loadDotenv("./.env.testbak");
 
 const KEY = process.env.DEEPSEEK_API_KEY;
 const BASE = process.env.DEEPSEEK_BASE_URL ?? "https://api.deepseek.com";
-const MODEL = process.env.REASONIX_CACHE_PROBE_MODEL ?? "deepseek-v4-flash";
+const MODEL = process.env.deepmicode_CACHE_PROBE_MODEL ?? "deepseek-v4-flash";
 
 if (!KEY) {
   throw new Error("DEEPSEEK_API_KEY missing; set it or add .env.testbak.");
@@ -98,7 +98,7 @@ async function call(label: string, system: string, turn: number): Promise<number
 }
 
 async function main(): Promise<void> {
-  const root = mkdtempSync(join(tmpdir(), "reasonix-cache-neutral-"));
+  const root = mkdtempSync(join(tmpdir(), "deepmicode-cache-neutral-"));
   try {
     const offSystem = codeSystemPrompt(root, { engineeringLifecycleMode: "off" });
     const strictSystem = codeSystemPrompt(root, { engineeringLifecycleMode: "strict" });

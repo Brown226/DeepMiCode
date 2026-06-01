@@ -1,4 +1,4 @@
-/** Diagnostic — print per-tool description + schema byte counts to plan compression targets. */
+﻿/** Diagnostic — print per-tool description + schema byte counts to plan compression targets. */
 
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -15,7 +15,7 @@ import { registerSkillTools } from "../src/tools/skills.js";
 import { registerTodoTool } from "../src/tools/todo.js";
 import { registerWebTools } from "../src/tools/web.js";
 
-const root = mkdtempSync(join(tmpdir(), "reasonix-measure-"));
+const root = mkdtempSync(join(tmpdir(), "deepmicode-measure-"));
 try {
   const tools = new ToolRegistry();
   const jobs = new JobRegistry();

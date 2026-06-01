@@ -1,4 +1,4 @@
-/** Locks cache-prefix byte budget — every byte ships in every request. PRs that
+﻿/** Locks cache-prefix byte budget — every byte ships in every request. PRs that
  *  grow it must compress elsewhere or raise the constant with a commit-message reason. */
 
 import { mkdtempSync, rmSync } from "node:fs";
@@ -71,7 +71,7 @@ describe("prompt budget — cache prefix size regression net", () => {
   });
 
   it("code-mode tool list stays under the byte budget", () => {
-    const root = mkdtempSync(join(tmpdir(), "reasonix-budget-"));
+    const root = mkdtempSync(join(tmpdir(), "deepmicode-budget-"));
     try {
       const tools = buildCodeToolset(root);
       const { total, perTool } = totalToolBytes(tools);
@@ -92,7 +92,7 @@ describe("prompt budget — cache prefix size regression net", () => {
   });
 
   it("no single tool description exceeds 8 KiB on its own", () => {
-    const root = mkdtempSync(join(tmpdir(), "reasonix-budget-"));
+    const root = mkdtempSync(join(tmpdir(), "deepmicode-budget-"));
     try {
       const tools = buildCodeToolset(root);
       const { perTool } = totalToolBytes(tools);
@@ -110,7 +110,7 @@ describe("prompt budget — cache prefix size regression net", () => {
   });
 
   it("codeSystemPrompt with no memory stays under the budget too (defense in depth)", () => {
-    const root = mkdtempSync(join(tmpdir(), "reasonix-budget-"));
+    const root = mkdtempSync(join(tmpdir(), "deepmicode-budget-"));
     try {
       const built = codeSystemPrompt(root);
       expect(built.length).toBeLessThanOrEqual(SYSTEM_PROMPT_BUDGET_WITH_SKILLS);

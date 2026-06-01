@@ -1,4 +1,4 @@
-/** Per-subdirectory REASONIX.md walker + injection (#1033). */
+﻿/** Per-subdirectory deepmicode.md walker + injection (#1033). */
 
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -17,59 +17,59 @@ describe("findSubdirMemoryAncestors", () => {
   let root: string;
 
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), "reasonix-subdir-mem-"));
+    root = mkdtempSync(join(tmpdir(), "deepmicode-subdir-mem-"));
   });
   afterEach(() => {
     rmSync(root, { recursive: true, force: true });
   });
 
   it("returns [] for a file directly under rootDir (project memory handles it)", () => {
-    writeFileSync(join(root, "REASONIX.md"), "root rules");
+    writeFileSync(join(root, "deepmicode.md"), "root rules");
     writeFileSync(join(root, "foo.ts"), "");
     expect(findSubdirMemoryAncestors(join(root, "foo.ts"), root)).toEqual([]);
   });
 
   it("finds the closest ancestor memory for a file in a subdir", () => {
     mkdirSync(join(root, "frontend"), { recursive: true });
-    writeFileSync(join(root, "frontend", "REASONIX.md"), "use pnpm");
+    writeFileSync(join(root, "frontend", "deepmicode.md"), "use pnpm");
     writeFileSync(join(root, "frontend", "App.tsx"), "");
     expect(findSubdirMemoryAncestors(join(root, "frontend", "App.tsx"), root)).toEqual([
-      join(root, "frontend", "REASONIX.md"),
+      join(root, "frontend", "deepmicode.md"),
     ]);
   });
 
   it("returns multiple ancestors innermost-first when both subdirs carry memory", () => {
     mkdirSync(join(root, "pkg", "module"), { recursive: true });
-    writeFileSync(join(root, "pkg", "REASONIX.md"), "package rules");
-    writeFileSync(join(root, "pkg", "module", "REASONIX.md"), "module rules");
+    writeFileSync(join(root, "pkg", "deepmicode.md"), "package rules");
+    writeFileSync(join(root, "pkg", "module", "deepmicode.md"), "module rules");
     writeFileSync(join(root, "pkg", "module", "deep.ts"), "");
     expect(findSubdirMemoryAncestors(join(root, "pkg", "module", "deep.ts"), root)).toEqual([
-      join(root, "pkg", "module", "REASONIX.md"),
-      join(root, "pkg", "REASONIX.md"),
+      join(root, "pkg", "module", "deepmicode.md"),
+      join(root, "pkg", "deepmicode.md"),
     ]);
   });
 
   it("skips dirs that have no memory file", () => {
     mkdirSync(join(root, "a", "b", "c"), { recursive: true });
-    writeFileSync(join(root, "a", "REASONIX.md"), "only at a");
+    writeFileSync(join(root, "a", "deepmicode.md"), "only at a");
     writeFileSync(join(root, "a", "b", "c", "x.ts"), "");
     expect(findSubdirMemoryAncestors(join(root, "a", "b", "c", "x.ts"), root)).toEqual([
-      join(root, "a", "REASONIX.md"),
+      join(root, "a", "deepmicode.md"),
     ]);
   });
 
-  it("excludes the rootDir's own REASONIX.md from the walk", () => {
+  it("excludes the rootDir's own deepmicode.md from the walk", () => {
     mkdirSync(join(root, "sub"), { recursive: true });
-    writeFileSync(join(root, "REASONIX.md"), "root rules");
-    writeFileSync(join(root, "sub", "REASONIX.md"), "sub rules");
+    writeFileSync(join(root, "deepmicode.md"), "root rules");
+    writeFileSync(join(root, "sub", "deepmicode.md"), "sub rules");
     writeFileSync(join(root, "sub", "x.ts"), "");
     const ancestors = findSubdirMemoryAncestors(join(root, "sub", "x.ts"), root);
-    expect(ancestors).toEqual([join(root, "sub", "REASONIX.md")]);
-    expect(ancestors).not.toContain(join(root, "REASONIX.md"));
+    expect(ancestors).toEqual([join(root, "sub", "deepmicode.md")]);
+    expect(ancestors).not.toContain(join(root, "deepmicode.md"));
   });
 
   it("returns [] for an absolute path that escapes rootDir", () => {
-    const outside = mkdtempSync(join(tmpdir(), "reasonix-subdir-out-"));
+    const outside = mkdtempSync(join(tmpdir(), "deepmicode-subdir-out-"));
     try {
       writeFileSync(join(outside, "foo.ts"), "");
       expect(findSubdirMemoryAncestors(join(outside, "foo.ts"), root)).toEqual([]);
@@ -78,7 +78,7 @@ describe("findSubdirMemoryAncestors", () => {
     }
   });
 
-  it("also recognises AGENTS.md / AGENT.md alongside REASONIX.md", () => {
+  it("also recognises AGENTS.md / AGENT.md alongside deepmicode.md", () => {
     mkdirSync(join(root, "a"), { recursive: true });
     mkdirSync(join(root, "b"), { recursive: true });
     writeFileSync(join(root, "a", "AGENTS.md"), "use agents file");
@@ -98,20 +98,20 @@ describe("readSubdirMemoryContent", () => {
   let root: string;
 
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), "reasonix-subdir-read-"));
+    root = mkdtempSync(join(tmpdir(), "deepmicode-subdir-read-"));
   });
   afterEach(() => {
     rmSync(root, { recursive: true, force: true });
   });
 
   it("returns trimmed content", () => {
-    const p = join(root, "REASONIX.md");
+    const p = join(root, "deepmicode.md");
     writeFileSync(p, "  hello world  \n\n");
     expect(readSubdirMemoryContent(p)).toBe("hello world");
   });
 
   it("returns null for an empty or whitespace-only file", () => {
-    const p = join(root, "REASONIX.md");
+    const p = join(root, "deepmicode.md");
     writeFileSync(p, "  \n\n");
     expect(readSubdirMemoryContent(p)).toBeNull();
   });
@@ -121,7 +121,7 @@ describe("readSubdirMemoryContent", () => {
   });
 
   it("truncates beyond PROJECT_MEMORY_MAX_CHARS with a marker", () => {
-    const p = join(root, "REASONIX.md");
+    const p = join(root, "deepmicode.md");
     writeFileSync(p, "x".repeat(8100));
     const out = readSubdirMemoryContent(p);
     expect(out).not.toBeNull();
@@ -132,8 +132,8 @@ describe("readSubdirMemoryContent", () => {
 
 describe("formatSubdirMemorySection", () => {
   it("includes the display path and content in a single block", () => {
-    const out = formatSubdirMemorySection("frontend/REASONIX.md", "use pnpm");
-    expect(out).toContain("frontend/REASONIX.md");
+    const out = formatSubdirMemorySection("frontend/deepmicode.md", "use pnpm");
+    expect(out).toContain("frontend/deepmicode.md");
     expect(out).toContain("use pnpm");
     expect(out.startsWith("[module memory:")).toBe(true);
   });
@@ -144,9 +144,9 @@ describe("read_file injects subdir memory on first read per session", () => {
   let tools: ToolRegistry;
 
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), "reasonix-fs-mem-"));
+    root = mkdtempSync(join(tmpdir(), "deepmicode-fs-mem-"));
     mkdirSync(join(root, "frontend"), { recursive: true });
-    writeFileSync(join(root, "frontend", "REASONIX.md"), "use pnpm, never npm");
+    writeFileSync(join(root, "frontend", "deepmicode.md"), "use pnpm, never npm");
     writeFileSync(join(root, "frontend", "App.tsx"), "export const App = () => null;");
     tools = new ToolRegistry();
     registerFilesystemTools(tools, { rootDir: root });
@@ -157,7 +157,7 @@ describe("read_file injects subdir memory on first read per session", () => {
 
   it("prepends [module memory:…] on first read of a file under that subdir", async () => {
     const out = await tools.dispatch("read_file", JSON.stringify({ path: "frontend/App.tsx" }));
-    expect(out).toContain("[module memory: frontend/REASONIX.md]");
+    expect(out).toContain("[module memory: frontend/deepmicode.md]");
     expect(out).toContain("use pnpm, never npm");
     expect(out).toContain("export const App");
   });
@@ -175,9 +175,9 @@ describe("read_file injects subdir memory on first read per session", () => {
     expect(out).not.toContain("[module memory:");
   });
 
-  it("respects REASONIX_MEMORY=off and skips injection entirely", async () => {
-    const prev = process.env.REASONIX_MEMORY;
-    process.env.REASONIX_MEMORY = "off";
+  it("respects deepmicode_MEMORY=off and skips injection entirely", async () => {
+    const prev = process.env.deepmicode_MEMORY;
+    process.env.deepmicode_MEMORY = "off";
     try {
       const tools2 = new ToolRegistry();
       registerFilesystemTools(tools2, { rootDir: root });
@@ -186,9 +186,9 @@ describe("read_file injects subdir memory on first read per session", () => {
     } finally {
       if (prev === undefined) {
         // biome-ignore lint/performance/noDelete: env restore
-        delete process.env.REASONIX_MEMORY;
+        delete process.env.deepmicode_MEMORY;
       } else {
-        process.env.REASONIX_MEMORY = prev;
+        process.env.deepmicode_MEMORY = prev;
       }
     }
   });
@@ -198,7 +198,7 @@ describe("findDirMemory — for list_directory's listed dir", () => {
   let root: string;
 
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), "reasonix-dir-mem-"));
+    root = mkdtempSync(join(tmpdir(), "deepmicode-dir-mem-"));
   });
   afterEach(() => {
     rmSync(root, { recursive: true, force: true });
@@ -212,21 +212,21 @@ describe("findDirMemory — for list_directory's listed dir", () => {
 
   it("walks ancestors innermost-first when nested dirs each have memory", () => {
     mkdirSync(join(root, "pkg", "module"), { recursive: true });
-    writeFileSync(join(root, "pkg", "REASONIX.md"), "pkg rules");
-    writeFileSync(join(root, "pkg", "module", "REASONIX.md"), "module rules");
+    writeFileSync(join(root, "pkg", "deepmicode.md"), "pkg rules");
+    writeFileSync(join(root, "pkg", "module", "deepmicode.md"), "module rules");
     expect(findDirMemory(join(root, "pkg", "module"), root)).toEqual([
-      join(root, "pkg", "module", "REASONIX.md"),
-      join(root, "pkg", "REASONIX.md"),
+      join(root, "pkg", "module", "deepmicode.md"),
+      join(root, "pkg", "deepmicode.md"),
     ]);
   });
 
   it("returns [] when the listed dir IS the root (root memory lives in system prompt)", () => {
-    writeFileSync(join(root, "REASONIX.md"), "root rules");
+    writeFileSync(join(root, "deepmicode.md"), "root rules");
     expect(findDirMemory(root, root)).toEqual([]);
   });
 
   it("returns [] for a dir outside rootDir", () => {
-    const outside = mkdtempSync(join(tmpdir(), "reasonix-dir-out-"));
+    const outside = mkdtempSync(join(tmpdir(), "deepmicode-dir-out-"));
     try {
       mkdirSync(join(outside, "sub"), { recursive: true });
       expect(findDirMemory(join(outside, "sub"), root)).toEqual([]);
@@ -241,7 +241,7 @@ describe("list_directory injects subdir memory (issue #1160)", () => {
   let tools: ToolRegistry;
 
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), "reasonix-ls-mem-"));
+    root = mkdtempSync(join(tmpdir(), "deepmicode-ls-mem-"));
     mkdirSync(join(root, "pkg", "module"), { recursive: true });
     writeFileSync(join(root, "pkg", "AGENTS.md"), "package rules");
     writeFileSync(join(root, "pkg", "module", "AGENTS.md"), "module rules");
@@ -269,7 +269,7 @@ describe("list_directory injects subdir memory (issue #1160)", () => {
   });
 
   it("does not inject memory when listing the project root", async () => {
-    writeFileSync(join(root, "REASONIX.md"), "root rules");
+    writeFileSync(join(root, "deepmicode.md"), "root rules");
     const out = await tools.dispatch("list_directory", JSON.stringify({ path: "." }));
     expect(out).not.toContain("[module memory:");
   });

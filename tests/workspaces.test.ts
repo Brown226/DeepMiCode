@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
+﻿import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -14,8 +14,8 @@ describe("known workspaces", () => {
   let fromSession: string;
 
   beforeEach(() => {
-    home = mkdtempSync(join(tmpdir(), "reasonix-workspaces-home-"));
-    root = mkdtempSync(join(tmpdir(), "reasonix-workspaces-root-"));
+    home = mkdtempSync(join(tmpdir(), "deepmicode-workspaces-home-"));
+    root = mkdtempSync(join(tmpdir(), "deepmicode-workspaces-root-"));
     current = join(root, "current");
     recent = join(root, "recent");
     fromSession = join(root, "from-session");

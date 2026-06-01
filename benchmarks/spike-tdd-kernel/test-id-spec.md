@@ -1,4 +1,4 @@
-# Exp 2 — `test_id` stability spec
+﻿# Exp 2 — `test_id` stability spec
 
 **Result: PASS (with hybrid).** Adopt vitest-native id (`<rel-path>::<fullName>`) as the default, with an optional annotation override for users who care about rename stability.
 
@@ -33,7 +33,7 @@ Critical failures: 3 (rename it / rename describe / move file).
 
 Critical failure: 1, but it's the worst possible one. Tests evolve while red — adding asserts, narrowing scope. A scheme that invalidates `test_id` on every body edit makes `edit_claim` impossible to track across the red→green journey. **Reject.**
 
-### C. user annotation — `// @reasonix-test-id: foo`
+### C. user annotation — `// @DEEPMICODE-test-id: foo`
 
 | event | stable? |
 |---|---|
@@ -47,10 +47,10 @@ Critical failures: 2 (parametrise ambiguity, brownfield bootstrap). Strong on re
 ## Decision: hybrid (A as default, C as opt-in override)
 
 Default `test_id` = `<rel-path>::<fullName>`.
-If the test source contains `// @reasonix-test-id: <slug>` directly above the `it(`/`test(`, that slug overrides the default.
+If the test source contains `// @DEEPMICODE-test-id: <slug>` directly above the `it(`/`test(`, that slug overrides the default.
 
 ```ts
-// @reasonix-test-id: bang.parses-leading-bang
+// @DEEPMICODE-test-id: bang.parses-leading-bang
 it('returns the command body for a `!`-prefixed input', () => { … });
 ```
 
@@ -58,7 +58,7 @@ This handles the failure modes of A:
 - **Rename it/describe**: a user who anticipates renames adds the annotation once. Without it, kernel treats rename as a new test (correct — the old red is gone, so should be the old claim).
 - **Move file**: same — annotation makes the id survive moves.
 - **Brownfield**: zero churn for existing 96 files; they use the default.
-- **Greenfield**: model uses the default unless the user requests stability. `reasonix doctor` could surface a warning when a `test_id` would be lost.
+- **Greenfield**: model uses the default unless the user requests stability. `deepmicode doctor` could surface a warning when a `test_id` would be lost.
 
 ### How the dispatcher resolves it
 
@@ -90,5 +90,5 @@ Add §"`test_id` resolution" subsection citing this spec.
 
 ## Out of scope (defer)
 
-- Cross-runner support (jest, mocha). Reasonix workspaces today are predominantly vitest; ship vitest-only first.
+- Cross-runner support (jest, mocha). deepmicode workspaces today are predominantly vitest; ship vitest-only first.
 - Refactor-safe id (e.g., AST-based fingerprint resilient to whitespace + rename). Possible v2.

@@ -1,9 +1,9 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import { add, greet } from "../src/demo-utils.js";
 
 describe("greet", () => {
   it("returns a formatted greeting", () => {
-    expect(greet("Alice")).toBe("Hello, Alice! Welcome to Reasonix Code.");
+    expect(greet("Alice")).toBe("Hello, Alice! Welcome to deepmicode Code.");
   });
 });
 

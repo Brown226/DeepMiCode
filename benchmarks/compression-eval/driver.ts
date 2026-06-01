@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "node:fs";
+﻿import { readFileSync, writeFileSync } from "node:fs";
 import { resolvePreset } from "../../src/cli/ui/presets.js";
 import { DeepSeekClient } from "../../src/client.js";
 import { codeSystemPrompt } from "../../src/code/prompt.js";
@@ -57,7 +57,7 @@ async function main(): Promise<void> {
   const opts = parseArgs(process.argv.slice(2));
   const key = loadApiKey();
   if (!key) {
-    console.error("DEEPSEEK_API_KEY missing — run `reasonix setup` first");
+    console.error("DEEPSEEK_API_KEY missing — run `deepmicode setup` first");
     process.exit(1);
   }
   process.env.DEEPSEEK_API_KEY = key;

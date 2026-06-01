@@ -1,4 +1,4 @@
-import React, { PureComponent, type ReactNode } from 'react';
+﻿import React, { PureComponent, type ReactNode } from 'react';
 import { logForDebugging } from '../_internal/debug.js';
 import { stopCapturingEarlyInput } from '../_internal/earlyInput.js';
 import { isEnvTruthy } from '../_internal/envUtils.js';
@@ -183,7 +183,7 @@ export default class App extends PureComponent<Props, State> {
     // Hide the native cursor while the app is running. In accessibility
     // mode the cursor stays visible because screen magnifiers and similar
     // assistive tools track its position to follow focus.
-    if (this.props.stdout.isTTY && !isEnvTruthy(process.env.REASONIX_ACCESSIBILITY)) {
+    if (this.props.stdout.isTTY && !isEnvTruthy(process.env.deepmicode_ACCESSIBILITY)) {
       this.props.stdout.write(HIDE_CURSOR);
     }
   }
@@ -431,7 +431,7 @@ export default class App extends PureComponent<Props, State> {
       // re-enable focus reporting so the terminal is back in the state
       // the app expected before suspension.
       if (this.props.stdout.isTTY) {
-        if (!isEnvTruthy(process.env.REASONIX_ACCESSIBILITY)) {
+        if (!isEnvTruthy(process.env.deepmicode_ACCESSIBILITY)) {
           this.props.stdout.write(HIDE_CURSOR);
         }
         this.props.stdout.write(EFE);

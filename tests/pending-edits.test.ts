@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+﻿import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -25,7 +25,7 @@ describe("pending-edits checkpoint", () => {
   let tmp: string;
 
   beforeEach(() => {
-    tmp = mkdtempSync(join(tmpdir(), "reasonix-pending-"));
+    tmp = mkdtempSync(join(tmpdir(), "deepmicode-pending-"));
     vi.stubEnv("USERPROFILE", tmp);
     vi.stubEnv("HOME", tmp);
     vi.spyOn(require("node:os"), "homedir").mockReturnValue(tmp);

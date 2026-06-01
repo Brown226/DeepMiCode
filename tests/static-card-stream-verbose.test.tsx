@@ -1,4 +1,4 @@
-/** StaticCardStream must let verbose mode expand already-settled tool cards. */
+﻿/** StaticCardStream must let verbose mode expand already-settled tool cards. */
 
 import { type ComponentType, type ReactElement, createElement } from "react";
 import { describe, expect, it, vi } from "vitest";
@@ -33,7 +33,7 @@ const SESSION: SessionInfo = {
 const OUTPUT = [
   "$ npm test",
   "[exit 1]",
-  "> reasonix-node-assert-fixture@1.0.0 test",
+  "> deepmicode-node-assert-fixture@1.0.0 test",
   "> node test.mjs",
   "node:internal/modules/run_main:123",
   "    triggerUncaughtException(",

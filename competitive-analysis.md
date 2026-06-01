@@ -1,8 +1,8 @@
-# DeepMiCode 竞品分析
+﻿# DeepMiCode 竞品分析
 
 > 扫描时间：2026-05-29
 > 核心准则：**锦上添花，不是推倒重来**
-> DeepMiCode 定位：基于 DeepSeek-Reasonix 的二次开发，最小化修改，保持与上游同步
+> DeepMiCode 定位：基于 DeepSeek-deepmicode 的二次开发，最小化修改，保持与上游同步
 
 ---
 
@@ -13,7 +13,7 @@
 | **CodeWhale** | 终端原生 AI 编程智能体 | 纯 Rust、宪法治理架构 |
 | **cc-haha** | Claude Code 桌面端工作台 | IM 适配器、59 个工具集 |
 | **claude-code-rust** | Claude Code Rust 重构版 | 极致性能、多形态编译 |
-| **reasonix-model-switch** | 多模型管理 CLI 工具 | Provider 抽象、代理模式 |
+| **deepmicode-model-switch** | 多模型管理 CLI 工具 | Provider 抽象、代理模式 |
 
 ---
 
@@ -34,13 +34,13 @@
 | Feature flag | claude-code-rust | TypeScript 不需要 |
 | 前缀缓存 | CodeWhale | 已有，不需要替换 |
 | Token 可视化 | cc-haha | 已有，不需要替换 |
-| Mimo 配置参数 | reasonix-model-switch | 已有独立配置文件 |
+| Mimo 配置参数 | deepmicode-model-switch | 已有独立配置文件 |
 
 ---
 
 ## 三、Mimo 配置参数（独立来源）
 
-Mimo 的配置参数来自独立配置文件，不需要从 reasonix-model-switch 借鉴：
+Mimo 的配置参数来自独立配置文件，不需要从 deepmicode-model-switch 借鉴：
 
 ```
 Mimo 模型：
@@ -81,7 +81,7 @@ DeepSeek 模型：
 
 > **"二次开发，不要从零开始"**
 >
-> DeepMiCode 是 DeepSeek-Reasonix 的二次开发版本，不是从零开始的项目。
+> DeepMiCode 是 DeepSeek-deepmicode 的二次开发版本，不是从零开始的项目。
 > 我们只做最小化修改，保持与上游同步的可能性。
 > 那些看起来很酷的特性，如果与现有功能重叠或增加复杂度，就不迁移。
 > 真正的价值在于 Mimo 支持，这才是 DeepMiCode 的核心差异化。

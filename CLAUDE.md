@@ -1,4 +1,4 @@
-# DeepMiCode 项目指导文件
+﻿# DeepMiCode 项目指导文件
 
 ## 品牌名称
 
@@ -12,13 +12,13 @@
 
 > **"在巨人肩膀上开发，不要从零开始造轮子"**
 
-**DeepMiCode 是 DeepSeek-Reasonix 的二次开发版本，不是从零开始的项目。**
+**DeepMiCode 是 DeepSeek-deepmicode 的二次开发版本，不是从零开始的项目。**
 
 ---
 
 ## 一、基础项目
 
-### 选择 DeepSeek-Reasonix 作为基础
+### 选择 DeepSeek-deepmicode 作为基础
 
 **原因**：
 1. ✅ 核心引擎已验证（缓存命中率 90%+、错误恢复、上下文管理）
@@ -27,8 +27,8 @@
 4. ✅ 版本稳定（v0.52.0，已经过测试）
 5. ✅ 用户深度使用过（效果良好，响应快，不中断）
 
-**基础项目路径**：`E:\DeepCode\DeepSeek-Reasonix-main`
-**项目路径**：`E:\DeepCode\DeepMiCode-Reasonix-v0.53.0`
+**基础项目路径**：`E:\DeepCode\DeepSeek-deepmicode-main`
+**项目路径**：`E:\DeepCode\DeepMiCode-deepmicode-v0.53.0`
 
 ## Git 仓库
 
@@ -38,7 +38,7 @@
 
 ```bash
 # 进入项目目录
-cd E:/DeepCode/DeepMiCode-Reasonix-v0.53.0
+cd E:/DeepCode/DeepMiCode-deepmicode-v0.53.0
 
 # 查看状态
 git status
@@ -85,8 +85,8 @@ git push
 ### 第一步：复制项目（10 分钟）
 
 ```bash
-# 复制 DeepSeek-Reasonix
-cp -r E:/DeepCode/DeepSeek-Reasonix-main E:/DeepCode/DeepMyCode
+# 复制 DeepSeek-deepmicode
+cp -r E:/DeepCode/DeepSeek-deepmicode-main E:/DeepCode/DeepMyCode
 
 # 进入项目目录
 cd E:/DeepCode/DeepMyCode
@@ -183,7 +183,7 @@ cd E:/DeepCode/DeepMyCode
 
 ```
 DeepMyCode/
-├── src/                    # 核心代码（来自 DeepSeek-Reasonix）
+├── src/                    # 核心代码（来自 DeepSeek-deepmicode）
 │   ├── core/              # 核心引擎
 │   ├── tools/             # 工具系统
 │   ├── client.ts          # DeepSeek 客户端
@@ -191,7 +191,7 @@ DeepMyCode/
 │   ├── config.ts          # 配置系统
 │   ├── loop.ts            # 主循环
 │   └── ...
-├── desktop/               # 桌面应用（来自 DeepSeek-Reasonix）
+├── desktop/               # 桌面应用（来自 DeepSeek-deepmicode）
 │   ├── src/               # React 前端
 │   ├── src-tauri/         # Tauri 后端
 │   └── ...
@@ -252,14 +252,14 @@ DeepMyCode/
 
 ### 不要做的事
 
-1. ❌ **不要从零开始写核心引擎** - DeepSeek-Reasonix 已经很完善
+1. ❌ **不要从零开始写核心引擎** - DeepSeek-deepmicode 已经很完善
 2. ❌ **不要重写工具系统** - 20+ 工具已经够用
 3. ❌ **不要重写桌面应用** - Tauri + React 已经很完整
 4. ❌ **不要过度修改** - 保持与上游同步的可能性
 
 ### 要做的事
 
-1. ✅ **直接复制 DeepSeek-Reasonix** - 作为基础
+1. ✅ **直接复制 DeepSeek-deepmicode** - 作为基础
 2. ✅ **只修改品牌和 API** - 最小化修改
 3. ✅ **添加 Mimo 支持** - 核心差异化功能
 4. ✅ **保持与上游同步** - 获取更新
@@ -268,11 +268,11 @@ DeepMyCode/
 
 ## 八、与上游同步
 
-### 保持与 DeepSeek-Reasonix 同步
+### 保持与 DeepSeek-deepmicode 同步
 
 ```bash
 # 添加上游仓库
-git remote add upstream https://github.com/esengine/DeepSeek-Reasonix.git
+git remote add upstream https://github.com/esengine/DeepSeek-deepmicode.git
 
 # 获取更新
 git fetch upstream
@@ -297,7 +297,7 @@ git merge upstream/main
 
 ### 实施策略
 
-1. **基础**：DeepSeek-Reasonix（已验证）
+1. **基础**：DeepSeek-deepmicode（已验证）
 2. **修改**：品牌 + API（最小化）
 3. **添加**：Mimo 支持（差异化）
 4. **时间**：8 天（而不是 3-6 个月）
@@ -317,7 +317,7 @@ git merge upstream/main
 ### 第一步
 
 ```bash
-cp -r E:/DeepCode/DeepSeek-Reasonix-main E:/DeepCode/DeepMyCode
+cp -r E:/DeepCode/DeepSeek-deepmicode-main E:/DeepCode/DeepMyCode
 ```
 
 ### 第二步

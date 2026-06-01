@@ -1,4 +1,4 @@
-/** run_skill — temp homeDir / projectRoot so the tool never reads real skill dirs. */
+﻿/** run_skill — temp homeDir / projectRoot so the tool never reads real skill dirs. */
 
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -9,7 +9,7 @@ import { ToolRegistry } from "../src/tools.js";
 import { registerSkillTools } from "../src/tools/skills.js";
 
 function writeSkill(baseDir: string, name: string, description: string, body: string): void {
-  const dir = join(baseDir, ".reasonix", "skills", name);
+  const dir = join(baseDir, ".deepmicode", "skills", name);
   mkdirSync(dir, { recursive: true });
   writeFileSync(
     join(dir, "SKILL.md"),
@@ -24,7 +24,7 @@ function writeSkillWithFrontmatter(
   fm: Record<string, string>,
   body: string,
 ): void {
-  const dir = join(baseDir, ".reasonix", "skills", name);
+  const dir = join(baseDir, ".deepmicode", "skills", name);
   mkdirSync(dir, { recursive: true });
   const lines = ["---", `name: ${name}`];
   for (const [k, v] of Object.entries(fm)) lines.push(`${k}: ${v}`);
@@ -37,8 +37,8 @@ describe("run_skill tool", () => {
   let projectRoot: string;
 
   beforeEach(() => {
-    home = mkdtempSync(join(tmpdir(), "reasonix-skilltool-"));
-    projectRoot = mkdtempSync(join(tmpdir(), "reasonix-skilltool-proj-"));
+    home = mkdtempSync(join(tmpdir(), "deepmicode-skilltool-"));
+    projectRoot = mkdtempSync(join(tmpdir(), "deepmicode-skilltool-proj-"));
   });
 
   afterEach(() => {
@@ -75,7 +75,7 @@ describe("run_skill tool", () => {
   });
 
   it("returns a custom path skill when customSkillPaths is passed", async () => {
-    const custom = mkdtempSync(join(tmpdir(), "reasonix-skilltool-custom-"));
+    const custom = mkdtempSync(join(tmpdir(), "deepmicode-skilltool-custom-"));
     try {
       const dir = join(custom, "custom-run");
       mkdirSync(dir, { recursive: true });
@@ -95,7 +95,7 @@ describe("run_skill tool", () => {
   });
 
   it("unknown skill available list includes custom skills", async () => {
-    const custom = mkdtempSync(join(tmpdir(), "reasonix-skilltool-custom-"));
+    const custom = mkdtempSync(join(tmpdir(), "deepmicode-skilltool-custom-"));
     try {
       const dir = join(custom, "custom-known");
       mkdirSync(dir, { recursive: true });
@@ -251,8 +251,8 @@ describe("install_skill tool", () => {
   let projectRoot: string;
 
   beforeEach(() => {
-    home = mkdtempSync(join(tmpdir(), "reasonix-installskill-"));
-    projectRoot = mkdtempSync(join(tmpdir(), "reasonix-installskill-proj-"));
+    home = mkdtempSync(join(tmpdir(), "deepmicode-installskill-"));
+    projectRoot = mkdtempSync(join(tmpdir(), "deepmicode-installskill-proj-"));
   });
 
   afterEach(() => {
@@ -448,7 +448,7 @@ describe("built-in subagent tools (explore / research / review / security_review
   let home: string;
 
   beforeEach(() => {
-    home = mkdtempSync(join(tmpdir(), "reasonix-builtin-subagent-"));
+    home = mkdtempSync(join(tmpdir(), "deepmicode-builtin-subagent-"));
   });
 
   afterEach(() => {

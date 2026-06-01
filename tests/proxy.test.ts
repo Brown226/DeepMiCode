@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+﻿import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   DEFAULT_NO_PROXY,
   _resetForTests,
@@ -181,16 +181,16 @@ describe("installProxyIfConfigured", () => {
     expect(raws).toContain(".private.lan");
   });
 
-  it("layers REASONIX_NO_PROXY on top of system NO_PROXY (app-specific override)", () => {
+  it("layers deepmicode_NO_PROXY on top of system NO_PROXY (app-specific override)", () => {
     const result = installProxyIfConfigured({
       HTTPS_PROXY: "http://example:8080",
       NO_PROXY: "system.corp.example",
-      REASONIX_NO_PROXY: "app.specific.example, .reasonix.lan",
+      deepmicode_NO_PROXY: "app.specific.example, .deepmicode.lan",
     });
     const raws = result?.noProxy.map((p) => p.raw) ?? [];
     expect(raws).toContain("system.corp.example");
     expect(raws).toContain("app.specific.example");
-    expect(raws).toContain(".reasonix.lan");
+    expect(raws).toContain(".deepmicode.lan");
   });
 
   it("layers opts.extraNoProxy (config) on top of env-derived patterns", () => {
@@ -230,10 +230,10 @@ describe("installProxyIfConfigured", () => {
     expect(raws).toContain("localhost");
   });
 
-  it("env REASONIX_PROXY_DEEPSEEK_DIRECT=0 drops deepseek even without config override (#1497)", () => {
+  it("env deepmicode_PROXY_DEEPSEEK_DIRECT=0 drops deepseek even without config override (#1497)", () => {
     const result = installProxyIfConfigured({
       HTTPS_PROXY: "http://example:8080",
-      REASONIX_PROXY_DEEPSEEK_DIRECT: "0",
+      deepmicode_PROXY_DEEPSEEK_DIRECT: "0",
     });
     const raws = result?.noProxy.map((p) => p.raw) ?? [];
     expect(raws).not.toContain("api.deepseek.com");
@@ -299,19 +299,19 @@ describe("resolveNoProxy", () => {
     const r = resolveNoProxy({});
     expect(r.defaults).toHaveLength(DEFAULT_NO_PROXY.length);
     expect(r.envSystem).toHaveLength(0);
-    expect(r.envReasonix).toHaveLength(0);
+    expect(r.envdeepmicode).toHaveLength(0);
     expect(r.extra).toHaveLength(0);
     expect(r.all.length).toBe(DEFAULT_NO_PROXY.length);
   });
 
-  it("partitions patterns by source (defaults / env / REASONIX / extra)", () => {
+  it("partitions patterns by source (defaults / env / deepmicode / extra)", () => {
     const r = resolveNoProxy(
-      { NO_PROXY: "system.example", REASONIX_NO_PROXY: "app.example" },
+      { NO_PROXY: "system.example", deepmicode_NO_PROXY: "app.example" },
       { extraNoProxy: ["config.example"] },
     );
     expect(r.defaults.map((p) => p.raw)).toContain("api.deepseek.com");
     expect(r.envSystem.map((p) => p.raw)).toEqual(["system.example"]);
-    expect(r.envReasonix.map((p) => p.raw)).toEqual(["app.example"]);
+    expect(r.envdeepmicode.map((p) => p.raw)).toEqual(["app.example"]);
     expect(r.extra.map((p) => p.raw)).toEqual(["config.example"]);
     expect(r.all.map((p) => p.raw)).toEqual([
       ...r.defaults.map((p) => p.raw),
@@ -334,15 +334,15 @@ describe("resolveNoProxy", () => {
     expect(matchesNoProxy("127.0.0.1", r.all)).toBe(true);
   });
 
-  it("env REASONIX_PROXY_DEEPSEEK_DIRECT=0 drops the DeepSeek bypass (#1497)", () => {
-    const r = resolveNoProxy({ REASONIX_PROXY_DEEPSEEK_DIRECT: "0" }, {});
+  it("env deepmicode_PROXY_DEEPSEEK_DIRECT=0 drops the DeepSeek bypass (#1497)", () => {
+    const r = resolveNoProxy({ deepmicode_PROXY_DEEPSEEK_DIRECT: "0" }, {});
     expect(matchesNoProxy("api.deepseek.com", r.all)).toBe(false);
     expect(matchesNoProxy("127.0.0.1", r.all)).toBe(true);
   });
 
-  it("env REASONIX_PROXY_DEEPSEEK_DIRECT wins over config when set", () => {
+  it("env deepmicode_PROXY_DEEPSEEK_DIRECT wins over config when set", () => {
     const r = resolveNoProxy(
-      { REASONIX_PROXY_DEEPSEEK_DIRECT: "1" },
+      { deepmicode_PROXY_DEEPSEEK_DIRECT: "1" },
       { bypassDeepSeekDirect: false },
     );
     expect(matchesNoProxy("api.deepseek.com", r.all)).toBe(true);
@@ -360,7 +360,7 @@ describe("resolveBypassDeepSeekDirect (#1497)", () => {
 
   it("env false-y values flip the default off", () => {
     for (const v of ["0", "false", "no", "off", "FALSE", "Off"]) {
-      expect(resolveBypassDeepSeekDirect({ REASONIX_PROXY_DEEPSEEK_DIRECT: v }, undefined)).toBe(
+      expect(resolveBypassDeepSeekDirect({ deepmicode_PROXY_DEEPSEEK_DIRECT: v }, undefined)).toBe(
         false,
       );
     }
@@ -368,16 +368,16 @@ describe("resolveBypassDeepSeekDirect (#1497)", () => {
 
   it("env truthy values force the bypass back on (override config false)", () => {
     for (const v of ["1", "true", "yes", "on", "TRUE", "Yes"]) {
-      expect(resolveBypassDeepSeekDirect({ REASONIX_PROXY_DEEPSEEK_DIRECT: v }, false)).toBe(true);
+      expect(resolveBypassDeepSeekDirect({ deepmicode_PROXY_DEEPSEEK_DIRECT: v }, false)).toBe(true);
     }
   });
 
   it("unrecognized env values fall through to config", () => {
-    expect(resolveBypassDeepSeekDirect({ REASONIX_PROXY_DEEPSEEK_DIRECT: "maybe" }, false)).toBe(
+    expect(resolveBypassDeepSeekDirect({ deepmicode_PROXY_DEEPSEEK_DIRECT: "maybe" }, false)).toBe(
       false,
     );
     expect(
-      resolveBypassDeepSeekDirect({ REASONIX_PROXY_DEEPSEEK_DIRECT: "maybe" }, undefined),
+      resolveBypassDeepSeekDirect({ deepmicode_PROXY_DEEPSEEK_DIRECT: "maybe" }, undefined),
     ).toBe(true);
   });
 });

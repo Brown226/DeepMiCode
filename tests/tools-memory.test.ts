@@ -1,4 +1,4 @@
-/** remember / forget / recall_memory — dispatches through ToolRegistry; refusals surface as JSON-encoded `{ error }`. */
+﻿/** remember / forget / recall_memory — dispatches through ToolRegistry; refusals surface as JSON-encoded `{ error }`. */
 
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -13,8 +13,8 @@ describe("memory tools", () => {
   let projectRoot: string;
 
   beforeEach(() => {
-    home = mkdtempSync(join(tmpdir(), "reasonix-memtools-home-"));
-    projectRoot = mkdtempSync(join(tmpdir(), "reasonix-memtools-proj-"));
+    home = mkdtempSync(join(tmpdir(), "deepmicode-memtools-home-"));
+    projectRoot = mkdtempSync(join(tmpdir(), "deepmicode-memtools-proj-"));
   });
 
   afterEach(() => {

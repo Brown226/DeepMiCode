@@ -1,6 +1,6 @@
-# QQ channel setup
+﻿# QQ channel setup
 
-Reasonix can attach QQ to an existing `chat` or `code` session as a remote channel. QQ is not a third runtime mode.
+deepmicode can attach QQ to an existing `chat` or `code` session as a remote channel. QQ is not a third runtime mode.
 
 Once connected, QQ can:
 
@@ -12,7 +12,7 @@ Once connected, QQ can:
 
 Prepare these first:
 
-- a recent Reasonix release that already includes QQ support
+- a recent deepmicode release that already includes QQ support
 - a QQ account that has completed real-name verification
 - a QQ bot `App ID` and `App Secret` from QQ Open Platform
 
@@ -40,9 +40,9 @@ The exact QQ Open Platform UI may change, but the flow is usually:
 Start a session first:
 
 ~~~bash
-reasonix code
+deepmicode code
 # or
-reasonix chat
+deepmicode chat
 ~~~
 
 Then run:
@@ -53,7 +53,7 @@ Then run:
 
 First-time behavior:
 
-1. Reasonix asks for the QQ `App ID` in the current TUI.
+1. deepmicode asks for the QQ `App ID` in the current TUI.
 2. Then it asks for the `App Secret`.
 3. Enter `/cancel` at either step to abort.
 
@@ -95,10 +95,10 @@ That means:
 
 ## Typical usage
 
-1. Start `reasonix code` or `reasonix chat`.
+1. Start `deepmicode code` or `deepmicode chat`.
 2. Connect QQ once.
 3. Send a message from QQ.
-4. Let the local Reasonix session keep running.
+4. Let the local deepmicode session keep running.
 5. Continue replies, approvals, and follow-up interactions from QQ when needed.
 
 QQ extends the current session. It does not replace `chat` or `code`.
@@ -122,7 +122,7 @@ If needed, reconnect with explicit arguments:
 
 ### QQ receives the message, but no reply comes back
 
-Check that the local Reasonix session is still running and the channel is still connected:
+Check that the local deepmicode session is still running and the channel is still connected:
 
 ~~~text
 /qq status

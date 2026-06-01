@@ -1,4 +1,4 @@
-/** create_skill / add_mcp_server — temp homeDir + configPath so the tool never touches the real config. */
+﻿/** create_skill / add_mcp_server — temp homeDir + configPath so the tool never touches the real config. */
 
 import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -16,8 +16,8 @@ interface Setup {
 }
 
 function setup(): Setup {
-  const home = mkdtempSync(join(tmpdir(), "reasonix-scaffold-"));
-  const projectRoot = mkdtempSync(join(tmpdir(), "reasonix-scaffold-proj-"));
+  const home = mkdtempSync(join(tmpdir(), "deepmicode-scaffold-"));
+  const projectRoot = mkdtempSync(join(tmpdir(), "deepmicode-scaffold-proj-"));
   const configPath = join(home, "config.json");
   const reg = new ToolRegistry();
   registerScaffoldTools(reg, { homeDir: home, projectRoot, configPath });
@@ -51,7 +51,7 @@ describe("create_skill", () => {
     });
     expect(r.success).toBe(true);
     expect(r.scope).toBe("project");
-    expect(r.path).toContain(".reasonix");
+    expect(r.path).toContain(".deepmicode");
     expect(existsSync(r.path)).toBe(true);
     const content = readFileSync(r.path, "utf8");
     expect(content).toContain("name: lint-before-commit");

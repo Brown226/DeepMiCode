@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+﻿import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, sep } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -29,7 +29,7 @@ describe("buildEditToolBlocks", () => {
   let root: string;
 
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), "reasonix-review-gate-"));
+    root = mkdtempSync(join(tmpdir(), "deepmicode-review-gate-"));
     writeFileSync(join(root, "existing.ts"), "export const value = 1;\n", "utf8");
   });
 

@@ -1,4 +1,4 @@
-// @vitest-environment jsdom
+﻿// @vitest-environment jsdom
 
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
@@ -10,7 +10,7 @@ describe("desktop startup failure screen (#1752)", () => {
     const retry = vi.fn();
     render(<StartupFailure details={["spawn: dist/cli/index.js not found"]} onRetry={retry} />);
 
-    expect(screen.getByRole("alert").textContent).toContain("Reasonix could not start");
+    expect(screen.getByRole("alert").textContent).toContain("deepmicode could not start");
     expect(screen.getByText("spawn: dist/cli/index.js not found")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Retry" }));

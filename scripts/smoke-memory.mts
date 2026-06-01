@@ -1,8 +1,8 @@
-/**
+﻿/**
  * End-to-end smoke test for the memory layer. Runs against a temp
- * homeDir so the developer's real ~/.reasonix/memory/ is never touched.
+ * homeDir so the developer's real ~/.deepmicode/memory/ is never touched.
  * Exercises: write → index regeneration → prefix assembly →
- * recall → delete → REASONIX_MEMORY=off short-circuit.
+ * recall → delete → deepmicode_MEMORY=off short-circuit.
  *
  * Run: npx tsx scripts/smoke-memory.mts
  * Exit code 0 on success, 1 on any assertion failure.
@@ -31,8 +31,8 @@ function check(label: string, cond: unknown, detail?: string) {
 }
 
 async function main() {
-  const home = mkdtempSync(join(tmpdir(), "reasonix-smoke-home-"));
-  const projectRoot = mkdtempSync(join(tmpdir(), "reasonix-smoke-proj-"));
+  const home = mkdtempSync(join(tmpdir(), "deepmicode-smoke-home-"));
+  const projectRoot = mkdtempSync(join(tmpdir(), "deepmicode-smoke-proj-"));
   process.stdout.write(`home:    ${home}\nproject: ${projectRoot}\n\n`);
 
   try {
@@ -69,9 +69,9 @@ async function main() {
     const raw = readFileSync(projectFile, "utf8");
     check("frontmatter has name/type/scope/created", /^---\nname: bun_build\n/.test(raw) && /type: project/.test(raw) && /scope: project/.test(raw) && /created: \d{4}-\d{2}-\d{2}/.test(raw));
 
-    // ── 2. Prefix assembly via applyMemoryStack (+ REASONIX.md) ────────
-    process.stdout.write("\n2. Prefix assembly (REASONIX.md + user memory)\n");
-    writeFileSync(join(projectRoot, "REASONIX.md"), "# Project notes\nPrefer explicit types over inference.\n", "utf8");
+    // ── 2. Prefix assembly via applyMemoryStack (+ deepmicode.md) ────────
+    process.stdout.write("\n2. Prefix assembly (deepmicode.md + user memory)\n");
+    writeFileSync(join(projectRoot, "deepmicode.md"), "# Project notes\nPrefer explicit types over inference.\n", "utf8");
     const BASE = "You are a test assistant.";
     const withProjOnly = applyUserMemory(BASE, { homeDir: home, projectRoot });
     check("applyUserMemory contains global block", withProjOnly.includes("# User memory — global"));
@@ -79,7 +79,7 @@ async function main() {
     check("bun_build description present in prefix", withProjOnly.includes("bun run build"));
     check("tabs_not_spaces description present in prefix", withProjOnly.includes("Use tabs for indentation"));
 
-    // Order: base → (REASONIX.md would go first via applyMemoryStack) → global → project
+    // Order: base → (deepmicode.md would go first via applyMemoryStack) → global → project
     const ordered = applyUserMemory(BASE, { homeDir: home, projectRoot });
     const iGlobalBlock = ordered.indexOf("# User memory — global");
     const iProjBlock = ordered.indexOf("# User memory — this project");
@@ -143,16 +143,16 @@ async function main() {
     });
     check("scope='global' in chat mode → writes successfully", globalInChat.includes("REMEMBERED (global/"));
 
-    // ── 5. REASONIX_MEMORY=off short-circuit ───────────────────────────
-    process.stdout.write("\n5. REASONIX_MEMORY=off opt-out\n");
-    process.env.REASONIX_MEMORY = "off";
+    // ── 5. deepmicode_MEMORY=off short-circuit ───────────────────────────
+    process.stdout.write("\n5. deepmicode_MEMORY=off opt-out\n");
+    process.env.deepmicode_MEMORY = "off";
     try {
       const silenced = applyUserMemory(BASE, { homeDir: home, projectRoot });
       check("applyUserMemory returns BASE unchanged when off", silenced === BASE);
       const fullStack = applyMemoryStack(BASE, projectRoot);
-      check("applyMemoryStack returns BASE unchanged when off (REASONIX.md also skipped)", fullStack === BASE);
+      check("applyMemoryStack returns BASE unchanged when off (deepmicode.md also skipped)", fullStack === BASE);
     } finally {
-      delete process.env.REASONIX_MEMORY;
+      delete process.env.deepmicode_MEMORY;
     }
 
     // ── 6. Delete regeneration: MEMORY.md matches current file set ─────

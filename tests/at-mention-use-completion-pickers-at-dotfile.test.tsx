@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Tests for @-mention search-mode directory-prefix filtering in
  * `useCompletionPickers`. Ensures that when the user types a path
  * like `@subdir/.gitignore`, only files under `subdir/` appear —
@@ -71,7 +71,7 @@ describe("useCompletionPickers @-mention directory-prefix filtering", () => {
   let root: string;
 
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), "reasonix-at-picker-"));
+    root = mkdtempSync(join(tmpdir(), "deepmicode-at-picker-"));
     // Reproduce the exact scenario from the bug report:
     //   root/.gitignore  (same-name file at project root)
     //   root/benchmarks/compression-eval/.gitignore  (the one the user wants)

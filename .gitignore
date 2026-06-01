@@ -1,4 +1,4 @@
-node_modules/
+﻿node_modules/
 dist/
 coverage/
 .stryker-tmp/
@@ -18,20 +18,20 @@ transcripts/
 sessions/
 *.jsonl
 !tests/**/*.jsonl
-# Committed reference transcripts so readers can reasonix replay / diff
+# Committed reference transcripts so readers can deepmicode replay / diff
 # the v0.1 bench results without an API key.
 !benchmarks/tau-bench/transcripts/
 !benchmarks/tau-bench/transcripts/*.jsonl
 .turbo/
 # Local-only Claude Code settings — personal overrides, never committed.
 .claude/settings.local.json
-# Per-user Reasonix state under .reasonix/ — committable team-level
+# Per-user deepmicode state under .deepmicode/ — committable team-level
 # files (settings.json, skills/) stay tracked, but the user-private
 # bits (semantic index, sessions, opt-out markers) never should.
-.reasonix/semantic/
-.reasonix/sessions/
-.reasonix/semantic-skip
-.reasonix/truncated-results/
+.deepmicode/semantic/
+.deepmicode/sessions/
+.deepmicode/semantic-skip
+.deepmicode/truncated-results/
 # Scratch entry regenerated each time scripts/bundle-codemirror.mjs runs.
 scripts/.cm-entry.mjs
 # Personal bun lockfile — project uses npm officially.

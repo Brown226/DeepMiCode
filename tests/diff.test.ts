@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import {
   diffTranscripts,
   findNextDivergence,
@@ -136,13 +136,13 @@ describe("diffTranscripts", () => {
       mkAssistant(1, "one", { hit: 100, miss: 900, cost: 0.0003, prefixHash: "h1" }),
       mkAssistant(2, "two", { hit: 100, miss: 900, cost: 0.0003, prefixHash: "h2" }),
     ];
-    const reasonix = [
+    const deepmicode = [
       mkAssistant(1, "one", { hit: 900, miss: 100, cost: 0.0001, prefixHash: "stable" }),
       mkAssistant(2, "two", { hit: 900, miss: 100, cost: 0.0001, prefixHash: "stable" }),
     ];
     const report = diffTranscripts(
       { label: "baseline", parsed: mkParsed(baseline) },
-      { label: "reasonix", parsed: mkParsed(reasonix) },
+      { label: "deepmicode", parsed: mkParsed(deepmicode) },
     );
     expect(report.a.stats.cacheHitRatio).toBeCloseTo(0.1, 2);
     expect(report.b.stats.cacheHitRatio).toBeCloseTo(0.9, 2);
@@ -169,13 +169,13 @@ describe("renderers", () => {
       mkAssistant(1, "one", { hit: 100, miss: 900, prefixHash: "h1" }),
       mkAssistant(2, "two", { hit: 100, miss: 900, prefixHash: "h2" }),
     ];
-    const reasonix = [
+    const deepmicode = [
       mkAssistant(1, "one", { hit: 900, miss: 100, prefixHash: "stable" }),
       mkAssistant(2, "two", { hit: 900, miss: 100, prefixHash: "stable" }),
     ];
     const report = diffTranscripts(
       { label: "baseline", parsed: mkParsed(baseline) },
-      { label: "reasonix", parsed: mkParsed(reasonix) },
+      { label: "deepmicode", parsed: mkParsed(deepmicode) },
     );
     const table = renderSummaryTable(report);
     expect(table).toContain("cache hit");

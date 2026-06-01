@@ -1,4 +1,4 @@
-import { promises as fs } from "node:fs";
+﻿import { promises as fs } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -11,7 +11,7 @@ describe("bootstrapSemanticSearchInCodeMode", () => {
   let tools: ToolRegistry;
 
   beforeEach(async () => {
-    root = await mkdtemp(join(tmpdir(), "reasonix-bootstrap-"));
+    root = await mkdtemp(join(tmpdir(), "deepmicode-bootstrap-"));
     tools = new ToolRegistry();
   });
 
@@ -20,7 +20,7 @@ describe("bootstrapSemanticSearchInCodeMode", () => {
   });
 
   it("registers the tool when an index already exists", async () => {
-    const semanticDir = join(root, ".reasonix", "semantic");
+    const semanticDir = join(root, ".deepmicode", "semantic");
     await fs.mkdir(semanticDir, { recursive: true });
     await fs.writeFile(
       join(semanticDir, "index.meta.json"),
@@ -43,7 +43,7 @@ describe("bootstrapSemanticSearchInCodeMode", () => {
   });
 
   it("skips the tool when the on-disk index targets a different provider", async () => {
-    const semanticDir = join(root, ".reasonix", "semantic");
+    const semanticDir = join(root, ".deepmicode", "semantic");
     await fs.mkdir(semanticDir, { recursive: true });
     await fs.writeFile(
       join(semanticDir, "index.meta.json"),
@@ -69,8 +69,8 @@ describe("bootstrapSemanticSearchInCodeMode", () => {
   it("silently skips (no prompt) when no index is built — even with Ollama present", async () => {
     // The contract: bootstrap NEVER prompts at startup, regardless of
     // local Ollama state. Setup happens via the explicit
-    // `reasonix index` command + `/semantic` slash. This is the
-    // load-bearing UX guarantee — `npx reasonix code` must be silent
+    // `deepmicode index` command + `/semantic` slash. This is the
+    // load-bearing UX guarantee — `npx deepmicode code` must be silent
     // for users who haven't opted in.
     const result = await bootstrapSemanticSearchInCodeMode(tools, root);
     expect(result.enabled).toBe(false);

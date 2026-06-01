@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Library example: programmatic replay + diff.
  *
  * This example runs with no API key and no DeepSeek calls — it reads the
@@ -8,7 +8,7 @@
  * Run from the repo root:
  *   npx tsx examples/replay-and-diff.ts
  *
- * Anything you can do with `reasonix replay` / `reasonix diff` is available
+ * Anything you can do with `deepmicode replay` / `deepmicode diff` is available
  * here as a function you can drive from your own scripts (CI gates, eval
  * dashboards, blog post generation, etc.).
  */
@@ -21,14 +21,14 @@ import {
 } from "../src/index.js";
 
 const BASELINE = "benchmarks/tau-bench/transcripts/t01_address_happy.baseline.r1.jsonl";
-const REASONIX = "benchmarks/tau-bench/transcripts/t01_address_happy.reasonix.r1.jsonl";
+const deepmicode = "benchmarks/tau-bench/transcripts/t01_address_happy.deepmicode.r1.jsonl";
 
 // ---------- 1. Replay a single transcript as pure data ----------
 
-const parsed = readTranscript(REASONIX);
+const parsed = readTranscript(deepmicode);
 const stats = computeReplayStats(parsed.records);
 
-console.log("=== Reasonix side, computed from transcript alone ===");
+console.log("=== deepmicode side, computed from transcript alone ===");
 console.log(`  model calls:        ${stats.turns}`);
 console.log(`  cache hit:          ${(stats.cacheHitRatio * 100).toFixed(1)}%`);
 console.log(`  total cost:         $${stats.totalCostUsd.toFixed(6)}`);
@@ -43,15 +43,15 @@ console.log();
 // ---------- 2. Diff two transcripts ----------
 
 const aParsed = readTranscript(BASELINE);
-const bParsed = readTranscript(REASONIX);
+const bParsed = readTranscript(deepmicode);
 
 const report = diffTranscripts(
   { label: "baseline", parsed: aParsed },
-  { label: "reasonix", parsed: bParsed },
+  { label: "deepmicode", parsed: bParsed },
 );
 
 // renderDiffSummary returns a monochrome stdout-ready string. Equivalent to
-// what `reasonix diff --print` outputs.
+// what `deepmicode diff --print` outputs.
 console.log(renderDiffSummary(report));
 
 // ---------- 3. Direct programmatic access to pairs ----------

@@ -1,4 +1,4 @@
-/** `startDashboardServer({ port })` — pinned port binds and rejects EADDRINUSE. */
+﻿/** `startDashboardServer({ port })` — pinned port binds and rejects EADDRINUSE. */
 
 import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { createServer } from "node:http";
@@ -40,7 +40,7 @@ describe("startDashboardServer port pinning", () => {
   let handle: DashboardServerHandle | undefined;
 
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-dashport-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-dashport-"));
   });
 
   afterEach(async () => {

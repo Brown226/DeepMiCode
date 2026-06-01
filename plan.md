@@ -1,8 +1,8 @@
-# DeepMiCode-Reasonix 实施计划
+﻿# DeepMiCode-deepmicode 实施计划
 
-> 基于 DeepSeek-Reasonix v0.53.0 二次开发
+> 基于 DeepSeek-deepmicode v0.53.0 二次开发
 > GitHub 仓库：https://github.com/Brown226/DeepMiCode.git
-> 项目路径：`E:\DeepCode\DeepMiCode-Reasonix-v0.53.0`
+> 项目路径：`E:\DeepCode\DeepMiCode-deepmicode-v0.53.0`
 
 ---
 
@@ -24,7 +24,7 @@
 
 | 关键词 | 出现文件数 | 出现次数 |
 |--------|-----------|----------|
-| `Reasonix` / `reasonix` | 214 个文件 | 1141 次 |
+| `deepmicode` / `deepmicode` | 214 个文件 | 1141 次 |
 | `DeepSeek` | 93 个文件 | 458 次 |
 
 ### 关键文件清单
@@ -34,7 +34,7 @@
 | `package.json` | 项目名称、版本、描述、bin 命令 | P0 |
 | `desktop/src-tauri/tauri.conf.json` | 桌面应用配置（productName、identifier） | P0 |
 | `src/version.ts` | 版本检测、npm registry URL | P0 |
-| `src/config.ts` | 配置系统、默认路径 ~/.reasonix | P0 |
+| `src/config.ts` | 配置系统、默认路径 ~/.deepmicode | P0 |
 | `src/cli/index.ts` | CLI 入口、命令名称 | P0 |
 | `src/i18n/*.ts` | 国际化文件（5种语言） | P0 |
 | `desktop/src/i18n/*.ts` | 桌面应用国际化 | P0 |
@@ -46,10 +46,10 @@
 
 ### 当前未修改状态
 
-- `package.json` 中 `name` 仍为 `"reasonix"`
+- `package.json` 中 `name` 仍为 `"deepmicode"`
 - 没有找到 `src/client-mimo.ts`（Mimo 客户端）
 - 没有找到任何 "Mimo" 或 "DeepMiCode" 相关代码
-- 配置路径仍为 `~/.reasonix/`
+- 配置路径仍为 `~/.deepmicode/`
 - 环境变量仍为 `DEEPSEEK_API_KEY`
 
 ---
@@ -111,26 +111,26 @@
 **文件**：`src/version.ts`
 
 修改内容：
-- `REGISTRY_URL`: `"https://registry.npmjs.org/reasonix/latest"` → `"https://registry.npmjs.org/deepmicode/latest"`
-- `readPackageVersion()`: `pkg?.name === "reasonix"` → `pkg?.name === "deepmicode"`
-- `cachePath()`: `join(dir, ".reasonix", ...)` → `join(dir, ".deepmicode", ...)`
-- `detectNpmInstallPrefix()`: 路径匹配中的 `reasonix` → `deepmicode`
+- `REGISTRY_URL`: `"https://registry.npmjs.org/deepmicode/latest"` → `"https://registry.npmjs.org/deepmicode/latest"`
+- `readPackageVersion()`: `pkg?.name === "deepmicode"` → `pkg?.name === "deepmicode"`
+- `cachePath()`: `join(dir, ".deepmicode", ...)` → `join(dir, ".deepmicode", ...)`
+- `detectNpmInstallPrefix()`: 路径匹配中的 `deepmicode` → `deepmicode`
 
 ### 步骤 1.4：修改配置系统
 
 **文件**：`src/config.ts`
 
 修改内容：
-- `defaultConfigPath()`: `join(homedir(), ".reasonix", "config.json")` → `join(homedir(), ".deepmicode", "config.json")`
-- 可选：`ReasonixConfig` 接口名 → `DeepMiCodeConfig`（影响范围较大，可暂时保留）
+- `defaultConfigPath()`: `join(homedir(), ".deepmicode", "config.json")` → `join(homedir(), ".deepmicode", "config.json")`
+- 可选：`deepmicodeConfig` 接口名 → `DeepMiCodeConfig`（影响范围较大，可暂时保留）
 
 ### 步骤 1.5：修改 CLI 入口
 
 **文件**：`src/cli/index.ts`
 
 修改内容：
-- `program.name("reasonix")` → `program.name("deepmicode")`
-- `defaultSystemPrompt()` 中的 `"You are Reasonix"` → `"You are DeepMiCode"`
+- `program.name("deepmicode")` → `program.name("deepmicode")`
+- `defaultSystemPrompt()` 中的 `"You are deepmicode"` → `"You are DeepMiCode"`
 
 ### 步骤 1.6：修改国际化文件
 
@@ -141,9 +141,9 @@
 - `src/i18n/ru.ts` - 约 19 处替换
 
 替换规则：
-- `Reasonix` → `DeepMiCode`
-- `reasonix` → `deepmicode`
-- `REASONIX` → `DEEPMICODE`（环境变量前缀）
+- `deepmicode` → `DeepMiCode`
+- `deepmicode` → `deepmicode`
+- `deepmicode` → `DEEPMICODE`（环境变量前缀）
 
 ### 步骤 1.7：修改桌面应用国际化
 
@@ -165,14 +165,14 @@ const REPO_URL = "https://github.com/Brown226/DeepMiCode";
 ### 步骤 1.9：修改其他引用文件
 
 **涉及目录**：
-- `src/cli/commands/*.ts` - 各命令文件中的 Reasonix 引用
+- `src/cli/commands/*.ts` - 各命令文件中的 deepmicode 引用
 - `src/tools/*.ts` - 工具文件中的引用
-- `src/memory/*.ts` - 内存系统（~/.reasonix 路径）
+- `src/memory/*.ts` - 内存系统（~/.deepmicode 路径）
 - `src/mcp/*.ts` - MCP 系统
 - `src/server/*.ts` - Dashboard 服务器
 - `dashboard/src/**/*.ts` - Dashboard 前端
 - `tests/*.ts` - 测试文件（200+ 个）
-- `src/net/proxy.ts` - 代理配置（REASONIX_PROXY_* 环境变量）
+- `src/net/proxy.ts` - 代理配置（deepmicode_PROXY_* 环境变量）
 - `src/hooks.ts` - Hook 系统（HOOK_SETTINGS_DIRNAME）
 
 ---
@@ -212,7 +212,7 @@ export class MimoClient {
 添加配置字段：
 
 ```typescript
-export interface ReasonixConfig {
+export interface deepmicodeConfig {
   // ... 现有字段 ...
 
   // AI 提供商选择
@@ -422,7 +422,7 @@ export function isMimoHost(baseUrl: string | undefined | null): boolean {
 ### 步骤 3.1：安装依赖
 
 ```bash
-cd E:/DeepCode/DeepMiCode-Reasonix-v0.53.0
+cd E:/DeepCode/DeepMiCode-deepmicode-v0.53.0
 npm install
 ```
 
@@ -504,7 +504,7 @@ npm publish
 每次修改后及时提交：
 
 ```bash
-cd E:/DeepCode/DeepMiCode-Reasonix-v0.53.0
+cd E:/DeepCode/DeepMiCode-deepmicode-v0.53.0
 
 # 查看状态
 git status

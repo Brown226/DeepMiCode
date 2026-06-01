@@ -1,4 +1,4 @@
-// Top nav — single bar shared between index and download pages
+﻿// Top nav — single bar shared between index and download pages
 
 function Nav({ active }) {
   const { version: rxVersion, status: rxStatus } = useVersion();
@@ -27,7 +27,7 @@ function Nav({ active }) {
         <a className="brand" href="index.html">
           <span className="brand-mark"></span>
           <span className="brand-name">
-            <b>Reasonix</b><span>DS · {rxLabel}</span>
+            <b>deepmicode</b><span>DS · {rxLabel}</span>
           </span>
         </a>
         <div className="nav-links" role="navigation">
@@ -60,7 +60,7 @@ function Nav({ active }) {
               onClick={() => setLang("zh")}
             >中文</button>
           </div>
-          <a className="btn btn-ghost btn-sm" href="https://github.com/esengine/DeepSeek-Reasonix" target="_blank" rel="noreferrer">
+          <a className="btn btn-ghost btn-sm" href="https://github.com/esengine/DeepSeek-deepmicode" target="_blank" rel="noreferrer">
             <Ic.Github size={13}/> GitHub
           </a>
           <a className="btn btn-primary btn-sm" href="download.html">

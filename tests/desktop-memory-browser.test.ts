@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+﻿import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -10,23 +10,23 @@ import { MemoryStore } from "../src/memory/user.js";
 
 describe("desktop memory browser", () => {
   let root: string;
-  let reasonixHome: string;
+  let deepmicodeHome: string;
 
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), "reasonix-memory-project-"));
-    reasonixHome = join(mkdtempSync(join(tmpdir(), "reasonix-memory-home-")), ".reasonix");
-    mkdirSync(reasonixHome, { recursive: true });
+    root = mkdtempSync(join(tmpdir(), "deepmicode-memory-project-"));
+    deepmicodeHome = join(mkdtempSync(join(tmpdir(), "deepmicode-memory-home-")), ".deepmicode");
+    mkdirSync(deepmicodeHome, { recursive: true });
   });
 
   afterEach(() => {
     rmSync(root, { recursive: true, force: true });
-    rmSync(reasonixHome, { recursive: true, force: true });
+    rmSync(deepmicodeHome, { recursive: true, force: true });
   });
 
-  it("lists project REASONIX.md, global REASONIX.md, and structured memory entries", () => {
-    writeFileSync(join(root, "REASONIX.md"), "project note", "utf8");
-    writeFileSync(join(reasonixHome, "REASONIX.md"), "global note", "utf8");
-    const store = new MemoryStore({ homeDir: reasonixHome, projectRoot: root });
+  it("lists project deepmicode.md, global deepmicode.md, and structured memory entries", () => {
+    writeFileSync(join(root, "deepmicode.md"), "project note", "utf8");
+    writeFileSync(join(deepmicodeHome, "deepmicode.md"), "global note", "utf8");
+    const store = new MemoryStore({ homeDir: deepmicodeHome, projectRoot: root });
     store.write({
       name: "cli_pref",
       scope: "global",
@@ -42,11 +42,11 @@ describe("desktop memory browser", () => {
       body: "Run npm run verify before release.",
     });
 
-    const entries = collectMemoryEntriesForWorkspace(root, { reasonixHome });
+    const entries = collectMemoryEntriesForWorkspace(root, { deepmicodeHome });
 
     expect(entries.map((e) => `${e.kind}:${e.scope}:${e.name}`)).toEqual([
-      "project_file:project:REASONIX.md",
-      "global_file:global:REASONIX.md",
+      "project_file:project:deepmicode.md",
+      "global_file:global:deepmicode.md",
       "structured:global:cli_pref",
       "structured:project:build_cmd",
     ]);
@@ -55,20 +55,20 @@ describe("desktop memory browser", () => {
   });
 
   it("reads details only for listed memory files", () => {
-    writeFileSync(join(root, "REASONIX.md"), "project note", "utf8");
-    const entries = collectMemoryEntriesForWorkspace(root, { reasonixHome });
+    writeFileSync(join(root, "deepmicode.md"), "project note", "utf8");
+    const entries = collectMemoryEntriesForWorkspace(root, { deepmicodeHome });
 
-    const detail = readMemoryEntryDetail({ path: entries[0]!.path }, root, { reasonixHome });
+    const detail = readMemoryEntryDetail({ path: entries[0]!.path }, root, { deepmicodeHome });
 
     expect(detail).toMatchObject({
       kind: "project_file",
       scope: "project",
-      name: "REASONIX.md",
+      name: "deepmicode.md",
       body: "project note",
     });
     expect(() =>
-      readMemoryEntryDetail({ path: join(reasonixHome, "not-listed.md") }, root, {
-        reasonixHome,
+      readMemoryEntryDetail({ path: join(deepmicodeHome, "not-listed.md") }, root, {
+        deepmicodeHome,
       }),
     ).toThrow(/not available/);
   });

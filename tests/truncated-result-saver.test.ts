@@ -1,4 +1,4 @@
-import {
+﻿import {
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -22,18 +22,18 @@ describe("saveTruncatedResult", () => {
   let rootDir: string;
 
   beforeEach(() => {
-    rootDir = mkdtempSync(join(tmpdir(), "reasonix-trunc-save-"));
+    rootDir = mkdtempSync(join(tmpdir(), "deepmicode-trunc-save-"));
   });
 
   afterEach(() => {
     rmSync(rootDir, { recursive: true, force: true });
   });
 
-  it("writes content to .reasonix/truncated-results/", () => {
+  it("writes content to .deepmicode/truncated-results/", () => {
     const content = "some long result that was truncated";
     const path = saveTruncatedResult(content, "web_search", rootDir);
     // Path should be relative to rootDir
-    expect(path).toMatch(/^\.reasonix\/truncated-results\/\d+-[a-f0-9]+-web_search\.txt$/);
+    expect(path).toMatch(/^\.deepmicode\/truncated-results\/\d+-[a-f0-9]+-web_search\.txt$/);
     const abs = resolve(rootDir, path);
     expect(existsSync(abs)).toBe(true);
     expect(readFileSync(abs, "utf-8")).toBe(content);
@@ -42,7 +42,7 @@ describe("saveTruncatedResult", () => {
   it("creates the directory if missing", () => {
     const content = "test content";
     const path = saveTruncatedResult(content, "read_file", rootDir);
-    expect(existsSync(join(rootDir, ".reasonix", "truncated-results"))).toBe(true);
+    expect(existsSync(join(rootDir, ".deepmicode", "truncated-results"))).toBe(true);
     expect(existsSync(resolve(rootDir, path))).toBe(true);
   });
 
@@ -60,18 +60,18 @@ describe("saveTruncatedResult", () => {
     expect(filename).not.toMatch(/[/:]/);
   });
 
-  it("falls back to ~/.reasonix when rootDir is the filesystem root", () => {
+  it("falls back to ~/.deepmicode when rootDir is the filesystem root", () => {
     const origHome = process.env.HOME;
     const origUserProfile = process.env.USERPROFILE;
-    const fakeHome = mkdtempSync(join(tmpdir(), "reasonix-trunc-home-"));
+    const fakeHome = mkdtempSync(join(tmpdir(), "deepmicode-trunc-home-"));
     process.env.HOME = fakeHome;
     process.env.USERPROFILE = fakeHome;
 
     try {
       const fsRoot = process.platform === "win32" ? "C:\\" : "/";
       const path = saveTruncatedResult("root cwd", "run_skill", fsRoot);
-      expect(path).toMatch(/\.reasonix\/truncated-results\//);
-      expect(path.startsWith("/.reasonix")).toBe(false);
+      expect(path).toMatch(/\.deepmicode\/truncated-results\//);
+      expect(path.startsWith("/.deepmicode")).toBe(false);
       expect(existsSync(path)).toBe(true);
     } finally {
       if (origHome === undefined) process.env.HOME = undefined;
@@ -82,11 +82,11 @@ describe("saveTruncatedResult", () => {
     }
   });
 
-  it("falls back to ~/.reasonix when rootDir is empty", () => {
+  it("falls back to ~/.deepmicode when rootDir is empty", () => {
     // Redirect HOME so os.homedir() points to a temp dir instead of real home.
     const origHome = process.env.HOME;
     const origUserProfile = process.env.USERPROFILE;
-    const fakeHome = mkdtempSync(join(tmpdir(), "reasonix-trunc-home-"));
+    const fakeHome = mkdtempSync(join(tmpdir(), "deepmicode-trunc-home-"));
     process.env.HOME = fakeHome;
     process.env.USERPROFILE = fakeHome;
 
@@ -94,7 +94,7 @@ describe("saveTruncatedResult", () => {
       const content = "fallback test";
       const path = saveTruncatedResult(content, "web_search", "");
       // Should be an absolute path since no rootDir to relativize against
-      expect(path).toMatch(/\.reasonix\/truncated-results\//);
+      expect(path).toMatch(/\.deepmicode\/truncated-results\//);
       expect(existsSync(path)).toBe(true);
     } finally {
       if (origHome === undefined) process.env.HOME = undefined;
@@ -120,7 +120,7 @@ describe("cleanupOldResults", () => {
   let rootDir: string;
 
   beforeEach(() => {
-    rootDir = mkdtempSync(join(tmpdir(), "reasonix-trunc-cln-"));
+    rootDir = mkdtempSync(join(tmpdir(), "deepmicode-trunc-cln-"));
     mkdirSync(storageDir(rootDir), { recursive: true });
   });
 
@@ -129,7 +129,7 @@ describe("cleanupOldResults", () => {
   });
 
   it("removes files older than maxAgeMs", () => {
-    const dir = join(rootDir, ".reasonix", "truncated-results");
+    const dir = join(rootDir, ".deepmicode", "truncated-results");
     // Create an old file by writing it with an mtime in the past
     const oldFile = join(dir, "1000000000000-old.txt");
     writeFileSync(oldFile, "old content");
@@ -152,7 +152,7 @@ describe("cleanupOldResults", () => {
   });
 
   it("is a no-op on missing directory", () => {
-    const missing = mkdtempSync(join(tmpdir(), "reasonix-trunc-missing-"));
+    const missing = mkdtempSync(join(tmpdir(), "deepmicode-trunc-missing-"));
     rmSync(missing, { recursive: true, force: true });
     expect(() => cleanupOldResults(missing, 1000)).not.toThrow();
   });

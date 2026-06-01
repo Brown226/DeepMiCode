@@ -1,4 +1,4 @@
-/** Regression for #942 — write_file interceptor must NOT strip the slash off a real absolute system path. */
+﻿/** Regression for #942 — write_file interceptor must NOT strip the slash off a real absolute system path. */
 
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -31,7 +31,7 @@ describe("pathIsUnder", () => {
   let root: string;
 
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), "reasonix-path-"));
+    root = mkdtempSync(join(tmpdir(), "deepmicode-path-"));
   });
   afterEach(() => {
     rmSync(root, { recursive: true, force: true });
@@ -46,7 +46,7 @@ describe("pathIsUnder", () => {
   });
 
   it("rejects a sibling", () => {
-    const other = mkdtempSync(join(tmpdir(), "reasonix-other-"));
+    const other = mkdtempSync(join(tmpdir(), "deepmicode-other-"));
     try {
       expect(pathIsUnder(join(other, "a"), root)).toBe(false);
     } finally {
@@ -84,7 +84,7 @@ describe("write_file interceptor logic — issue #942 reproduction", () => {
   let root: string;
 
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), "reasonix-root-"));
+    root = mkdtempSync(join(tmpdir(), "deepmicode-root-"));
   });
   afterEach(() => {
     rmSync(root, { recursive: true, force: true });

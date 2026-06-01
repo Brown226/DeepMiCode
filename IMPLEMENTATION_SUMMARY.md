@@ -1,12 +1,12 @@
-# DeepMiCode 实施完成总结
+﻿# DeepMiCode 实施完成总结
 
 ## 项目概述
 
-**DeepMiCode** 是基于 DeepSeek-Reasonix 的二次开发版本，融合了 DeepSeek + Mimo 的 AI 编码助手。
+**DeepMiCode** 是基于 DeepSeek-deepmicode 的二次开发版本，融合了 DeepSeek + Mimo 的 AI 编码助手。
 
 - **GitHub 仓库**: https://github.com/Brown226/DeepMiCode.git
 - **版本**: v0.53.0
-- **基础项目**: DeepSeek-Reasonix v0.53.0
+- **基础项目**: DeepSeek-deepmicode v0.53.0
 
 ---
 
@@ -40,7 +40,7 @@
 
 **新增配置项**:
 ```typescript
-interface ReasonixConfig {
+interface deepmicodeConfig {
   provider?: "deepseek" | "mimo";
   mimoApiKey?: string;
   mimoBaseUrl?: string;
@@ -150,7 +150,7 @@ e186848 feat: Add MiMo model support and update branding to DeepMiCode
 f386d03 docs: 更新竞品分析为务实版，明确不迁移的特性
 142014e docs: 添加竞品分析与技术借鉴文档
 9bd6355 docs: 添加详细实施计划 plan.md
-a0f41a5 Initial commit: DeepMiCode v0.53.0 (based on DeepSeek-Reasonix)
+a0f41a5 Initial commit: DeepMiCode v0.53.0 (based on DeepSeek-deepmicode)
 ```
 
 ---

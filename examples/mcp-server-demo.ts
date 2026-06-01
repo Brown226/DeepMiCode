@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Bundled demo MCP server.
  *
  * A minimal stdio MCP server that exposes three tools: echo, add, get_time.
@@ -10,7 +10,7 @@
  *
  * Usage:
  *   npx tsx examples/mcp-server-demo.ts          # speaks MCP on stdin/stdout
- *   reasonix chat --mcp "npx tsx examples/mcp-server-demo.ts"
+ *   deepmicode chat --mcp "npx tsx examples/mcp-server-demo.ts"
  *
  * Spec reference: https://spec.modelcontextprotocol.io/ (2024-11-05)
  * Only the subset this demo needs is implemented — initialize, tools/list,
@@ -70,7 +70,7 @@ const TOOLS = [
   {
     name: "slow_count",
     description:
-      "Counts from 1 to n with a ~300 ms pause between steps, emitting notifications/progress frames along the way. Useful for demonstrating Reasonix's progress-bar UI.",
+      "Counts from 1 to n with a ~300 ms pause between steps, emitting notifications/progress frames along the way. Useful for demonstrating deepmicode's progress-bar UI.",
     inputSchema: {
       type: "object",
       properties: {
@@ -103,7 +103,7 @@ async function handleRequest(
         id: id ?? 0,
         result: {
           protocolVersion: PROTOCOL_VERSION,
-          serverInfo: { name: "reasonix-demo-mcp", version: "0.0.1" },
+          serverInfo: { name: "deepmicode-demo-mcp", version: "0.0.1" },
           capabilities: { tools: { listChanged: false } },
         },
       };

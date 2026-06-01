@@ -1,4 +1,4 @@
-// Exp 3 — does DeepSeek V4 reliably write a failing test FIRST?
+﻿// Exp 3 — does DeepSeek V4 reliably write a failing test FIRST?
 // Loads .env, runs N prompts asking for a vitest-style failing test only.
 // Scores each response on 4 axes and writes tdd-eval.json + tdd-eval.md.
 
@@ -45,7 +45,7 @@ const PROMPTS = [
   { id: "m3", level: "medium", task: "A function \`debounceAsync<T extends any[], R>(fn: (...args: T) => Promise<R>, ms: number): (...args: T) => Promise<R>\` in src/util/debounce.ts. Resolves only the latest call's promise; earlier callers reject with an AbortError-like." },
 
   // hard (2) — these touch domain types from the repo
-  { id: "h1", level: "hard", task: "A function \`extractTestId(file: string, fullName: string, source: string): { id: string, source: 'native' | 'annotation' }\` in src/repair/test-id.ts. If \`source\` contains a '// @reasonix-test-id: <slug>' comment within 3 lines above an it()/test() whose name matches \`fullName\`, return that slug with source='annotation'. Otherwise return \`${file}::${fullName}\` with source='native'." },
+  { id: "h1", level: "hard", task: "A function \`extractTestId(file: string, fullName: string, source: string): { id: string, source: 'native' | 'annotation' }\` in src/repair/test-id.ts. If \`source\` contains a '// @DEEPMICODE-test-id: <slug>' comment within 3 lines above an it()/test() whose name matches \`fullName\`, return that slug with source='annotation'. Otherwise return \`${file}::${fullName}\` with source='native'." },
   { id: "h2", level: "hard", task: "A function \`pairRedGreen(events: Array<{type:string, test_id?:string, status?:string, ts:number}>): Array<{ test_id: string, red_ts: number, green_ts: number }>\` in src/events/pair.ts. For each test_id, find the most recent fail→pass transition and return one entry per test_id. Ignore test_ids that never went green." },
 ];
 

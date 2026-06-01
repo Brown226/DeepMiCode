@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+﻿import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -28,7 +28,7 @@ describe("settings API — combined POST persistence (#274)", () => {
   let configPath: string;
 
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-settings-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-settings-"));
     configPath = join(dir, "config.json");
     writeFileSync(configPath, JSON.stringify({ lang: "ZH", baseUrl: "https://orig" }), "utf8");
   });

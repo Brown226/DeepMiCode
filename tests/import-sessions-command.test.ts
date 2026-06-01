@@ -1,4 +1,4 @@
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+﻿import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -10,8 +10,8 @@ describe("import-sessions command", () => {
   let tmpSourceDir: string;
 
   beforeEach(() => {
-    tmpHome = mkdtempSync(join(tmpdir(), "reasonix-import-home-"));
-    tmpSourceDir = mkdtempSync(join(tmpdir(), "reasonix-import-src-"));
+    tmpHome = mkdtempSync(join(tmpdir(), "deepmicode-import-home-"));
+    tmpSourceDir = mkdtempSync(join(tmpdir(), "deepmicode-import-src-"));
     vi.stubEnv("USERPROFILE", tmpHome);
     vi.stubEnv("HOME", tmpHome);
     vi.spyOn(require("node:os"), "homedir").mockReturnValue(tmpHome);
@@ -24,7 +24,7 @@ describe("import-sessions command", () => {
     if (existsSync(tmpSourceDir)) rmSync(tmpSourceDir, { recursive: true, force: true });
   });
 
-  it("imports a Claude session into Reasonix storage and writes meta", () => {
+  it("imports a Claude session into deepmicode storage and writes meta", () => {
     const sourcePath = join(tmpSourceDir, "claude.jsonl");
     writeFileSync(
       sourcePath,

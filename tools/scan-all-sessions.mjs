@@ -1,8 +1,8 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
-const dir = process.argv[2] ?? "C:/Users/yuhuahui/.reasonix/sessions";
+const dir = process.argv[2] ?? "C:/Users/yuhuahui/.deepmicode/sessions";
 const files = readdirSync(dir).filter(
   (f) => f.endsWith(".jsonl") && !f.endsWith(".events.jsonl") && !f.startsWith("subagent-"),
 );

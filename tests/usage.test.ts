@@ -1,4 +1,4 @@
-/** Usage log + aggregator — append round-trip, malformed-tail tolerance, rolling-window rollups, dashboard render. */
+﻿/** Usage log + aggregator — append round-trip, malformed-tail tolerance, rolling-window rollups, dashboard render. */
 
 import { appendFileSync, mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -30,7 +30,7 @@ describe("appendUsage + readUsageLog", () => {
   let path: string;
 
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-usage-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-usage-"));
     path = join(dir, "usage.jsonl");
   });
   afterEach(() => {

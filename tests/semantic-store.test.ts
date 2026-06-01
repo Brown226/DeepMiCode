@@ -1,4 +1,4 @@
-import { promises as fs } from "node:fs";
+﻿import { promises as fs } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -39,7 +39,7 @@ describe("SemanticStore", () => {
   let dir: string;
 
   beforeEach(async () => {
-    dir = await mkdtemp(join(tmpdir(), "reasonix-store-"));
+    dir = await mkdtemp(join(tmpdir(), "deepmicode-store-"));
   });
 
   afterEach(async () => {

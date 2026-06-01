@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+﻿import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PauseGate } from "../src/core/pause-gate.js";
@@ -30,8 +30,8 @@ class AutoGate extends PauseGate {
   }
 }
 
-const root = mkdtempSync(join(tmpdir(), "reasonix-tokencost-"));
-const home = mkdtempSync(join(tmpdir(), "reasonix-tokencost-home-"));
+const root = mkdtempSync(join(tmpdir(), "deepmicode-tokencost-"));
+const home = mkdtempSync(join(tmpdir(), "deepmicode-tokencost-home-"));
 
 try {
   mkdirSync(join(root, "src"), { recursive: true });

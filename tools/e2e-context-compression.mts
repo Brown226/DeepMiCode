@@ -1,4 +1,4 @@
-#!/usr/bin/env tsx
+﻿#!/usr/bin/env tsx
 // End-to-end probe of the refactored context-compression flow against the
 // LIVE DeepSeek API. Verifies:
 //   1) Post-response auto-fold (decideAfterUsage triggers compactHistory).
@@ -34,7 +34,7 @@ function loadEnv(path: string): void {
   } catch {}
 }
 
-loadEnv("F:/Reasonix/.env");
+loadEnv("F:/deepmicode/.env");
 
 const MODEL = "deepseek-chat";
 const TEST_CTX = 50_000;

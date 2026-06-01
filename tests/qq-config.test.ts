@@ -1,4 +1,4 @@
-import { existsSync, mkdtempSync, rmSync } from "node:fs";
+﻿import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -11,7 +11,7 @@ describe("QQ config", () => {
   const originalAllowlist = process.env.QQ_ALLOWLIST;
 
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-qq-config-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-qq-config-"));
     path = join(dir, "config.json");
     // biome-ignore lint/performance/noDelete: tests must restore exact env absence
     delete process.env.QQ_OWNER_OPENID;

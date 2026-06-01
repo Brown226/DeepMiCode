@@ -1,4 +1,4 @@
-/** Evaluation harness — runs scenarios and collects results. */
+﻿/** Evaluation harness — runs scenarios and collects results. */
 
 import type { EvalReport, EvalResult, EvalScenario } from "./types.js";
 
@@ -32,7 +32,7 @@ export async function runScenarios(
   return {
     meta: {
       date: new Date().toISOString(),
-      reasonixVersion: VERSION,
+      deepmicodeVersion: VERSION,
     },
     results,
   };

@@ -1,4 +1,4 @@
-# Exp 1 — cache-hit cost analysis
+﻿# Exp 1 — cache-hit cost analysis
 
 **Result: PASS.** Augmenting `edit_file` tool_results with an `[edit_claim]` + `[test_run]` footer does **not** reduce cache hit. In a controlled side-by-side, the augmented variant cache-hit at **93.6%** vs the baseline's **83.5%** on the same hot turn — a **+10pt improvement**, not a regression.
 
@@ -46,11 +46,11 @@ The augmentation adds ~87 tokens to the prefix (the `[edit_claim]`/`[test_run]` 
 
 Both have the same kind of tail (a new user message). B's tail is smaller because the model emitted a slightly different response continuation seed; nonetheless, the structural point holds: **augmenting tool_results moves bytes from "uncached" (this-turn-only) to "cached" (re-used by every subsequent turn)**.
 
-In real Reasonix sessions with multi-thousand-token histories, the absolute cache-hit ratio is dominated by history size; the marginal effect of an extra ~80 tokens per edit is to *raise* it slightly, not lower it.
+In real deepmicode sessions with multi-thousand-token histories, the absolute cache-hit ratio is dominated by history size; the marginal effect of an extra ~80 tokens per edit is to *raise* it slightly, not lower it.
 
 ## Pass criterion (revised)
 
-The original RFC threshold of "≥92% absolute" doesn't apply cleanly to this synthetic harness — the transcript is only ~460 tokens, far smaller than a typical Reasonix session, which inflates the tail's relative weight.
+The original RFC threshold of "≥92% absolute" doesn't apply cleanly to this synthetic harness — the transcript is only ~460 tokens, far smaller than a typical deepmicode session, which inflates the tail's relative weight.
 
 The substantive criterion is **no degradation**:
 

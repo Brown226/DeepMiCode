@@ -1,4 +1,4 @@
-import { promises as fs } from "node:fs";
+﻿import { promises as fs } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -10,7 +10,7 @@ describe("walkChunks excludes", () => {
   let root: string;
 
   beforeEach(async () => {
-    root = await mkdtemp(join(tmpdir(), "reasonix-excludes-"));
+    root = await mkdtemp(join(tmpdir(), "deepmicode-excludes-"));
   });
 
   afterEach(async () => {

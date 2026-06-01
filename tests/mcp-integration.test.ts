@@ -1,4 +1,4 @@
-/** MCP integration — spawns the demo MCP server, bridges tools, invokes them end-to-end. */
+﻿/** MCP integration — spawns the demo MCP server, bridges tools, invokes them end-to-end. */
 
 import { afterEach, describe, expect, it } from "vitest";
 import { McpClient } from "../src/mcp/client.js";
@@ -34,7 +34,7 @@ describe("MCP integration — real subprocess against bundled demo server", () =
     });
     client = new McpClient({ transport, requestTimeoutMs: 15_000 });
     const info = await client.initialize();
-    expect(info.serverInfo.name).toBe("reasonix-demo-mcp");
+    expect(info.serverInfo.name).toBe("deepmicode-demo-mcp");
     expect(info.capabilities.tools).toBeDefined();
 
     const { tools } = await client.listTools();
@@ -50,7 +50,7 @@ describe("MCP integration — real subprocess against bundled demo server", () =
     expect(addText).toContain("42");
   }, 30_000);
 
-  it("bridges real MCP tools into a Reasonix ToolRegistry", async () => {
+  it("bridges real MCP tools into a deepmicode ToolRegistry", async () => {
     const transport = new StdioTransport({
       command: NODE_CMD,
       args: DEMO_SERVER_ARGS,

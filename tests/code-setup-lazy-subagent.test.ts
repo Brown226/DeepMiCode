@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+﻿import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -18,7 +18,7 @@ describe("buildCodeToolset", () => {
     savedKey = process.env.DEEPSEEK_API_KEY;
     // biome-ignore lint/performance/noDelete: setting to "undefined" string would mask test
     delete process.env.DEEPSEEK_API_KEY;
-    tmpRoot = mkdtempSync(join(tmpdir(), "reasonix-code-setup-"));
+    tmpRoot = mkdtempSync(join(tmpdir(), "deepmicode-code-setup-"));
     cfgPath = join(tmpRoot, "config.json");
   });
 

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import { shellSplit } from "../src/mcp/shell-split.js";
 
 describe("shellSplit", () => {
@@ -27,7 +27,7 @@ describe("shellSplit", () => {
   });
 
   it("passes backslashes through literally OUTSIDE quotes (so Windows paths don't mangle)", () => {
-    // Critical for `reasonix chat --mcp "... C:\\path\\to\\dir"`. Users
+    // Critical for `deepmicode chat --mcp "... C:\\path\\to\\dir"`. Users
     // who want to escape a space outside quotes can quote the arg.
     expect(shellSplit("cmd C:\\path\\to\\file.exe")).toEqual(["cmd", "C:\\path\\to\\file.exe"]);
   });

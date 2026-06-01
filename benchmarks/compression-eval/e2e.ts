@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+﻿import { spawnSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -157,8 +157,8 @@ function runOne(
     {
       env: {
         ...process.env,
-        REASONIX_FOLD_THRESHOLD: String(spec.foldThreshold),
-        REASONIX_FOLD_AGGRESSIVE_THRESHOLD: String(spec.aggressiveThreshold),
+        deepmicode_FOLD_THRESHOLD: String(spec.foldThreshold),
+        deepmicode_FOLD_AGGRESSIVE_THRESHOLD: String(spec.aggressiveThreshold),
       },
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],

@@ -1,6 +1,6 @@
-# Changelog
+﻿# Changelog
 
-All notable changes to Reasonix. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
+All notable changes to deepmicode. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.53.0] — 2026-05-27
@@ -59,7 +59,7 @@ DeepSeek's (#1972).
 **Truncation / encoding.**
 - Slice boundaries align to UTF-16 codepoints so multi-code-unit
   characters can't be split mid-surrogate (#1976, includes #1970)
-- Truncated-result-saver falls back to `~/.reasonix` when `rootDir`
+- Truncated-result-saver falls back to `~/.deepmicode` when `rootDir`
   resolves to the filesystem root (#1974)
 - Lone surrogates are sanitized in chat payloads before serialization
   (#1939)
@@ -92,7 +92,7 @@ session context switches (#1810), incremental repaint coverage
 **Desktop — clipboard image paste.** Paste screenshots / copied images
 directly into the composer (#1889); paste path hardened against
 oversized + non-image clipboard payloads (#1897). Sessions exported by
-other local AI apps can be imported into Reasonix (#1894).
+other local AI apps can be imported into deepmicode (#1894).
 
 **Desktop — JumpBar polish + drag perf.** JumpBar now highlights the
 active message bar and follows the latest one as the thread grows
@@ -166,8 +166,8 @@ from beeping on every render frame (#1795).
 
 **Memory — CLAUDE.md import for Claude Code migration.** Loading
 `CLAUDE.md` and `~/.claude/CLAUDE.md` alongside the existing
-`REASONIX.md` (#1694) lets Claude Code users carry their project /
-user memory directly into Reasonix without rewriting it.
+`deepmicode.md` (#1694) lets Claude Code users carry their project /
+user memory directly into deepmicode without rewriting it.
 
 **i18n — German.** Full German (`de`) locale added (#1773) with a
 follow-up correction pass (#1797).
@@ -204,14 +204,14 @@ follow-up correction pass (#1797).
 - Drain steer queue on `/new` + `/cwd` so prior intent doesn't leak (#1774)
 - Suppress DeepSeek-specific 5xx hints when host isn't DeepSeek (#1716)
 - `normalizeSemanticEmbeddingUserConfig` preserves `timeoutMs` (#1788)
-- `REASONIX_ACP_SYSTEM_APPEND` env var for system-prompt injection (#1737)
+- `deepmicode_ACP_SYSTEM_APPEND` env var for system-prompt injection (#1737)
 - Configurable cost-display currency with click-to-toggle (#1710)
 
 **Refactors / internals.**
 - Extract `LruCache` + `TtlLruCache` + `lazy()` helpers from ad-hoc
   duplicates (#1746)
 - Split stream aggregator + chunked dispatch out of `step()` (#1739)
-- Per-component render trace gated by `REASONIX_TRACE_RENDERS` (#1747);
+- Per-component render trace gated by `deepmicode_TRACE_RENDERS` (#1747);
   `readStats` API on render trace + real-numbers large-session probe (#1751)
 
 ## [0.50.1] — 2026-05-24
@@ -220,7 +220,7 @@ follow-up correction pass (#1797).
 `postinstall` hook added in 0.50.0 (#1584) ran `npm ci` inside
 `dashboard/` and `desktop/` to set up the dev workspace, but those
 directories aren't shipped in the published tarball. Result: `npx
-reasonix@0.50.0 code` failed during install with a `dashboard/package.json
+deepmicode@0.50.0 code` failed during install with a `dashboard/package.json
 not found` error and the CLI never started. `postinstall` now delegates
 to `scripts/postinstall.mjs`, which exits 0 when `dashboard/package.json`
 is missing (i.e. anywhere except a git checkout). 0.50.0 is deprecated
@@ -365,7 +365,7 @@ exclusively through Ink's `<Static>` (#1529, stages 1–4). The previous
 virtual-viewport machinery — viewport-budget row allocator, byte-virtual
 frame layer, manual scroll math — is gone. Net: less code on the hot
 path, no more "frame drift" on very long sessions, and the rewrite stays
-Ink-native instead of fighting it. Behind `REASONIX_STATIC_HISTORY` at
+Ink-native instead of fighting it. Behind `deepmicode_STATIC_HISTORY` at
 stage 1, default-on by stage 2, scaffolding removed by stage 4.
 
 **Chat — queued mid-turn steers.** Typing while the model is mid-turn
@@ -430,7 +430,7 @@ dropping out under pressure.
   hit" hint instead of a raw HTTP error (#1526)
 - `timeoutMs` is now wired to `fetch` when the caller passes an
   `AbortSignal` (#1535) — previously the timeout was silently ignored
-- `--no-proxy` / `REASONIX_NO_PROXY` opt-out is honored for the
+- `--no-proxy` / `deepmicode_NO_PROXY` opt-out is honored for the
   DeepSeek direct-route default (#1507)
 
 **Files.** Read/edit/restore now preserve the source file's encoding
@@ -471,7 +471,7 @@ reduction per fold.
 ## [0.48.1] — 2026-05-21
 
 **`dsnix` — short alias.** A new `dsnix` shim package lands alongside
-`reasonix` (#1440), so `npx dsnix` is now equivalent to `npx reasonix`
+`deepmicode` (#1440), so `npx dsnix` is now equivalent to `npx deepmicode`
 for users who'd rather type five characters than eight. The shim is
 just a forwarding binary — same CLI, same release cadence — and ships
 on npm with the same version pinning (#1442). The root README documents
@@ -547,15 +547,15 @@ avoid the click-eats-selection problem on conhost-class hosts.
 **Proxy-aware networking.** `NO_PROXY` is now honored end-to-end and
 the DeepSeek host is baked into the default bypass whitelist so a
 machine-wide `HTTPS_PROXY` no longer routes API traffic through an
-unwanted proxy (#1373). A `--no-proxy` CLI flag, `REASONIX_NO_PROXY`
+unwanted proxy (#1373). A `--no-proxy` CLI flag, `deepmicode_NO_PROXY`
 env, and `cfg.proxy` field give per-invocation control (#1374), and
 `/doctor` surfaces the resolved `NO_PROXY` value plus the routing
-decision Reasonix made for each host (#1375). If proxy behavior ever
+decision deepmicode made for each host (#1375). If proxy behavior ever
 looks wrong, `/doctor` will tell you why in one screen.
 
 **Code intelligence boost.** Two new tree-sitter–powered tools land:
 `get_symbols` and `find_in_code` cover TS/JS/Python/Go/Rust/Java
-(#1387), giving Reasonix structural code navigation instead of plain
+(#1387), giving deepmicode structural code navigation instead of plain
 grep. Java gets a dedicated `java_source` tool that reads `.java`
 sources and decompiles `.class` / inner jar entries via `javap`
 (#1344), with output stripped of noise and the read buffer raised so
@@ -577,7 +577,7 @@ row instead of a frozen spinner (#1422). The agent loop is hardened:
 `_turnAbort` resets in `finally` so a consumer break can't lock the
 session (#1421), ambiguous search-replace edit blocks are rejected
 instead of silently miss-applying (#1414), repeated gate rejections
-no longer ping-pong (#1392), and FS tools walk `.reasonix/` so user
+no longer ping-pong (#1392), and FS tools walk `.deepmicode/` so user
 skills are reachable from any subdir (#1371).
 
 **Desktop.** QQ sessions are now usable from the desktop app — the
@@ -625,8 +625,8 @@ propagate into the running session (#1396).
 
 ## [0.47.2] — 2026-05-19
 
-**Hotfix — `npx reasonix@latest` install.** `0.47.1` shipped with
-`@reasonix/core-utils` listed under runtime `dependencies` as
+**Hotfix — `npx deepmicode@latest` install.** `0.47.1` shipped with
+`@deepmicode/core-utils` listed under runtime `dependencies` as
 `workspace:*`. Because the workspace package is `private: true`,
 `npm publish` did not rewrite the protocol, so consumers hit
 `EUNSUPPORTEDPROTOCOL: Unsupported URL Type "workspace:"` during
@@ -660,7 +660,7 @@ picker rows highlight on selection (#1330); `//` line-comment input
 no longer parses as a slash command (#1288).
 
 **Other:**
-- `feat(core-utils)` new `@reasonix/core-utils` workspace package —
+- `feat(core-utils)` new `@deepmicode/core-utils` workspace package —
   Phase 1 internal split, no public-API change (#1328)
 - `feat(lifecycle)` opt-in engineering lifecycle (#1306)
 - `feat(tools)` ordered interceptor chain (#1301)
@@ -701,7 +701,7 @@ deadline 15s → 120s for legitimately large repos. Tavily added as a
 `web_search` backend — escape hatch when Mojeek 403s. `search_content`
 gets a walk-level deadline and ESC preempts queued tool calls.
 
-**Claude-ecosystem compat.** Reasonix now reads `.mcp.json` and
+**Claude-ecosystem compat.** deepmicode now reads `.mcp.json` and
 `.claude/skills/` from the repo so existing Claude Code setups work
 without a second copy; common skill fields (`type`/`context`/`agent`)
 are aliased.
@@ -725,9 +725,9 @@ are aliased.
 
 ## [0.46.0] — 2026-05-17
 
-**Breaking — Rust renderer removed.** Reasonix is back to a pure Ink/Node
-TUI. The `reasonix-render` ratatui crate, the five
-`@reasonix/render-{platform}-{arch}` optional sub-packages, the NAPI
+**Breaking — Rust renderer removed.** deepmicode is back to a pure Ink/Node
+TUI. The `deepmicode-render` ratatui crate, the five
+`@deepmicode/render-{platform}-{arch}` optional sub-packages, the NAPI
 loader (`src/cli/ui/scene/`), and the `--node` opt-out flag are all
 gone. Cross-terminal compat issues (Termux #1149 / #1026, mac eager-spawn
 chain, Windows alt-screen handoff, integrated-mode keyboard collisions)
@@ -735,13 +735,13 @@ disappear with them — at the cost of the streaming/animation perf the
 rust renderer was supposed to buy us.
 
 Notes for users:
-- `REASONIX_RENDERER`, `REASONIX_RENDER_BIN`, `REASONIX_RENDER_CMD`,
-  `REASONIX_INPUT_CMD`, `REASONIX_RENDERER_INTEGRATED` env vars are no-ops
+- `deepmicode_RENDERER`, `deepmicode_RENDER_BIN`, `deepmicode_RENDER_CMD`,
+  `deepmicode_INPUT_CMD`, `deepmicode_RENDERER_INTEGRATED` env vars are no-ops
   — drop them from your shell config.
 - `--node` flag is no-op (and unrecognized; will error). Just drop it.
 - `--no-alt-screen` / `--no-mouse` flags also gone — Ink defaults take
   over end-to-end.
-- `npm install reasonix@0.46.0` no longer pulls a per-platform binary —
+- `npm install deepmicode@0.46.0` no longer pulls a per-platform binary —
   one dep tree on every OS, no optional resolution step.
 
 **TUI overhaul** — same pass that removed the rust path also cleared
@@ -761,7 +761,7 @@ the Ink-side workarounds we'd accumulated on top of it:
 
 ## [0.44.2-rc.2] — 2026-05-17
 
-**Fix:** macOS hang on `npx reasonix@next code` — keep-alive interval
+**Fix:** macOS hang on `npx deepmicode@next code` — keep-alive interval
 from rc.1 prevented Node from exiting, but the rust child was never
 actually spawned. Root cause: spawn was triggered by a React
 `useEffect` (`useSceneTrace` → `emitSceneMessage` → `trace.ts`
@@ -778,11 +778,11 @@ the integrated event callback is wired before spawn. Also:
 - `trace.ts` now logs a clear warning to stderr when `resolveRenderer`
   returns no usable command, instead of bailing silently — anyone
   hitting "TUI never appears" can find the cause in
-  `~/.reasonix/rust-render-stderr.log`.
+  `~/.deepmicode/rust-render-stderr.log`.
 
 ## [0.44.2-rc.1] — 2026-05-17
 
-**Fix:** macOS `npx reasonix code` (default rust + integrated TUI) exited
+**Fix:** macOS `npx deepmicode code` (default rust + integrated TUI) exited
 back to the shell prompt immediately without rendering. Root cause:
 `makeNullStdin` / `makeNullStdout` are pure-JS Node streams with no
 underlying libuv handles, so they don't keep the event loop alive. The
@@ -799,13 +799,13 @@ binary as 0.44.0; only chat.tsx changed.
 
 ## [0.44.1] — 2026-05-17
 
-**Fix:** Mac/Linux `npx reasonix@latest` failed with `EACCES` when spawning
-the rust renderer (`spawn ... reasonix-render EACCES`). `actions/download-artifact@v4`
+**Fix:** Mac/Linux `npx deepmicode@latest` failed with `EACCES` when spawning
+the rust renderer (`spawn ... deepmicode-render EACCES`). `actions/download-artifact@v4`
 strips Unix file modes during the release pipeline's artifact round-trip,
 so the binaries in the published 0.44.0 subpackages landed without the
 executable bit. Two-layer fix:
 
-- Each `@reasonix/render-*` subpackage now declares its binary in the
+- Each `@deepmicode/render-*` subpackage now declares its binary in the
   `bin` field of `package.json`, so `npm install` chmod +x's the file
   during extraction (standard npm behavior for bin-declared files).
 - The publish workflow explicitly `chmod +x`'s the non-Windows binaries
@@ -817,7 +817,7 @@ correct file modes.
 
 ## [0.44.0] — 2026-05-17
 
-**Headline:** The Rust TUI is now the default TUI. `npx reasonix@latest`
+**Headline:** The Rust TUI is now the default TUI. `npx deepmicode@latest`
 on any supported platform (win32-x64, linux-x64, linux-arm64, darwin-x64,
 darwin-arm64) pulls a pre-built ratatui binary as an `optionalDependencies`
 sub-package and renders the full agent loop natively — no cargo, no
@@ -828,32 +828,32 @@ a one-line stderr hint when no rust binary is locatable. Inside the rust
 TUI, **integrated mode** is the default too (rust owns keyboard + mouse +
 composer directly), which fixes the multi-press Ctrl+D + dropped preset
 clicks + Ctrl+C terminal-state leak that the split keystroke-bus path had.
-Bare `reasonix` (no subcommand) routes to `code` in the cwd instead of
-chat — explicit `reasonix chat` still works.
+Bare `deepmicode` (no subcommand) routes to `code` in the cwd instead of
+chat — explicit `deepmicode chat` still works.
 
-**Note:** Existing users with `REASONIX_RENDERER=rust` or
-`REASONIX_RENDERER_INTEGRATED=1` set in their shell rc will see no
+**Note:** Existing users with `deepmicode_RENDERER=rust` or
+`deepmicode_RENDERER_INTEGRATED=1` set in their shell rc will see no
 behavior change (both are now no-ops with the value `=node` / `=0`
 opting back to the old behaviors).
 
 **Features:**
 
 - feat(rust): rust TUI is the default. `--node` flag (or
-  `REASONIX_RENDERER=node`) opts back to the Ink/Node renderer. Auto-
+  `deepmicode_RENDERER=node`) opts back to the Ink/Node renderer. Auto-
   fallback to Ink with a stderr hint when no rust binary is found
   (#1081)
 - feat(rust): integrated mode is the default once the rust renderer
-  is active. `REASONIX_RENDERER_INTEGRATED=0` opts back to the
+  is active. `deepmicode_RENDERER_INTEGRATED=0` opts back to the
   --emit-input split keystroke bus (debug only) (#1081)
-- feat(cli): bare `reasonix` (no subcommand) now launches `code` in
+- feat(cli): bare `deepmicode` (no subcommand) now launches `code` in
   the cwd. Drops the project-marker heuristic that used to route to
-  `chat` outside of project dirs; `reasonix chat` stays explicit (#1081)
+  `chat` outside of project dirs; `deepmicode chat` stays explicit (#1081)
 - feat(scene): renderer-resolver picks the binary by priority chain —
-  `REASONIX_RENDER_CMD` / `REASONIX_INPUT_CMD` env (full-command
-  override) > `REASONIX_RENDER_BIN` env (single binary path) >
-  `@reasonix/render-{platform}-{arch}` optional dependency > source-
-  tree `target/release/reasonix-render(.exe)` > `target/debug/...` >
-  `cargo run --bin reasonix-render` (source tree + cargo on PATH) >
+  `deepmicode_RENDER_CMD` / `deepmicode_INPUT_CMD` env (full-command
+  override) > `deepmicode_RENDER_BIN` env (single binary path) >
+  `@deepmicode/render-{platform}-{arch}` optional dependency > source-
+  tree `target/release/deepmicode-render(.exe)` > `target/debug/...` >
+  `cargo run --bin deepmicode-render` (source tree + cargo on PATH) >
   missing → Ink fallback (#1081)
 - feat(scene): Setup wizard works end-to-end under the rust renderer.
   First-launch with no saved API key shows the masked input prompt in
@@ -863,7 +863,7 @@ opting back to the old behaviors).
   panel instead of bleeding into the sidebar. `paint_link_wrapped`
   emits each wrapped chunk as its own OSC 8 hyperlink so click-to-open
   still hits the full URL (#1081)
-- feat(release): per-platform `@reasonix/render-*` subpackages
+- feat(release): per-platform `@deepmicode/render-*` subpackages
   published as `optionalDependencies` of the main package. CI workflow
   cross-compiles the rust renderer for 5 targets on tag push, uploads
   one binary per subpackage, and `npm publish`es the 5 subpackages +
@@ -1000,7 +1000,7 @@ behavior change. Preset escalation now happens only on explicit
   cmd. (#821)
 - fix(code): honor the configured preset instead of hardcoding flash.
   (#824)
-- fix(cli): route bare project launches (`reasonix` with no
+- fix(cli): route bare project launches (`deepmicode` with no
   subcommand, in a project directory) to `code` mode. (#812)
 - fix(policy): `--yolo` bypasses `path_access` too, parity with the
   shell `allowAll` shortcut. (#786)
@@ -1010,7 +1010,7 @@ behavior change. Preset escalation now happens only on explicit
   actually shows the modal (was only firing in the desktop). (#832,
   #840)
 - fix(dashboard): swallow third-party-origin errors in the global
-  overlay — extension scripts no longer surface as Reasonix crashes.
+  overlay — extension scripts no longer surface as deepmicode crashes.
   (#825)
 
 **Polish / refactor:**
@@ -1050,7 +1050,7 @@ behavior change. Preset escalation now happens only on explicit
 **Headline:** ACP graduates — three stages of work on the headless
 entrypoint (NDJSON framing, `tool_call` streaming, `session/request_permission`
 bridging) plus three flags (`--transcript`, `--yolo`, `--mcp` /
-`--mcp-prefix`) make `reasonix acp` ready for non-interactive callers
+`--mcp-prefix`) make `deepmicode acp` ready for non-interactive callers
 like CI harnesses and cost-tracking adapters. The loop picked up
 auto-escalation on read-only sequences (caps the dead-end fishing-trip
 cost), `read_file` now outlines four more languages, and `wait_for_job`
@@ -1058,14 +1058,14 @@ got an exit-only mode so chatty long jobs (curl, wget, big installs)
 stop burning one tool call per progress tick. On the daily-driver side:
 `/btw` for side questions that don't pollute context, user-defined
 memory types with priority + expiry, status-bar field toggles, and
-field-reported fixes for `/new` silently keeping the old REASONIX.md,
+field-reported fixes for `/new` silently keeping the old deepmicode.md,
 the dashboard search toggle's one-way-trap UX, preset/effort
 persistence on auto-preset switch, plus a stack of desktop UI surfaces
 gaining real data.
 
 **Features:**
 
-- feat(acp): three-stage rollout of `reasonix acp`, the headless ACP
+- feat(acp): three-stage rollout of `deepmicode acp`, the headless ACP
   entrypoint. Stage 1 brings the NDJSON framing + `initialize` /
   `session/new` / `session/prompt` round-trip with `agent_thought_chunk`
   / `agent_message_chunk` streaming. Stage 2 wires `tool_call` /
@@ -1075,7 +1075,7 @@ gaining real data.
   / `cost` / `prefixHash`, mirroring the same flag on `chat` / `code`.
   (#766)
 - feat(acp): `--yolo` flag bypasses plan checkpoints without mutating
-  `~/.reasonix/config.json` — process-per-task callers don't have to
+  `~/.deepmicode/config.json` — process-per-task callers don't have to
   rewrite user config to skip the modal. (#767)
 - feat(acp): `--mcp <spec>` (repeatable) + `--mcp-prefix <str>` for
   headless callers — domain-specific tools (custom MCP servers,
@@ -1120,7 +1120,7 @@ gaining real data.
 **Fixes:**
 
 - fix(loop): `/new` now re-runs the system-prompt builder, so editing
-  REASONIX.md and starting a fresh conversation actually picks up the
+  deepmicode.md and starting a fresh conversation actually picks up the
   new content. Previously the prompt was baked into
   `ImmutablePrefix.system` at startup and `clearLog()` never touched
   it — users had to restart. Cache-key invalidation happens only when
@@ -1182,14 +1182,14 @@ gaining real data.
 - chore(plan): document magic numbers + swap the hand-rolled
   ANSI-strip for the standard `strip-ansi` package. (#738)
 - chore: oosmetrics badges + weekly health-check workflow; point
-  Star History at the canonical DeepSeek-Reasonix slug. (#772, #773)
+  Star History at the canonical DeepSeek-deepmicode slug. (#772, #773)
 - docs(readme): badge color pass; thank AIGC Link for XiaoHongShu
   promotions. (#726)
 
 ## [0.40.0] — 2026-05-12
 
 **Headline:** npm-only release. The repo also gained a Tauri desktop
-client (`reasonix desktop`) wired against the agent loop with multi-
+client (`deepmicode desktop`) wired against the agent loop with multi-
 tab concurrent runtimes — the source is here but the macOS / Windows /
 Linux installer bundles are NOT shipping this round; they'll get their
 own release once the signing pipeline is settled. The CLI side picked
@@ -1198,8 +1198,8 @@ dashboard, a shared pause-gate policy module so the desktop's
 auto-resolve rules don't drift from the CLI TUI's, plus a wave of
 field-reported fixes: the long-standing `Maximum update depth` crash
 inside CardStream is finally gone (this time for good — quantized
-window), `reasonix code` no longer boots dead when a user has only
-configured their key via `reasonix setup`, and a half-dozen MCP /
+window), `deepmicode code` no longer boots dead when a user has only
+configured their key via `deepmicode setup`, and a half-dozen MCP /
 shell / stdin / scroll papercuts are gone.
 
 **Features:**
@@ -1247,8 +1247,8 @@ shell / stdin / scroll papercuts are gone.
   which was the residual `Maximum update depth exceeded` crash inside
   `useBoxMetrics` (the #549 fix only patched one instance of the
   pattern). (#700, #702)
-- fix(code): `reasonix code` now calls `loadDotenv()` + bridges
-  `~/.reasonix/config.json` → `process.env.DEEPSEEK_API_KEY` like
+- fix(code): `deepmicode code` now calls `loadDotenv()` + bridges
+  `~/.deepmicode/config.json` → `process.env.DEEPSEEK_API_KEY` like
   `chat` / `desktop` / `run` already did. Subagent's `DeepSeekClient`
   is constructed lazily so a missing key doesn't kill boot before the
   setup wizard can prompt. (#703)
@@ -1263,7 +1263,7 @@ shell / stdin / scroll papercuts are gone.
   width so the Allow / Allow-prefix / Deny options stay visible
   instead of scrolling off-screen. (#691)
 - fix(skills, memory): frontmatter parser handles BOM, folded lines,
-  and quoted values; previously a BOM-prefixed `REASONIX.md` was
+  and quoted values; previously a BOM-prefixed `deepmicode.md` was
   silently dropped. (#690)
 - fix(mcp): inspect failures are classified into network / TLS / HTTP
   buckets — the error in the UI is now actionable instead of a raw
@@ -1295,7 +1295,7 @@ as an internal or external command`, taking the whole install down.
 The `patch-package` approach was wrong by design — it patches
 `./node_modules/<dep>`, but npm hoists `ink` to the consumer's
 top-level `node_modules/ink`, so patch-package never finds the target
-when reasonix is installed as a dependency. The install-time
+when deepmicode is installed as a dependency. The install-time
 machinery is removed entirely. The ink alt-screen render fix (#639)
 will return via a forked `ink` package and an `npm:` alias in a later
 release; until then the alt-screen ghosting on CJK terminals matches
@@ -1328,18 +1328,18 @@ Three feature/fix PRs that were in flight piggyback on this release.
 **Headline:** field-bug week — a wave of user-reported rendering, tool
 and network bugs all landed with focused fixes. Two structural wins:
 the open `AGENTS.md` spec now works without anyone having to create a
-separate `REASONIX.md`, and `HTTPS_PROXY` / `HTTP_PROXY` / `ALL_PROXY`
+separate `deepmicode.md`, and `HTTPS_PROXY` / `HTTP_PROXY` / `ALL_PROXY`
 are honored across every fetch path (DeepSeek API, web search, MCP,
 doctor) — Node's built-in fetch silently ignored them before. zh-CN
 coverage is now essentially complete for the TUI surface.
 
 **Features:**
 
-- feat(memory): `readProjectMemory` walks `REASONIX.md` → `AGENTS.md` →
+- feat(memory): `readProjectMemory` walks `deepmicode.md` → `AGENTS.md` →
   `AGENT.md` and picks the first that exists; writes target whichever
   file is already on disk. Projects on the open
   [agents.md](https://agents.md) spec no longer need a separate
-  reasonix-only memory file. (#635, #636)
+  deepmicode-only memory file. (#635, #636)
 - feat(net): HTTPS_PROXY / HTTP_PROXY / ALL_PROXY are now honored across
   every fetch path — undici's global dispatcher gets a `ProxyAgent` at
   CLI entry, before any client constructs. `/doctor` reports the active
@@ -1455,7 +1455,7 @@ as flash when asked.
 
 **Fixes:**
 
-- fix(loop): `/new` truncated `~/.reasonix/sessions/code-<project>.jsonl`
+- fix(loop): `/new` truncated `~/.deepmicode/sessions/code-<project>.jsonl`
   in place — multiple `/new`s in a project produced exactly one
   Sessions row and every prior turn was destroyed without warning.
   `clearLog` now rotates the live jsonl plus sidecars to
@@ -1519,19 +1519,19 @@ as flash when asked.
   bottom rows briefly bled through every redraw, visible as
   vertical bobbing. Default is now 50ms (20Hz); still reads as
   continuous streaming, no bob on any affected terminal. The
-  `REASONIX_UI=plain` escape hatch (which suppressed every live row)
+  `deepmicode_UI=plain` escape hatch (which suppressed every live row)
   is removed since the new default addresses the same terminals
   without losing the spinner / status line / live cards. Override
-  via `REASONIX_FLUSH_MS=16` for terminals with atomic frame swap.
+  via `deepmicode_FLUSH_MS=16` for terminals with atomic frame swap.
   (#570)
 
 **Features:**
 
-- feat(ui): boot splash for `reasonix code` / `reasonix chat`. Cold
+- feat(ui): boot splash for `deepmicode code` / `deepmicode chat`. Cold
   launch used to flash the alt-screen blank for a few hundred ms
   before AppInner's first paint completed; users read that as a
   freeze. The splash holds for one whale-spout cycle (~1.4s) so the
-  REASONIX wordmark lands cleanly and AppInner's heavy first-paint
+  deepmicode wordmark lands cleanly and AppInner's heavy first-paint
   cost (~150 hooks + several disk reads) hides under it. ANSI Shadow
   block letters in brand color; three-tone shaded whale silhouette
   with a 7-frame spout cycle and a shifting wave below. Setup screen
@@ -1607,11 +1607,11 @@ picker for one-keystroke theme switching.
   and the user can recover. (#552)
 - fix(prompt): when the workspace root contained another agent
   platform's config (`SOUL.md`, `skills/`, `memories/`, a foreign
-  `REASONIX.md`) the model would browse those files and claim a
+  `deepmicode.md`) the model would browse those files and claim a
   layered architectural relationship — "the underlying runtime is
   Hermes Agent" or similar. Top-of-prompt identity guard names the
   failure mode: workspace files describe the user's project, never
-  what Reasonix is; identity questions are answered from the prompt,
+  what deepmicode is; identity questions are answered from the prompt,
   not from `ls`. Plus a launch-time detector that warns when those
   markers sit at the workspace root, suggesting `--dir <real-project>`.
   (#555)
@@ -1676,7 +1676,7 @@ forever.
 
 Plus a setup-wizard theme-picker step with live preview, "did you
 mean /…?" suggestions on slash typos, install-source-aware
-`reasonix update` (no more forced `npm install -g` for bun/pnpm
+`deepmicode update` (no more forced `npm install -g` for bun/pnpm
 users), zh-CN coverage extended to the card components, Windows PATH
 normalized before `spawn`, slash-popover windowing stabilized, semver
 compare on the dashboard up-to-date check, and self-hosted DeepSeek
@@ -1692,7 +1692,7 @@ endpoints with non-standard key prefixes accepted.
   Previously users had to learn `/theme` after the fact and try
   themes blind. (#518)
 
-- feat(update): `reasonix update` respects the install source
+- feat(update): `deepmicode update` respects the install source
   (npm / yarn / pnpm / bun) instead of always forcing `npm install
   -g`. Stops bun-installed users from getting a stale global from a
   different package manager. (#511)
@@ -1791,7 +1791,7 @@ endpoints with non-standard key prefixes accepted.
 - perf(tui): streaming flush rate tuned to 60Hz default. Earlier
   landed at 20Hz to suppress repaint glitches on fragile terminals
   then raised to 60Hz once frame pacing was proven stable.
-  `REASONIX_FLUSH_MS` overrides for hosts that need it. (#515, #517)
+  `deepmicode_FLUSH_MS` overrides for hosts that need it. (#515, #517)
 
 ## [0.35.0] — 2026-05-09
 
@@ -1845,7 +1845,7 @@ instead of literal `**`/`##`/code-fences in the JSON envelope.
   args; `add_mcp_server` builds `name=…` specs for stdio / sse /
   streamable-http with `from_catalog` shortcut for bundled entries,
   runs the existing preflight, refuses name collisions. Both register
-  alongside native filesystem / shell tools in `reasonix code`.
+  alongside native filesystem / shell tools in `deepmicode code`.
   (#498, closes #494)
 
 - feat(ui): `/feedback` + version badge in the status row. Slash
@@ -2053,7 +2053,7 @@ server on every page load.
 
 - fix(doctor): tokenizer check now finds the file. The runtime
   resolver in `tokenizer.ts` had three candidates including a
-  `createRequire("reasonix/package.json")` probe and worked
+  `createRequire("deepmicode/package.json")` probe and worked
   reliably; the doctor had its own copy of the path math that
   walked `dist/cli/commands/doctor.js → ../../../data/`. After the
   lazy-import refactor in #467 the doctor compiles to
@@ -2102,11 +2102,11 @@ round-tripping eight `edit_file` calls or losing its plan to a
 context fold. `search_content` also gains `-C N` context lines.
 
 The other half is cold-start surgery (#464). Stage 1 adds a zero-cost
-profiler gated behind `REASONIX_PROFILE_STARTUP=1`. Stage 2 lazy-
+profiler gated behind `deepmicode_PROFILE_STARTUP=1`. Stage 2 lazy-
 imports every per-command module and the dashboard server, paying
-for the chat UI only when `reasonix code` actually runs. `reasonix
-version` and `reasonix --help` drop ~290ms (~440ms → ~140ms);
-`reasonix code` is unchanged on the hot path. Critical bug fix at
+for the chat UI only when `deepmicode code` actually runs. `deepmicode
+version` and `deepmicode --help` drop ~290ms (~440ms → ~140ms);
+`deepmicode code` is unchanged on the hot path. Critical bug fix at
 the bottom: a long-session OOM where every tool result was retained
 indefinitely in a useRef array left behind when `/tool` was deleted.
 
@@ -2144,7 +2144,7 @@ indefinitely in a useRef array left behind when `/tool` was deleted.
 
 **Performance:**
 
-- perf(cli): `REASONIX_PROFILE_STARTUP=1` cold-start profiler. Marks
+- perf(cli): `deepmicode_PROFILE_STARTUP=1` cold-start profiler. Marks
   at `cli_module_loaded`, `chat_command_enter`, `config_loaded`,
   `mcp_launch`, `mcp_connected_M_of_N`, `code_command_enter`,
   `semantic_bootstrap_start`/`_done_*`, `ink_render_complete`. Single
@@ -2152,9 +2152,9 @@ indefinitely in a useRef array left behind when `/tool` was deleted.
   Stage 1 of #464. (#466)
 
 - perf(cli): lazy-import every per-command module. Each
-  `reasonix <subcommand>` only loads its own command's chunk. tsup
-  splits, Node loads on first invocation. `reasonix version` and
-  `reasonix --help` drop ~290ms (~440ms → ~140ms); `reasonix code`
+  `deepmicode <subcommand>` only loads its own command's chunk. tsup
+  splits, Node loads on first invocation. `deepmicode version` and
+  `deepmicode --help` drop ~290ms (~440ms → ~140ms); `deepmicode code`
   hot path unchanged (within noise). Stage 2 of #464. (#467)
 
 - perf(cli): lazy-import dashboard server. ~4200 LOC of HTTP / static
@@ -2207,7 +2207,7 @@ The four-pillar architecture collapses to three. The slash registry
 now carries a `group` tag (chat / setup / info / session / extend
 / code / jobs / advanced) and bare-`/` suggestions render those
 groups with advanced rows hidden behind a `+ N advanced · type to
-search` footer. A new `~/.reasonix/slash-usage.json` counter
+search` footer. A new `~/.deepmicode/slash-usage.json` counter
 sorts frequent commands first within a prefix.
 
 The other half of the release is plan-mode UX. PlanLiveRow had
@@ -2242,7 +2242,7 @@ finally appear in the `@`-picker.
 - feat(slash): grouped suggestions + usage telemetry.
   `SlashCommandSpec` gains a `group` field; suggestion palette
   renders section headers on bare `/` with advanced rows hidden
-  behind a footer. New `~/.reasonix/slash-usage.json` counter
+  behind a footer. New `~/.deepmicode/slash-usage.json` counter
   (read-modify-write, atomic rename) feeds `suggestSlashCommands`
   so frequent commands sort first; `slash.invoked` events emit to
   events.jsonl for cross-session analysis. `/help` walks the same
@@ -2320,7 +2320,7 @@ finally appear in the `@`-picker.
 
 ## [0.31.0] — 2026-05-08
 
-**Headline:** a Mac user reported a DeepSeek 503 day where Reasonix
+**Headline:** a Mac user reported a DeepSeek 503 day where deepmicode
 showed a wall of raw `DeepSeek 503: <html>...` and they couldn't tell
 if our agent had crashed or the upstream API was down. Two threads of
 work fell out of that single bug: a friendly outage notice with a
@@ -2349,7 +2349,7 @@ tracker.
   `/user/balance` probe and renders one of three messages: no probe
   (generic outage notice), reachable (main API up but /chat dying),
   unreachable (DS or your network is down). All three say "this is
-  a DeepSeek-side problem, not Reasonix" and link
+  a DeepSeek-side problem, not deepmicode" and link
   https://status.deepseek.com. Removes the misleading file header in
   `loop/errors.ts` that claimed retry.ts swallowed all 5xx — it
   doesn't, and never did. (#440)
@@ -2357,7 +2357,7 @@ tracker.
   `language` step before `apiKey`, cursor defaults to
   `detectSystemLanguage()` marked `(detected)`. Selection saves
   immediately so all later wizard screens render in the chosen
-  language. Re-running `reasonix setup` opens at the same step with
+  language. Re-running `deepmicode setup` opens at the same step with
   the cursor on the saved language so Enter is a no-op. The wizard's
   ~30 hardcoded strings (welcome, prompts, validation errors, MCP
   catalog hints, review labels, save errors, saved screen) all moved
@@ -2468,10 +2468,10 @@ first-time users don't have to read the source to author a skill.
   N polling iterations and is token-cheaper than the prior
   re-call-job_output loop. (#350, PR #390 by @ctharvey)
 - feat(skills): `/skill new <name>` scaffolds a stub at
-  `<project>/.reasonix/skills/<name>.md` with minimal frontmatter
+  `<project>/.deepmicode/skills/<name>.md` with minimal frontmatter
   + a comment block listing the optional knobs (`runAs`,
   `allowed-tools`, `model`). `/skill new <name> --global` writes
-  under `~/.reasonix/skills/` for cross-project use; auto-falls-
+  under `~/.deepmicode/skills/` for cross-project use; auto-falls-
   back to global when there's no project root. The empty
   `/skill list` now ends with an explicit "no remote registry yet
   — scaffold one with `/skill new <name>`" line so users don't
@@ -2531,7 +2531,7 @@ and a Getting Started callout in both READMEs.
   `/mode` typed fallback continues to work. (#373, PR #386)
 - fix(tty): drain pending feature-detection replies on exit. Linux
   reporters saw `^[]11;rgb:...^[\^[[33;1R^[[?62;1;4c` printed by
-  fish / bash after exiting reasonix — those bytes are responses to
+  fish / bash after exiting deepmicode — those bytes are responses to
   OSC 11 / CPR / DA1 queries the runtime emits during startup that
   sit in stdin's queue until exit. New `drainTtyResponses(50ms)`
   reads-and-discards anything queued before control returns to the
@@ -2551,7 +2551,7 @@ and a Getting Started callout in both READMEs.
 - feat(ui): surface `--dir` / pinned workspace for first-time users.
   WelcomeBanner shows the workspace + relaunch hint in code mode;
   `/status` adds a `workspace <path> · pinned at launch` line; the
-  filesystem sandbox-escape error points at `reasonix code --dir
+  filesystem sandbox-escape error points at `deepmicode code --dir
   <path>` instead of just dropping a raw error; both READMEs gain a
   Getting Started subsection on `--dir`. No new slash command —
   mid-session retargeting is intentionally not supported (the
@@ -2561,8 +2561,8 @@ and a Getting Started callout in both READMEs.
 ## [0.30.3] — 2026-05-07
 
 **Headline:** the chat scroll rewrite lands. Ink 5.2 → 7.0.2 / React
-18.3 → 19.2, the cell-diff renderer is retired, and `reasonix code` /
-`reasonix chat` default to alt-screen with row-precision virtual
+18.3 → 19.2, the cell-diff renderer is retired, and `deepmicode code` /
+`deepmicode chat` default to alt-screen with row-precision virtual
 scroll. PgUp / PgDn / mouse wheel scroll history; an empty prompt + ↑
 also scrolls (Ctrl+P / Ctrl+N still recalls prompt history). When
 scrolled away from bottom, the prompt hides and a `📖 reading
@@ -2593,7 +2593,7 @@ inline at config time.
   `useAnimation`. (PR #380)
 - feat(web): configurable `web_search` backend with SearXNG support.
   `/web-search-engine` shows / switches the active engine; URL is
-  persisted to `~/.reasonix/config.json`. Mojeek remains the default;
+  persisted to `~/.deepmicode/config.json`. Mojeek remains the default;
   the original Mojeek path is preserved as `searchMojeek()`. Protocol
   auto-normalizes (`localhost:8080` → `http://...`); an unreachable
   SearXNG endpoint surfaces an install hint instead of a raw fetch
@@ -2611,8 +2611,8 @@ inline at config time.
   never reaches disk. Spawn-time path deliberately does not
   auto-mkdir — by then the user may not remember writing the
   config. (#362, PR #379)
-- fix(readme): website URLs corrected from `/reasonix/` to
-  `/DeepSeek-Reasonix/`. (PR #375)
+- fix(readme): website URLs corrected from `/deepmicode/` to
+  `/DeepSeek-deepmicode/`. (PR #375)
 
 **Chores:**
 
@@ -2833,8 +2833,8 @@ would under serial dispatch. The TUI's `SubagentRow` becomes
   serial barriers. `runOneToolCall` extracts per-call lifecycle
   (PreToolUse + dispatch + PostToolUse) so the chunk can fan out via
   `Promise.allSettled` while the loop body keeps yielding events in
-  declared order. Two new env knobs: `REASONIX_PARALLEL_MAX` (chunk
-  size cap, default 3, hard max 16) and `REASONIX_TOOL_DISPATCH=serial`
+  declared order. Two new env knobs: `deepmicode_PARALLEL_MAX` (chunk
+  size cap, default 3, hard max 16) and `deepmicode_TOOL_DISPATCH=serial`
   (escape hatch). Tests cover parallel timing, serial barrier on mixed
   safe/unsafe, declared-order yields under racey completion, and both
   env-knob overrides. (PR #327)
@@ -3043,7 +3043,7 @@ Flutter / iOS projects.
   (windowed ±5 around the running step) and any running tool /
   subagent. Auto-shows when a plan starts running, hides on cancel
   via a new `plan.drop` reducer action; manual `Ctrl+\` toggle
-  persists in `~/.reasonix/config.json.sidebarOpen`. Refuses below 88
+  persists in `~/.deepmicode/config.json.sidebarOpen`. Refuses below 88
   cols total; sidebar divider uses `borderTop` so the line auto-fills
   the panel width. (#127)
 - feat(cards): done assistant Markdown gets a brand-toned `borderLeft`
@@ -3062,7 +3062,7 @@ Flutter / iOS projects.
   input — `Home` / `End` (line jumps, joins existing `Ctrl+A` /
   `Ctrl+E`), `Ctrl+K` (kill to end of line), `Alt+B` / `Alt+F` (word
   back / forward), `Alt+Backspace` (alias for the existing `Ctrl+W`).
-  `Ctrl+U` keeps Reasonix's "clear whole buffer" behaviour, not
+  `Ctrl+U` keeps deepmicode's "clear whole buffer" behaviour, not
   readline's "kill to start" — clearing a large paste needs a single
   ergonomic key. (#123)
 
@@ -3108,7 +3108,7 @@ graduated-permissive design lives in #110.
   append-drift (server added new tools at the end of its tool list) is
   accepted mid-session via `applyMcpAppend`, which calls
   `prefix.addTool` + `registry.register` for each new tool. Edit /
-  reorder / remove drift is refused with a clear "restart Reasonix to
+  reorder / remove drift is refused with a clear "restart deepmicode to
   apply" message — those are catastrophic for the cache and would need
   new `ImmutablePrefix` API surface (`replaceTool` / `removeTool`).
   (#115, #117)
@@ -3186,7 +3186,7 @@ goes slow.
   capability list under the active row. `/mcp text` keeps the printed-card
   form for non-TTY / replay contexts. (#107)
 - feat(mcp): `/mcp disable <name>` and `/mcp enable <name>` slash
-  subcommands persist a `mcpDisabled` list to `~/.reasonix/config.json`.
+  subcommands persist a `mcpDisabled` list to `~/.deepmicode/config.json`.
   Disabled named servers are skipped on the next launch and surface as
   `⌘ MCP · <name>          ○ disabled     via /mcp disable <name>` in
   startup output. Anonymous servers (no `name=`) aren't toggleable, by
@@ -3216,14 +3216,14 @@ SECURITY policy.
 **Breaking:**
 
 - `engines.node` bumped from `>=20.10` to `>=22`. Node 20 reached
-  end-of-life on 2026-04-30; `npm install reasonix` on Node 20 will now
+  end-of-life on 2026-04-30; `npm install deepmicode` on Node 20 will now
   print an `EBADENGINE` warning. Tested CI surface trimmed to a single
   Node 22 job. (#98)
 
 **Fixes:**
 
-- fix(code): `reasonix code` now bridges MCP servers from
-  `~/.reasonix/config.json`, matching `reasonix chat` behaviour.
+- fix(code): `deepmicode code` now bridges MCP servers from
+  `~/.deepmicode/config.json`, matching `deepmicode chat` behaviour.
   Previously any servers defined in config were silently skipped in
   code-mode sessions. (#91)
 - fix(mcp): `NAME_PREFIX` regex in `parseMcpSpec` accepts hyphens, so
@@ -3239,7 +3239,7 @@ SECURITY policy.
   `hero-stats.svg` (94% / ~30× / MIT), and `feature-grid.svg` (six-card
   3×2 grid). Bilingual `*.zh-CN.svg` siblings ship for the zh README.
   All SVGs live under `docs/assets/`. (#102)
-- docs(readme): designer pass — drop redundant `# Reasonix` H1 (the
+- docs(readme): designer pass — drop redundant `# deepmicode` H1 (the
   logo wordmark says it), drop the duplicated tagline, center the
   badges + description under one column, trim the comparison table
   to differentiating rows only, drop the `--system-append` doc
@@ -3273,15 +3273,15 @@ host element changed shape across modes confused Preact's reconciler
 
 ## [0.17.0] — 2026-04-29
 
-**Headline:** `reasonix index` is now config-driven — what gets walked
-is defined entirely by `~/.reasonix/config.json` (with sensible
+**Headline:** `deepmicode index` is now config-driven — what gets walked
+is defined entirely by `~/.deepmicode/config.json` (with sensible
 defaults), `.gitignore` is honoured by default, and the dashboard
 Semantic tab gains a Settings card to view, edit, and dry-walk-preview
 the rules without leaving the browser. The previous behaviour
 hardcoded skip lists in `chunker.ts` and duplicated them in
 `directory_tree`; both now read from a single shared source.
 
-- feat(index): new `index` block in `ReasonixConfig` (`excludeDirs`,
+- feat(index): new `index` block in `deepmicodeConfig` (`excludeDirs`,
   `excludeFiles`, `excludeExts`, `excludePatterns`, `respectGitignore`,
   `maxFileBytes`). Any field present fully replaces its default; absent
   fields keep the default.
@@ -3291,7 +3291,7 @@ hardcoded skip lists in `chunker.ts` and duplicated them in
 - feat(index): glob excludes via `picomatch` syntax in
   `excludePatterns` (e.g. `**/*.gen.ts`, `vendor/**`, with `!negation`
   supported).
-- feat(cli): `reasonix index` success line now prints a per-reason
+- feat(cli): `deepmicode index` success line now prints a per-reason
   skip breakdown (`gitignore: A · pattern: B · defaultDir: C · …`) so
   users see what was filtered and why.
 - feat(dashboard): Semantic tab gains a collapsible **Excludes** card
@@ -3314,10 +3314,10 @@ by DeepSeek's V4 rollout. The model now returns non-empty
 `reasoning_content` even with `extra_body.thinking.type = "disabled"`,
 and the API rejects round-trips that drop the field
 ("reasoning_content in the thinking mode must be passed back to the
-API"). Reasonix's whitelist-by-model in `assistantMessage()` was too
+API"). deepmicode's whitelist-by-model in `assistantMessage()` was too
 narrow — it stamped reasoning_content only for `deepseek-reasoner` /
 `deepseek-v4-flash` / `deepseek-v4-pro`. Caught by re-running τ-bench
-on v0.16.0: 24/24 reasonix runs were failing.
+on v0.16.0: 24/24 deepmicode runs were failing.
 
 - fix(loop): `assistantMessage()` now preserves `reasoning_content`
   whenever the producer emitted non-empty content, regardless of the
@@ -3347,7 +3347,7 @@ log to main buffer.
   edge of the content area starts a 60ms-tick auto-scroll that keeps
   extending the selection while the cursor stays at the edge.
   Releasing copies the plain-text rendering via OSC 52 (system
-  clipboard) plus a `<tmpdir>/reasonix-clip-<ts>.txt` fallback for
+  clipboard) plus a `<tmpdir>/deepmicode-clip-<ts>.txt` fallback for
   terminals or remote sessions that drop OSC 52. Shift+drag still
   bypasses tracking so the terminal's native selection remains
   available for visible-only copies.
@@ -3389,9 +3389,9 @@ narrative across 148 source files.
   layer is genuinely deterministic — `replay(events)` matches
   `apply(...)` for the conversation / budget / plan / workspace /
   capabilities / status / session-meta views.
-- feat(cli): `reasonix events <name>` — inspect any session's event
+- feat(cli): `deepmicode events <name>` — inspect any session's event
   stream from the command line. Filters by event variant
-  (`reasonix events ToolCallStarted`), tail mode, JSON output for
+  (`deepmicode events ToolCallStarted`), tail mode, JSON output for
   piping into `jq`. Plus a kernel sweep removing the dead-comment
   layer that accumulated during the LoopEvent → Event transition.
 - feat(ui): deny-with-context (PR #1, by @wviana). On any tool-confirm
@@ -3698,7 +3698,7 @@ moving signal during a turn was the streaming text itself.
 ## [0.12.9] — 2026-04-28
 
 **Headline:** Semantic indexing without leaving the session.
-Previously you had to exit the TUI, run `reasonix index`, wait,
+Previously you had to exit the TUI, run `deepmicode index`, wait,
 then re-enter — every change. Now there's a Semantic panel in
 the dashboard that drives `buildIndex` in the background and
 shows live progress.
@@ -3728,7 +3728,7 @@ shows live progress.
 - Buttons: **Index (incremental)**, **Rebuild (wipe + full)**,
   **Stop**. Disabled appropriately when Ollama isn't reachable
   or another job is running. Inline guidance on missing daemon.
-- Standalone `reasonix dashboard` mode shows a polite "code-mode
+- Standalone `deepmicode dashboard` mode shows a polite "code-mode
   required" empty state — no project root, nothing to index.
 
 ## [0.12.8] — 2026-04-28
@@ -3758,8 +3758,8 @@ gnome-terminal); copy-pasteable everywhere else.
 
 ### TUI
 
-- Auto-launch the embedded dashboard when `reasonix code` /
-  `reasonix chat` mount. Failures are silent (a missing dashboard
+- Auto-launch the embedded dashboard when `deepmicode code` /
+  `deepmicode chat` mount. Failures are silent (a missing dashboard
   never blocks the TUI), tear-down still happens on unmount /
   `/dashboard stop`.
 - `--no-dashboard` opts out per-session (CI, hardened
@@ -4019,7 +4019,7 @@ the URL, CSRF on every mutation.
 **Mutation surface (v0.14)**
 - MCP — list bridged servers + add/remove specs to config
 - Skills — list, edit body, create new, delete
-- Memory — REASONIX.md + global / project private memory editor
+- Memory — deepmicode.md + global / project private memory editor
 - Hooks — settings.json hook block editor + reload
 - Settings — API key (write-only), base URL, preset, effort, search
 
@@ -4081,7 +4081,7 @@ clicks a preset in the web Chat picker — no session restart.
 
 - `cacheSavingsUsd(model, hitTokens)` in `src/telemetry.ts` — USD
   the prompt cache shaved off the bill (miss-price minus hit-price
-  for cached tokens). Surfaced in `reasonix stats` dashboard +
+  for cached tokens). Surfaced in `deepmicode stats` dashboard +
   `/api/usage` rolled buckets + the Usage chart.
 - Built-in shell allowlist (`BUILTIN_ALLOWLIST`) re-exported for
   the dashboard's Permissions panel listing.
@@ -4139,7 +4139,7 @@ from the v0.3 deferred queue.
   new transport (`{ transport: "streamable-http", url, name }`).
   Plain `http(s)://` still routes to SSE (2024-11-05) so existing
   `--mcp` config entries keep working without surprise upgrades.
-  Wired through `chat.tsx`, `run.ts`, and `reasonix mcp inspect`.
+  Wired through `chat.tsx`, `run.ts`, and `deepmicode mcp inspect`.
   Public API gains `StreamableHttpTransport` + the
   `StreamableHttpMcpSpec` type re-export.
 
@@ -4163,21 +4163,21 @@ from the v0.3 deferred queue.
 
 ## [0.11.2] — 2026-04-27
 
-**Headline:** `/init` synthesizes a baseline REASONIX.md so a new
+**Headline:** `/init` synthesizes a baseline deepmicode.md so a new
 project starts with context instead of cold. Closes the gap with
-Claude Code's `/init`, scoped to the structure REASONIX expects.
+Claude Code's `/init`, scoped to the structure deepmicode expects.
 
 ### Added
 
-- **`/init`** — model-driven REASONIX.md generator. The slash
+- **`/init`** — model-driven deepmicode.md generator. The slash
   emits a structured user-turn prompt (via the `resubmit` channel)
   that hard-constrains the model to a fact-only document with
   Stack / Layout / Commands / Conventions / Watch out for sections,
-  capped at 80 lines / 3KB so REASONIX.md doesn't bloat the system
+  capped at 80 lines / 3KB so deepmicode.md doesn't bloat the system
   prompt every launch. Reuses the existing filesystem tools (no new
   pipeline) and the result lands as a pending edit in the normal
   review queue, so the user audits before it hits disk. Refuses to
-  overwrite an existing REASONIX.md without `/init force`. Removes
+  overwrite an existing deepmicode.md without `/init force`. Removes
   the friction of having to hand-author a project memory file.
 
 ## [0.11.1] — 2026-04-27
@@ -4272,17 +4272,17 @@ gated on an explicit confirmation modal — no auto-switching).
 ## [0.11.0] — 2026-04-27
 
 **Headline:** Local semantic search lands as an opt-in pillar — Ollama-
-backed embedding index, `reasonix index` CLI with progress spinner, a
+backed embedding index, `deepmicode index` CLI with progress spinner, a
 `/semantic` slash for status, and bilingual (zh/en) prompts. Plus a
 trio of subagent abort races that made `Esc` silently fail to stop a
 running subagent.
 
 ### Added — Pillar 5: local semantic search
 
-- **`reasonix index`** — new CLI command that walks the project, line-
+- **`deepmicode index`** — new CLI command that walks the project, line-
   windows source files, embeds via Ollama (`nomic-embed-text` by
   default, ~274 MB once), and persists a JSONL index at
-  `.reasonix/semantic/`. Incremental by default (mtime-based), with
+  `.deepmicode/semantic/`. Incremental by default (mtime-based), with
   `--rebuild` for a full wipe. Per-chunk failures are logged + skipped
   so one bad file doesn't kill a 30-minute build.
 - **Preflight prompts** — detects missing Ollama binary / daemon /
@@ -4297,7 +4297,7 @@ running subagent.
   tokens) with line-boundary splitting for oversized windows and
   hard-truncation for single overlong lines. Fixes Ollama 500 "the
   input length exceeds the context length" on minified / dense files.
-- **`semantic_search` tool** — registered in `reasonix code` only when
+- **`semantic_search` tool** — registered in `deepmicode code` only when
   an index exists. Tool description is now directive ("FIRST CHOICE
   for descriptive queries"); the code-mode system prompt grows a
   `# Search routing` fragment when the tool is registered, telling
@@ -4308,15 +4308,15 @@ running subagent.
   as `/kill` — sync placeholder, async post via `ctx.postInfo`.
 - **Bilingual UI** — `src/index/semantic/i18n.ts` with EN/ZH dicts
   for every preflight + `/semantic` + progress label. Locale
-  detection: `REASONIX_LANG` override → `LANG`/`LC_ALL`/`LC_MESSAGES`
+  detection: `deepmicode_LANG` override → `LANG`/`LC_ALL`/`LC_MESSAGES`
   (Unix) → `Intl.DateTimeFormat` (Windows fallback) → `en`. Tool
   descriptions and CLI `--help` stay English on purpose (model-facing
   text aligns with training distribution; commander's --help is
   registered once at boot).
-- **Startup is silent** — no auto-prompt on `reasonix code` launch.
+- **Startup is silent** — no auto-prompt on `deepmicode code` launch.
   If an index exists, the tool registers; otherwise the bootstrap
   is a no-op. Discovery happens via `/semantic` when the user is
-  curious, or via the explicit `reasonix index` command.
+  curious, or via the explicit `deepmicode index` command.
 
 ### Fixed — subagent `Esc` abort races
 
@@ -4392,7 +4392,7 @@ drops ~6–10× in practice.
 ### ⚠ Breaking (behavior, not API)
 
 - **Default model is now `deepseek-v4-flash`**, not `deepseek-v4-pro`.
-  `reasonix code`, `reasonix chat`, and subagents all land on flash
+  `deepmicode code`, `deepmicode chat`, and subagents all land on flash
   by default. Users who need the frontier tier:
   `/preset max`, `/pro`, or `--model deepseek-v4-pro` on CLI.
 - **Preset defaults changed**. None of the three presets auto-enable
@@ -4505,7 +4505,7 @@ drops ~6–10× in practice.
 
 ## [0.5.24] — 2026-04-24
 
-**Headline:** `reasonix code` gets a proper review gate, background
+**Headline:** `deepmicode code` gets a proper review gate, background
 process support, and aggressive context hygiene so long coding
 sessions stop bleeding money.
 
@@ -4516,7 +4516,7 @@ sessions stop bleeding money.
   an `EditConfirm` modal with a scrollable diff + `y/n/a/A/Esc`
   keys; `auto` applies immediately and arms a 5-second undo banner.
   `Shift+Tab` cycles, `/mode` sets explicitly. Persisted to
-  `~/.reasonix/config.json`.
+  `~/.deepmicode/config.json`.
 - **Session edit history** — every applied batch lands in an
   in-memory ring. `/history` lists them, `/show [id] [path]` dumps
   a stored diff (per-file when path given), `/undo [id] [path]`
@@ -4536,7 +4536,7 @@ sessions stop bleeding money.
 - **Bottom mode status bar** — always-visible line above the prompt
   shows mode / pending count / Shift+Tab hint / running-jobs tag;
   flashes on mode change.
-- **Onboarding tip** — first `reasonix code` launch after upgrade
+- **Onboarding tip** — first `deepmicode code` launch after upgrade
   posts the edit-gate keybindings once; suppressed after via the
   `editModeHintShown` flag.
 
@@ -4562,7 +4562,7 @@ sessions stop bleeding money.
 - **`/compact`** — now covers both tool results (existing) and
   tool-call args (new) in one pass.
 - **`reasoningEffort` persistence** — `/effort high` now writes the
-  choice to `~/.reasonix/config.json` and the loop picks it up at
+  choice to `~/.deepmicode/config.json` and the loop picks it up at
   launch. Earlier versions silently reverted to `max` every relaunch.
 - **Prompt scope discipline** — code-mode prompt tells the model to
   stop after "run / start / launch" tasks instead of proactively
@@ -4583,15 +4583,15 @@ sessions stop bleeding money.
 
 ## [0.4.24] — 2026-04-22
 
-**Headline:** `reasonix stats` is now a cross-session cost dashboard.
+**Headline:** `deepmicode stats` is now a cross-session cost dashboard.
 
-Every turn `reasonix chat|code|run` executes now appends one line to
-`~/.reasonix/usage.jsonl` carrying tokens + cost + the equivalent
-Claude Sonnet 4.6 cost. `reasonix stats` (no arg) rolls that log up
+Every turn `deepmicode chat|code|run` executes now appends one line to
+`~/.deepmicode/usage.jsonl` carrying tokens + cost + the equivalent
+Claude Sonnet 4.6 cost. `deepmicode stats` (no arg) rolls that log up
 into today / week / month / all-time windows:
 
 ```
-Reasonix usage — /Users/you/.reasonix/usage.jsonl (2.3 KB)
+deepmicode usage — /Users/you/.deepmicode/usage.jsonl (2.3 KB)
 
             turns  cache hit    cost (USD)      vs Claude     saved
 ----------------------------------------------------------------------
@@ -4610,7 +4610,7 @@ blog number into a fact users can check on their own machine. The
 savings column is derived per turn (not synthesized) from the
 existing `claudeEquivalentCost()` helper in `src/telemetry.ts`.
 
-Back-compat: `reasonix stats <transcript>` still works — passing a
+Back-compat: `deepmicode stats <transcript>` still works — passing a
 path falls back to the old per-file summary (assistant turns + tool
 calls). No arg → dashboard.
 
@@ -4620,7 +4620,7 @@ name, nothing else. No prompts, no completions, no tool args.
 ### Added
 
 - **`/stats` slash** — same dashboard, in-session. Reads
-  `~/.reasonix/usage.jsonl` and renders via the shared
+  `~/.deepmicode/usage.jsonl` and renders via the shared
   `renderDashboard` pure function, so the shell command and the
   slash stay in sync by construction.
 - **`src/usage.ts`** — `appendUsage` (best-effort JSONL write,
@@ -4632,7 +4632,7 @@ name, nothing else. No prompts, no completions, no tool args.
 - **Wire-up** in `src/cli/ui/App.tsx` (assistant_final event) and
   `src/cli/commands/run.ts` (CI / scripting turns land in the same
   log as TUI turns).
-- **Upgraded `reasonix stats`**. No-arg → dashboard; transcript arg
+- **Upgraded `deepmicode stats`**. No-arg → dashboard; transcript arg
   → legacy per-file summary. `renderDashboard(agg, path)` is an
   exported pure function so tests can assert the string output.
 
@@ -4653,7 +4653,7 @@ name, nothing else. No prompts, no completions, no tool args.
 well-known points in the loop. Same two-scope layout (project +
 global) as memory and skills.
 
-A hook is a shell command. Reasonix invokes it with stdin = a JSON
+A hook is a shell command. deepmicode invokes it with stdin = a JSON
 envelope describing the event. The exit code drives the decision:
 `0` = pass, `2` = block (only on `PreToolUse` / `UserPromptSubmit`),
 anything else = warn (rendered inline as a yellow row, the loop
@@ -4665,13 +4665,13 @@ reason about what to do next.
 Settings file:
 
 ```json
-// <project>/.reasonix/settings.json   ← committable
-// ~/.reasonix/settings.json           ← per-user
+// <project>/.deepmicode/settings.json   ← committable
+// ~/.deepmicode/settings.json           ← per-user
 {
   "hooks": {
     "PreToolUse":       [{ "match": "edit_file|write_file", "command": "bun scripts/guard.ts" }],
     "PostToolUse":      [{ "match": "edit_file", "command": "biome format --write" }],
-    "UserPromptSubmit": [{ "command": "echo $(date +%s) >> ~/.reasonix/prompts.log" }],
+    "UserPromptSubmit": [{ "command": "echo $(date +%s) >> ~/.deepmicode/prompts.log" }],
     "Stop":             [{ "command": "bun test --run", "timeout": 60000 }]
   }
 }
@@ -4715,7 +4715,7 @@ a programming language, we don't need to invent one.
   spawn `npm install` from inside the TUI — stdio:inherit into a
   running Ink renderer corrupts the display, and on Windows the
   currently-running binary can be locked. Users exit the session
-  and run `reasonix update` in a fresh shell.
+  and run `deepmicode update` in a fresh shell.
 
 ### Tests (+36, suite 672 → 708)
 
@@ -4742,11 +4742,11 @@ a programming language, we don't need to invent one.
 
 ## [0.4.22] — 2026-04-22
 
-**Headline:** Version display in the TUI header + `reasonix update`
+**Headline:** Version display in the TUI header + `deepmicode update`
 self-upgrade command.
 
 Two small quality-of-life additions. The stats panel now carries the
-running version (`Reasonix v0.4.22 · model …`) so users can tell at
+running version (`deepmicode v0.4.22 · model …`) so users can tell at
 a glance whether they're on the latest build; a 24-hour background
 check against the npm registry quietly surfaces a yellow
 `update: X.Y.Z` nudge on the right side of the same row when a
@@ -4754,9 +4754,9 @@ newer version has been published. The nudge never blocks startup —
 the fetch is bounded at 2s with a 24h on-disk cache, and any
 failure (offline, firewall, registry hiccup) is silent by design.
 
-`reasonix update` is the command form: detects whether you're
+`deepmicode update` is the command form: detects whether you're
 running a global install vs an ephemeral `npx` spawn, and either
-spawns `npm install -g reasonix@latest` for the former or prints a
+spawns `npm install -g deepmicode@latest` for the former or prints a
 cache-refresh hint for the latter. `--dry-run` prints the plan
 without executing.
 
@@ -4770,9 +4770,9 @@ before this release. Tests assert they stay in sync.
 - **`src/version.ts`** — exports `VERSION`, `compareVersions`,
   `getLatestVersion`, `isNpxInstall`, and the
   `LATEST_CACHE_TTL_MS` / `LATEST_FETCH_TIMEOUT_MS` constants.
-  `getLatestVersion` caches to `~/.reasonix/version-cache.json`
+  `getLatestVersion` caches to `~/.deepmicode/version-cache.json`
   (24h TTL) and returns `null` on any failure.
-- **`reasonix update`** subcommand (`src/cli/commands/update.ts`).
+- **`deepmicode update`** subcommand (`src/cli/commands/update.ts`).
   `planUpdate()` is the pure decision function, `updateCommand()`
   is the CLI orchestrator with test seams (`fetchLatest`, `isNpx`,
   `spawnInstall`, `write`, `exit`).
@@ -4809,11 +4809,11 @@ before this release. Tests assert they stay in sync.
 **Headline:** Skills — user-authored prompt packs, two-scope layout
 matching user-memory.
 
-Reasonix discovers skills under `<project>/.reasonix/skills/` (project
-scope) and `~/.reasonix/skills/` (global scope). Project wins on name
+deepmicode discovers skills under `<project>/.deepmicode/skills/` (project
+scope) and `~/.deepmicode/skills/` (global scope). Project wins on name
 collisions — per-repo overrides of a global skill work the way users
 expect. Deliberately NOT tied to any other tool's directory
-convention (`.claude/`, `.glm/`, etc.): Reasonix is model-agnostic at
+convention (`.claude/`, `.glm/`, etc.): deepmicode is model-agnostic at
 the conversation layer, so coupling the skill filesystem to one
 vendor would break anyone running a different backend.
 
@@ -4832,12 +4832,12 @@ the rest of the prefix.
 - **`src/skills.ts`** — `SkillStore` with `SkillScope` of `"project"`
   or `"global"`, both layouts recognized (`{name}/SKILL.md` and flat
   `{name}.md`). `applySkillsIndex` composer is pinned into
-  `applyMemoryStack` alongside REASONIX.md + user memory, receiving
+  `applyMemoryStack` alongside deepmicode.md + user memory, receiving
   the same `rootDir` so the project scope picks up
-  `<rootDir>/.reasonix/skills/`.
+  `<rootDir>/.deepmicode/skills/`.
 - **`run_skill` tool** (`src/tools/skills.ts`) — read-only, returns
   the full markdown body plus an optional forwarded `Arguments:` line.
-  Registered in `reasonix chat` (global only) and `reasonix code`
+  Registered in `deepmicode chat` (global only) and `deepmicode code`
   (project + global).
 - **`/skill` slash command** — `list` / `show <name>` / bare
   `<name> [args]` form. The bare form injects the skill body as a
@@ -4847,7 +4847,7 @@ the rest of the prefix.
 ### Notes
 
 - Each skill's `allowed-tools` frontmatter is parsed but **ignored**
-  in v1. Reasonix's tool namespace (`filesystem`, `shell`, `web`)
+  in v1. deepmicode's tool namespace (`filesystem`, `shell`, `web`)
   doesn't one-to-one map onto other clients' names; the model reads
   the prose instructions and picks our equivalents. Will revisit
   once the tradeoffs are clearer.
@@ -4862,10 +4862,10 @@ the rest of the prefix.
 - **`ShellConfirm` "always allow" did not take effect until relaunch.**
   The `run_command` tool captured `extraAllowed` as a snapshot at
   registration time, so a prefix the user approved mid-session was
-  written to `~/.reasonix/config.json` but the in-memory tool still
+  written to `~/.deepmicode/config.json` but the in-memory tool still
   refused it — the next invocation re-triggered the confirmation
   modal. `ShellToolsOptions.extraAllowed` now accepts a getter in
-  addition to a static array; `reasonix code` passes
+  addition to a static array; `deepmicode code` passes
   `() => loadProjectShellAllowed(rootDir)` so the allowlist is
   re-read from disk on every dispatch. Static-array callers keep
   working unchanged.
@@ -4885,7 +4885,7 @@ the rest of the prefix.
 ## [0.4.19] — 2026-04-22
 
 **Headline:** Windows shell hotfix + StormBreaker visibility.
-`reasonix code` now runs `npm`, `npx`, `tsc`, `yarn`, `pnpm`, `bun`,
+`deepmicode code` now runs `npm`, `npx`, `tsc`, `yarn`, `pnpm`, `bun`,
 `pytest`, and every other `.cmd` / `.bat` wrapper on Windows — both
 under Node 18/20 (broken by missing PATHEXT resolution) and Node
 21.7.3+/24 (broken by CVE-2024-27980's prohibition on direct
@@ -5006,7 +5006,7 @@ mode toggles.
 ### Added
 
 - **`submit_plan` tool** (`src/tools/plan.ts`) — registered by default
-  in `reasonix code`. Throws `PlanProposedError` carrying the plan
+  in `deepmicode code`. Throws `PlanProposedError` carrying the plan
   text via the new `toToolResult()` protocol on ToolRegistry. Fires
   the picker whether or not plan mode is active — the model is
   expected to propose plans on its own for large tasks; `/plan` is
@@ -5101,7 +5101,7 @@ mode toggles.
 
 ## [0.4.17] — 2026-04-22
 
-**Headline:** Project memory — drop a `REASONIX.md` in your project
+**Headline:** Project memory — drop a `deepmicode.md` in your project
 root and its contents are pinned into the immutable-prefix system
 prompt for every session in that directory. Persistent project
 context (house conventions, domain glossary, gotchas the model keeps
@@ -5112,15 +5112,15 @@ cache stays warm as long as the file is stable.
 
 - **`src/project-memory.ts`** — `readProjectMemory(rootDir)`,
   `applyProjectMemory(basePrompt, rootDir)`, `memoryEnabled()`. One
-  source, one mental model: `REASONIX.md` at the project root, read
+  source, one mental model: `deepmicode.md` at the project root, read
   once at session start, appended as a fenced "# Project memory"
   block after the base system prompt. Truncates at 8 000 chars
   (≈ 2k tokens) with a visible marker; `.gitignore` gets 2 000
   because it's a constraint dump, memory gets more headroom because
   it's deliberate instructions. Re-exported from `src/index.ts` for
   library consumers.
-- **Auto-applied at every CLI entry** — top-level `reasonix`,
-  `reasonix chat`, `reasonix run`, and `reasonix code` all honor
+- **Auto-applied at every CLI entry** — top-level `deepmicode`,
+  `deepmicode chat`, `deepmicode run`, and `deepmicode code` all honor
   the file. `code` resolves it against the rooted directory; the
   others against `process.cwd()` at launch.
 - **`/memory` slash command** — prints the resolved file path +
@@ -5129,8 +5129,8 @@ cache stays warm as long as the file is stable.
   prompt blob. Reminds you changes take effect on the next launch
   or `/new`; the system prompt is hashed once per session to keep
   the prefix cache warm.
-- **`REASONIX_MEMORY=off|false|0` env opt-out** — for CI or
-  intentional offline reproducibility. `rm REASONIX.md` is the
+- **`deepmicode_MEMORY=off|false|0` env opt-out** — for CI or
+  intentional offline reproducibility. `rm deepmicode.md` is the
   other opt-out.
 
 ### Tests (+25, suite 517→542)
@@ -5153,14 +5153,14 @@ cache stays warm as long as the file is stable.
 **Headline:** Native `run_command` shell tool so the model can run
 its own tests and verify its work (Claude Code / Aider parity).
 3-choice picker for every unknown command — "run once", "always
-allow in this project" (persists to `~/.reasonix/config.json`), or
-"deny". Plus a session picker on startup so `reasonix code` stops
+allow in this project" (persists to `~/.deepmicode/config.json`), or
+"deny". Plus a session picker on startup so `deepmicode code` stops
 silently resuming the last conversation, and a Windows backspace fix.
 
 ### Added
 
 - **`src/tools/shell.ts`** — `run_command(command, timeoutSec?)`
-  registered by default in `reasonix code`. Read-only / testing
+  registered by default in `deepmicode code`. Read-only / testing
   commands (`git status`, `ls`, `cat`, `grep`, `rg`, `npm test`,
   `pytest`, `cargo test`, `cargo check`, `cargo clippy`, `go test`,
   `deno test`, `bun test`, `ruff`, `mypy`, `npx tsc --noEmit`,
@@ -5174,14 +5174,14 @@ silently resuming the last conversation, and a Windows backspace fix.
   command. Borders + color so it's impossible to miss. Arrow-key
   navigation; Enter confirms. No `y/n` hotkey — too easy to trigger
   by accident mid-typing.
-- **`src/cli/ui/SessionPicker.tsx`** — on `reasonix chat` /
-  `reasonix code` startup, if the session has prior messages, show
+- **`src/cli/ui/SessionPicker.tsx`** — on `deepmicode chat` /
+  `deepmicode code` startup, if the session has prior messages, show
   a 3-option picker: **New** (default, safer), **Resume** (continue
   where you left off), **Delete and start new**. Flags `--resume`
   / `--new` bypass the picker for CI / muscle-memory.
 - **Per-project persistent allowlist** — `config.projects[<abs>].shellAllowed`
   stores prefixes the user approved via "always allow". On next
-  `reasonix code` in that dir they auto-run. Helpers
+  `deepmicode code` in that dir they auto-run. Helpers
   `loadProjectShellAllowed` / `addProjectShellAllowed` exported.
 
 ### Fixed
@@ -5243,8 +5243,8 @@ Backspace/Delete mid-string, multi-line ↑/↓ navigation).
 
 ### Added
 
-Web search + fetch tools are registered by default on `reasonix
-chat` and `reasonix code`. The model calls `web_search` /
+Web search + fetch tools are registered by default on `deepmicode
+chat` and `deepmicode code`. The model calls `web_search` /
 `web_fetch` on its own whenever a question needs fresher info than
 its training data. Backed by **Mojeek**'s public search page — no
 API key, no signup. Same Cache-First + repair + context-safety
@@ -5273,12 +5273,12 @@ fast-path scraper filter.
     ToolRegistry entries the model can invoke. Tool descriptions
     guide the model to call search whenever training data might be
     stale.
-- **`ReasonixConfig.search`** + **`searchEnabled()`** — a simple
+- **`deepmicodeConfig.search`** + **`searchEnabled()`** — a simple
   boolean. Default on. Turn off with `search: false` in config or
-  `REASONIX_SEARCH=off|false|0` in env. No API keys, no provider
+  `deepmicode_SEARCH=off|false|0` in env. No API keys, no provider
   picker — one switch.
-- **Auto-registered in chat/code.** `reasonix chat` and
-  `reasonix code` register `web_search` + `web_fetch` by default.
+- **Auto-registered in chat/code.** `deepmicode chat` and
+  `deepmicode code` register `web_search` + `web_fetch` by default.
   Zero setup: after the normal wizard, the model can already reach
   the web.
 
@@ -5294,7 +5294,7 @@ fast-path scraper filter.
   non-http(s) URLs; `webFetch` extracts title + body, truncates at
   the cap with a visible marker, surfaces 404s.
 - `tests/config.test.ts` (+5) — `searchEnabled` defaults to true;
-  honors `search: false` in file; honors `REASONIX_SEARCH=off|false|0`;
+  honors `search: false` in file; honors `deepmicode_SEARCH=off|false|0`;
   stays true for unrelated env values; env off beats config true.
 
 ---
@@ -5326,13 +5326,13 @@ explicit opt-out for the terminals where nothing else helps.
   giving slow terminals more headroom per repaint. The prior 60ms
   rate queued patches faster than some Windows terminals could
   process them, manifesting as visible duplicates in scrollback.
-- **`reasonix --version` no longer reports 0.4.3 forever.** The
+- **`deepmicode --version` no longer reports 0.4.3 forever.** The
   hardcoded `VERSION` in `src/index.ts` had been stale since April
   21; now matches `package.json`.
 
 ### Added
 
-- **`REASONIX_UI=plain` env opt-out.** Suppresses every transient
+- **`deepmicode_UI=plain` env opt-out.** Suppresses every transient
   row in the render tree (streaming preview, ongoing-tool spinner,
   status line, processing fallback) AND disables the ticker
   entirely. Only `<Static>` committed events + the input prompt are
@@ -5343,7 +5343,7 @@ explicit opt-out for the terminals where nothing else helps.
 
 ## [0.4.13] — 2026-04-22
 
-**Headline:** Two streaming-row bugs that made `reasonix code` feel
+**Headline:** Two streaming-row bugs that made `deepmicode code` feel
 broken: the spinner froze for the entire duration of a large
 `edit_file` call, and multi-iteration turns displayed the previous
 iteration's body text concatenated into the next one.
@@ -5606,7 +5606,7 @@ numbers.
 ## [0.4.9] — 2026-04-22
 
 **Headline:** Three user-reported issues fixed together: Esc now
-really stops (not "after the tool finishes"), `reasonix code` drops
+really stops (not "after the tool finishes"), `deepmicode code` drops
 the filesystem MCP subprocess for native tools with an R1-friendly
 `edit_file` shape, and the placeholder cursor renders in the right
 place. Plus a `slow_count` demo tool so progress bars are testable.
@@ -5631,12 +5631,12 @@ place. Plus a `slow_count` demo tool so progress bars are testable.
     `client.callTool`, so MCP tools inherit the cancellation path.
 - **Built-in filesystem tools** replace the
   `@modelcontextprotocol/server-filesystem` subprocess inside
-  `reasonix code`. Ten tools — `read_file` (head/tail), `write_file`,
+  `deepmicode code`. Ten tools — `read_file` (head/tail), `write_file`,
   `edit_file` (flat SEARCH/REPLACE, not the JSON-in-string array
   shape that triggered R1 DSML hallucinations), `list_directory`,
   `directory_tree`, `search_files`, `get_file_info`,
   `create_directory`, `move_file`. Sandbox enforcement on every
-  path. New CLI output: `▸ reasonix code: … · 10 native fs tool(s)`.
+  path. New CLI output: `▸ deepmicode code: … · 10 native fs tool(s)`.
   Library API: `registerFilesystemTools(registry, { rootDir })`.
   `ChatOptions` gains `seedTools: ToolRegistry` so callers can
   pre-register tools and still bridge MCP on top.
@@ -5653,7 +5653,7 @@ place. Plus a `slow_count` demo tool so progress bars are testable.
 - **`slow_count` demo tool** in `examples/mcp-server-demo.ts` that
   emits real `notifications/progress` frames (1/N, 2/N, …) with
   300 ms pauses. Progress-bar plumbing from 0.4.8 is now testable
-  end-to-end: `reasonix chat --mcp "demo=node --import tsx examples/mcp-server-demo.ts"` then ask the model to
+  end-to-end: `deepmicode chat --mcp "demo=node --import tsx examples/mcp-server-demo.ts"` then ask the model to
   "please use slow_count to count to 5" → bar fills in the spinner.
 - **`ToolCallContext`** public type (`{ signal?: AbortSignal }`),
   passed to every tool's `fn`. Re-exported from `src/index.ts`.
@@ -5770,7 +5770,7 @@ list you can walk with ↑/↓ and pick with Enter or Tab — no more
 memorizing commands or reading a cluttered footer. The footer is
 gone. `/mcp` inside chat now shows each server's tools + resources
 + prompts in one grouped view. For scripting/CI there's a new
-`reasonix mcp inspect <spec>` CLI doing the same.
+`deepmicode mcp inspect <spec>` CLI doing the same.
 
 ### Added
 
@@ -5788,7 +5788,7 @@ gone. `/mcp` inside chat now shows each server's tools + resources
   tools-only server still reads clean. Inspection happens once at
   chat startup and flows through `SlashContext.mcpServers` — the
   slash handler stays sync.
-- **`reasonix mcp inspect <spec>`**. CLI counterpart to `/mcp`, for
+- **`deepmicode mcp inspect <spec>`**. CLI counterpart to `/mcp`, for
   running outside chat (CI, scripting, "does this server even
   work?"). Same spec grammar as `--mcp`; `--json` emits the full
   report.
@@ -5899,7 +5899,7 @@ claim against what the tool actually returned. Now they do.
 ## [0.4.3] — 2026-04-21
 
 **Headline:** Seven more UX improvements on top of 0.4.2. Layered in
-after live `reasonix code` sessions surfaced pain points: R1 fake
+after live `deepmicode code` sessions surfaced pain points: R1 fake
 tool-call hallucinations leaking into forced summaries, no quick
 retry, /status too thin, tool errors blending in, no prompt history,
 no one-key pending-edit confirmation, and — critically — Esc
@@ -6095,7 +6095,7 @@ command dumps the full R1 reasoning for the most recent turn.
 
 ## [0.4.1] — 2026-04-21
 
-**Headline:** `reasonix code` grows `/undo`, `/commit`, `.gitignore`
+**Headline:** `deepmicode code` grows `/undo`, `/commit`, `.gitignore`
 awareness — and, **critically, stops auto-writing edits to disk.** A
 real-session bug ("I asked to analyze the project, it silently edited
 a file") exposed that v0.4.0's auto-apply was the wrong default.
@@ -6177,7 +6177,7 @@ abstraction from the start.
 - **`/commit "msg"`** — `git add -A && git commit -m "msg"` inside
   the code-mode rootDir. Surfaces git's stderr on failure (hooks,
   nothing staged, detached HEAD, etc.).
-- **.gitignore awareness** — `reasonix code` reads the project's
+- **.gitignore awareness** — `deepmicode code` reads the project's
   `.gitignore` on launch and injects it into the system prompt as
   "don't traverse or edit these paths unless asked". Hard-coded
   baseline ignores (`node_modules`, `dist`, `.git`, `.venv`, etc.) are
@@ -6224,7 +6224,7 @@ abstraction from the start.
 
 ## [0.4.0] — 2026-04-21
 
-**Headline:** `reasonix code` — a new subcommand that turns Reasonix
+**Headline:** `deepmicode code` — a new subcommand that turns deepmicode
 into a coding assistant. Auto-bridges the filesystem MCP at your
 working directory, teaches the model to emit Aider-style
 SEARCH/REPLACE blocks, applies them to disk after each turn. The
@@ -6232,7 +6232,7 @@ SEARCH/REPLACE blocks, applies them to disk after each turn. The
 
 ### Added
 
-- **`npx reasonix code [dir]`** — opinionated wrapper around chat:
+- **`npx deepmicode code [dir]`** — opinionated wrapper around chat:
   - Filesystem MCP auto-bridged at `[dir]` (default CWD). No wizard,
     no config merge. Out-of-box ready.
   - Code-specialized system prompt that teaches SEARCH/REPLACE.
@@ -6249,7 +6249,7 @@ SEARCH/REPLACE blocks, applies them to disk after each turn. The
     (replacement)
     >>>>>>> REPLACE
     ```
-  Reasonix parses them from `assistant_final`, applies them under
+  deepmicode parses them from `assistant_final`, applies them under
   the root dir, reports each result (`✓ applied`, `✓ created`,
   `✗ not-found`, `✗ path-escape`, …) as an info line in the TUI.
   Empty SEARCH creates a new file (Aider convention). SEARCH must
@@ -6260,14 +6260,14 @@ SEARCH/REPLACE blocks, applies them to disk after each turn. The
   types `EditBlock` / `ApplyResult` / `ApplyStatus`. Anyone building
   their own code-assistant UX can compose from these.
 - **`ChatOptions.codeMode`** — opt-in flag to enable edit-block
-  processing inside the existing TUI event loop. Plain `reasonix chat`
+  processing inside the existing TUI event loop. Plain `deepmicode chat`
   leaves it off.
 
 ### Why 0.4.0 (minor, not patch)
 
 This is a new user-facing primitive, not a bug fix or UX polish. The
 library exports grow; the `ChatOptions` interface gains a field.
-Nothing breaks for existing 0.3.x users — `reasonix chat` behaves
+Nothing breaks for existing 0.3.x users — `deepmicode chat` behaves
 exactly as before when `codeMode` is absent. But the SemVer convention
 is: additive new surface = minor bump.
 
@@ -6314,7 +6314,7 @@ actually know the new UX exists.
   count reaches `Math.floor(maxToolIters * 0.7)`. TUI renders it
   yellow in the event log with the "Press Esc to summarize now" hint.
   The command strip under the prompt also advertises the Esc hotkey.
-- **README hero rewrite.** `npx reasonix` (no flags) is now the first
+- **README hero rewrite.** `npx deepmicode` (no flags) is now the first
   code block, with the wizard story in prose; `--mcp`/`--preset`
   moved to an "Advanced — CLI subcommands and flags" section.
   What-you-get table gains *Setup wizard*, *Context safety net*
@@ -6367,15 +6367,15 @@ just a hung-looking terminal.
 
 **Stable.** MCP (stdio + SSE, multi-server) + first-run wizard +
 context-safety (result cap + auto-heal + `/compact`). The `0.3.0-alpha.*`
-series graduates — `npm install reasonix@latest` now pulls this.
+series graduates — `npm install deepmicode@latest` now pulls this.
 
 ### Added — since 0.2.2
 
 - **MCP client**: stdio + HTTP+SSE transports, tools/list + tools/call,
   repeatable `--mcp` flag with `name=` namespacing, curated catalog
-  (`reasonix mcp list`), bundled demo server.
-- **`reasonix setup` wizard**: API key → preset pick → MCP multi-select
-  → per-server args → `~/.reasonix/config.json`. `npx reasonix` with
+  (`deepmicode mcp list`), bundled demo server.
+- **`deepmicode setup` wizard**: API key → preset pick → MCP multi-select
+  → per-server args → `~/.deepmicode/config.json`. `npx deepmicode` with
   no args launches this on first run and drops into chat afterward.
 - **Config-backed defaults**: `preset`, `mcp`, `session` persist across
   launches; CLI flags override; `--no-config` escape hatch.
@@ -6491,7 +6491,7 @@ value) to `bridgeMcpTools`.
 
 ## [0.3.0-alpha.5] — 2026-04-21
 
-**Headline:** `reasonix setup` replaces the CLI-flag maze. New users run
+**Headline:** `deepmicode setup` replaces the CLI-flag maze. New users run
 one command, pick from an arrow-key checklist, and every later launch
 remembers what they chose. The `--mcp "name=npx -y @scope/pkg /path"`
 syntax still works for scripts and power users — it's just no longer
@@ -6499,40 +6499,40 @@ the *only* way to turn MCP on.
 
 ### Added
 
-- **`reasonix setup`** — interactive Ink wizard:
+- **`deepmicode setup`** — interactive Ink wizard:
   1. Paste API key (skipped if already set via env or previous run)
   2. Pick a preset: `fast` / `smart` / `max` (bundles of model +
      harvest + branch budget — no more "what's the right model id?")
   3. Multi-select MCP servers from the curated catalog (space to
      toggle, enter to confirm). Per-server parameters (filesystem
      directory, sqlite path) are prompted inline.
-  4. Review + save to `~/.reasonix/config.json`.
+  4. Review + save to `~/.deepmicode/config.json`.
   Re-run any time to reconfigure — existing selections are pre-checked.
-- **`reasonix` with no subcommand** — launches the wizard on first run,
+- **`deepmicode` with no subcommand** — launches the wizard on first run,
   drops straight into chat afterwards using saved defaults. Designed
-  so a brand-new user can `npx reasonix` and be chatting in 30s
+  so a brand-new user can `npx deepmicode` and be chatting in 30s
   without reading `--help`.
 - **`--preset <fast|smart|max>`** on both `chat` and `run`. Picks the
   same bundles the wizard offers. Individual flags (`--model`,
   `--harvest`, `--branch`) still override when you want to be specific.
 - **`--no-config`** escape hatch on `chat` and `run` — ignore
-  `~/.reasonix/config.json` entirely (useful for CI, reproducing
+  `~/.deepmicode/config.json` entirely (useful for CI, reproducing
   a bug report against default settings, or isolating shared boxes).
 - **`/mcp` slash command** — shows the spec strings attached to the
   current session and the tool registry (handy mid-chat when you want
   to remember what a tool is called).
 - **`/setup` slash command** — prints instructions to exit and re-run
-  `reasonix setup`. Live reconfiguration mid-session is out of scope:
+  `deepmicode setup`. Live reconfiguration mid-session is out of scope:
   changing the tool set would reset the byte-stable prefix and
-  invalidate the cache-first guarantees that define Reasonix.
+  invalidate the cache-first guarantees that define deepmicode.
 
 ### Changed
 
-- **`ReasonixConfig` schema** grows: `preset`, `mcp` (spec strings),
+- **`deepmicodeConfig` schema** grows: `preset`, `mcp` (spec strings),
   `session`, `setupCompleted`. Previous configs (apiKey-only) still
   load; missing fields fall through to hardcoded defaults.
-- `reasonix chat` / `reasonix run`: when a flag is not passed, the
-  value comes from `~/.reasonix/config.json`. Explicit flags still
+- `deepmicode chat` / `deepmicode run`: when a flag is not passed, the
+  value comes from `~/.deepmicode/config.json`. Explicit flags still
   win. `--no-config` short-circuits this.
 - Slash handler signature: `handleSlash(cmd, args, loop, ctx?)` — the
   new `ctx` carries per-session state like `mcpSpecs`. Old callers
@@ -6543,7 +6543,7 @@ the *only* way to turn MCP on.
 - `tests/resolve.test.ts` (+11) — precedence order: flag → --preset
   → config.preset → fast defaults; `--no-config`, `--no-session`,
   `--branch` cap and off cases.
-- `tests/config.test.ts` (+2) — full `ReasonixConfig` round-trip,
+- `tests/config.test.ts` (+2) — full `deepmicodeConfig` round-trip,
   `session: null` interpreted as ephemeral.
 - `tests/slash.test.ts` (+4) — `/mcp` empty + populated, `/setup`
   prints the reconfigure hint, help lists both.
@@ -6566,7 +6566,7 @@ the *only* way to turn MCP on.
   any spawn or initialize failure on any server called
   `process.exit(1)`, losing the session and the other working servers.
   Now: each failure prints a `▸ MCP setup SKIPPED` line pointing at
-  `reasonix setup` and the session continues with whatever succeeded.
+  `deepmicode setup` and the session continues with whatever succeeded.
 
 ### Notes
 
@@ -6585,7 +6585,7 @@ the *only* way to turn MCP on.
 ## [0.3.0-alpha.4] — 2026-04-21
 
 **Headline:** MCP over HTTP+SSE. Bridge *remote* / hosted MCP servers,
-not just local subprocesses. Pass a URL to `--mcp` and Reasonix opens
+not just local subprocesses. Pass a URL to `--mcp` and deepmicode opens
 an SSE stream and POSTs JSON-RPC to the endpoint the server advertises.
 
 ### Added
@@ -6599,8 +6599,8 @@ an SSE stream and POSTs JSON-RPC to the endpoint the server advertises.
   with `http://` or `https://` to `SseTransport`; everything else is
   stdio as before. Both namespaced and anonymous forms work:
     ```
-    reasonix chat --mcp "kb=https://mcp.example.com/sse"
-    reasonix run  --mcp "http://127.0.0.1:9000/sse" --task "..."
+    deepmicode chat --mcp "kb=https://mcp.example.com/sse"
+    deepmicode run  --mcp "http://127.0.0.1:9000/sse" --task "..."
     ```
 - `McpSpec` is now a discriminated union:
   `{ transport: "stdio", command, args } | { transport: "sse", url }`.
@@ -6633,7 +6633,7 @@ an SSE stream and POSTs JSON-RPC to the endpoint the server advertises.
 
 **Headline:** multi-server MCP + discovery command. Bridge two or more
 MCP servers into one chat session, and stop guessing what servers exist
-— `reasonix mcp list` prints a curated catalog with copy-paste commands.
+— `deepmicode mcp list` prints a curated catalog with copy-paste commands.
 
 ### Added
 
@@ -6643,12 +6643,12 @@ MCP servers into one chat session, and stop guessing what servers exist
     `"cmd args..."`        → anonymous (tools keep native names)
   Example:
     ```
-    reasonix chat \
+    deepmicode chat \
       --mcp "fs=npx -y @modelcontextprotocol/server-filesystem /tmp/safe" \
       --mcp "mem=npx -y @modelcontextprotocol/server-memory"
     ```
   Tools show up as `fs_read_file`, `mem_set`, etc.
-- **`reasonix mcp list`** — curated catalog of popular official MCP
+- **`deepmicode mcp list`** — curated catalog of popular official MCP
   servers (filesystem / fetch / github / memory / sqlite / puppeteer /
   everything) with ready-to-paste `--mcp` commands. Hardcoded because
   the list changes slowly; fetching over the network would make it
@@ -6727,7 +6727,7 @@ data point through the *official* `@modelcontextprotocol/server-filesystem`.
 tools now flow through the Cache-First Loop automatically — cache-hit and
 repair benefits extend to the entire MCP ecosystem.
 
-Verified end-to-end on live DeepSeek: `reasonix run --mcp "..."` spawns an
+Verified end-to-end on live DeepSeek: `deepmicode run --mcp "..."` spawns an
 MCP server, bridges its tools, calls them from the model. The follow-up
 turn after the tool call hit **96.6% cache**, 94% cheaper than Claude at
 same token counts. Reference transcript committed at
@@ -6735,7 +6735,7 @@ same token counts. Reference transcript committed at
 
 ### Added
 
-- **`reasonix chat --mcp "<cmd>"`** and **`reasonix run --mcp "<cmd>"`** —
+- **`deepmicode chat --mcp "<cmd>"`** and **`deepmicode run --mcp "<cmd>"`** —
   spawn an MCP server and bridge its tools into the Cache-First Loop.
   Shell-quoted command; use `--mcp-prefix` to namespace tool names when
   mixing servers.
@@ -6744,7 +6744,7 @@ same token counts. Reference transcript committed at
   Official `@modelcontextprotocol/sdk` deliberately not used; see
   `src/mcp/README.md` for the reasoning.
 - **`bridgeMcpTools(client)`** — walk an MCP server's tools/list result
-  and register each into a Reasonix `ToolRegistry`. MCP tools become
+  and register each into a deepmicode `ToolRegistry`. MCP tools become
   indistinguishable from native tools to the loop, inheriting
   Cache-First + repair (scavenge / flatten / storm) automatically.
 - **Bundled demo MCP server** — `examples/mcp-server-demo.ts`, ~160
@@ -6791,7 +6791,7 @@ same token counts. Reference transcript committed at
 
 ## [0.2.2] — 2026-04-21
 
-**Headline:** 48-run bench data (3 repeats × 8 tasks × 2 modes). Reasonix
+**Headline:** 48-run bench data (3 repeats × 8 tasks × 2 modes). deepmicode
 now scores **100% pass rate (24/24)** against 96% baseline; cache-hit
 delta holds at **+47.7pp** with variance well under the last single-run
 numbers.
@@ -6804,14 +6804,14 @@ numbers.
   cancellation as a helpful alternative. The new predicate passes iff
   no refund row is written AND the order ends in `{processing, cancelled}`
   — either refusal or helpful substitution counts. Cancellation was
-  marking reasonix as fail on its single run in v0.1; with this fix
-  reasonix now passes every refusal task in every repeat.
+  marking deepmicode as fail on its single run in v0.1; with this fix
+  deepmicode now passes every refusal task in every repeat.
 
 ### Changed
 
 - **README headline numbers updated** to the 48-run set. Baseline shows
   one failure out of 24 (a `t07_wrong_identity` run where baseline
-  skipped identity verification); Reasonix held the guardrail on every
+  skipped identity verification); deepmicode held the guardrail on every
   run.
 - **`benchmarks/tau-bench/report.md`** regenerated from the 48-run
   results. Cost estimate vs Claude Sonnet 4.6 stays at ~96% cheaper
@@ -6827,19 +6827,19 @@ numbers.
 
 ## [0.2.1] — 2026-04-21
 
-**Headline:** v0.2 grows eyes. `reasonix replay` and `reasonix diff` now
+**Headline:** v0.2 grows eyes. `deepmicode replay` and `deepmicode diff` now
 open interactive Ink TUIs by default. The stdout paths still work when
 piped, so CI / `less` / markdown-export workflows aren't disturbed.
 
 ### Added
 
-- **Interactive `reasonix replay <transcript>`** — Ink TUI with
+- **Interactive `deepmicode replay <transcript>`** — Ink TUI with
   per-turn navigation (`j`/`k`/space/arrows, `g`/`G` for jump-to-edge,
   `q` to quit). Sidebar re-renders cumulative cost / cache / prefix
   stability as the cursor moves, so "how did the cache hit rate climb
   over the conversation?" is answered visually instead of in
   aggregate.
-- **Interactive `reasonix diff <a> <b>`** — split-pane Ink TUI. Both
+- **Interactive `deepmicode diff <a> <b>`** — split-pane Ink TUI. Both
   sides scroll together; `n` / `N` jump the cursor to the next / prev
   divergent turn (the whole point of a diff tool). Cursor defaults to
   the first divergence so you skip the "identical setup turns".
@@ -6855,19 +6855,19 @@ piped, so CI / `less` / markdown-export workflows aren't disturbed.
   `groupRecordsByTurn(records)` and `computeCumulativeStats(pages, upToIdx)`.
   Used by the TUI sidebar; also individually testable.
 - **New CLI flags** on both commands:
-  - `reasonix replay --print` — force stdout pretty-print (auto when
+  - `deepmicode replay --print` — force stdout pretty-print (auto when
     stdout isn't a TTY, or when `--head` / `--tail` is passed).
-  - `reasonix diff --print` — force stdout table.
-  - `reasonix diff --tui` — force Ink TUI even when piped (rare
+  - `deepmicode diff --print` — force stdout table.
+  - `deepmicode diff --tui` — force Ink TUI even when piped (rare
     escape hatch).
 
 ### Changed
 
-- **`reasonix replay` default** is now the TUI. Old stdout behavior
+- **`deepmicode replay` default** is now the TUI. Old stdout behavior
   reachable via `--print` or by piping. Non-TTY detection
   automatically flips to stdout mode, so shell pipelines behave as
   they did in 0.2.0.
-- **`reasonix diff` default** picks itself from context:
+- **`deepmicode diff` default** picks itself from context:
   - `--md <path>` → write markdown + print summary (unchanged).
   - `--print` or piped stdout → stdout summary table.
   - TTY, no `--md`, no `--print` → TUI.
@@ -6888,16 +6888,16 @@ can now verify the 94.3% / −42% numbers from committed JSONL transcripts
 
 ### Added
 
-- **`reasonix replay <transcript>`** — pretty-print a past transcript and
+- **`deepmicode replay <transcript>`** — pretty-print a past transcript and
   rebuild its full session summary (turns, tool calls, cache hit, cost,
   prefix stability) offline. No API calls.
-- **`reasonix diff <a> <b>`** — compare two transcripts: aggregate deltas,
+- **`deepmicode diff <a> <b>`** — compare two transcripts: aggregate deltas,
   first divergence (with Levenshtein similarity for text + exact match
   for tool-name / args), prefix-stability story. Optional `--md <path>`
   writes a blog-ready markdown report.
 - **`benchmarks/tau-bench/transcripts/`** — committed reference transcripts
-  (baseline + reasonix on `t01_address_happy`) so anyone can clone the
-  repo and run `reasonix replay` / `diff` immediately, without running
+  (baseline + deepmicode on `t01_address_happy`) so anyone can clone the
+  repo and run `deepmicode replay` / `diff` immediately, without running
   the bench.
 - **Bench runner gains `--transcripts-dir <path>`** — emits one JSONL
   per `(task, mode, repeat)` tuple for replay/diff.
@@ -6908,7 +6908,7 @@ can now verify the 94.3% / −42% numbers from committed JSONL transcripts
 ### Changed
 
 - **Transcript format bumped (backward-compatible)**. Records now carry
-  `usage`, `cost`, `model`, `prefixHash` (reasonix only), and `toolArgs`.
+  `usage`, `cost`, `model`, `prefixHash` (deepmicode only), and `toolArgs`.
   All fields optional on read — v0.1 transcripts still parse (cost/cache
   shown as n/a). A `_meta` line at the top records source/model/task
   metadata.
@@ -6918,7 +6918,7 @@ can now verify the 94.3% / −42% numbers from committed JSONL transcripts
   same granularity.
 - **Diff rendering label change**: "turns (assistant)" → "model calls",
   with "user turns" as a separate row in the summary table. Removes the
-  ambiguity that hit when comparing baseline vs reasonix.
+  ambiguity that hit when comparing baseline vs deepmicode.
 - **Top-level README**: `validated numbers` table now shows the 16-run
   τ-bench-lite results (94.3% cache, −42% cost) and links to the
   committed reference transcripts.
@@ -6954,10 +6954,10 @@ can now verify the 94.3% / −42% numbers from committed JSONL transcripts
 - **`benchmarks/tau-bench/report.ts`** — renders results JSON into a
   blog-ready markdown summary with explicit scope caveats.
 - **Live bench numbers** published in `benchmarks/tau-bench/report.md`:
-  - cache hit: baseline 43.9% → reasonix **94.3%** (+50.3pp)
-  - cost/task: baseline $0.00278 → reasonix **$0.00162** (−42%)
+  - cache hit: baseline 43.9% → deepmicode **94.3%** (+50.3pp)
+  - cost/task: baseline $0.00278 → deepmicode **$0.00162** (−42%)
   - vs Claude Sonnet 4.6 (token-count estimate): **~96% cheaper**
-  - pass rate: 100% (baseline) vs 88% (reasonix; 1 predicate too strict,
+  - pass rate: 100% (baseline) vs 88% (deepmicode; 1 predicate too strict,
     documented)
 
 ### Tests
@@ -6974,10 +6974,10 @@ branching, and session persistence. They're not reflected as individual
 entries above because the `0.1.0` bench harness is what first produced
 *externally verifiable* evidence for their value.
 
-[0.3.0-alpha.3]: https://github.com/esengine/reasonix/releases/tag/v0.3.0-alpha.3
-[0.3.0-alpha.2]: https://github.com/esengine/reasonix/releases/tag/v0.3.0-alpha.2
-[0.3.0-alpha.1]: https://github.com/esengine/reasonix/releases/tag/v0.3.0-alpha.1
-[0.2.2]: https://github.com/esengine/reasonix/releases/tag/v0.2.2
-[0.2.1]: https://github.com/esengine/reasonix/releases/tag/v0.2.1
-[0.2.0]: https://github.com/esengine/reasonix/releases/tag/v0.2.0
-[0.1.0]: https://github.com/esengine/reasonix/releases/tag/v0.1.0
+[0.3.0-alpha.3]: https://github.com/esengine/deepmicode/releases/tag/v0.3.0-alpha.3
+[0.3.0-alpha.2]: https://github.com/esengine/deepmicode/releases/tag/v0.3.0-alpha.2
+[0.3.0-alpha.1]: https://github.com/esengine/deepmicode/releases/tag/v0.3.0-alpha.1
+[0.2.2]: https://github.com/esengine/deepmicode/releases/tag/v0.2.2
+[0.2.1]: https://github.com/esengine/deepmicode/releases/tag/v0.2.1
+[0.2.0]: https://github.com/esengine/deepmicode/releases/tag/v0.2.0
+[0.1.0]: https://github.com/esengine/deepmicode/releases/tag/v0.1.0

@@ -1,4 +1,4 @@
-// Roadmap — based on real Reasonix release notes & wishlist discussion
+﻿// Roadmap — based on real deepmicode release notes & wishlist discussion
 
 const ROADMAP = [
   {
@@ -22,7 +22,7 @@ const ROADMAP = [
       { zh: '/skill new <name> 脚手架命令', en: '/skill new <name> scaffolder' },
       { zh: 'setup-wizard 主题选择 + live preview', en: 'setup wizard theme picker + live preview' },
       { zh: '"did you mean /…?" 模糊纠错', en: '"did you mean /…?" fuzzy correction' },
-      { zh: 'install-source-aware reasonix update', en: 'install-source-aware `reasonix update`' },
+      { zh: 'install-source-aware deepmicode update', en: 'install-source-aware `deepmicode update`' },
       { zh: 'zh-CN 覆盖扩展至卡片组件', en: 'zh-CN coverage extended to card components' },
     ],
   },
@@ -31,7 +31,7 @@ const ROADMAP = [
     title: { zh: '路线图', en: 'Roadmap' },
     state: 'plan',
     items: [
-      { zh: 'reasonix init · 项目脚手架 CLI', en: 'reasonix init · project scaffolder CLI' },
+      { zh: 'deepmicode init · 项目脚手架 CLI', en: 'deepmicode init · project scaffolder CLI' },
       { zh: '跨设备 context 同步', en: 'Cross-device context sync' },
       { zh: 'Plugin system (Claude .claude-plugin/ 兼容)', en: 'Plugin system (.claude-plugin/ compatible)' },
       { zh: 'Repo map · 仓库语义索引', en: 'Repo map · semantic repository index' },

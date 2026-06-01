@@ -1,4 +1,4 @@
-/** `~/.reasonix/memory/` store + prefix-loading composer — temp homeDir per test. */
+﻿/** `~/.deepmicode/memory/` store + prefix-loading composer — temp homeDir per test. */
 
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -9,7 +9,7 @@ import {
   MEMORY_INDEX_FILE,
   MEMORY_INDEX_MAX_CHARS,
   MemoryStore,
-  applyGlobalReasonixMemory,
+  applyGlobaldeepmicodeMemory,
   applyMemoryStack,
   applyUserMemory,
   projectHash,
@@ -21,17 +21,17 @@ const BASE = "You are a test assistant.";
 describe("user-memory", () => {
   let home: string;
   let projectRoot: string;
-  const originalEnv = process.env.REASONIX_MEMORY;
+  const originalEnv = process.env.deepmicode_MEMORY;
   const originalHome = process.env.HOME;
   const originalUserProfile = process.env.USERPROFILE;
 
   beforeEach(() => {
-    home = mkdtempSync(join(tmpdir(), "reasonix-umem-home-"));
-    projectRoot = mkdtempSync(join(tmpdir(), "reasonix-umem-proj-"));
+    home = mkdtempSync(join(tmpdir(), "deepmicode-umem-home-"));
+    projectRoot = mkdtempSync(join(tmpdir(), "deepmicode-umem-proj-"));
     process.env.HOME = home;
     process.env.USERPROFILE = home;
     // biome-ignore lint/performance/noDelete: avoid leaking "undefined" into env
-    delete process.env.REASONIX_MEMORY;
+    delete process.env.deepmicode_MEMORY;
   });
 
   afterEach(() => {
@@ -39,9 +39,9 @@ describe("user-memory", () => {
     rmSync(projectRoot, { recursive: true, force: true });
     if (originalEnv === undefined) {
       // biome-ignore lint/performance/noDelete: same
-      delete process.env.REASONIX_MEMORY;
+      delete process.env.deepmicode_MEMORY;
     } else {
-      process.env.REASONIX_MEMORY = originalEnv;
+      process.env.deepmicode_MEMORY = originalEnv;
     }
     if (originalHome === undefined) {
       // biome-ignore lint/performance/noDelete: env restoration needs absence, not "undefined"
@@ -333,7 +333,7 @@ describe("user-memory", () => {
       expect(a).toBe(b);
     });
 
-    it("respects REASONIX_MEMORY=off", () => {
+    it("respects deepmicode_MEMORY=off", () => {
       const store = new MemoryStore({ homeDir: home, projectRoot });
       store.write({
         name: "pref_one",
@@ -342,7 +342,7 @@ describe("user-memory", () => {
         description: "d",
         body: "b",
       });
-      process.env.REASONIX_MEMORY = "off";
+      process.env.deepmicode_MEMORY = "off";
       expect(applyUserMemory(BASE, { homeDir: home, projectRoot })).toBe(BASE);
     });
 
@@ -362,9 +362,9 @@ describe("user-memory", () => {
   });
 
   describe("applyMemoryStack", () => {
-    it("composes REASONIX.md → global memory → project memory", () => {
-      writeFileSync(join(projectRoot, "REASONIX.md"), "Pinned by REASONIX.md\n", "utf8");
-      // applyMemoryStack uses ~/.reasonix by default — redirect via HOME
+    it("composes deepmicode.md → global memory → project memory", () => {
+      writeFileSync(join(projectRoot, "deepmicode.md"), "Pinned by deepmicode.md\n", "utf8");
+      // applyMemoryStack uses ~/.deepmicode by default — redirect via HOME
       // isn't portable across Windows; use the public applyUserMemory
       // directly for the global/project part and compose manually to
       // check ordering is what the helper produces.
@@ -385,19 +385,19 @@ describe("user-memory", () => {
         body: "b",
       });
       const out = applyUserMemory(withProj, { homeDir: home, projectRoot });
-      // Order: REASONIX.md content → global → project. Each unique
+      // Order: deepmicode.md content → global → project. Each unique
       // string should appear, and in that order.
-      const iReasonix = out.indexOf("Pinned by REASONIX.md");
+      const ideepmicode = out.indexOf("Pinned by deepmicode.md");
       const iGlobal = out.indexOf("g_pref");
       const iProject = out.indexOf("p_fact");
-      expect(iReasonix).toBeGreaterThan(BASE.length - 1);
-      expect(iGlobal).toBeGreaterThan(iReasonix);
+      expect(ideepmicode).toBeGreaterThan(BASE.length - 1);
+      expect(iGlobal).toBeGreaterThan(ideepmicode);
       expect(iProject).toBeGreaterThan(iGlobal);
     });
 
     it("applyMemoryStack injects no memory blocks when no memory is set", () => {
       // homeDir override required — otherwise the helper falls back to the
-      // dev's real ~/.reasonix and bleeds in whatever memory they have.
+      // dev's real ~/.deepmicode and bleeds in whatever memory they have.
       const out = applyMemoryStack(BASE, projectRoot, { homeDir: home });
       expect(out).toContain(BASE);
       expect(out).not.toMatch(/# Project memory/);
@@ -406,42 +406,42 @@ describe("user-memory", () => {
     });
   });
 
-  describe("applyGlobalReasonixMemory", () => {
-    it("loads ~/.reasonix/REASONIX.md when present", () => {
+  describe("applyGlobaldeepmicodeMemory", () => {
+    it("loads ~/.deepmicode/deepmicode.md when present", () => {
       mkdirSync(home, { recursive: true });
-      writeFileSync(join(home, "REASONIX.md"), "- always pnpm not npm\n", "utf8");
-      const out = applyGlobalReasonixMemory(BASE, home);
+      writeFileSync(join(home, "deepmicode.md"), "- always pnpm not npm\n", "utf8");
+      const out = applyGlobaldeepmicodeMemory(BASE, home);
       expect(out).toContain("# Global memory");
       expect(out).toContain("always pnpm not npm");
       expect(out.startsWith(BASE)).toBe(true);
     });
 
     it("returns BASE unchanged when the file is missing", () => {
-      const out = applyGlobalReasonixMemory(BASE, home);
+      const out = applyGlobaldeepmicodeMemory(BASE, home);
       expect(out).toBe(BASE);
     });
 
     it("returns BASE unchanged when the file is empty / whitespace-only", () => {
       mkdirSync(home, { recursive: true });
-      writeFileSync(join(home, "REASONIX.md"), "   \n  \n", "utf8");
-      const out = applyGlobalReasonixMemory(BASE, home);
+      writeFileSync(join(home, "deepmicode.md"), "   \n  \n", "utf8");
+      const out = applyGlobaldeepmicodeMemory(BASE, home);
       expect(out).toBe(BASE);
     });
 
-    it("respects REASONIX_MEMORY=off opt-out", () => {
+    it("respects deepmicode_MEMORY=off opt-out", () => {
       mkdirSync(home, { recursive: true });
-      writeFileSync(join(home, "REASONIX.md"), "- secret\n", "utf8");
-      const orig = process.env.REASONIX_MEMORY;
-      process.env.REASONIX_MEMORY = "off";
+      writeFileSync(join(home, "deepmicode.md"), "- secret\n", "utf8");
+      const orig = process.env.deepmicode_MEMORY;
+      process.env.deepmicode_MEMORY = "off";
       try {
-        const out = applyGlobalReasonixMemory(BASE, home);
+        const out = applyGlobaldeepmicodeMemory(BASE, home);
         expect(out).toBe(BASE);
       } finally {
         if (orig === undefined) {
           // biome-ignore lint/performance/noDelete: env key must lose presence
-          delete process.env.REASONIX_MEMORY;
+          delete process.env.deepmicode_MEMORY;
         } else {
-          process.env.REASONIX_MEMORY = orig;
+          process.env.deepmicode_MEMORY = orig;
         }
       }
     });

@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync } from "node:fs";
+﻿import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -14,7 +14,7 @@ describe("desktop QQ settings helpers", () => {
   let path: string;
 
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-desktop-qq-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-desktop-qq-"));
     path = join(dir, "config.json");
   });
 

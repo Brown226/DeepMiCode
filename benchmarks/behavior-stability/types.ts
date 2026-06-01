@@ -1,4 +1,4 @@
-/** Behavior-stability evaluation types — lightweight, local-first regression suite. */
+﻿/** Behavior-stability evaluation types — lightweight, local-first regression suite. */
 
 export interface EvalScenario {
   id: string;
@@ -19,7 +19,7 @@ export interface EvalResult {
 export interface EvalReport {
   meta: {
     date: string;
-    reasonixVersion: string;
+    deepmicodeVersion: string;
     model?: string;
   };
   results: EvalResult[];

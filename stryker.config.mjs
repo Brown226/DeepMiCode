@@ -1,4 +1,4 @@
-// @ts-check
+﻿// @ts-check
 /** @type {import('@stryker-mutator/api/core').StrykerOptions} */
 const config = {
   // Vitest runner.
@@ -6,7 +6,7 @@ const config = {
   plugins: ["@stryker-mutator/vitest-runner"],
 
   // Ignore symlinks and large dirs that stryker can't copy.
-  ignorePatterns: ["home_sessions", ".reasonix", "node_modules"],
+  ignorePatterns: ["home_sessions", ".deepmicode", "node_modules"],
 
   // Target load-bearing modules — keeps runs fast (~minutes) so contributors
   // actually run it. UI, MCP transport, renderer, and TUI primitives are

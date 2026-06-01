@@ -1,4 +1,4 @@
-import { promises as fs } from "node:fs";
+﻿import { promises as fs } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -13,7 +13,7 @@ describe("read-before-edit gate", () => {
   let readTracker: ReadTracker;
 
   beforeEach(async () => {
-    root = await mkdtemp(join(tmpdir(), "reasonix-rbeg-"));
+    root = await mkdtemp(join(tmpdir(), "deepmicode-rbeg-"));
     tools = new ToolRegistry();
     registerFilesystemTools(tools, { rootDir: root });
     readTracker = new ReadTracker();

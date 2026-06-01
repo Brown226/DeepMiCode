@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+﻿import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -10,7 +10,7 @@ describe("code-query tools", () => {
   let registry: ToolRegistry;
 
   beforeEach(() => {
-    tmp = mkdtempSync(join(tmpdir(), "reasonix-code-query-"));
+    tmp = mkdtempSync(join(tmpdir(), "deepmicode-code-query-"));
     registry = new ToolRegistry();
     registerCodeQueryTools(registry, { rootDir: tmp });
   });

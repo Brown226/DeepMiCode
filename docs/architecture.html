@@ -1,16 +1,16 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en" data-lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Architecture — Reasonix · Cache-First Loop, Tool-Call Repair, Cost Control</title>
+    <title>Architecture — deepmicode · Cache-First Loop, Tool-Call Repair, Cost Control</title>
     <meta
       name="description"
-      content="Reasonix architecture deep dive — cache-first loop, tool-call repair pipeline, cost control, and module layout."
+      content="deepmicode architecture deep dive — cache-first loop, tool-call repair pipeline, cost control, and module layout."
     />
     <meta
       name="keywords"
-      content="Reasonix architecture, cache-first loop, tool-call repair, DeepSeek cost control, prefix caching, agent architecture"
+      content="deepmicode architecture, cache-first loop, tool-call repair, DeepSeek cost control, prefix caching, agent architecture"
     />
     <meta name="author" content="esengine" />
     <meta name="theme-color" content="#0b0f17" />
@@ -18,44 +18,44 @@
 
     <link
       rel="canonical"
-      href="https://esengine.github.io/DeepSeek-Reasonix/architecture.html"
+      href="https://esengine.github.io/DeepSeek-deepmicode/architecture.html"
     />
     <link
       rel="alternate"
       hreflang="en"
-      href="https://esengine.github.io/DeepSeek-Reasonix/architecture.html?lang=en"
+      href="https://esengine.github.io/DeepSeek-deepmicode/architecture.html?lang=en"
     />
     <link
       rel="alternate"
       hreflang="zh-CN"
-      href="https://esengine.github.io/DeepSeek-Reasonix/architecture.html?lang=zh"
+      href="https://esengine.github.io/DeepSeek-deepmicode/architecture.html?lang=zh"
     />
     <link
       rel="alternate"
       hreflang="x-default"
-      href="https://esengine.github.io/DeepSeek-Reasonix/architecture.html"
+      href="https://esengine.github.io/DeepSeek-deepmicode/architecture.html"
     />
 
     <meta property="og:type" content="article" />
-    <meta property="og:site_name" content="Reasonix" />
-    <meta property="og:title" content="Reasonix Architecture" />
+    <meta property="og:site_name" content="deepmicode" />
+    <meta property="og:title" content="deepmicode Architecture" />
     <meta
       property="og:description"
       content="Cache-first loop, tool-call repair, cost control, and module layout — the full architecture deep dive."
     />
     <meta
       property="og:url"
-      content="https://esengine.github.io/DeepSeek-Reasonix/architecture.html"
+      content="https://esengine.github.io/DeepSeek-deepmicode/architecture.html"
     />
     <meta
       property="og:image"
-      content="https://raw.githubusercontent.com/esengine/reasonix/main/docs/assets/hero-terminal.svg"
+      content="https://raw.githubusercontent.com/esengine/deepmicode/main/docs/assets/hero-terminal.svg"
     />
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="zh_CN" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Reasonix Architecture" />
+    <meta name="twitter:title" content="deepmicode Architecture" />
     <meta
       name="twitter:description"
       content="Cache-first loop, tool-call repair, cost control, and module layout."
@@ -70,9 +70,9 @@
       {
         "@context": "https://schema.org",
         "@type": "TechArticle",
-        "headline": "Reasonix Architecture",
+        "headline": "deepmicode Architecture",
         "description": "Cache-first loop, tool-call repair pipeline, cost control, and module layout.",
-        "url": "https://esengine.github.io/DeepSeek-Reasonix/architecture.html",
+        "url": "https://esengine.github.io/DeepSeek-deepmicode/architecture.html",
         "inLanguage": ["en", "zh-CN"],
         "author": {
           "@type": "Organization",
@@ -81,12 +81,12 @@
         },
         "isPartOf": {
           "@type": "WebSite",
-          "name": "Reasonix",
-          "url": "https://esengine.github.io/DeepSeek-Reasonix/"
+          "name": "deepmicode",
+          "url": "https://esengine.github.io/DeepSeek-deepmicode/"
         },
         "about": {
           "@type": "SoftwareApplication",
-          "name": "Reasonix"
+          "name": "deepmicode"
         }
       }
     </script>
@@ -98,14 +98,14 @@
           {
             "@type": "ListItem",
             "position": 1,
-            "name": "Reasonix",
-            "item": "https://esengine.github.io/DeepSeek-Reasonix/"
+            "name": "deepmicode",
+            "item": "https://esengine.github.io/DeepSeek-deepmicode/"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Architecture",
-            "item": "https://esengine.github.io/DeepSeek-Reasonix/architecture.html"
+            "item": "https://esengine.github.io/DeepSeek-deepmicode/architecture.html"
           }
         ]
       }
@@ -121,7 +121,7 @@
         <a class="brand" href="index.html">
           <span class="brand-mark"></span>
           <span class="brand-name">
-            <b>Reasonix</b><span>DS · v0.45.1</span>
+            <b>deepmicode</b><span>DS · v0.45.1</span>
           </span>
         </a>
         <div class="nav-links" role="navigation">
@@ -138,7 +138,7 @@
             <button data-lang-btn="en" type="button" aria-pressed="true">EN</button>
             <button data-lang-btn="zh" type="button" aria-pressed="false">中文</button>
           </div>
-          <a class="btn btn-ghost btn-sm" href="https://github.com/esengine/DeepSeek-Reasonix" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn btn-ghost btn-sm" href="https://github.com/esengine/DeepSeek-deepmicode" target="_blank" rel="noopener">GitHub</a>
           <a class="btn btn-primary btn-sm" href="download.html">Download →</a>
         </div>
       </div>
@@ -149,12 +149,12 @@
         <div class="container">
           <div class="badge" data-i18n="arch.badge">Cache · Repair · Cost · Modules</div>
           <h1 class="guide-title">
-            <span class="grad-text" data-i18n="arch.title.line1">Reasonix Architecture</span>
+            <span class="grad-text" data-i18n="arch.title.line1">deepmicode Architecture</span>
             <br />
             <span data-i18n="arch.title.line2">how it works under the hood</span>
           </h1>
           <p class="guide-sub" data-i18n="arch.sub">
-            Reasonix is <strong>opinionated, not general</strong>. Every abstraction is
+            deepmicode is <strong>opinionated, not general</strong>. Every abstraction is
             justified by a DeepSeek-specific behavior or economic property. The product
             north star: a coding agent that stays cheap enough to leave on.
           </p>
@@ -179,7 +179,7 @@
           <section id="philosophy">
             <h2 data-i18n="ph.title">Design philosophy</h2>
             <p data-i18n="ph.body1">
-              Reasonix is <strong>opinionated, not general</strong>. Every abstraction is
+              deepmicode is <strong>opinionated, not general</strong>. Every abstraction is
               justified by a DeepSeek-specific behavior or economic property. If it's
               generic, we don't ship it.
             </p>
@@ -246,12 +246,12 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><code>REASONIX_PARALLEL_MAX</code></td>
+                  <td><code>deepmicode_PARALLEL_MAX</code></td>
                   <td><code>3</code> (hard cap <code>16</code>)</td>
                   <td>Max chunk size.</td>
                 </tr>
                 <tr>
-                  <td><code>REASONIX_TOOL_DISPATCH=serial</code></td>
+                  <td><code>deepmicode_TOOL_DISPATCH=serial</code></td>
                   <td>unset</td>
                   <td>Forces serial dispatch — escape hatch.</td>
                 </tr>
@@ -424,7 +424,7 @@
 │   ├── truncation.ts
 │   └── storm.ts
 ├── prompt-fragments.ts     <span class="hash"># TUI_FORMATTING_RULES, NEGATIVE_CLAIM_RULE</span>
-├── code/prompt.ts          <span class="hash"># reasonix code main system prompt</span>
+├── code/prompt.ts          <span class="hash"># deepmicode code main system prompt</span>
 ├── tools/                  <span class="hash"># Tool implementations</span>
 │   ├── filesystem.ts       <span class="hash"># read / list / search / edit / write</span>
 │   ├── shell.ts            <span class="hash"># run_command + run_background (JobRegistry)</span>
@@ -436,13 +436,13 @@
 │   └── web.ts              <span class="hash"># web_search, web_fetch (multi-engine: Mojeek, SearXNG or Metaso)</span>
 ├── mcp/                    <span class="hash"># MCP client + bridge (stdio + SSE)</span>
 ├── memory.ts               <span class="hash"># ImmutablePrefix / AppendOnlyLog / VolatileScratch</span>
-├── project-memory.ts       <span class="hash"># REASONIX.md loader</span>
-├── user-memory.ts          <span class="hash"># ~/.reasonix/memory/ store (project + global)</span>
+├── project-memory.ts       <span class="hash"># deepmicode.md loader</span>
+├── user-memory.ts          <span class="hash"># ~/.deepmicode/memory/ store (project + global)</span>
 ├── skills.ts               <span class="hash"># built-in explore + research skills</span>
 ├── session.ts              <span class="hash"># JSONL session persistence</span>
 ├── telemetry.ts            <span class="hash"># cost + cache-hit accounting + SessionSummary</span>
 ├── tokenizer.ts            <span class="hash"># DeepSeek V3 tokenizer (ported)</span>
-├── usage.ts                <span class="hash"># ~/.reasonix/usage.jsonl roll-up</span>
+├── usage.ts                <span class="hash"># ~/.deepmicode/usage.jsonl roll-up</span>
 ├── types.ts                <span class="hash"># ChatMessage, ToolCall, ToolSpec</span>
 ├── index.ts                <span class="hash"># library barrel</span>
 └── cli/
@@ -484,7 +484,7 @@
               <li><strong>v0.0.x</strong> — Pillar 1 end-to-end, repair pipeline complete, Ink TUI scaffold.</li>
               <li><strong>v0.1</strong> — τ-bench numbers published, streaming polish, transcript replay.</li>
               <li><strong>v0.3</strong> — MCP client (stdio + SSE), session persistence.</li>
-              <li><strong>v0.4.x</strong> — <code>reasonix code</code> with SEARCH/REPLACE edits, review/auto gate, background jobs, hooks.</li>
+              <li><strong>v0.4.x</strong> — <code>deepmicode code</code> with SEARCH/REPLACE edits, review/auto gate, background jobs, hooks.</li>
               <li><strong>v0.5.x</strong> — V4 model support, skills, memory, subagents, actionable error messages.</li>
               <li>
                 <strong>v0.6</strong> —
@@ -518,14 +518,14 @@
         <div>
           <a class="brand" href="index.html" style="text-decoration:none; color:inherit">
             <span class="brand-mark"></span>
-            <span class="brand-name"><b>DeepSeek-Reasonix</b></span>
+            <span class="brand-name"><b>DeepSeek-deepmicode</b></span>
           </a>
           <p style="color:var(--cream-mute); font-size:13px; margin-top:14px; line-height:1.65; max-width:340px">
             DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stability — leave it running.
           </p>
           <div style="display:flex; gap:10px; margin-top:18px">
-            <a class="btn btn-ghost btn-sm" href="https://github.com/esengine/DeepSeek-Reasonix" target="_blank" rel="noopener" aria-label="GitHub">GitHub</a>
-            <a class="btn btn-ghost btn-sm" href="https://github.com/esengine/DeepSeek-Reasonix/discussions" target="_blank" rel="noopener">Discussions</a>
+            <a class="btn btn-ghost btn-sm" href="https://github.com/esengine/DeepSeek-deepmicode" target="_blank" rel="noopener" aria-label="GitHub">GitHub</a>
+            <a class="btn btn-ghost btn-sm" href="https://github.com/esengine/DeepSeek-deepmicode/discussions" target="_blank" rel="noopener">Discussions</a>
           </div>
         </div>
         <div>
@@ -540,18 +540,18 @@
         <div>
           <h5>Community</h5>
           <ul>
-            <li><a href="https://github.com/esengine/DeepSeek-Reasonix" target="_blank" rel="noopener">GitHub</a></li>
-            <li><a href="https://github.com/esengine/DeepSeek-Reasonix/discussions" target="_blank" rel="noopener">Discussions</a></li>
-            <li><a href="https://github.com/esengine/DeepSeek-Reasonix/issues" target="_blank" rel="noopener">Issues</a></li>
-            <li><a href="https://github.com/esengine/DeepSeek-Reasonix/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a></li>
+            <li><a href="https://github.com/esengine/DeepSeek-deepmicode" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://github.com/esengine/DeepSeek-deepmicode/discussions" target="_blank" rel="noopener">Discussions</a></li>
+            <li><a href="https://github.com/esengine/DeepSeek-deepmicode/issues" target="_blank" rel="noopener">Issues</a></li>
+            <li><a href="https://github.com/esengine/DeepSeek-deepmicode/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a></li>
           </ul>
         </div>
         <div>
           <h5>Resources</h5>
           <ul>
-            <li><a href="https://github.com/esengine/DeepSeek-Reasonix#readme" target="_blank" rel="noopener">README</a></li>
+            <li><a href="https://github.com/esengine/DeepSeek-deepmicode#readme" target="_blank" rel="noopener">README</a></li>
             <li><a href="index.html#roadmap">Roadmap</a></li>
-            <li><a href="https://github.com/esengine/DeepSeek-Reasonix/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a></li>
+            <li><a href="https://github.com/esengine/DeepSeek-deepmicode/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a></li>
             <li><a href="https://platform.deepseek.com" target="_blank" rel="noopener">DeepSeek Platform</a></li>
           </ul>
         </div>

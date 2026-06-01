@@ -1,11 +1,11 @@
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+﻿import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
 import { buildImportedSessionName, parseExternalSessionFile } from "../src/session-import.js";
 
 describe("session import parsers", () => {
-  it("parses Claude sessions into Reasonix messages", () => {
+  it("parses Claude sessions into deepmicode messages", () => {
     const source = [
       JSON.stringify({
         isMeta: true,
@@ -96,7 +96,7 @@ describe("session import parsers", () => {
 });
 
 function writeFixture(name: string, body: string): string {
-  const dir = mkdtempSync(join(tmpdir(), "reasonix-session-import-"));
+  const dir = mkdtempSync(join(tmpdir(), "deepmicode-session-import-"));
   const path = join(dir, name);
   writeFileSync(path, `${body}\n`, "utf8");
   fixtures.push(dir);

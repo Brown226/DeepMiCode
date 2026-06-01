@@ -1,5 +1,5 @@
-// Configuration explorer — MCP, Skills, Memory, Slash commands
-// Tabbed interface with code panels showing real Reasonix config
+﻿// Configuration explorer — MCP, Skills, Memory, Slash commands
+// Tabbed interface with code panels showing real deepmicode config
 
 const CONFIG_TABS = [
   {
@@ -8,8 +8,8 @@ const CONFIG_TABS = [
     title: 'Model Context Protocol',
     cn: { zh: '外部工具服务器', en: 'External tool servers' },
     desc: {
-      zh: 'MCP 是 Reasonix 接入外部能力的一等公民通道，支持 stdio / SSE / Streamable HTTP 三种传输。每个 server 的工具会以前缀合并进统一的工具 registry，对模型透明。',
-      en: 'MCP is the first-class channel for plugging external capabilities into Reasonix — supports stdio, SSE, and Streamable HTTP transports. Each server\'s tools merge into the unified registry under a prefix, transparent to the model.',
+      zh: 'MCP 是 deepmicode 接入外部能力的一等公民通道，支持 stdio / SSE / Streamable HTTP 三种传输。每个 server 的工具会以前缀合并进统一的工具 registry，对模型透明。',
+      en: 'MCP is the first-class channel for plugging external capabilities into deepmicode — supports stdio, SSE, and Streamable HTTP transports. Each server\'s tools merge into the unified registry under a prefix, transparent to the model.',
     },
     bullets: [
       { zh: '一行命令挂载: --mcp \'name=cmd args\'', en: 'One-line mount: --mcp \'name=cmd args\'' },
@@ -19,7 +19,7 @@ const CONFIG_TABS = [
     ],
     files: [
       {
-        name: '~/.reasonix/config.json',
+        name: '~/.deepmicode/config.json',
         lang: 'json',
         code: `{
   "model": "deepseek-v4-flash",
@@ -44,7 +44,7 @@ const CONFIG_TABS = [
       {
         name: 'or via CLI flag',
         lang: 'bash',
-        code: `$ reasonix code \\
+        code: `$ deepmicode code \\
     --mcp 'github=npx -y @modelcontextprotocol/server-github' \\
     --mcp 'pg=https://mcp.internal/pg/sse'`,
       },
@@ -60,14 +60,14 @@ const CONFIG_TABS = [
       en: 'A skill is a Markdown file with frontmatter that crystallises "how to do X" into something callable. `runAs: subagent` runs it inside an isolated sub-agent; `allowed-tools` restricts which tools it can call.',
     },
     bullets: [
-      { zh: '项目级: <project>/.reasonix/skills/<name>.md', en: 'Project: <project>/.reasonix/skills/<name>.md' },
-      { zh: '全局: ~/.reasonix/skills/<name>.md', en: 'Global: ~/.reasonix/skills/<name>.md' },
+      { zh: '项目级: <project>/.deepmicode/skills/<name>.md', en: 'Project: <project>/.deepmicode/skills/<name>.md' },
+      { zh: '全局: ~/.deepmicode/skills/<name>.md', en: 'Global: ~/.deepmicode/skills/<name>.md' },
       { zh: '/skill new <name> 生成脚手架', en: '/skill new <name> scaffolds a template' },
       { zh: 'runAs: subagent 让 skill 跑在隔离的子循环里', en: '`runAs: subagent` runs the body in an isolated sub-loop' },
     ],
     files: [
       {
-        name: '.reasonix/skills/review-pr.md',
+        name: '.deepmicode/skills/review-pr.md',
         lang: 'md',
         code: `---
 description: Review the current branch diff against main
@@ -103,21 +103,21 @@ Only focus on the code touched by this diff — don't go off-topic.`,
     title: 'Memory',
     cn: { zh: '项目级与全局记忆', en: 'Project + global memory' },
     desc: {
-      zh: 'Reasonix 把"应当记住"的内容拆成两层：仓库级的 reasonix.md（提交进 git，团队共享）与用户级的 ~/.reasonix/memory.md（个人偏好，不入库）。每次会话启动时自动注入到 prompt 头部。',
-      en: 'Reasonix splits "what to remember" into two layers: repo-level `reasonix.md` (checked into git, shared with the team) and user-level `~/.reasonix/memory.md` (personal preferences, kept private). Both are injected at the top of the prompt on every session.',
+      zh: 'deepmicode 把"应当记住"的内容拆成两层：仓库级的 deepmicode.md（提交进 git，团队共享）与用户级的 ~/.deepmicode/memory.md（个人偏好，不入库）。每次会话启动时自动注入到 prompt 头部。',
+      en: 'deepmicode splits "what to remember" into two layers: repo-level `deepmicode.md` (checked into git, shared with the team) and user-level `~/.deepmicode/memory.md` (personal preferences, kept private). Both are injected at the top of the prompt on every session.',
     },
     bullets: [
-      { zh: '<project>/reasonix.md · 项目约定 · git-tracked', en: '<project>/reasonix.md · project conventions · git-tracked' },
-      { zh: '~/.reasonix/memory.md · 用户偏好 · 私有', en: '~/.reasonix/memory.md · user preferences · private' },
+      { zh: '<project>/deepmicode.md · 项目约定 · git-tracked', en: '<project>/deepmicode.md · project conventions · git-tracked' },
+      { zh: '~/.deepmicode/memory.md · 用户偏好 · 私有', en: '~/.deepmicode/memory.md · user preferences · private' },
       { zh: '/memory edit 在 TUI 内直接编辑', en: '/memory edit opens it inside the TUI' },
       { zh: '注入位置位于 cache-stable 前缀 · 不影响命中', en: 'Injected inside the cache-stable prefix · cache hit unaffected' },
     ],
     files: [
       {
-        name: '<project>/reasonix.md',
+        name: '<project>/deepmicode.md',
         lang: 'md',
-        code: `# reasonix.md
-# Reasonix loads this on every session start.
+        code: `# deepmicode.md
+# deepmicode loads this on every session start.
 
 ## Conventions
 - Package manager is pnpm — don't suggest npm install
@@ -135,7 +135,7 @@ Only focus on the code touched by this diff — don't go off-topic.`,
 - Don't bump version numbers in package.json`,
       },
       {
-        name: '~/.reasonix/memory.md',
+        name: '~/.deepmicode/memory.md',
         lang: 'md',
         code: `# Personal preferences
 
@@ -151,8 +151,8 @@ Only focus on the code touched by this diff — don't go off-topic.`,
     title: 'Config',
     cn: { zh: '全局与项目级配置', en: 'Global + project config' },
     desc: {
-      zh: '一份 JSON 配置承载所有可调项。全局放 ~/.reasonix/config.json，每个项目可以再用 <project>/.reasonix/config.json 局部覆盖。',
-      en: 'A single JSON file holds every knob. The global one lives at `~/.reasonix/config.json`; any project can override it locally with `<project>/.reasonix/config.json`.',
+      zh: '一份 JSON 配置承载所有可调项。全局放 ~/.deepmicode/config.json，每个项目可以再用 <project>/.deepmicode/config.json 局部覆盖。',
+      en: 'A single JSON file holds every knob. The global one lives at `~/.deepmicode/config.json`; any project can override it locally with `<project>/.deepmicode/config.json`.',
     },
     bullets: [
       { zh: '模型 · 推理深度 · 输出格式', en: 'Model · reasoning depth · output format' },
@@ -162,7 +162,7 @@ Only focus on the code touched by this diff — don't go off-topic.`,
     ],
     files: [
       {
-        name: '~/.reasonix/config.json',
+        name: '~/.deepmicode/config.json',
         lang: 'json',
         code: `{
   "apiKey": "sk-***",
@@ -180,7 +180,7 @@ Only focus on the code touched by this diff — don't go off-topic.`,
 }`,
       },
       {
-        name: '<project>/.reasonix/config.json',
+        name: '<project>/.deepmicode/config.json',
         lang: 'json',
         code: `{
   "model": "deepseek-v4-pro",
@@ -223,7 +223,7 @@ Only focus on the code touched by this diff — don't go off-topic.`,
 # Capabilities
 › /mcp list           # mounted MCP servers
 › /skill new fix-bug  # scaffold a new skill
-› /memory edit        # open reasonix.md
+› /memory edit        # open deepmicode.md
 
 # Session + replay
 › /status             # model · cache hit · cost
@@ -335,8 +335,8 @@ function Config() {
           en: 'Extensions, memory, config — <em>plain text</em> is enough.',
         }, lang)}
         sub={t({
-          zh: 'Reasonix 把可扩展性收敛到几个明确的目录与文件 —— 没有花哨的注册表，所有内容都是可读、可 diff、可入库的纯文本。',
-          en: 'Reasonix collapses extensibility into a handful of well-defined directories and files. No registries, no magic — everything is readable, diffable, git-trackable plain text.',
+          zh: 'deepmicode 把可扩展性收敛到几个明确的目录与文件 —— 没有花哨的注册表，所有内容都是可读、可 diff、可入库的纯文本。',
+          en: 'deepmicode collapses extensibility into a handful of well-defined directories and files. No registries, no magic — everything is readable, diffable, git-trackable plain text.',
         }, lang)}
       />
 
@@ -356,8 +356,8 @@ function Config() {
             <Ic.Sparkle size={13}/>
             <span>
               {t({
-                zh: <>所有路径与命令均来自 <a href="https://github.com/esengine/DeepSeek-Reasonix" target="_blank" rel="noreferrer" style={{color:'var(--accent)', textDecoration:'none'}}>esengine/DeepSeek-Reasonix</a>。</>,
-                en: <>Every path and command shown lives in <a href="https://github.com/esengine/DeepSeek-Reasonix" target="_blank" rel="noreferrer" style={{color:'var(--accent)', textDecoration:'none'}}>esengine/DeepSeek-Reasonix</a>.</>,
+                zh: <>所有路径与命令均来自 <a href="https://github.com/esengine/DeepSeek-deepmicode" target="_blank" rel="noreferrer" style={{color:'var(--accent)', textDecoration:'none'}}>esengine/DeepSeek-deepmicode</a>。</>,
+                en: <>Every path and command shown lives in <a href="https://github.com/esengine/DeepSeek-deepmicode" target="_blank" rel="noreferrer" style={{color:'var(--accent)', textDecoration:'none'}}>esengine/DeepSeek-deepmicode</a>.</>,
               }, lang)}
             </span>
           </div>

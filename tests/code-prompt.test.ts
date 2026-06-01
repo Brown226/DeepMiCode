@@ -1,4 +1,4 @@
-/** codeSystemPrompt — gitignore injection + system-append composition. */
+﻿/** codeSystemPrompt — gitignore injection + system-append composition. */
 
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -10,7 +10,7 @@ import { ImmutablePrefix } from "../src/memory/runtime.js";
 describe("codeSystemPrompt", () => {
   let root: string;
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), "reasonix-prompt-"));
+    root = mkdtempSync(join(tmpdir(), "deepmicode-prompt-"));
   });
   afterEach(() => {
     rmSync(root, { recursive: true, force: true });

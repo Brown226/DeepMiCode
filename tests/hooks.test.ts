@@ -1,4 +1,4 @@
-/** Hooks — settings load, match patterns, outcome decisions, runHooks dispatcher (stubbed spawner). */
+﻿/** Hooks — settings load, match patterns, outcome decisions, runHooks dispatcher (stubbed spawner). */
 
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -18,8 +18,8 @@ import {
 } from "../src/hooks.js";
 
 function writeSettings(dir: string, json: unknown): string {
-  const path = join(dir, ".reasonix", "settings.json");
-  mkdirSync(join(dir, ".reasonix"), { recursive: true });
+  const path = join(dir, ".deepmicode", "settings.json");
+  mkdirSync(join(dir, ".deepmicode"), { recursive: true });
   writeFileSync(path, JSON.stringify(json), "utf8");
   return path;
 }
@@ -51,8 +51,8 @@ describe("loadHooks", () => {
   let configPath: string;
 
   beforeEach(() => {
-    home = mkdtempSync(join(tmpdir(), "reasonix-hooks-home-"));
-    project = mkdtempSync(join(tmpdir(), "reasonix-hooks-proj-"));
+    home = mkdtempSync(join(tmpdir(), "deepmicode-hooks-home-"));
+    project = mkdtempSync(join(tmpdir(), "deepmicode-hooks-proj-"));
     configPath = join(home, "config.json");
   });
   afterEach(() => {
@@ -115,8 +115,8 @@ describe("loadHooks", () => {
   });
 
   it("tolerates malformed JSON without throwing", () => {
-    mkdirSync(join(home, ".reasonix"), { recursive: true });
-    writeFileSync(join(home, ".reasonix", "settings.json"), "{ not valid json", "utf8");
+    mkdirSync(join(home, ".deepmicode"), { recursive: true });
+    writeFileSync(join(home, ".deepmicode", "settings.json"), "{ not valid json", "utf8");
     expect(() => loadHooks({ homeDir: home })).not.toThrow();
     expect(loadHooks({ homeDir: home })).toEqual([]);
   });
@@ -128,8 +128,8 @@ describe("loadHooks", () => {
   });
 
   it("paths reported by *SettingsPath helpers are absolute", () => {
-    expect(globalSettingsPath(home)).toBe(join(home, ".reasonix", "settings.json"));
-    expect(projectSettingsPath(project)).toBe(join(project, ".reasonix", "settings.json"));
+    expect(globalSettingsPath(home)).toBe(join(home, ".deepmicode", "settings.json"));
+    expect(projectSettingsPath(project)).toBe(join(project, ".deepmicode", "settings.json"));
   });
 });
 

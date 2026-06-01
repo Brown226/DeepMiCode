@@ -1,4 +1,4 @@
-// @ts-nocheck — react-reconciler internals (FiberRoot, ConcurrentRoot) lag the runtime types.
+﻿// @ts-nocheck — react-reconciler internals (FiberRoot, ConcurrentRoot) lag the runtime types.
 
 import autoBind from 'auto-bind';
 import { closeSync, constants as fsConstants, openSync, readSync, writeSync } from 'fs';
@@ -399,7 +399,7 @@ export default class Ink {
     '\x1b[H' + (
     // cursor home
     this.altScreenMouseTracking ? ENABLE_MOUSE_TRACKING : '') + (
-    // re-enable mouse (skip if REASONIX_DISABLE_MOUSE)
+    // re-enable mouse (skip if deepmicode_DISABLE_MOUSE)
     this.altScreenActive ? '' : '\x1b[?1049l') +
     // exit alt (non-fullscreen only)
     '\x1b[?25l' // hide cursor (Ink manages)

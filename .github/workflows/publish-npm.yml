@@ -1,7 +1,7 @@
-name: Publish npm
+﻿name: Publish npm
 
 # Tag namespace: plain `v<semver>` triggers npm publish for the
-# reasonix CLI package. Desktop Tauri releases use `desktop-v*`
+# deepmicode CLI package. Desktop Tauri releases use `desktop-v*`
 # (see release.yml) — pushing one of those never reaches this
 # workflow, so the two release tracks are fully decoupled.
 on:

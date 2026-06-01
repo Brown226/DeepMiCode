@@ -1,4 +1,4 @@
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+﻿import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -9,17 +9,17 @@ let dir: string;
 let prevEnv: string | undefined;
 
 beforeEach(() => {
-  dir = mkdtempSync(join(tmpdir(), "reasonix-usage-"));
-  prevEnv = process.env.REASONIX_SLASH_USAGE_PATH;
-  process.env.REASONIX_SLASH_USAGE_PATH = join(dir, "slash-usage.json");
+  dir = mkdtempSync(join(tmpdir(), "deepmicode-usage-"));
+  prevEnv = process.env.deepmicode_SLASH_USAGE_PATH;
+  process.env.deepmicode_SLASH_USAGE_PATH = join(dir, "slash-usage.json");
 });
 
 afterEach(() => {
   if (prevEnv === undefined) {
     // biome-ignore lint/performance/noDelete: process.env must lose the key, not hold "undefined"
-    delete process.env.REASONIX_SLASH_USAGE_PATH;
+    delete process.env.deepmicode_SLASH_USAGE_PATH;
   } else {
-    process.env.REASONIX_SLASH_USAGE_PATH = prevEnv;
+    process.env.deepmicode_SLASH_USAGE_PATH = prevEnv;
   }
   rmSync(dir, { recursive: true, force: true });
 });

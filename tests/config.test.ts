@@ -1,4 +1,4 @@
-import { existsSync, mkdtempSync, rmSync } from "node:fs";
+﻿import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -58,17 +58,17 @@ describe("config", () => {
   let dir: string;
   let path: string;
   const originalEnv = process.env.DEEPSEEK_API_KEY;
-  const originalSearch = process.env.REASONIX_SEARCH;
+  const originalSearch = process.env.deepmicode_SEARCH;
   const originalBaseUrl = process.env.DEEPSEEK_BASE_URL;
   const originalApiBaseUrl = process.env.DEEPSEEK_API_BASE_URL;
 
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-test-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-test-"));
     path = join(dir, "config.json");
     // biome-ignore lint/performance/noDelete: the string "undefined" leaks into process.env otherwise
     delete process.env.DEEPSEEK_API_KEY;
     // biome-ignore lint/performance/noDelete: same reason
-    delete process.env.REASONIX_SEARCH;
+    delete process.env.deepmicode_SEARCH;
     // biome-ignore lint/performance/noDelete: same reason
     delete process.env.DEEPSEEK_BASE_URL;
     // biome-ignore lint/performance/noDelete: same reason
@@ -85,9 +85,9 @@ describe("config", () => {
     }
     if (originalSearch === undefined) {
       // biome-ignore lint/performance/noDelete: same reason
-      delete process.env.REASONIX_SEARCH;
+      delete process.env.deepmicode_SEARCH;
     } else {
-      process.env.REASONIX_SEARCH = originalSearch;
+      process.env.deepmicode_SEARCH = originalSearch;
     }
     if (originalBaseUrl === undefined) {
       // biome-ignore lint/performance/noDelete: same reason
@@ -398,7 +398,7 @@ describe("config", () => {
     expect(redactKey("")).toBe("");
   });
 
-  it("round-trips the full ReasonixConfig (model, effort, mcp, session, setupCompleted)", () => {
+  it("round-trips the full deepmicodeConfig (model, effort, mcp, session, setupCompleted)", () => {
     writeConfig(
       {
         apiKey: "sk-test123abcdefghijkl",
@@ -436,23 +436,23 @@ describe("config", () => {
     expect(searchEnabled(path)).toBe(false);
   });
 
-  it("searchEnabled honours REASONIX_SEARCH=off/false/0", () => {
-    process.env.REASONIX_SEARCH = "off";
+  it("searchEnabled honours deepmicode_SEARCH=off/false/0", () => {
+    process.env.deepmicode_SEARCH = "off";
     expect(searchEnabled(path)).toBe(false);
-    process.env.REASONIX_SEARCH = "false";
+    process.env.deepmicode_SEARCH = "false";
     expect(searchEnabled(path)).toBe(false);
-    process.env.REASONIX_SEARCH = "0";
+    process.env.deepmicode_SEARCH = "0";
     expect(searchEnabled(path)).toBe(false);
   });
 
   it("searchEnabled stays true for unrelated env values", () => {
-    process.env.REASONIX_SEARCH = "on";
+    process.env.deepmicode_SEARCH = "on";
     expect(searchEnabled(path)).toBe(true);
   });
 
   it("env off beats config true", () => {
     writeConfig({ apiKey: "sk-test123abcdefghijkl", search: true }, path);
-    process.env.REASONIX_SEARCH = "off";
+    process.env.deepmicode_SEARCH = "off";
     expect(searchEnabled(path)).toBe(false);
   });
 
@@ -541,17 +541,17 @@ describe("config", () => {
   it.runIf(process.platform === "win32")(
     "matches project keys case-insensitively on Windows so cross-shell rootDir casing doesn't lose entries (#402)",
     () => {
-      addProjectShellAllowed("F:\\Reasonix", "gh", path);
-      expect(loadProjectShellAllowed("f:\\reasonix", path)).toContain("gh");
-      expect(loadProjectShellAllowed("F:\\REASONIX", path)).toContain("gh");
+      addProjectShellAllowed("F:\\deepmicode", "gh", path);
+      expect(loadProjectShellAllowed("f:\\deepmicode", path)).toContain("gh");
+      expect(loadProjectShellAllowed("F:\\deepmicode", path)).toContain("gh");
       // Mutations through any-cased rootDir consolidate onto the original key.
-      addProjectShellAllowed("f:\\reasonix", "deploy", path);
-      expect(loadProjectShellAllowed("F:\\Reasonix", path)).toEqual(["gh", "deploy"]);
-      expect(Object.keys(readConfig(path).projects ?? {})).toEqual(["F:\\Reasonix"]);
-      expect(removeProjectShellAllowed("f:\\REASONIX", "gh", path)).toBe(true);
-      expect(loadProjectShellAllowed("F:\\Reasonix", path)).toEqual(["deploy"]);
-      expect(clearProjectShellAllowed("F:\\REASONIX", path)).toBe(1);
-      expect(loadProjectShellAllowed("F:\\Reasonix", path)).toEqual([]);
+      addProjectShellAllowed("f:\\deepmicode", "deploy", path);
+      expect(loadProjectShellAllowed("F:\\deepmicode", path)).toEqual(["gh", "deploy"]);
+      expect(Object.keys(readConfig(path).projects ?? {})).toEqual(["F:\\deepmicode"]);
+      expect(removeProjectShellAllowed("f:\\deepmicode", "gh", path)).toBe(true);
+      expect(loadProjectShellAllowed("F:\\deepmicode", path)).toEqual(["deploy"]);
+      expect(clearProjectShellAllowed("F:\\deepmicode", path)).toBe(1);
+      expect(loadProjectShellAllowed("F:\\deepmicode", path)).toEqual([]);
     },
   );
 
@@ -698,7 +698,7 @@ describe("config", () => {
           baseUrl: "https://api.openai.com/v1",
           apiKey: "sk-openai1234567890abcd",
           model: "text-embedding-3-small",
-          extraBody: { user: "reasonix" },
+          extraBody: { user: "deepmicode" },
         },
       },
       path,
@@ -706,7 +706,7 @@ describe("config", () => {
     const loaded = loadSemanticEmbeddingUserConfig(path);
     expect(loaded.provider).toBe("openai-compat");
     expect(loaded.openaiCompat?.baseUrl).toBe("https://api.openai.com/v1");
-    expect(loaded.openaiCompat?.extraBody).toEqual({ user: "reasonix" });
+    expect(loaded.openaiCompat?.extraBody).toEqual({ user: "deepmicode" });
   });
 
   it("resolves ollama by default when semantic config is absent", () => {

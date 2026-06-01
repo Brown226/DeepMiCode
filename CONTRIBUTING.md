@@ -1,31 +1,31 @@
-# Contributing to Reasonix
+﻿# Contributing to deepmicode
 
-Thanks for showing up. Reasonix is a small, opinionated codebase
+Thanks for showing up. deepmicode is a small, opinionated codebase
 maintained primarily by [@esengine](https://github.com/esengine);
 PRs are welcome, but read this first so the round-trip is short.
 
 ## Setup
 
 ```sh
-git clone https://github.com/esengine/reasonix
-cd reasonix
+git clone https://github.com/esengine/deepmicode
+cd deepmicode
 npm install
 npm run dev          # tsx src/cli/index.ts — live source
 ```
 
 Node ≥ 22. No global install needed during development.
 
-For stack, layout, scripts, see [`REASONIX.md`](./REASONIX.md).
+For stack, layout, scripts, see [`deepmicode.md`](./deepmicode.md).
 
 ## Proposing changes
 
 - **Bug fixes** — go ahead and open a PR. Include a reproduction.
 - **New features / behavior changes** — open an issue first to align
-  on scope and approach. Reasonix tries to stay small; "we could add
+  on scope and approach. deepmicode tries to stay small; "we could add
   X" PRs that arrive cold are usually rejected or scoped down.
 - **External MCP servers, plugins, presets** — a thin wrapper is
   fine; a sprawling integration is better hosted as a separate
-  package that depends on `reasonix`.
+  package that depends on `deepmicode`.
 
 ## Code rules
 
@@ -128,7 +128,7 @@ wrapper — don't fork a local table.
 
 ## Code review
 
-Reasonix prefers blunt, fast review. Expect:
+deepmicode prefers blunt, fast review. Expect:
 
 - Line-level pushback on comments that explain *what* instead of *why*.
 - Pushback on new abstractions / flags introduced before there are

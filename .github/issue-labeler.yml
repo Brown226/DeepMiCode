@@ -1,4 +1,4 @@
-bug:
+﻿bug:
   - '/\b(crash|crashed|crashes|panic|panicked|stack trace|stacktrace|traceback)\b/i'
   - '/\b(broken|doesn''?t work|not working|stopped working|regression)\b/i'
   - '/\b(throws? (an? )?error|uncaught|unhandled)\b/i'
@@ -6,7 +6,7 @@ bug:
 enhancement:
   - '/\b(feature request|would (be nice|like|love)|please add|please support)\b/i'
   - '/\b(add (a |the )?(flag|option|config|setting|switch)|allow (configuring|disabling|enabling))\b/i'
-  - '/\b(can (we|you|reasonix) (add|support)|proposal|propose adding)\b/i'
+  - '/\b(can (we|you|deepmicode) (add|support)|proposal|propose adding)\b/i'
 
 documentation:
   - '/\b(docs?\b|documentation|readme|getting started|tutorial|wiki|man page)\b/i'

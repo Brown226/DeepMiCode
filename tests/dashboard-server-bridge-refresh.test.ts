@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+﻿import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 type EventSourceInstance = {
   url: string;
@@ -60,10 +60,10 @@ async function loadBridge(options?: {
   vi.stubGlobal("document", {
     documentElement: { dataset: {} },
     querySelector: (selector: string) => {
-      if (selector === 'meta[name="reasonix-mode"]') {
+      if (selector === 'meta[name="deepmicode-mode"]') {
         return { getAttribute: () => "server" };
       }
-      if (selector === 'meta[name="reasonix-token"]') {
+      if (selector === 'meta[name="deepmicode-token"]') {
         return { getAttribute: () => "testtoken" };
       }
       return null;

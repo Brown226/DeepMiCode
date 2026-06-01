@@ -1,4 +1,4 @@
-/** Dashboard sessions API — new / switch / delete with an attached switchSession callback wired in. */
+﻿/** Dashboard sessions API — new / switch / delete with an attached switchSession callback wired in. */
 
 import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -23,7 +23,7 @@ async function call(
   const method = opts.method ?? "GET";
   const headers: Record<string, string> = {};
   // POST / DELETE require the token in the header (CSRF defence — query alone rejected).
-  if (method !== "GET") headers["X-Reasonix-Token"] = TOKEN;
+  if (method !== "GET") headers["X-deepmicode-Token"] = TOKEN;
   if (opts.body !== undefined) headers["Content-Type"] = "application/json";
   const res = await fetch(u.toString(), {
     method,
@@ -47,8 +47,8 @@ describe("dashboard /sessions: new / switch / delete (attached)", () => {
   let currentName: string | null = "alpha";
 
   beforeEach(async () => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-sess-ops-"));
-    // Re-home so listSessions reads from our temp dir, not the user's real ~/.reasonix.
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-sess-ops-"));
+    // Re-home so listSessions reads from our temp dir, not the user's real ~/.deepmicode.
     vi.stubEnv("USERPROFILE", dir);
     vi.stubEnv("HOME", dir);
     vi.spyOn(require("node:os"), "homedir").mockReturnValue(dir);
@@ -105,7 +105,7 @@ describe("dashboard /sessions: new / switch / delete (attached)", () => {
 
   it("GET /api/sessions filters out other-workspace sessions when getCurrentCwd is wired", async () => {
     await handle?.close();
-    const otherWorkspace = mkdtempSync(join(tmpdir(), "reasonix-other-ws-"));
+    const otherWorkspace = mkdtempSync(join(tmpdir(), "deepmicode-other-ws-"));
     try {
       // alpha+beta live in `dir`; this third session belongs to a different cwd.
       appendSessionMessage("gamma", { role: "user", content: "noise" });

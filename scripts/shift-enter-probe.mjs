@@ -1,8 +1,8 @@
-// Shift+Enter probe. Usage: node scripts/shift-enter-probe.mjs
+﻿// Shift+Enter probe. Usage: node scripts/shift-enter-probe.mjs
 // Enables modifyOtherKeys + kitty keyboard protocol, then prints the
 // raw bytes for every keypress. Press Shift+Enter and see what your
 // terminal actually emits — if it's just "0x0d", the host doesn't
-// support either protocol and there's nothing Reasonix can do at the
+// support either protocol and there's nothing deepmicode can do at the
 // raw-stdin layer.
 
 process.stdout.write("\u001b[>4;2m"); // modifyOtherKeys level 2 (xterm)

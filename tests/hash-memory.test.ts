@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+﻿import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -101,7 +101,7 @@ describe("appendProjectMemory", () => {
   let dir: string;
 
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-hashmem-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-hashmem-"));
   });
 
   afterEach(() => {
@@ -112,19 +112,19 @@ describe("appendProjectMemory", () => {
     }
   });
 
-  it("creates REASONIX.md with a header and the first bullet when absent", () => {
-    const path = join(dir, "REASONIX.md");
+  it("creates deepmicode.md with a header and the first bullet when absent", () => {
+    const path = join(dir, "deepmicode.md");
     expect(existsSync(path)).toBe(false);
     const result = appendProjectMemory(dir, "always use pnpm");
     expect(result.created).toBe(true);
     expect(result.path).toBe(path);
     const content = readFileSync(path, "utf8");
-    expect(content).toContain("# Reasonix project memory");
+    expect(content).toContain("# deepmicode project memory");
     expect(content).toMatch(/- always use pnpm\n$/);
   });
 
-  it("appends to an existing REASONIX.md without disturbing earlier content", () => {
-    const path = join(dir, "REASONIX.md");
+  it("appends to an existing deepmicode.md without disturbing earlier content", () => {
+    const path = join(dir, "deepmicode.md");
     writeFileSync(path, "# Custom header\n\nSome existing note.\n", "utf8");
     const result = appendProjectMemory(dir, "always use pnpm");
     expect(result.created).toBe(false);
@@ -135,7 +135,7 @@ describe("appendProjectMemory", () => {
   });
 
   it("inserts a separator newline if the file lacks a trailing newline", () => {
-    const path = join(dir, "REASONIX.md");
+    const path = join(dir, "deepmicode.md");
     writeFileSync(path, "no trailing newline", "utf8");
     appendProjectMemory(dir, "fresh note");
     const content = readFileSync(path, "utf8");
@@ -146,7 +146,7 @@ describe("appendProjectMemory", () => {
     appendProjectMemory(dir, "first");
     appendProjectMemory(dir, "second");
     appendProjectMemory(dir, "third");
-    const content = readFileSync(join(dir, "REASONIX.md"), "utf8");
+    const content = readFileSync(join(dir, "deepmicode.md"), "utf8");
     const bullets = content.match(/- (first|second|third)/g);
     expect(bullets).toEqual(["- first", "- second", "- third"]);
   });
@@ -155,12 +155,12 @@ describe("appendProjectMemory", () => {
     expect(() => appendProjectMemory(dir, "   ")).toThrow(/cannot be empty/);
   });
 
-  it("respects nested rootDir paths (creates REASONIX.md in the given dir, not cwd)", () => {
+  it("respects nested rootDir paths (creates deepmicode.md in the given dir, not cwd)", () => {
     const nested = join(dir, "subproject");
     mkdirSync(nested);
     const result = appendProjectMemory(nested, "scoped note");
-    expect(result.path).toBe(join(nested, "REASONIX.md"));
-    expect(existsSync(join(dir, "REASONIX.md"))).toBe(false);
+    expect(result.path).toBe(join(nested, "deepmicode.md"));
+    expect(existsSync(join(dir, "deepmicode.md"))).toBe(false);
   });
 });
 
@@ -168,7 +168,7 @@ describe("appendGlobalMemory", () => {
   let home: string;
 
   beforeEach(() => {
-    home = mkdtempSync(join(tmpdir(), "reasonix-globalmem-"));
+    home = mkdtempSync(join(tmpdir(), "deepmicode-globalmem-"));
   });
 
   afterEach(() => {
@@ -179,20 +179,20 @@ describe("appendGlobalMemory", () => {
     }
   });
 
-  it("creates ~/.reasonix/REASONIX.md (with parent dir) when missing", () => {
+  it("creates ~/.deepmicode/deepmicode.md (with parent dir) when missing", () => {
     const path = globalMemoryPath(home);
     expect(existsSync(path)).toBe(false);
     const result = appendGlobalMemory("always use pnpm", home);
     expect(result.created).toBe(true);
     expect(result.path).toBe(path);
     const content = readFileSync(path, "utf8");
-    expect(content).toContain("# Reasonix global memory");
+    expect(content).toContain("# deepmicode global memory");
     expect(content).toMatch(/- always use pnpm\n$/);
   });
 
   it("appends to an existing global file", () => {
     const path = globalMemoryPath(home);
-    mkdirSync(join(home, ".reasonix"), { recursive: true });
+    mkdirSync(join(home, ".deepmicode"), { recursive: true });
     writeFileSync(path, "# header\n\n- existing\n", "utf8");
     appendGlobalMemory("second", home);
     const content = readFileSync(path, "utf8");
@@ -205,7 +205,7 @@ describe("appendGlobalMemory", () => {
     // sane. The test environment's HOME is a tmpdir from the parent
     // afterEach setup, so this won't pollute the real user home.
     const path = globalMemoryPath();
-    expect(path).toMatch(/[/\\]\.reasonix[/\\]REASONIX\.md$/);
+    expect(path).toMatch(/[/\\]\.deepmicode[/\\]deepmicode\.md$/);
   });
 
   it("rejects empty notes", () => {

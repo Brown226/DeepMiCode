@@ -1,11 +1,11 @@
-import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
+﻿import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { writeClipboard } from "../src/cli/ui/clipboard.js";
 
 describe("writeClipboard", () => {
-  const testDir = join(tmpdir(), `reasonix-clip-test-${process.pid}`);
+  const testDir = join(tmpdir(), `deepmicode-clip-test-${process.pid}`);
   let stdoutWriteSpy: ReturnType<typeof vi.spyOn>;
   const createdFiles: string[] = [];
 
@@ -70,7 +70,7 @@ describe("writeClipboard", () => {
     expect(result.osc52).toBe(false);
     expect(result.size).toBe(80_000);
     expect(result.filePath).toBeTruthy();
-    expect(result.filePath).toContain("reasonix-clip-");
+    expect(result.filePath).toContain("deepmicode-clip-");
 
     // Verify file contents match input
     const fileContent = readFileSync(result.filePath!, "utf8");

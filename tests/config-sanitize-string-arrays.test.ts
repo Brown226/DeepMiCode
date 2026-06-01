@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+﻿import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -10,7 +10,7 @@ describe("readConfig — string[] field sanitization", () => {
   let warnSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-readconfig-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-readconfig-"));
     path = join(dir, "config.json");
     warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
   });

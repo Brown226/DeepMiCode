@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+﻿import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -7,7 +7,7 @@ import type { Event } from "../src/core/events.js";
 
 let dir: string;
 beforeEach(() => {
-  dir = mkdtempSync(join(tmpdir(), "reasonix-events-"));
+  dir = mkdtempSync(join(tmpdir(), "deepmicode-events-"));
 });
 afterEach(() => {
   rmSync(dir, { recursive: true, force: true });

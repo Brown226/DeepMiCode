@@ -1,4 +1,4 @@
-/** resolveDefaults — flags vs config precedence; silent failures here are user-visible "config does nothing" bugs. */
+﻿/** resolveDefaults — flags vs config precedence; silent failures here are user-visible "config does nothing" bugs. */
 
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -13,7 +13,7 @@ describe("resolveDefaults", () => {
   const origUserProfile = process.env.USERPROFILE;
 
   beforeEach(() => {
-    home = mkdtempSync(join(tmpdir(), "reasonix-resolve-"));
+    home = mkdtempSync(join(tmpdir(), "deepmicode-resolve-"));
     process.env.HOME = home;
     process.env.USERPROFILE = home;
   });
@@ -43,24 +43,24 @@ describe("resolveDefaults", () => {
   });
 
   it("config.model overrides the default", () => {
-    writeConfig({ model: "deepseek-v4-pro" }, join(home, ".reasonix", "config.json"));
+    writeConfig({ model: "deepseek-v4-pro" }, join(home, ".deepmicode", "config.json"));
     const r = resolveDefaults({});
     expect(r.model).toBe("deepseek-v4-pro");
   });
 
   it("config.reasoningEffort persists across launches", () => {
-    writeConfig({ reasoningEffort: "max" }, join(home, ".reasonix", "config.json"));
+    writeConfig({ reasoningEffort: "max" }, join(home, ".deepmicode", "config.json"));
     expect(resolveDefaults({}).reasoningEffort).toBe("max");
   });
 
   it("--model wins over config.model", () => {
-    writeConfig({ model: "deepseek-v4-flash" }, join(home, ".reasonix", "config.json"));
+    writeConfig({ model: "deepseek-v4-flash" }, join(home, ".deepmicode", "config.json"));
     const r = resolveDefaults({ model: "deepseek-v4-pro" });
     expect(r.model).toBe("deepseek-v4-pro");
   });
 
   it("--effort wins over config.reasoningEffort", () => {
-    writeConfig({ reasoningEffort: "max" }, join(home, ".reasonix", "config.json"));
+    writeConfig({ reasoningEffort: "max" }, join(home, ".deepmicode", "config.json"));
     const r = resolveDefaults({ effort: "low" });
     expect(r.reasoningEffort).toBe("low");
   });
@@ -72,14 +72,14 @@ describe("resolveDefaults", () => {
   });
 
   it("--effort with garbage value falls through to config / default", () => {
-    writeConfig({ reasoningEffort: "medium" }, join(home, ".reasonix", "config.json"));
+    writeConfig({ reasoningEffort: "medium" }, join(home, ".deepmicode", "config.json"));
     expect(resolveDefaults({ effort: "absurd" }).reasoningEffort).toBe("medium");
   });
 
   it("--mcp overrides config.mcp wholesale (no merging)", () => {
     writeConfig(
       { mcp: ["fs=npx -y @modelcontextprotocol/server-filesystem /tmp/old"] },
-      join(home, ".reasonix", "config.json"),
+      join(home, ".deepmicode", "config.json"),
     );
     const r = resolveDefaults({ mcp: ["new=cmd arg"] });
     expect(r.mcp).toEqual(["new=cmd arg"]);
@@ -88,7 +88,7 @@ describe("resolveDefaults", () => {
   it("empty --mcp array falls through to config.mcp", () => {
     writeConfig(
       { mcp: ["fs=npx -y @modelcontextprotocol/server-filesystem /tmp/safe"] },
-      join(home, ".reasonix", "config.json"),
+      join(home, ".deepmicode", "config.json"),
     );
     const r = resolveDefaults({ mcp: [] });
     expect(r.mcp).toHaveLength(1);
@@ -98,7 +98,7 @@ describe("resolveDefaults", () => {
   it("--no-config ignores the config entirely", () => {
     writeConfig(
       { model: "deepseek-v4-pro", reasoningEffort: "max", mcp: ["x=cmd"] },
-      join(home, ".reasonix", "config.json"),
+      join(home, ".deepmicode", "config.json"),
     );
     const r = resolveDefaults({ noConfig: true });
     expect(r.model).toBe("deepseek-v4-flash");
@@ -107,13 +107,13 @@ describe("resolveDefaults", () => {
   });
 
   it("--no-session beats config.session", () => {
-    writeConfig({ session: "work" }, join(home, ".reasonix", "config.json"));
+    writeConfig({ session: "work" }, join(home, ".deepmicode", "config.json"));
     const r = resolveDefaults({ session: false });
     expect(r.session).toBeUndefined();
   });
 
   it("config.session=null means ephemeral by default", () => {
-    writeConfig({ session: null }, join(home, ".reasonix", "config.json"));
+    writeConfig({ session: null }, join(home, ".deepmicode", "config.json"));
     const r = resolveDefaults({});
     expect(r.session).toBeUndefined();
   });
@@ -123,7 +123,7 @@ describe("resolveDefaults", () => {
     const origCwd = process.cwd();
 
     beforeEach(() => {
-      cwd = mkdtempSync(join(tmpdir(), "reasonix-cwd-"));
+      cwd = mkdtempSync(join(tmpdir(), "deepmicode-cwd-"));
       process.chdir(cwd);
     });
 
@@ -151,7 +151,7 @@ describe("resolveDefaults", () => {
         {
           mcpServers: { gh: { command: "user-level-cmd" } },
         },
-        join(home, ".reasonix", "config.json"),
+        join(home, ".deepmicode", "config.json"),
       );
       writeFileSync(
         join(cwd, ".mcp.json"),

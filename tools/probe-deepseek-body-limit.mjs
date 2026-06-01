@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 // One-shot probe: send progressively larger JSON bodies to DeepSeek's chat
 // endpoint to detect the current gateway body-size limit (if any). Validates
 // whether MAX_BODY_BYTES in src/context-manager.ts is still load-bearing.
@@ -29,7 +29,7 @@ function loadEnv(path) {
   } catch {}
 }
 
-loadEnv("F:/Reasonix/.env");
+loadEnv("F:/deepmicode/.env");
 const apiKey = process.env.DEEPSEEK_API_KEY;
 if (!apiKey) {
   console.error("DEEPSEEK_API_KEY missing");

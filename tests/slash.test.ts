@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+﻿import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -126,8 +126,8 @@ describe("handleSlash", () => {
   it("/about prints version, website, repo, and MIT license", () => {
     const r = handleSlash("about", [], makeLoop());
     expect(r.info).toContain(VERSION);
-    expect(r.info).toContain("https://esengine.github.io/DeepSeek-Reasonix/");
-    expect(r.info).toContain("https://github.com/esengine/DeepSeek-Reasonix");
+    expect(r.info).toContain("https://esengine.github.io/DeepSeek-deepmicode/");
+    expect(r.info).toContain("https://github.com/esengine/DeepSeek-deepmicode");
     expect(r.info).toContain("MIT");
     expect(SLASH_COMMANDS.find((s) => s.cmd === "about")?.group).toBe("info");
   });
@@ -294,7 +294,7 @@ describe("handleSlash", () => {
 
   it("/undo outside code mode says it's not available", () => {
     const r = handleSlash("undo", [], makeLoop());
-    expect(r.info).toMatch(/only available inside .reasonix code/);
+    expect(r.info).toMatch(/only available inside .deepmicode code/);
   });
 
   it("/restore with no arg opens the checkpoint picker in code mode", () => {
@@ -312,9 +312,9 @@ describe("handleSlash", () => {
   it("/restore outside code mode is unavailable regardless of args", () => {
     const noArg = handleSlash("restore", [], makeLoop());
     expect(noArg.openCheckpointPicker).toBeUndefined();
-    expect(noArg.info).toMatch(/only available inside .reasonix code/);
+    expect(noArg.info).toMatch(/only available inside .deepmicode code/);
     const withArg = handleSlash("restore", ["abc"], makeLoop());
-    expect(withArg.info).toMatch(/only available inside .reasonix code/);
+    expect(withArg.info).toMatch(/only available inside .deepmicode code/);
   });
 
   it("/undo in code mode invokes the callback", () => {
@@ -348,7 +348,7 @@ describe("handleSlash", () => {
 
   it("/commit outside code mode says it's not available", () => {
     const r = handleSlash("commit", ["foo"], makeLoop());
-    expect(r.info).toMatch(/only available inside .reasonix code/);
+    expect(r.info).toMatch(/only available inside .deepmicode code/);
   });
 
   it("/commit with no message prints usage", () => {
@@ -358,7 +358,7 @@ describe("handleSlash", () => {
 
   it("/apply outside code mode says it's not available", () => {
     const r = handleSlash("apply", [], makeLoop());
-    expect(r.info).toMatch(/only available inside .reasonix code/);
+    expect(r.info).toMatch(/only available inside .deepmicode code/);
   });
 
   it("/apply in code mode invokes the callback", () => {
@@ -370,7 +370,7 @@ describe("handleSlash", () => {
 
   it("/discard outside code mode says it's not available", () => {
     const r = handleSlash("discard", [], makeLoop());
-    expect(r.info).toMatch(/only available inside .reasonix code/);
+    expect(r.info).toMatch(/only available inside .deepmicode code/);
   });
 
   it("/discard in code mode invokes the callback", () => {
@@ -620,9 +620,9 @@ describe("handleSlash", () => {
   describe("/update", () => {
     it("reports pending check when latestVersion is null (offline / in flight)", () => {
       const r = handleSlash("update", [], makeLoop(), { latestVersion: null });
-      expect(r.info).toMatch(/current: reasonix/);
+      expect(r.info).toMatch(/current: deepmicode/);
       expect(r.info).toMatch(/not yet resolved/);
-      expect(r.info).toMatch(/reasonix update/);
+      expect(r.info).toMatch(/deepmicode update/);
     });
 
     it("reports up-to-date when current matches latest", () => {
@@ -634,8 +634,8 @@ describe("handleSlash", () => {
     it("prints shell command when latest is newer than current", () => {
       const r = handleSlash("update", [], makeLoop(), { latestVersion: "99.99.99" });
       expect(r.info).toMatch(/99\.99\.99/);
-      expect(r.info).toMatch(/reasonix update/);
-      expect(r.info).toMatch(/npm install -g reasonix@latest/);
+      expect(r.info).toMatch(/deepmicode update/);
+      expect(r.info).toMatch(/npm install -g deepmicode@latest/);
     });
 
     it("is surfaced by suggestSlashCommands", () => {
@@ -793,7 +793,7 @@ describe("handleSlash", () => {
     let originalUserProfile: string | undefined;
 
     beforeEach(() => {
-      tempHome = mkdtempSync(join(tmpdir(), "reasonix-mcp-toggle-"));
+      tempHome = mkdtempSync(join(tmpdir(), "deepmicode-mcp-toggle-"));
       originalHome = process.env.HOME;
       originalUserProfile = process.env.USERPROFILE;
       process.env.HOME = tempHome;
@@ -811,14 +811,14 @@ describe("handleSlash", () => {
       });
       expect(r.info).toMatch(/notion disabled/);
       expect(r.info).toMatch(/next launch/);
-      const cfgPath = join(tempHome, ".reasonix", "config.json");
+      const cfgPath = join(tempHome, ".deepmicode", "config.json");
       const cfg = JSON.parse(readFileSync(cfgPath, "utf8"));
       expect(cfg.mcpDisabled).toEqual(["notion"]);
     });
 
     it("/mcp enable <name> removes from disabled and clears the array when empty", () => {
-      const cfgPath = join(tempHome, ".reasonix", "config.json");
-      mkdirSync(join(tempHome, ".reasonix"), { recursive: true });
+      const cfgPath = join(tempHome, ".deepmicode", "config.json");
+      mkdirSync(join(tempHome, ".deepmicode"), { recursive: true });
       writeFileSync(cfgPath, JSON.stringify({ mcpDisabled: ["notion", "linear"] }));
       const r = handleSlash("mcp", ["enable", "notion"], makeLoop(), {
         mcpSpecs: ["notion=npx -y @scope/notion", "linear=npx -y @scope/linear"],
@@ -829,8 +829,8 @@ describe("handleSlash", () => {
     });
 
     it("/mcp enable removes the array entirely when last entry clears", () => {
-      const cfgPath = join(tempHome, ".reasonix", "config.json");
-      mkdirSync(join(tempHome, ".reasonix"), { recursive: true });
+      const cfgPath = join(tempHome, ".deepmicode", "config.json");
+      mkdirSync(join(tempHome, ".deepmicode"), { recursive: true });
       writeFileSync(cfgPath, JSON.stringify({ mcpDisabled: ["notion"] }));
       handleSlash("mcp", ["enable", "notion"], makeLoop(), {
         mcpSpecs: ["notion=npx -y @scope/notion"],
@@ -855,8 +855,8 @@ describe("handleSlash", () => {
     });
 
     it("/mcp disable on already-disabled is idempotent", () => {
-      const cfgPath = join(tempHome, ".reasonix", "config.json");
-      mkdirSync(join(tempHome, ".reasonix"), { recursive: true });
+      const cfgPath = join(tempHome, ".deepmicode", "config.json");
+      mkdirSync(join(tempHome, ".deepmicode"), { recursive: true });
       writeFileSync(cfgPath, JSON.stringify({ mcpDisabled: ["notion"] }));
       const r = handleSlash("mcp", ["disable", "notion"], makeLoop(), {
         mcpSpecs: ["notion=cmd"],
@@ -1011,7 +1011,7 @@ describe("handleSlash", () => {
     let originalUserProfile: string | undefined;
 
     beforeEach(() => {
-      tempHome = mkdtempSync(join(tmpdir(), "reasonix-replay-slash-"));
+      tempHome = mkdtempSync(join(tmpdir(), "deepmicode-replay-slash-"));
       originalHome = process.env.HOME;
       originalUserProfile = process.env.USERPROFILE;
       process.env.HOME = tempHome;
@@ -1040,7 +1040,7 @@ describe("handleSlash", () => {
       stamp: string,
       payload: Record<string, unknown>,
     ): void {
-      const dir = join(tempHome, ".reasonix", "sessions");
+      const dir = join(tempHome, ".deepmicode", "sessions");
       const fs = require("node:fs") as typeof import("node:fs");
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(
@@ -1128,7 +1128,7 @@ describe("handleSlash", () => {
     it("/plans surfaces the summary as the active plan label", () => {
       const loop = loopWithSession("plans-summary");
       const fs = require("node:fs") as typeof import("node:fs");
-      const dir = join(tempHome, ".reasonix", "sessions");
+      const dir = join(tempHome, ".deepmicode", "sessions");
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(
         join(dir, "plans-summary.plan.json"),
@@ -1151,7 +1151,7 @@ describe("handleSlash", () => {
     it("/plans surfaces active step evidence and pending evidence state", () => {
       const loop = loopWithSession("plans-active-evidence");
       const fs = require("node:fs") as typeof import("node:fs");
-      const dir = join(tempHome, ".reasonix", "sessions");
+      const dir = join(tempHome, ".deepmicode", "sessions");
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(
         join(dir, "plans-active-evidence.plan.json"),
@@ -1259,24 +1259,24 @@ describe("handleSlash", () => {
 
   describe("/memory", () => {
     let root: string;
-    const originalEnv = process.env.REASONIX_MEMORY;
+    const originalEnv = process.env.deepmicode_MEMORY;
     const originalHome = process.env.HOME;
     const originalUserProfile = process.env.USERPROFILE;
 
     beforeEach(() => {
-      root = mkdtempSync(join(tmpdir(), "reasonix-mem-slash-"));
+      root = mkdtempSync(join(tmpdir(), "deepmicode-mem-slash-"));
       process.env.HOME = root;
       process.env.USERPROFILE = root;
       // biome-ignore lint/performance/noDelete: avoid "undefined" in env
-      delete process.env.REASONIX_MEMORY;
+      delete process.env.deepmicode_MEMORY;
     });
     afterEach(() => {
       rmSync(root, { recursive: true, force: true });
       if (originalEnv === undefined) {
         // biome-ignore lint/performance/noDelete: same reason
-        delete process.env.REASONIX_MEMORY;
+        delete process.env.deepmicode_MEMORY;
       } else {
-        process.env.REASONIX_MEMORY = originalEnv;
+        process.env.deepmicode_MEMORY = originalEnv;
       }
       if (originalHome === undefined) {
         // biome-ignore lint/performance/noDelete: env restoration needs absence, not "undefined"
@@ -1292,27 +1292,27 @@ describe("handleSlash", () => {
       }
     });
 
-    it("prints a how-to when no memory (REASONIX.md or ~/.reasonix/memory) exists", () => {
+    it("prints a how-to when no memory (deepmicode.md or ~/.deepmicode/memory) exists", () => {
       const r = handleSlash("memory", [], makeLoop(), { memoryRoot: root });
       expect(r.info).toMatch(/no memory pinned/);
-      expect(r.info).toMatch(/REASONIX\.md/);
+      expect(r.info).toMatch(/deepmicode\.md/);
     });
 
-    it("prints the REASONIX.md contents + path when present", () => {
+    it("prints the deepmicode.md contents + path when present", () => {
       writeFileSync(
-        join(root, "REASONIX.md"),
+        join(root, "deepmicode.md"),
         "# House rules\nSnake case only in this repo.\n",
         "utf8",
       );
       const r = handleSlash("memory", [], makeLoop(), { memoryRoot: root });
-      expect(r.info).toMatch(/▸ REASONIX\.md:/);
+      expect(r.info).toMatch(/▸ deepmicode\.md:/);
       expect(r.info).toContain("Snake case only");
       expect(r.info).toMatch(/chars/);
     });
 
-    it("says memory is disabled when REASONIX_MEMORY=off, even with a file present", () => {
-      writeFileSync(join(root, "REASONIX.md"), "content", "utf8");
-      process.env.REASONIX_MEMORY = "off";
+    it("says memory is disabled when deepmicode_MEMORY=off, even with a file present", () => {
+      writeFileSync(join(root, "deepmicode.md"), "content", "utf8");
+      process.env.deepmicode_MEMORY = "off";
       const r = handleSlash("memory", [], makeLoop(), { memoryRoot: root });
       expect(r.info).toMatch(/memory is disabled/);
     });
@@ -1326,7 +1326,7 @@ describe("handleSlash", () => {
   describe("/plan", () => {
     it("/plan replies 'only in code mode' when setPlanMode callback is missing", () => {
       const r = handleSlash("plan", [], makeLoop());
-      expect(r.info).toMatch(/only available inside `reasonix code`/);
+      expect(r.info).toMatch(/only available inside `deepmicode code`/);
     });
 
     it("/plan toggles when called with no args", () => {
@@ -1460,22 +1460,22 @@ describe("handleSlash", () => {
     let originalTheme: string | undefined;
 
     beforeEach(() => {
-      tempHome = mkdtempSync(join(tmpdir(), "reasonix-theme-slash-"));
+      tempHome = mkdtempSync(join(tmpdir(), "deepmicode-theme-slash-"));
       originalHome = process.env.HOME;
       originalUserProfile = process.env.USERPROFILE;
-      originalTheme = process.env.REASONIX_THEME;
+      originalTheme = process.env.deepmicode_THEME;
       process.env.HOME = tempHome;
       process.env.USERPROFILE = tempHome;
-      process.env.REASONIX_THEME = "github-dark";
+      process.env.deepmicode_THEME = "github-dark";
     });
 
     afterEach(() => {
       process.env.HOME = originalHome;
       process.env.USERPROFILE = originalUserProfile;
       if (originalTheme === undefined) {
-        process.env.REASONIX_THEME = undefined;
+        process.env.deepmicode_THEME = undefined;
       } else {
-        process.env.REASONIX_THEME = originalTheme;
+        process.env.deepmicode_THEME = originalTheme;
       }
       rmSync(tempHome, { recursive: true, force: true });
     });

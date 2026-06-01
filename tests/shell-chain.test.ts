@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync } from "node:fs";
+﻿import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -162,7 +162,7 @@ describe("isCommandAllowed", () => {
 describe("runChain integration", () => {
   let tmp: string;
   beforeEach(() => {
-    tmp = mkdtempSync(join(tmpdir(), "reasonix-chain-"));
+    tmp = mkdtempSync(join(tmpdir(), "deepmicode-chain-"));
   });
   afterEach(() => {
     rmSync(tmp, { recursive: true, force: true });
@@ -258,7 +258,7 @@ describe("runChain integration", () => {
 describe("runCommand wired with chains", () => {
   let tmp: string;
   beforeEach(() => {
-    tmp = mkdtempSync(join(tmpdir(), "reasonix-chain-rc-"));
+    tmp = mkdtempSync(join(tmpdir(), "deepmicode-chain-rc-"));
   });
   afterEach(() => {
     rmSync(tmp, { recursive: true, force: true });

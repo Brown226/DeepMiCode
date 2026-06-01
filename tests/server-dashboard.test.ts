@@ -1,4 +1,4 @@
-/** Dashboard server — token/CSRF gates, endpoint shapes, permissions CRUD against a real http server. */
+﻿/** Dashboard server — token/CSRF gates, endpoint shapes, permissions CRUD against a real http server. */
 
 import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -31,7 +31,7 @@ async function call(
   }
   const headers: Record<string, string> = {};
   if (opts.token && opts.tokenInHeader) {
-    headers["X-Reasonix-Token"] = opts.token;
+    headers["X-deepmicode-Token"] = opts.token;
   }
   if (opts.body !== undefined) headers["Content-Type"] = "application/json";
   const res = await fetch(u.toString(), {
@@ -69,7 +69,7 @@ describe("dashboard server: auth + CSRF", () => {
   const TOKEN = "deadbeefcafebabe1234567890abcdefdeadbeefcafebabe1234567890abcdef";
 
   beforeEach(async () => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-dashtest-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-dashtest-"));
     cfgPath = join(dir, "config.json");
     usagePath = join(dir, "usage.jsonl");
     handle = await startDashboardServer(
@@ -163,7 +163,7 @@ describe("dashboard server: endpoints", () => {
   const PROJ = "/test/project";
 
   beforeEach(async () => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-dash-ep-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-dash-ep-"));
     cfgPath = join(dir, "config.json");
     usagePath = join(dir, "usage.jsonl");
   });
@@ -230,9 +230,9 @@ describe("dashboard server: endpoints", () => {
   });
 
   it("GET /api/semantic reports incompatible on-disk index against current config", async () => {
-    const proj = mkdtempSync(join(tmpdir(), "reasonix-dash-sem-"));
+    const proj = mkdtempSync(join(tmpdir(), "deepmicode-dash-sem-"));
     try {
-      const semanticDir = join(proj, ".reasonix", "semantic");
+      const semanticDir = join(proj, ".deepmicode", "semantic");
       await mkdir(semanticDir, { recursive: true });
       await writeFile(
         cfgPath,
@@ -292,9 +292,9 @@ describe("dashboard server: endpoints", () => {
   });
 
   it("GET /api/skills lists and edits flat-format project skills (#586)", async () => {
-    const proj = mkdtempSync(join(tmpdir(), "reasonix-dash-skills-"));
+    const proj = mkdtempSync(join(tmpdir(), "deepmicode-dash-skills-"));
     try {
-      const skillsDir = join(proj, ".reasonix", "skills");
+      const skillsDir = join(proj, ".deepmicode", "skills");
       const folderDir = join(skillsDir, "folder-skill");
       const flatPath = join(skillsDir, "flat-skill.md");
       await mkdir(folderDir, { recursive: true });
@@ -356,8 +356,8 @@ describe("dashboard server: endpoints", () => {
   });
 
   it("GET /api/skills returns custom skills and path status", async () => {
-    const proj = mkdtempSync(join(tmpdir(), "reasonix-dash-skills-custom-proj-"));
-    const custom = mkdtempSync(join(tmpdir(), "reasonix-dash-skills-custom-"));
+    const proj = mkdtempSync(join(tmpdir(), "deepmicode-dash-skills-custom-proj-"));
+    const custom = mkdtempSync(join(tmpdir(), "deepmicode-dash-skills-custom-"));
     try {
       await writeFile(
         cfgPath,
@@ -385,14 +385,14 @@ describe("dashboard server: endpoints", () => {
   });
 
   it("POST /api/skills rejects content missing a description frontmatter line (#583)", async () => {
-    const proj = mkdtempSync(join(tmpdir(), "reasonix-dash-skills-desc-"));
+    const proj = mkdtempSync(join(tmpdir(), "deepmicode-dash-skills-desc-"));
     try {
       const audited: Array<{ action: string }> = [];
       const base = await boot({
         getCurrentCwd: () => proj,
         audit: (e) => audited.push({ action: e.action }),
       });
-      const target = join(proj, ".reasonix", "skills", "silent-fail", "SKILL.md");
+      const target = join(proj, ".deepmicode", "skills", "silent-fail", "SKILL.md");
 
       const noFrontmatter = await call(`${base}api/skills/project/silent-fail`, {
         method: "POST",
@@ -525,7 +525,7 @@ describe("dashboard server: SPA shell", () => {
   const TOKEN = "a".repeat(64);
 
   beforeEach(async () => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-dash-spa-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-dash-spa-"));
     handle = await startDashboardServer(
       {
         mode: "standalone",
@@ -547,18 +547,18 @@ describe("dashboard server: SPA shell", () => {
     const html = String(r.body);
     expect(html).toContain(TOKEN); // token interpolated into <meta>
     expect(html).toContain("standalone"); // mode interpolated
-    expect(html).toContain("<title>Reasonix</title>");
+    expect(html).toContain("<title>deepmicode</title>");
   });
 
   it("rendered index.html replaces ALL token placeholders, not just the first", async () => {
     // Regression: String.replace(s, r) only swaps the first occurrence.
-    // The HTML template has __REASONIX_TOKEN__ in three spots (meta,
+    // The HTML template has __deepmicode_TOKEN__ in three spots (meta,
     // css href, script src). Browser hits 401 on every asset fetch
     // when only the meta tag gets the real token.
     const r = await call(handle!.url, { token: TOKEN });
     const html = String(r.body);
-    expect(html).not.toContain("__REASONIX_TOKEN__");
-    expect(html).not.toContain("__REASONIX_MODE__");
+    expect(html).not.toContain("__deepmicode_TOKEN__");
+    expect(html).not.toContain("__deepmicode_MODE__");
     // Sanity: every asset URL should embed the live token, not the placeholder.
     const assetMatches = html.match(/\/assets\/[^"]+/g) ?? [];
     for (const url of assetMatches) {
@@ -587,7 +587,7 @@ describe("dashboard server: chat bridge", () => {
   const TOKEN = "c".repeat(64);
 
   beforeEach(async () => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-dash-chat-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-dash-chat-"));
     cfgPath = join(dir, "config.json");
     usagePath = join(dir, "usage.jsonl");
   });
@@ -786,10 +786,10 @@ describe("dashboard server: v0.13 panels", () => {
   const TOKEN = "d".repeat(64);
 
   beforeEach(async () => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-dash-v013-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-dash-v013-"));
     cfgPath = join(dir, "config.json");
     usagePath = join(dir, "usage.jsonl");
-    // Handlers like /api/health still walk `homedir()/.reasonix/{sessions,memory,semantic}`,
+    // Handlers like /api/health still walk `homedir()/.deepmicode/{sessions,memory,semantic}`,
     // so without redirecting HOME the test reads the dev's real history. On a machine
     // with ~20k sessions the readdir + per-file statSync chain blows past the 5s default.
     savedHome = process.env.HOME;
@@ -893,7 +893,7 @@ describe("dashboard server: modal mirroring (workspace / checkpoint / revision)"
   const TOKEN = "e".repeat(64);
 
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-dash-modal-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-dash-modal-"));
     cfgPath = join(dir, "config.json");
     usagePath = join(dir, "usage.jsonl");
   });
@@ -1122,7 +1122,7 @@ describe("dashboard server: D-1 settings + auto-loop surface", () => {
   const TOKEN = "f".repeat(64);
 
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-d1-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-d1-"));
     cfgPath = join(dir, "config.json");
     usagePath = join(dir, "usage.jsonl");
   });
@@ -1326,7 +1326,7 @@ describe("dashboard server: checkpoint API", () => {
   let cwd: string;
 
   beforeEach(async () => {
-    dir = mkdtempSync(join(tmpdir(), "reasonix-dash-cp-"));
+    dir = mkdtempSync(join(tmpdir(), "deepmicode-dash-cp-"));
     cfgPath = join(dir, "config.json");
     usagePath = join(dir, "usage.jsonl");
     // Init a tiny git repo so checkpoint-create works

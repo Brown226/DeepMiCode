@@ -1,4 +1,4 @@
-import {
+﻿import {
   appendFileSync,
   existsSync,
   mkdtempSync,
@@ -55,7 +55,7 @@ describe("session persistence", () => {
   const realHome = homedir();
 
   beforeEach(() => {
-    tmp = mkdtempSync(join(tmpdir(), "reasonix-session-"));
+    tmp = mkdtempSync(join(tmpdir(), "deepmicode-session-"));
     vi.stubEnv("USERPROFILE", tmp); // Windows
     vi.stubEnv("HOME", tmp); // Unix
     // os.homedir() is cached per-process on some platforms — override via spy.
@@ -68,9 +68,9 @@ describe("session persistence", () => {
     if (existsSync(tmp)) rmSync(tmp, { recursive: true, force: true });
   });
 
-  it("sessionPath lives under <home>/.reasonix/sessions", () => {
+  it("sessionPath lives under <home>/.deepmicode/sessions", () => {
     const p = sessionPath("demo");
-    expect(p).toContain(".reasonix");
+    expect(p).toContain(".deepmicode");
     expect(p).toContain("sessions");
     expect(p.endsWith("demo.jsonl")).toBe(true);
     expect(p.startsWith(tmp)).toBe(true);
@@ -554,15 +554,15 @@ describe("session persistence", () => {
     it("returns session names matching the prefix, sorted alpha-reverse", () => {
       // Filename sort — zero-padded YYYYMMDDHHmm sorts newest-first after reverse.
       // Non-digit suffixes (letters > digits in ASCII) sort above timestamps.
-      appendSessionMessage("code-reasonix-old", { role: "user", content: "x" });
-      appendSessionMessage("code-reasonix-20260430T143200", { role: "user", content: "y" });
-      appendSessionMessage("code-reasonix-20260430T154500", { role: "user", content: "z" });
+      appendSessionMessage("code-deepmicode-old", { role: "user", content: "x" });
+      appendSessionMessage("code-deepmicode-20260430T143200", { role: "user", content: "y" });
+      appendSessionMessage("code-deepmicode-20260430T154500", { role: "user", content: "z" });
 
-      const result = findSessionsByPrefix("code-reasonix-");
+      const result = findSessionsByPrefix("code-deepmicode-");
       expect(result).toEqual([
-        "code-reasonix-old",
-        "code-reasonix-20260430T154500",
-        "code-reasonix-20260430T143200",
+        "code-deepmicode-old",
+        "code-deepmicode-20260430T154500",
+        "code-deepmicode-20260430T143200",
       ]);
     });
 

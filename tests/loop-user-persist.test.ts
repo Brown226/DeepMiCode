@@ -1,4 +1,4 @@
-import { existsSync, mkdtempSync, rmSync } from "node:fs";
+﻿import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -12,7 +12,7 @@ describe("loop persists user message at step entry (issue #943)", () => {
   let tmp: string;
 
   beforeEach(() => {
-    tmp = mkdtempSync(join(tmpdir(), "reasonix-loop943-"));
+    tmp = mkdtempSync(join(tmpdir(), "deepmicode-loop943-"));
     vi.stubEnv("USERPROFILE", tmp);
     vi.stubEnv("HOME", tmp);
     vi.spyOn(require("node:os"), "homedir").mockReturnValue(tmp);

@@ -1,4 +1,4 @@
-/** Public API snapshot — fail loud on unintended changes to the npm package's export surface. */
+﻿/** Public API snapshot — fail loud on unintended changes to the npm package's export surface. */
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -156,7 +156,7 @@ const PUBLIC_API: readonly string[] = [
   "RankPickerOptions",
   "ReadResourceResult",
   "ReadTranscriptResult",
-  "ReasonixConfig",
+  "deepmicodeConfig",
   "ReconfigurableOptions",
   "RepairReport",
   "ReplayStats",

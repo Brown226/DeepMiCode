@@ -1,4 +1,4 @@
-// @ts-nocheck — react-reconciler internal types lag the runtime API.
+﻿// @ts-nocheck — react-reconciler internal types lag the runtime API.
 /* eslint-disable custom-rules/no-top-level-side-effects */
 /* Invariants: Yoga nodes are owned by ./dom.ts (reconciler never frees them);
    event-handler props diff via EVENT_HANDLER_PROPS, bypassing the style path. */
@@ -175,7 +175,7 @@ export function getOwnerChain(fiber: unknown): string[] {
 let debugRepaints: boolean | undefined
 export function isDebugRepaintsEnabled(): boolean {
   if (debugRepaints === undefined) {
-    debugRepaints = isEnvTruthy(process.env.REASONIX_DEBUG_REPAINTS)
+    debugRepaints = isEnvTruthy(process.env.deepmicode_DEBUG_REPAINTS)
   }
   return debugRepaints
 }
@@ -184,7 +184,7 @@ export const dispatcher = new Dispatcher()
 
 // --- COMMIT INSTRUMENTATION (temp debugging) ---
 // eslint-disable-next-line custom-rules/no-process-env-top-level -- debug instrumentation, read-once is fine
-const COMMIT_LOG = process.env.REASONIX_COMMIT_LOG
+const COMMIT_LOG = process.env.deepmicode_COMMIT_LOG
 let _commits = 0
 let _lastLog = 0
 let _lastCommitAt = 0

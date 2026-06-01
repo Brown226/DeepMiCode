@@ -1,4 +1,4 @@
-/** Tool-use eval types — shape-compatible with Sierra τ-bench so a later port can drop real tasks in. */
+﻿/** Tool-use eval types — shape-compatible with Sierra τ-bench so a later port can drop real tasks in. */
 
 import type { ToolDefinition } from "../../src/index.js";
 
@@ -43,7 +43,7 @@ export interface Turn {
   toolName?: string;
 }
 
-export type RunMode = "baseline" | "reasonix";
+export type RunMode = "baseline" | "deepmicode";
 
 export interface RunResult {
   taskId: string;
@@ -68,8 +68,8 @@ export interface BenchMeta {
   userSimModel: string;
   taskCount: number;
   repeatsPerTask: number;
-  /** Reasonix version written into the report for reproducibility. */
-  reasonixVersion: string;
+  /** deepmicode version written into the report for reproducibility. */
+  deepmicodeVersion: string;
 }
 
 export interface BenchReport {

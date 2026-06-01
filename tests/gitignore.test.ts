@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+﻿import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import ignore from "ignore";
@@ -59,7 +59,7 @@ describe("ignoredByLayers", () => {
 describe("loadGitignoreAt / loadGitignoreAtSync", () => {
   let dir: string;
   beforeEach(() => {
-    dir = mkdtempSync(path.join(tmpdir(), "reasonix-gitignore-"));
+    dir = mkdtempSync(path.join(tmpdir(), "deepmicode-gitignore-"));
   });
   afterEach(() => {
     rmSync(dir, { recursive: true, force: true });
