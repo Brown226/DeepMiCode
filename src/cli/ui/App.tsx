@@ -396,7 +396,7 @@ export function App(props: AppProps): React.ReactElement {
     [props.session],
   );
   const [themeName, setThemeName] = React.useState<ThemeName>(() =>
-    resolveThemePreference(loadTheme(), process.env.REASONIX_THEME),
+    resolveThemePreference(loadTheme(), process.env.DEEPMICODE_THEME),
   );
   const statusBar = React.useMemo((): StatusBarConfig => {
     const cfg = readConfig().statusBar ?? {};
@@ -943,7 +943,7 @@ function AppInner({
   if (transcript && !transcriptRef.current) {
     transcriptRef.current = openTranscriptFile(transcript, {
       version: 1,
-      source: "reasonix chat",
+      source: "deepmicode chat",
       model,
       startedAt: new Date().toISOString(),
     });
@@ -2188,7 +2188,7 @@ function AppInner({
    */
   const startWalkthrough = useCallback((): string => {
     if (!codeMode) {
-      return "/walk is only available inside `reasonix code`.";
+      return "/walk is only available inside `deepmicode code`.";
     }
     if (pendingEdits.current.length === 0) {
       return "nothing pending - nothing to walk through.";
@@ -2696,7 +2696,7 @@ function AppInner({
   const handleQQThemePick = useCallback(
     (target: ThemeChoice): string => {
       saveTheme(target);
-      const active = resolveThemePreference(target, process.env.REASONIX_THEME);
+      const active = resolveThemePreference(target, process.env.DEEPMICODE_THEME);
       setThemeName(active);
       return `theme saved: ${target}\nactive now: ${active}`;
     },
@@ -4466,7 +4466,7 @@ function AppInner({
                         onSwitchSession(outcome.name);
                       } else {
                         log.pushInfo(
-                          `to switch to "${outcome.name}", quit and run: reasonix chat --session ${outcome.name}`,
+                          `to switch to "${outcome.name}", quit and run: deepmicode chat --session ${outcome.name}`,
                         );
                       }
                       return;
@@ -4477,7 +4477,7 @@ function AppInner({
                         onSwitchSession(freshSessionName(session));
                       } else {
                         log.pushInfo(
-                          "to start a fresh session, quit and run: reasonix chat (no --session flag)",
+                          "to start a fresh session, quit and run: deepmicode chat (no --session flag)",
                         );
                       }
                       return;
@@ -4507,7 +4507,7 @@ function AppInner({
                     saveTheme(outcome.value);
                     const active = resolveThemePreference(
                       outcome.value,
-                      process.env.REASONIX_THEME,
+                      process.env.DEEPMICODE_THEME,
                     );
                     setThemeName(active);
                     log.pushInfo(`theme saved: ${outcome.value}\n  active now: ${active}`);

@@ -85,13 +85,13 @@ export function Wizard({
   useEffect(() => onLanguageChange(() => setLanguageVersion((v) => v + 1)), []);
 
   const [previewTheme, setPreviewTheme] = useState<ThemeName>(() =>
-    resolveThemePreference(initial?.theme ?? loadTheme(), process.env.REASONIX_THEME),
+    resolveThemePreference(initial?.theme ?? loadTheme(), process.env.DEEPMICODE_THEME),
   );
 
   const [step, setStep] = useState<Step>("language");
   const [data, setData] = useState<WizardData>(() => ({
     language: getLanguage(),
-    theme: resolveThemePreference(initial?.theme ?? loadTheme(), process.env.REASONIX_THEME),
+    theme: resolveThemePreference(initial?.theme ?? loadTheme(), process.env.DEEPMICODE_THEME),
     apiKey: existingApiKey ?? "",
     selectedCatalog: deriveInitialCatalog(initial?.mcp ?? []),
     catalogArgs: {},

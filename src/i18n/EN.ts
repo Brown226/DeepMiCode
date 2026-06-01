@@ -490,7 +490,7 @@ export const EN: TranslationSchema = {
     footer: "↑↓ pick · ⏎ confirm · esc cancel",
     currentPref: "current preference",
     activeNow: "active now",
-    autoDesc: "use REASONIX_THEME or default",
+    autoDesc: "use DEEPMICODE_THEME or default",
   },
   planFlow: {
     approveCardTitle: "Approve plan",
@@ -1127,7 +1127,7 @@ export const EN: TranslationSchema = {
     },
     memory: {
       disabled:
-        "memory is disabled (REASONIX_MEMORY=off in env). Unset the var to re-enable — no REASONIX.md or ~/.reasonix/memory content will be pinned in the meantime.",
+        "memory is disabled (DEEPMICODE_MEMORY=off in env). Unset the var to re-enable — no DEEPMICODE.md or ~/.reasonix/memory content will be pinned in the meantime.",
       noRoot:
         "no working directory on this session — `/memory` needs a root to resolve REASONIX.md from. (Running in a test harness?)",
       listEmpty:

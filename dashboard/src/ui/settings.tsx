@@ -201,6 +201,13 @@ export function SettingsModal({
                   onSave={onSave}
                   onSaveApiKey={onSaveApiKey}
                 />
+                <MimoApiSection
+                  mimoBaseUrl={settings.mimoBaseUrl}
+                  mimoApiKeyPrefix={settings.mimoApiKeyPrefix}
+                  mimoRegion={settings.mimoRegion}
+                  onSave={onSave}
+                  onSaveMimoApiKey={(key) => onSave({ mimoApiKey: key })}
+                />
                 <QQChannelSection
                   qq={qq}
                   configureOpen={qqConfigureOpen}
@@ -757,12 +764,99 @@ function ApiKeySection({
   );
 }
 
+function MimoApiSection({
+  mimoBaseUrl,
+  mimoApiKeyPrefix,
+  mimoRegion,
+  onSave,
+  onSaveMimoApiKey,
+}: {
+  mimoBaseUrl?: string;
+  mimoApiKeyPrefix?: string;
+  mimoRegion?: "international" | "china";
+  onSave: (patch: SettingsPatch) => void;
+  onSaveMimoApiKey: (key: string) => void;
+}) {
+  const [key, setKey] = useState("");
+  const [urlDraft, setUrlDraft] = useState(mimoBaseUrl ?? "");
+  useEffect(() => setUrlDraft(mimoBaseUrl ?? ""), [mimoBaseUrl]);
+  return (
+    <section className="section">
+      <div className="stitle">{t("settings.mimoSection")}</div>
+      <div className="setting-row">
+        <div className="l">
+          <div className="n">{t("settings.mimoApiKey")}</div>
+          <div className="h">
+            {mimoApiKeyPrefix
+              ? t("settings.mimoApiKeySet", { prefix: mimoApiKeyPrefix })
+              : t("settings.mimoApiKeyNotSet")}
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 6 }}>
+          <input
+            className="field mono"
+            type="password"
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
+            placeholder="sk-…"
+          />
+          <button
+            type="button"
+            className="btn primary"
+            disabled={!key}
+            onClick={() => {
+              if (!key) return;
+              onSaveMimoApiKey(key);
+              setKey("");
+            }}
+          >
+            {t("settings.mimoApiKeySave")}
+          </button>
+        </div>
+      </div>
+      <div className="setting-row">
+        <div className="l">
+          <div className="n">{t("settings.mimoBaseUrl")}</div>
+          <div className="h">{t("settings.mimoBaseUrlHint")}</div>
+        </div>
+        <input
+          className="field mono"
+          value={urlDraft}
+          placeholder={t("settings.mimoBaseUrlPlaceholder")}
+          onChange={(e) => setUrlDraft(e.target.value)}
+          onBlur={() => onSave({ mimoBaseUrl: urlDraft.trim() || undefined })}
+        />
+      </div>
+      <div className="setting-row">
+        <div className="l">
+          <div className="n">{t("settings.mimoRegion")}</div>
+          <div className="h">{t("settings.mimoRegionHint")}</div>
+        </div>
+        <select
+          className="field mono"
+          value={mimoRegion ?? ""}
+          onChange={(e) => {
+            const val = e.target.value;
+            onSave({ mimoRegion: val === "" ? undefined : (val as "international" | "china") });
+          }}
+        >
+          <option value="">{t("settings.mimoRegionNone")}</option>
+          <option value="international">{t("settings.mimoRegionInternational")}</option>
+          <option value="china">{t("settings.mimoRegionChina")}</option>
+        </select>
+      </div>
+    </section>
+  );
+}
+
 const KNOWN_MODELS = [
   "deepseek-v4-flash",
   "deepseek-v4-pro",
   "mimo-v2.5-pro",
   "mimo-v2.5",
   "mimo-v2-flash",
+  "mimo-v2-omni",
+  "mimo-v2-pro",
 ] as const;
 
 const EFFORT_VALUES = ["low", "medium", "high", "max"] as const;

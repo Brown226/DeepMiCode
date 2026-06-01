@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/logo.svg" alt="Reasonix" width="640"/>
+  <img src="docs/logo.svg" alt="DeepMiCode" width="640"/>
 </p>
 
 <p align="center">
@@ -7,9 +7,9 @@
   &nbsp;·&nbsp;
   <a href="./README.zh-CN.md">简体中文</a>
   &nbsp;·&nbsp;
-  <a href="https://esengine.github.io/DeepSeek-Reasonix/">Website</a>
+  <a href="https://github.com/Brown226/DeepMiCode">Website</a>
   &nbsp;·&nbsp;
-  <a href="https://esengine.github.io/DeepSeek-Reasonix/configuration.html">Guide</a>
+  <a href="https://github.com/Brown226/DeepMiCode">Guide</a>
   &nbsp;·&nbsp;
   <a href="./docs/ARCHITECTURE.md">Architecture</a>
   &nbsp;·&nbsp;
@@ -19,16 +19,15 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/reasonix"><img src="https://img.shields.io/npm/v/reasonix.svg?style=flat-square&color=cb3837&labelColor=161b22&logo=npm&logoColor=white" alt="npm version"/></a>
-  <a href="https://github.com/esengine/reasonix/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/esengine/reasonix/ci.yml?style=flat-square&label=ci&labelColor=161b22&logo=githubactions&logoColor=white" alt="CI"/></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/npm/l/reasonix.svg?style=flat-square&color=8b949e&labelColor=161b22" alt="license"/></a>
-  <a href="https://www.npmjs.com/package/reasonix"><img src="https://img.shields.io/npm/dm/reasonix.svg?style=flat-square&color=3fb950&labelColor=161b22&label=downloads" alt="downloads"/></a>
-  <a href="./package.json"><img src="https://img.shields.io/node/v/reasonix.svg?style=flat-square&color=5fa04e&labelColor=161b22&logo=nodedotjs&logoColor=white" alt="node"/></a>
-  <a href="https://github.com/esengine/reasonix/stargazers"><img src="https://img.shields.io/github/stars/esengine/reasonix.svg?style=flat-square&color=dbab09&labelColor=161b22&logo=github&logoColor=white" alt="GitHub stars"/></a>
-  <a href="https://atomgit.com/esengine/DeepSeek-Reasonix"><img src="https://atomgit.com/esengine/DeepSeek-Reasonix/star/badge.svg" alt="AtomGit stars"/></a>
-  <a href="https://github.com/esengine/reasonix/graphs/contributors"><img src="https://img.shields.io/github/contributors/esengine/reasonix.svg?style=flat-square&color=bc8cff&labelColor=161b22&logo=github&logoColor=white" alt="contributors"/></a>
-  <a href="https://github.com/esengine/reasonix/discussions"><img src="https://img.shields.io/github/discussions/esengine/reasonix.svg?style=flat-square&color=58a6ff&labelColor=161b22&logo=github&logoColor=white" alt="Discussions"/></a>
-  <a href="https://discord.gg/XF78rEME2D"><img src="https://img.shields.io/badge/discord-join-5865F2.svg?style=flat-square&labelColor=161b22&logo=discord&logoColor=white" alt="Discord"/></a>
+  <a href="https://github.com/Brown226/DeepMiCode">
+    <img src="https://img.shields.io/github/stars/Brown226/DeepMiCode.svg?style=flat-square&color=dbab09&labelColor=161b22&logo=github&logoColor=white" alt="GitHub stars"/>
+  </a>
+  <a href="https://github.com/Brown226/DeepMiCode/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/Brown226/DeepMiCode.svg?style=flat-square&color=8b949e&labelColor=161b22" alt="license"/>
+  </a>
+  <a href="https://github.com/Brown226/DeepMiCode">
+    <img src="https://img.shields.io/github/contributors/Brown226/DeepMiCode.svg?style=flat-square&color=bc8cff&labelColor=161b22&logo=github&logoColor=white" alt="contributors"/>
+  </a>
 </p>
 
 <p align="center">
@@ -39,8 +38,8 @@
 
 <br/>
 
-<h3 align="center">A DeepSeek-native AI coding agent for your terminal.</h3>
-<p align="center">Engineered around prefix-cache stability — so token costs stay low across long sessions, and you can leave it running.</p>
+<h3 align="center">DeepMiCode — DeepSeek + Mimo AI coding agent for your terminal.</h3>
+<p align="center">Built on DeepSeek-Reasonix, engineered around prefix-cache stability — so token costs stay low across long sessions.</p>
 
 <br/>
 
@@ -100,9 +99,9 @@ Bare `reasonix` (no subcommand) launches `code` in the current directory — typ
 | `reasonix chat` | Plain chat — no filesystem or shell tools. |
 | `reasonix run "task"` | One-shot, streams to stdout. Good for pipes. |
 | `reasonix doctor` | Health check: Node, API key, MCP wiring. |
-| `reasonix update` | Upgrade Reasonix itself. |
+| `deepmicode update` | Upgrade DeepMiCode itself. |
 
-Other subcommands (`replay` · `diff` · `events` · `stats` · `index` · `mcp` · `prune-sessions`) are in `reasonix --help` and the [CLI reference](https://esengine.github.io/DeepSeek-Reasonix/#cli).
+Other subcommands (`replay` · `diff` · `events` · `stats` · `index` · `mcp` · `prune-sessions`) are in `deepmicode --help`.
 
 ### QQ channel
 
@@ -117,11 +116,11 @@ For full setup, desktop quick start, and troubleshooting, see [QQ channel setup]
 
 ### Desktop client (prerelease)
 
-A native Tauri client for users who want a GUI over the same loop. Multi-tab, the right-panel shows files the agent has read or edited this session, the same cost / cache / token meters live at the bottom. Same DeepSeek API key, same `~/.reasonix` config — the desktop bundles its own Node runtime, no separate `npm install` step.
+A native Tauri client for users who want a GUI over the same loop. Multi-tab, the right-panel shows files the agent has read or edited this session, the same cost / cache / token meters live at the bottom. Same API key, same config — the desktop bundles its own Node runtime, no separate `npm install` step.
 
-Download platform installers from [GitHub Releases](https://github.com/esengine/DeepSeek-Reasonix/releases). The desktop ships as a **prerelease**: the loop and protocol are the same as the CLI, but the UI is still being polished and the installers aren't code-signed yet.
+Download platform installers from [GitHub Releases](https://github.com/Brown226/DeepMiCode/releases). The desktop ships as a **prerelease**: the loop and protocol are the same as the CLI, but the UI is still being polished and the installers aren't code-signed yet.
 
-- **macOS** — first launch hits Gatekeeper. One-time fix: `xattr -dr com.apple.quarantine /Applications/Reasonix.app` (or right-click → Open → confirm).
+- **macOS** — first launch hits Gatekeeper. One-time fix: `xattr -dr com.apple.quarantine /Applications/DeepMiCode.app` (or right-click → Open → confirm).
 - **Windows** — SmartScreen warns "Unknown publisher". Click **More info → Run anyway**.
 - **Linux** — `.deb` and `.AppImage` ship plain, no extra step.
 
@@ -169,19 +168,17 @@ npx openspec init --tools claude    # writes .claude/skills/openspec-*/SKILL.md
 
 ## Configuration
 
-One JSON file at `~/.reasonix/config.json` plus per-project overrides under `<project>/.reasonix/`. The full bilingual reference — every key, every slash command, the on-disk shape of skills/memory/hooks — lives at:
-
-> 📘 **[Configuration Guide](https://esengine.github.io/DeepSeek-Reasonix/configuration.html)** · [中文](https://esengine.github.io/DeepSeek-Reasonix/configuration.html?lang=zh)
+One JSON file at `~/.deepmicode/config.json` plus per-project overrides under `<project>/.deepmicode/`. The full bilingual reference — every key, every slash command, the on-disk shape of skills/memory/hooks — lives at the docs directory.
 
 | Topic | Quick read |
 |---|---|
-| [MCP servers](https://esengine.github.io/DeepSeek-Reasonix/configuration.html#mcp) | stdio · SSE · Streamable HTTP. One spec format works for both `config.json` and `--mcp`. |
-| [Skills](https://esengine.github.io/DeepSeek-Reasonix/configuration.html#skills) | Markdown playbooks the model can invoke. `inline` or `subagent` mode. |
-| [Memory](https://esengine.github.io/DeepSeek-Reasonix/configuration.html#memory) | User-private knowledge pinned into the prefix. `user` / `feedback` / `project` / `reference` types. |
-| [Hooks](https://esengine.github.io/DeepSeek-Reasonix/configuration.html#hooks) | Shell commands on lifecycle events. `PreToolUse` (gating) · `PostToolUse` · `UserPromptSubmit` · `Stop`. |
-| [Permissions](https://esengine.github.io/DeepSeek-Reasonix/configuration.html#permissions) | Per-workspace shell allowlist. Exact-prefix match. |
-| [Web search](https://esengine.github.io/DeepSeek-Reasonix/configuration.html#search) | Mojeek by default; switch to self-hosted SearXNG or Metaso with `/search-engine`. |
-| [Semantic index](https://esengine.github.io/DeepSeek-Reasonix/configuration.html#index) | `reasonix index` — local Ollama or any OpenAI-compatible embedding endpoint. |
+| MCP servers | stdio · SSE · Streamable HTTP. One spec format works for both `config.json` and `--mcp`. |
+| Skills | Markdown playbooks the model can invoke. `inline` or `subagent` mode. |
+| Memory | User-private knowledge pinned into the prefix. `user` / `feedback` / `project` / `reference` types. |
+| Hooks | Shell commands on lifecycle events. `PreToolUse` (gating) · `PostToolUse` · `UserPromptSubmit` · `Stop`. |
+| Permissions | Per-workspace shell allowlist. Exact-prefix match. |
+| Web search | Mojeek by default; switch to self-hosted SearXNG or Metaso with `/search-engine`. |
+| Semantic index | `deepmicode index` — local Ollama or any OpenAI-compatible embedding endpoint. |
 
 <br/>
 
@@ -230,7 +227,6 @@ For live cache-hit rates, costs, and methodology, see [`benchmarks/`](./benchmar
 - [**CLI Reference**](./docs/CLI-REFERENCE.md) — every shell subcommand, every slash command, every keybinding
 - [**QQ channel setup**](./docs/qq-connect.md) — CLI first-connect flow, desktop entry, and QQ Open Platform credentials
 - [**Benchmarks**](./benchmarks/) — τ-bench-lite harness, transcripts, cost methodology
-- [**Website**](https://esengine.github.io/DeepSeek-Reasonix/) — getting started, dashboard mockup, TUI mockup
 - [**Contributing**](./CONTRIBUTING.md) — comment policy, error-handling rules, library-over-hand-rolled
 - [**Code of Conduct**](./CODE_OF_CONDUCT.md) · [**Security policy**](./SECURITY.md)
 
@@ -239,25 +235,19 @@ For live cache-hit rates, costs, and methodology, see [`benchmarks/`](./benchmar
 ## Community
 
 > [!NOTE]
-> Reasonix is open source and community-developed. Every avatar in the Acknowledgments wall at the bottom of this file is a real PR that shipped.
+> DeepMiCode is open source and community-developed. Every avatar in the Acknowledgments wall at the bottom of this file is a real PR that shipped.
 
-Scoped starter tickets — each with background, code pointers, acceptance criteria, and hints — live under the [`good first issue`](https://github.com/esengine/reasonix/labels/good%20first%20issue) label. Pick anything open.
+Scoped starter tickets — each with background, code pointers, acceptance criteria, and hints — live under the `good first issue` label. Pick anything open.
 
 **Open Discussions — opinions wanted:**
 
-- [#20 · CLI / TUI design](https://github.com/esengine/reasonix/discussions/20) — what's broken, what's missing, what would you change?
-- [#21 · Dashboard design](https://github.com/esengine/reasonix/discussions/21) — react against the [proposed mockup](https://esengine.github.io/DeepSeek-Reasonix/design/agent-dashboard.html)
-- [#22 · Future feature wishlist](https://github.com/esengine/reasonix/discussions/22) — what would you build into Reasonix next?
+- What's broken, what's missing, what would you change?
+- Dashboard design — feedback welcome
+- Future feature wishlist — what would you build into DeepMiCode next?
 
-**Already using Reasonix and willing to help others discover it?** Publish blog posts, articles, screenshots, talks, or videos to [**Show and tell**](https://github.com/esengine/reasonix/discussions/categories/show-and-tell). The project has no marketing budget — community word of mouth is how new users find it. Sustained advocates earn the badge below, displayed next to the contributors wall once awarded:
+**Already using DeepMiCode and willing to help others discover it?** Publish blog posts, articles, screenshots, talks, or videos. The project has no marketing budget — community word of mouth is how new users find it.
 
-<p align="center">
-  <a href="https://github.com/esengine/reasonix/discussions/categories/show-and-tell">
-    <img src="https://img.shields.io/badge/REASONIX-📣%20ADVOCATE-c4b5fd?style=for-the-badge&labelColor=0d1117" alt="Reasonix Advocate badge — earned by sustained advocates"/>
-  </a>
-</p>
-
-**Before your first PR**: read [`CONTRIBUTING.md`](./CONTRIBUTING.md) — short, strict rules (comments, errors, libraries-over-hand-rolled). `tests/comment-policy.test.ts` enforces the comment ones; `npm run verify` is the pre-push gate. By participating you agree to the [Code of Conduct](./CODE_OF_CONDUCT.md). Security issues → [SECURITY.md](./SECURITY.md).
+**Before your first PR**: read [`CONTRIBUTING.md`](./CONTRIBUTING.md) — short, strict rules (comments, errors, libraries-over-hand-rolled). `npm run verify` is the pre-push gate. By participating you agree to the [Code of Conduct](./CODE_OF_CONDUCT.md). Security issues → [SECURITY.md](./SECURITY.md).
 
 <br/>
 
@@ -275,19 +265,17 @@ Scoped starter tickets — each with background, code pointers, acceptance crite
 
 ## Star History
 
-<a href="https://www.star-history.com/?repos=esengine%2FDeepSeek-Reasonix&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=esengine/DeepSeek-Reasonix&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=esengine/DeepSeek-Reasonix&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=esengine/DeepSeek-Reasonix&type=date&legend=top-left" />
- </picture>
-</a>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=Brown226/DeepMiCode&type=date&theme=dark&legend=top-left" />
+  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=Brown226/DeepMiCode&type=date&legend=top-left" />
+  <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Brown226/DeepMiCode&type=date&legend=top-left" />
+</picture>
 
 <br/>
 
 ## Support
 
-If Reasonix has been useful and you'd like to say thanks, you can. It stays a coffee, not a contract — donations don't buy feature priority or change how issues get triaged.
+If DeepMiCode has been useful and you'd like to say thanks, you can. It stays a coffee, not a contract — donations don't buy feature priority or change how issues get triaged.
 
 - **International** — PayPal: [paypal.me/yuhuahui](https://paypal.me/yuhuahui)
 - **国内** — 微信支付（扫码）
@@ -320,8 +308,8 @@ for designing the project logo (see [`docs/brand/`](./docs/brand/)), and to
 [AIGC Link](https://xhslink.com/m/80ngts127cA) for promoting the project on XiaoHongShu.
 
 <p align="center">
-  <a href="https://github.com/esengine/DeepSeek-Reasonix/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=esengine/DeepSeek-Reasonix&max=100&columns=12" alt="Contributors to esengine/DeepSeek-Reasonix" width="860"/>
+  <a href="https://github.com/Brown226/DeepMiCode/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=Brown226/DeepMiCode&max=100&columns=12" alt="Contributors to Brown226/DeepMiCode" width="860"/>
   </a>
 </p>
 
@@ -332,5 +320,5 @@ for designing the project logo (see [`docs/brand/`](./docs/brand/)), and to
 <p align="center">
   <sub>MIT — see <a href="./LICENSE">LICENSE</a></sub>
   <br/>
-  <sub>Built by the community at <a href="https://github.com/esengine/DeepSeek-Reasonix/graphs/contributors">esengine/DeepSeek-Reasonix</a></sub>
+  <sub>Built by the community at <a href="https://github.com/Brown226/DeepMiCode/graphs/contributors">Brown226/DeepMiCode</a></sub>
 </p>

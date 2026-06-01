@@ -1,4 +1,4 @@
-/** User-private memory pinned into the immutable prefix; distinct from committable REASONIX.md. */
+/** User-private memory pinned into the immutable prefix; distinct from committable DEEPMICODE.md. */
 
 import { createHash } from "node:crypto";
 import {
@@ -49,7 +49,7 @@ export interface MemoryEntry {
 }
 
 export interface MemoryStoreOptions {
-  /** Override `~/.reasonix` — tests set this to a tmpdir. */
+  /** Override `~/.deepmicode` — tests set this to a tmpdir. */
   homeDir?: string;
   /** Absolute sandbox root. Required to use `scope: "project"`. */
   projectRoot?: string;

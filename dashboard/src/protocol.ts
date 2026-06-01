@@ -314,6 +314,9 @@ export type SettingsEvent = {
   subagentModels?: Record<string, "flash" | "pro">;
   showSystemEvents?: boolean;
   version: string;
+  mimoApiKeyPrefix?: string;
+  mimoBaseUrl?: string;
+  mimoRegion?: "international" | "china";
 };
 
 export type QQSettingsEvent = {
@@ -347,6 +350,9 @@ export type SettingsPatch = {
   webSearchEngine?: WebSearchEngineName;
   subagentModels?: Record<string, "flash" | "pro">;
   showSystemEvents?: boolean;
+  mimoApiKey?: string;
+  mimoBaseUrl?: string;
+  mimoRegion?: "international" | "china";
 };
 
 export type QQConfigPatch = {

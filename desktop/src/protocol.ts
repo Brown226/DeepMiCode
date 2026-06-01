@@ -323,6 +323,9 @@ export type SettingsEvent = {
   subagentModels?: Record<string, "flash" | "pro">;
   showSystemEvents?: boolean;
   version: string;
+  mimoApiKeyPrefix?: string;
+  mimoBaseUrl?: string;
+  mimoRegion?: "international" | "china";
 };
 
 export type QQSettingsEvent = {
@@ -371,6 +374,9 @@ export type SettingsPatch = {
   braveApiKey?: string | null;
   subagentModels?: Record<string, "flash" | "pro">;
   showSystemEvents?: boolean;
+  mimoApiKey?: string;
+  mimoBaseUrl?: string;
+  mimoRegion?: "international" | "china";
 };
 
 export type QQConfigPatch = {

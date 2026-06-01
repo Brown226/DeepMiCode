@@ -490,7 +490,7 @@ export const de: TranslationSchema = {
     footer: "↑↓ auswählen · ⏎ bestätigen · Esc abbrechen",
     currentPref: "Aktuelle Einstellung",
     activeNow: "Jetzt aktiv",
-    autoDesc: "REASONIX_THEME oder Standard verwenden",
+    autoDesc: "DEEPMICODE_THEME oder Standard verwenden",
   },
   planFlow: {
     ...EN.planFlow,
@@ -1190,7 +1190,7 @@ export const de: TranslationSchema = {
     memory: {
       ...EN.handlers.memory,
       disabled:
-        "Memory ist deaktiviert (REASONIX_MEMORY=off in der Umgebung). Entferne die Variable zur Reaktivierung — es werden weder REASONIX.md noch ~/.reasonix/memory-Inhalte eingefügt.",
+        "Memory ist deaktiviert (DEEPMICODE_MEMORY=off in der Umgebung). Entferne die Variable zur Reaktivierung — es werden weder DEEPMICODE.md noch ~/.reasonix/memory-Inhalte eingefügt.",
       noRoot:
         "Kein Arbeitsverzeichnis in dieser Sitzung — `/memory` benötigt ein Root, um REASONIX.md aufzulösen. (Läuft in einer Test-Umgebung?)",
       listEmpty:

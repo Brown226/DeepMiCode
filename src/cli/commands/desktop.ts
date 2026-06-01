@@ -20,6 +20,7 @@ import {
   type DesktopOpenTab,
   type EditMode,
   bridgeEndpointEnv,
+  bridgeMimoEndpointEnv,
   isPlausibleKey,
   isReasoningEffort,
   loadApiKey,
@@ -28,6 +29,7 @@ import {
   loadEditMode,
   loadEditor,
   loadEndpoint,
+  loadMimoEndpoint,
   loadExaApiKey,
   loadMetasoApiKey,
   loadModel,
@@ -155,6 +157,7 @@ type InMessage = { tabId?: string } & (
   | { cmd: "memory_read"; path: string }
   | { cmd: "new_chat" }
   | { cmd: "setup_save_key"; key: string }
+  | { cmd: "setup_save_mimo_key"; key: string }
   | { cmd: "settings_get" }
   | {
       cmd: "settings_save";
@@ -183,6 +186,9 @@ type InMessage = { tabId?: string } & (
       braveApiKey?: string | null;
       subagentModels?: Record<string, "flash" | "pro">;
       showSystemEvents?: boolean;
+      mimoApiKey?: string;
+      mimoBaseUrl?: string;
+      mimoRegion?: "international" | "china";
     }
   | { cmd: "qq_status_get" }
   | { cmd: "qq_connect" }
@@ -227,6 +233,9 @@ interface SettingsEvent {
   apiKeyPrefix?: string;
   workspaceDir: string;
   recentWorkspaces: string[];
+  mimoApiKeyPrefix?: string;
+  mimoBaseUrl?: string;
+  mimoRegion?: "international" | "china";
   model: string;
   editor?: string;
   webSearchEngine?:
@@ -724,6 +733,8 @@ function collectWebSearchApiKeyPrefixes(): {
 
 function emitSettings(tab: Tab): void {
   const ep = loadEndpoint();
+  const mimoEp = loadMimoEndpoint();
+  const cfg = readConfig();
   const editMode = loadEditMode();
   if (tab.toolset) applyPlanMode(tab.toolset.tools, editMode);
   const recent = loadRecentWorkspaces().filter((p) => p !== tab.rootDir);
@@ -745,6 +756,11 @@ function emitSettings(tab: Tab): void {
       subagentModels: loadSubagentModels(),
       showSystemEvents: loadShowSystemEvents(),
       version: VERSION,
+      mimoApiKeyPrefix: mimoEp.apiKey
+        ? `${mimoEp.apiKey.slice(0, 6)}…${mimoEp.apiKey.slice(-3)}`
+        : undefined,
+      mimoBaseUrl: mimoEp.baseUrl,
+      mimoRegion: cfg.mimoRegion,
     },
     tab.id,
   );
@@ -2246,9 +2262,6 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
         saveApiKey(key);
         bridgeEndpointEnv();
         for (const tab of tabs.values()) {
-          // Skeleton tabs still mid-bootstrap pick up the new key inside
-          // initTabToolset's tail when buildCodeToolset settles — don't
-          // try to construct a runtime against a null toolset here.
           if (!tab.toolset) {
             emitSettings(tab);
             void emitBalance(tab);
@@ -2261,6 +2274,29 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
         }
       } catch (err) {
         emit({ type: "$error", message: `saveApiKey failed: ${(err as Error).message}` });
+      }
+      return;
+    }
+
+    if (msg.cmd === "setup_save_mimo_key") {
+      const key = msg.key?.trim();
+      if (!key || !isPlausibleKey(key)) {
+        emit({
+          type: "$error",
+          message: "MiMo key looks too short — paste the full token (16+ chars, no spaces).",
+        });
+        return;
+      }
+      try {
+        const cfg = readConfig();
+        cfg.mimoApiKey = key;
+        writeConfig(cfg);
+        bridgeMimoEndpointEnv();
+        for (const tab of tabs.values()) {
+          emitSettings(tab);
+        }
+      } catch (err) {
+        emit({ type: "$error", message: `saveMimoApiKey failed: ${(err as Error).message}` });
       }
       return;
     }
@@ -2624,6 +2660,20 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
               if (tab.runtime) tab.runtime = buildRuntimeFor(tab);
             }
           }
+        }
+        if (msg.mimoApiKey !== undefined || msg.mimoBaseUrl !== undefined || msg.mimoRegion !== undefined) {
+          const cfg = readConfig();
+          if (msg.mimoApiKey !== undefined) {
+            cfg.mimoApiKey = msg.mimoApiKey?.trim() || undefined;
+          }
+          if (msg.mimoBaseUrl !== undefined) {
+            cfg.mimoBaseUrl = msg.mimoBaseUrl?.trim() || undefined;
+          }
+          if (msg.mimoRegion !== undefined) {
+            cfg.mimoRegion = msg.mimoRegion || undefined;
+          }
+          writeConfig(cfg);
+          bridgeMimoEndpointEnv();
         }
         emitSettings(tab);
       } catch (err) {

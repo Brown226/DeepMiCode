@@ -1,15 +1,15 @@
-/** Reads REASONIX.md → AGENTS.md → AGENT.md (first that exists); writes prefer the file already on disk. */
+/** Reads DEEPMICODE.md → AGENTS.md → AGENT.md (first that exists); writes prefer the file already on disk. */
 
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { basename, join } from "node:path";
 
 /** Default WRITE target — created when no candidate exists yet. */
-export const PROJECT_MEMORY_FILE = "REASONIX.md";
+export const PROJECT_MEMORY_FILE = "DEEPMICODE.md";
 
 /** READ candidates, in priority order. AGENTS.md is the open spec at agents.md (Linux Foundation).
  *  CLAUDE.md candidates support migration from Claude Code (project-root or .claude/ subdirectory). */
 export const PROJECT_MEMORY_FILES = [
-  "REASONIX.md",
+  "DEEPMICODE.md",
   ".claude/CLAUDE.md",
   "CLAUDE.md",
   "AGENTS.md",
@@ -88,7 +88,7 @@ export function readProjectMemory(rootDir: string): ProjectMemory | null {
 }
 
 export function memoryEnabled(): boolean {
-  const env = process.env.REASONIX_MEMORY;
+  const env = process.env.DEEPMICODE_MEMORY;
   if (env === "off" || env === "false" || env === "0") return false;
   return true;
 }

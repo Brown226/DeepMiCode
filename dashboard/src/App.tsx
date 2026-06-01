@@ -197,6 +197,9 @@ export type Settings = {
   subagentModels?: Record<string, "flash" | "pro">;
   showSystemEvents?: boolean;
   version: string;
+  mimoApiKeyPrefix?: string;
+  mimoBaseUrl?: string;
+  mimoRegion?: "international" | "china";
 };
 
 export type Balance = {
@@ -807,6 +810,9 @@ export function applyIncoming(state: State, ev: IncomingEvent): State {
           subagentModels: ev.subagentModels,
           showSystemEvents: ev.showSystemEvents,
           version: ev.version,
+          mimoApiKeyPrefix: ev.mimoApiKeyPrefix,
+          mimoBaseUrl: ev.mimoBaseUrl,
+          mimoRegion: ev.mimoRegion,
         },
       };
     }
