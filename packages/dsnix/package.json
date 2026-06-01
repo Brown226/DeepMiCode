@@ -31,6 +31,6 @@
     "node": ">=22"
   },
   "dependencies": {
-    "deepmicode": "0.52.0"
+    "reasonix": "0.52.0"
   }
 }

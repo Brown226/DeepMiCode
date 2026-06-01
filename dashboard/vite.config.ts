@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+﻿import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "node:path";
 
@@ -20,9 +20,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@DEEPMICODE/core-utils/compaction": resolve(__dirname, "../packages/core-utils/src/compaction.ts"),
-      "@DEEPMICODE/core-utils/derive-prefix": resolve(__dirname, "../packages/core-utils/src/derive-prefix.ts"),
-      "@DEEPMICODE/core-utils": resolve(__dirname, "../packages/core-utils/src/index.ts"),
+      "@reasonix/core-utils/compaction": resolve(__dirname, "../packages/core-utils/src/compaction.ts"),
+      "@reasonix/core-utils/derive-prefix": resolve(__dirname, "../packages/core-utils/src/derive-prefix.ts"),
+      "@reasonix/core-utils": resolve(__dirname, "../packages/core-utils/src/index.ts"),
       "@tauri-apps/api/core": resolve(__dirname, "src/lib/tauri-bridge.ts"),
       "@tauri-apps/api/event": resolve(__dirname, "src/lib/tauri-bridge.ts"),
       "@tauri-apps/api/window": resolve(__dirname, "src/lib/tauri-bridge.ts"),
@@ -37,7 +37,7 @@ export default defineConfig({
     minify: "esbuild",
     sourcemap: true,
     outDir: "dist",
-    emptyOutDir: false, // 避免清空 dist 下原有的第三方资�?(�?vendor-css)
+    emptyOutDir: false, // 避免清空 dist 下原有的第三方资�?(�?vendor-css)
     rollupOptions: {
       input: {
         app: resolve(__dirname, "src/main.tsx")
@@ -47,7 +47,7 @@ export default defineConfig({
         chunkFileNames: "[name].js",
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === "app.css" || assetInfo.name === "index.css") return "app.css";
-          // 字体等静态文件输出到 assets/ 子目录，匹配服务�?/assets/* 路由
+          // 字体等静态文件输出到 assets/ 子目录，匹配服务�?/assets/* 路由
           if (/\.(woff2?|ttf|otf)$/.test(assetInfo.name ?? "")) return "assets/[name].[ext]";
           return "[name].[ext]";
         },
