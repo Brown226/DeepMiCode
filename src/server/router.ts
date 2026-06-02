@@ -25,6 +25,7 @@ import { handleProjectTree } from "./api/project-tree.js";
 import { handleReviewDiffs } from "./api/review-diffs.js";
 import { handleSemantic } from "./api/semantic.js";
 import { handleSessions } from "./api/sessions.js";
+import { handleScheduledTasks } from "./api/scheduled-tasks.js";
 import { handleSettings } from "./api/settings.js";
 import { handleSkills } from "./api/skills.js";
 import { handleSlash } from "./api/slash.js";
@@ -69,6 +70,8 @@ export async function handleApi(
         return await handleHealth(method, rest, body, ctx);
       case "sessions":
         return await handleSessions(method, rest, body, ctx);
+      case "scheduled-tasks":
+        return await handleScheduledTasks(method, rest, body, ctx);
       case "plans":
         return await handlePlans(method, rest, body, ctx);
       case "modal":

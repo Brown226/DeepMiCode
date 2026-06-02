@@ -91,6 +91,11 @@ export interface DashboardContext {
   ) => Promise<unknown>;
   /** Without this, registry has the tool but the prefix shown to the model stays stale until restart. */
   addToolToPrefix?: (spec: import("../types.js").ToolSpec) => boolean;
+
+  /** Cron service for scheduled tasks */
+  cronService?: import("../cron/cronService.js").CronService;
+  /** Cron scheduler for executing tasks */
+  cronScheduler?: import("../cron/cronScheduler.js").CronScheduler;
 }
 
 export type ChoiceResolution =

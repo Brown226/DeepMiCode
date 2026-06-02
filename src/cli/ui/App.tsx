@@ -1,5 +1,6 @@
 import { type WriteStream, statSync } from "node:fs";
-import { resolve } from "node:path";
+import { homedir } from "node:os";
+import { join, resolve } from "node:path";
 import { derivePrefix, toApprovalPrompt } from "@reasonix/core-utils";
 import { Box, Text, useStdin, useStdout } from "ink";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -77,6 +78,8 @@ import { isMimoModel } from "../../providers/mimo-client.js";
 import type { LLMProvider } from "../../providers/types.js";
 import type { QQChannel } from "../../qq/channel.js";
 import { useQQChannel } from "../../qq/use-qq-channel.js";
+import { CronService } from "../../cron/cronService.js";
+import { CronScheduler } from "../../cron/cronScheduler.js";
 import type {
   ActiveModal,
   ChoiceResolution,
@@ -625,6 +628,8 @@ function AppInner({
   // returned values would freeze at boot. Same pattern as editModeRef.
   const planModeRef = useRef<boolean>(false);
   const latestVersionRef = useRef<string | null>(null);
+  const cronServiceRef = useRef<CronService | null>(null);
+  const cronSchedulerRef = useRef<CronScheduler | null>(null);
   // Current per-edit confirmation prompt (review mode, tool-call path).
   // Non-null —EditConfirm modal renders, interceptor is suspended on
   // `editReviewResolveRef.current`, other live rows hide. User picks a
@@ -966,6 +971,7 @@ function AppInner({
     return () => {
       transcriptRef.current?.end();
       void eventSinkRef.current?.close();
+      cronSchedulerRef.current?.stop();
     };
   }, []);
 
@@ -2471,6 +2477,19 @@ function AppInner({
             }
           : undefined,
       };
+
+      // Initialize cron service and scheduler
+      const dataDir = join(homedir(), ".deepmicode");
+      const cronService = new CronService(dataDir);
+      await cronService.init();
+      const cronScheduler = new CronScheduler(cronService);
+      cronScheduler.start();
+      cronServiceRef.current = cronService;
+      cronSchedulerRef.current = cronScheduler;
+
+      ctx.cronService = cronService;
+      ctx.cronScheduler = cronScheduler;
+
       return ctx;
     };
 
