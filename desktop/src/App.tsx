@@ -60,6 +60,7 @@ import { ContextPanel } from "./ui/context-panel";
 import { JobsPop } from "./ui/jobs-pop";
 import { useElapsed } from "./ui/live";
 import { AboutModal } from "./ui/about";
+import { ScheduledTasksModal } from "./ui/scheduled-tasks";
 import { SettingsModal, type PageId as SettingsPageId } from "./ui/settings";
 import { JumpBar } from "./ui/jump-bar";
 import { Sidebar } from "./ui/sidebar";
@@ -1418,6 +1419,7 @@ function TabRuntime({
   const [settingsPage, setSettingsPage] = useState<SettingsPageId>("general");
   const [jobsOpen, setJobsOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [scheduledTasksOpen, setScheduledTasksOpen] = useState(false);
   const previousApprovalSnapshotRef = useRef<ApprovalSnapshot>({
     confirms: [],
     pathAccess: [],
@@ -1624,7 +1626,7 @@ function TabRuntime({
   }, [state.settings?.workspaceDir, markMentionPicked]);
 
   const send = useCallback(
-    (override?: string, images?: Array<{ mimeType: string; data: string }>) => {
+    (override?: string, images?: Array<{ url: string }>) => {
       const text = (override ?? draft).trim();
       if (!text || !state.ready || state.busy) return;
 
@@ -2452,6 +2454,7 @@ function TabRuntime({
           onOpenRules={() => openSettingsAt("rules")}
           onOpenCommands={() => palette.setOpen(true)}
           onOpenAbout={() => setAboutOpen(true)}
+          onOpenScheduledTasks={() => setScheduledTasksOpen(true)}
         />
 
         {!sideCollapsed ? (
@@ -2783,6 +2786,10 @@ function TabRuntime({
         />
 
         {aboutOpen ? <AboutModal onClose={() => setAboutOpen(false)} /> : null}
+
+        {scheduledTasksOpen ? (
+          <ScheduledTasksModal onClose={() => setScheduledTasksOpen(false)} />
+        ) : null}
 
         {settingsOpen && state.settings ? (
           <SettingsModal

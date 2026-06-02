@@ -65,6 +65,7 @@ export function Sidebar({
   onOpenRules,
   onOpenCommands,
   onOpenAbout,
+  onOpenScheduledTasks,
 }: {
   sessions: SessionInfo[];
   importSources: ExternalSessionApp[];
@@ -82,6 +83,7 @@ export function Sidebar({
   onOpenRules: () => void;
   onOpenCommands: () => void;
   onOpenAbout: () => void;
+  onOpenScheduledTasks: () => void;
 }) {
   useLang();
   const [query, setQuery] = useState("");
@@ -337,6 +339,12 @@ export function Sidebar({
       </div>
 
       <div className="side-foot">
+        <div className="row" onClick={onOpenScheduledTasks}>
+          <span className="ico">
+            <I.cpu size={13} />
+          </span>
+          <span>{t("scheduledTasks.title")}</span>
+        </div>
         <div className="row" onClick={onOpenRules}>
           <span className="ico">
             <I.shield size={13} />
