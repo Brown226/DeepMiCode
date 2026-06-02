@@ -12,11 +12,7 @@ import { type Update, check } from "@tauri-apps/plugin-updater";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { CommandPalette, Toast, buildCommands, useCommandPalette } from "./CommandPalette";
 import { WorkspaceProvider } from "./Markdown";
-import {
-  nextAbortDraftCandidate,
-  restoreAbortedDraft,
-  type AbortDraftSource,
-} from "./abort-draft";
+import { nextAbortDraftCandidate, restoreAbortedDraft, type AbortDraftSource } from "./abort-draft";
 import { getLang, getLangLabel, getSupportedLangs, setLang, t, useLang } from "./i18n";
 import { I } from "./icons";
 import {
@@ -226,6 +222,8 @@ export type UsageStats = {
   reservedTokens: number;
   /** Current conversation log tokens, refreshed by the desktop sidecar. */
   liveLogTokens: number;
+  /** Token Plan Credits consumed (0 when not in Token Plan mode). */
+  totalCredits: number;
 };
 
 export type SessionInfo = {
@@ -246,7 +244,15 @@ export type Settings = {
   recentWorkspaces: string[];
   model: string;
   editor?: string;
-  webSearchEngine?: "bing" | "searxng" | "metaso" | "tavily" | "perplexity" | "exa" | "brave" | "ollama";
+  webSearchEngine?:
+    | "bing"
+    | "searxng"
+    | "metaso"
+    | "tavily"
+    | "perplexity"
+    | "exa"
+    | "brave"
+    | "ollama";
   webSearchEndpoint?: string;
   webSearchApiKeys?: {
     metaso?: string;
@@ -385,9 +391,7 @@ function fallbackSkillDesc(skill: SkillInfo): string {
         ? t("app.skill.scope.global")
         : t("app.skill.scope.project");
   const runAs =
-    skill.runAs === "subagent"
-      ? t("app.skill.runAs.subagent")
-      : t("app.skill.runAs.inline");
+    skill.runAs === "subagent" ? t("app.skill.runAs.subagent") : t("app.skill.runAs.inline");
   return t("app.skill.generic", { scope, runAs });
 }
 
@@ -413,7 +417,12 @@ export function reduce(state: State, action: Action): State {
         busy: true,
         messages: [
           ...state.messages,
-          { kind: "user", text: action.text, clientId: action.clientId, turn: nextMessageTurn(state.messages) },
+          {
+            kind: "user",
+            text: action.text,
+            clientId: action.clientId,
+            turn: nextMessageTurn(state.messages),
+          },
         ],
       };
     }
@@ -565,9 +574,7 @@ export function reduce(state: State, action: Action): State {
     case "dismiss_error":
       return {
         ...state,
-        messages: state.messages.filter(
-          (m) => !(m.kind === "error" && m.id === action.id),
-        ),
+        messages: state.messages.filter((m) => !(m.kind === "error" && m.id === action.id)),
       };
     case "mention_results":
       return { ...state, mentionResults: action.results };
@@ -637,16 +644,13 @@ function DiffStats({ stats }: { stats: FileStats }) {
   const total = stats.entries.length;
   return (
     <div className="diff-stats">
-      <button
-        type="button"
-        className="diff-stats-head"
-        onClick={() => setOpen((v) => !v)}
-      >
+      <button type="button" className="diff-stats-head" onClick={() => setOpen((v) => !v)}>
         <span className="ico">
           <I.diff size={11} />
         </span>
         <span>
-          {total} {total === 1 ? "file" : "files"} changed · +{stats.totalAdded} / −{stats.totalRemoved} {stats.totalRemoved === 1 ? "line" : "lines"}
+          {total} {total === 1 ? "file" : "files"} changed · +{stats.totalAdded} / −
+          {stats.totalRemoved} {stats.totalRemoved === 1 ? "line" : "lines"}
         </span>
         <span className="chev">{open ? <I.chev size={10} /> : <I.chevR size={10} />}</span>
       </button>
@@ -727,6 +731,7 @@ function zeroUsage(): UsageStats {
     lastCallCacheMiss: null,
     reservedTokens: 0,
     liveLogTokens: 0,
+    totalCredits: 0,
   };
 }
 
@@ -1122,11 +1127,12 @@ export function applyIncoming(state: State, ev: IncomingEvent): State {
     case "model.final": {
       const u = ev.usage;
       const promptTokens =
-        u?.prompt_tokens ??
-        (u?.prompt_cache_hit_tokens ?? 0) + (u?.prompt_cache_miss_tokens ?? 0);
+        u?.prompt_tokens ?? (u?.prompt_cache_hit_tokens ?? 0) + (u?.prompt_cache_miss_tokens ?? 0);
       const callHit = u?.prompt_cache_hit_tokens ?? 0;
       const callMiss = u?.prompt_cache_miss_tokens ?? Math.max(0, promptTokens - callHit);
       const hasCall = promptTokens > 0 || callHit > 0 || callMiss > 0;
+      // Token Plan Credit consumption (mimo-v2.5: hit=2, miss=100, output=200)
+      const callCredits = callHit * 2 + callMiss * 100 + (u?.completion_tokens ?? 0) * 200;
       const usage: UsageStats = {
         totalCostUsd: state.usage.totalCostUsd + (ev.costUsd ?? 0),
         totalPromptTokens: state.usage.totalPromptTokens + promptTokens,
@@ -1137,6 +1143,7 @@ export function applyIncoming(state: State, ev: IncomingEvent): State {
         lastCallCacheMiss: hasCall ? callMiss : state.usage.lastCallCacheMiss,
         reservedTokens: state.usage.reservedTokens,
         liveLogTokens: state.usage.liveLogTokens,
+        totalCredits: state.usage.totalCredits + callCredits,
       };
       return {
         ...state,
@@ -1227,10 +1234,7 @@ export function applyIncoming(state: State, ev: IncomingEvent): State {
       return {
         ...state,
         busy: false,
-        messages: [
-          ...state.messages,
-          { kind: "status", text: `≫ btw\n${ev.answer}` },
-        ],
+        messages: [...state.messages, { kind: "status", text: `≫ btw\n${ev.answer}` }],
       };
     case "status":
       return state;
@@ -1283,7 +1287,12 @@ function formatConversationMarkdown(messages: ChatMessage[], userLabel: string):
 }
 
 function sanitizeFilename(name: string): string {
-  return name.replace(/[<>:"/\\|?*\x00-\x1f]/g, "_").replace(/^\.+/, "").slice(0, 200) || "session";
+  return (
+    name
+      .replace(/[<>:"/\\|?*\x00-\x1f]/g, "_")
+      .replace(/^\.+/, "")
+      .slice(0, 200) || "session"
+  );
 }
 
 function defaultExportFilename(session: string): string {
@@ -1516,13 +1525,10 @@ function TabRuntime({
     }
   }, [clearAbortDraft, saveSettings, state.settings?.workspaceDir]);
 
-  const flashToast = useCallback(
-    (msg: string, opts?: { yolo?: boolean; duration?: number }) => {
-      setToast({ msg, yolo: opts?.yolo });
-      window.setTimeout(() => setToast(null), opts?.duration ?? 1600);
-    },
-    [],
-  );
+  const flashToast = useCallback((msg: string, opts?: { yolo?: boolean; duration?: number }) => {
+    setToast({ msg, yolo: opts?.yolo });
+    window.setTimeout(() => setToast(null), opts?.duration ?? 1600);
+  }, []);
 
   const applyReasoningEffort = useCallback(
     (reasoningEffort: Settings["reasoningEffort"]) => {
@@ -1574,10 +1580,7 @@ function TabRuntime({
         const handle = await webview.onDragDropEvent((event) => {
           if (!dropActiveRef.current) return;
           if (event.payload.type === "enter") {
-            document.body.style.setProperty(
-              "--drop-overlay-label",
-              `"${t("dragDrop.overlay")}"`,
-            );
+            document.body.style.setProperty("--drop-overlay-label", `"${t("dragDrop.overlay")}"`);
             document.body.dataset.dragOver = "1";
             return;
           }
@@ -1671,7 +1674,12 @@ function TabRuntime({
           const clientId = `skill-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
           const trimmedArgs = args?.trim() ?? "";
           recordAbortDraft("skill_run", text);
-          dispatch({ t: "start_skill", skill: { name: skill.name, runAs: skill.runAs }, args: trimmedArgs, clientId });
+          dispatch({
+            t: "start_skill",
+            skill: { name: skill.name, runAs: skill.runAs },
+            args: trimmedArgs,
+            clientId,
+          });
           sendRpc({ cmd: "skill_run", name: skill.name, args: trimmedArgs || undefined });
           if (!override) setDraft("");
           return;
@@ -1740,17 +1748,30 @@ function TabRuntime({
   useEffect(() => {
     const currentSnapshot: ApprovalSnapshot = {
       confirms: state.pendingConfirms.map((c) => ({ id: c.id, command: c.command })),
-      pathAccess: state.pendingPathAccess.map((p) => ({ id: p.id, path: p.path, intent: p.intent })),
+      pathAccess: state.pendingPathAccess.map((p) => ({
+        id: p.id,
+        path: p.path,
+        intent: p.intent,
+      })),
       choices: state.pendingChoices.map((c) => ({ id: c.id, question: c.question })),
       plans: state.pendingPlans.map((p) => ({ id: p.id, summary: p.summary, plan: p.plan })),
-      checkpoints: state.pendingCheckpoints.map((c) => ({ id: c.id, title: c.title, result: c.result })),
-      revisions: state.pendingRevisions.map((r) => ({ id: r.id, summary: r.summary, reason: r.reason })),
+      checkpoints: state.pendingCheckpoints.map((c) => ({
+        id: c.id,
+        title: c.title,
+        result: c.result,
+      })),
+      revisions: state.pendingRevisions.map((r) => ({
+        id: r.id,
+        summary: r.summary,
+        reason: r.reason,
+      })),
     };
     const previousSnapshot = previousApprovalSnapshotRef.current;
     const wasBusy = wasBusyRef.current;
-    const busyDurationMs = wasBusy && !state.busy && busyStartedAtRef.current
-      ? Date.now() - busyStartedAtRef.current
-      : 0;
+    const busyDurationMs =
+      wasBusy && !state.busy && busyStartedAtRef.current
+        ? Date.now() - busyStartedAtRef.current
+        : 0;
 
     if (state.busy && busyStartedAtRef.current === null) {
       busyStartedAtRef.current = Date.now();
@@ -2026,7 +2047,12 @@ function TabRuntime({
         composerRef.current?.focus();
       },
     },
-    { cmd: "/new", desc: t("app.cmd.newSession"), run: () => newChat(), kb: shortcutText(["mod", "N"]) },
+    {
+      cmd: "/new",
+      desc: t("app.cmd.newSession"),
+      run: () => newChat(),
+      kb: shortcutText(["mod", "N"]),
+    },
     { cmd: "/clear", desc: t("app.cmd.clearChat"), run: () => clearConversation() },
     { cmd: "/abort", desc: t("app.cmd.abort"), run: () => abort(), kb: "esc" },
     {
@@ -2505,6 +2531,7 @@ function TabRuntime({
                 textareaRef={composerRef}
                 modelLabel={state.settings?.model ?? "deepseek-v4-flash"}
                 reasoningEffort={state.settings?.reasoningEffort ?? "high"}
+                baseUrl={state.settings?.baseUrl}
                 onModelChange={(model) => {
                   applySettingsPatch({ model });
                   flashToast(t("app.toast.modelSwitched", { model }));
@@ -2656,23 +2683,63 @@ function WinMinimize() {
 function WinMaximize() {
   return (
     <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
-      <rect x="0.5" y="0.5" width="9" height="9" fill="none" stroke="currentColor" strokeWidth="1" />
+      <rect
+        x="0.5"
+        y="0.5"
+        width="9"
+        height="9"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+      />
     </svg>
   );
 }
 function WinRestore() {
   return (
     <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
-      <rect x="2.5" y="0.5" width="7" height="7" fill="none" stroke="currentColor" strokeWidth="1" />
-      <rect x="0.5" y="2.5" width="7" height="7" fill="var(--bg-2, #eee)" stroke="currentColor" strokeWidth="1" />
+      <rect
+        x="2.5"
+        y="0.5"
+        width="7"
+        height="7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+      />
+      <rect
+        x="0.5"
+        y="2.5"
+        width="7"
+        height="7"
+        fill="var(--bg-2, #eee)"
+        stroke="currentColor"
+        strokeWidth="1"
+      />
     </svg>
   );
 }
 function WinClose() {
   return (
     <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
-      <line x1="0.5" y1="0.5" x2="9.5" y2="9.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-      <line x1="9.5" y1="0.5" x2="0.5" y2="9.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <line
+        x1="0.5"
+        y1="0.5"
+        x2="9.5"
+        y2="9.5"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+      <line
+        x1="9.5"
+        y1="0.5"
+        x2="0.5"
+        y2="9.5"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -2714,9 +2781,13 @@ function TitleBar({
     const win = getCurrentWindow();
     win.isMaximized().then(setIsMaximized);
     let unlisten: (() => void) | undefined;
-    win.listen("tauri://resize", async () => {
-      setIsMaximized(await win.isMaximized());
-    }).then((fn) => { unlisten = fn; });
+    win
+      .listen("tauri://resize", async () => {
+        setIsMaximized(await win.isMaximized());
+      })
+      .then((fn) => {
+        unlisten = fn;
+      });
     return () => unlisten?.();
   }, []);
 
@@ -2826,39 +2897,89 @@ function TitleBar({
           {menuOpen ? (
             <div
               className="popup"
-              style={{ top: "calc(100% + 6px)", right: 0, left: "auto", bottom: "auto", width: 220 }}
+              style={{
+                top: "calc(100% + 6px)",
+                right: 0,
+                left: "auto",
+                bottom: "auto",
+                width: 220,
+              }}
             >
               <div className="popup-list">
-                <div className="popup-item" onClick={() => { onOpenCommands(); setMenuOpen(false); }}>
-                  <span className="ico"><I.search size={12} /></span>
-                  <div className="nm"><span>{t("app.titlebar.commandPalette")}</span></div>
+                <div
+                  className="popup-item"
+                  onClick={() => {
+                    onOpenCommands();
+                    setMenuOpen(false);
+                  }}
+                >
+                  <span className="ico">
+                    <I.search size={12} />
+                  </span>
+                  <div className="nm">
+                    <span>{t("app.titlebar.commandPalette")}</span>
+                  </div>
                   <span className="kb">
                     <Shortcut keys={["mod", "K"]} />
                   </span>
                 </div>
                 <div
                   className="popup-item"
-                  onClick={() => { if (hasMessages) onCopy(); setMenuOpen(false); }}
+                  onClick={() => {
+                    if (hasMessages) onCopy();
+                    setMenuOpen(false);
+                  }}
                   style={{ opacity: hasMessages ? 1 : 0.5 }}
                 >
-                  <span className="ico"><I.copy size={12} /></span>
-                  <div className="nm"><span>{t("app.titlebar.copyMd")}</span></div>
+                  <span className="ico">
+                    <I.copy size={12} />
+                  </span>
+                  <div className="nm">
+                    <span>{t("app.titlebar.copyMd")}</span>
+                  </div>
                 </div>
                 <div
                   className="popup-item"
-                  onClick={() => { if (hasMessages) onExport(); setMenuOpen(false); }}
+                  onClick={() => {
+                    if (hasMessages) onExport();
+                    setMenuOpen(false);
+                  }}
                   style={{ opacity: hasMessages ? 1 : 0.5 }}
                 >
-                  <span className="ico"><I.download size={12} /></span>
-                  <div className="nm"><span>{t("app.titlebar.exportMd")}</span></div>
+                  <span className="ico">
+                    <I.download size={12} />
+                  </span>
+                  <div className="nm">
+                    <span>{t("app.titlebar.exportMd")}</span>
+                  </div>
                 </div>
-                <div className="popup-item" onClick={() => { onClear(); setMenuOpen(false); }}>
-                  <span className="ico"><I.x size={12} /></span>
-                  <div className="nm"><span>{t("app.titlebar.clearChat")}</span></div>
+                <div
+                  className="popup-item"
+                  onClick={() => {
+                    onClear();
+                    setMenuOpen(false);
+                  }}
+                >
+                  <span className="ico">
+                    <I.x size={12} />
+                  </span>
+                  <div className="nm">
+                    <span>{t("app.titlebar.clearChat")}</span>
+                  </div>
                 </div>
-                <div className="popup-item" onClick={() => { onOpenSettings(); setMenuOpen(false); }}>
-                  <span className="ico"><I.cog size={12} /></span>
-                  <div className="nm"><span>{t("app.titlebar.settings")}</span></div>
+                <div
+                  className="popup-item"
+                  onClick={() => {
+                    onOpenSettings();
+                    setMenuOpen(false);
+                  }}
+                >
+                  <span className="ico">
+                    <I.cog size={12} />
+                  </span>
+                  <div className="nm">
+                    <span>{t("app.titlebar.settings")}</span>
+                  </div>
                   <span className="kb">
                     <Shortcut keys={["mod", ","]} />
                   </span>
@@ -2875,7 +2996,10 @@ function TitleBar({
               type="button"
               className="win-ctrl"
               title={t("app.titlebar.minimize")}
-              onMouseDown={(e) => { e.stopPropagation(); win.minimize(); }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                win.minimize();
+              }}
             >
               <WinMinimize />
             </button>
@@ -2883,7 +3007,10 @@ function TitleBar({
               type="button"
               className="win-ctrl"
               title={isMaximized ? t("app.titlebar.restore") : t("app.titlebar.maximize")}
-              onMouseDown={(e) => { e.stopPropagation(); win.toggleMaximize(); }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                win.toggleMaximize();
+              }}
             >
               {isMaximized ? <WinRestore /> : <WinMaximize />}
             </button>
@@ -2891,7 +3018,10 @@ function TitleBar({
               type="button"
               className="win-ctrl close"
               title={t("app.titlebar.close")}
-              onMouseDown={(e) => { e.stopPropagation(); win.close(); }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                win.close();
+              }}
             >
               <WinClose />
             </button>
@@ -2951,7 +3081,11 @@ function TabBar({
           </div>
         );
       })}
-      <div className="tab newtab" title={localizeShortcutText(t("app.tab.newTabTitle"))} onClick={onNew}>
+      <div
+        className="tab newtab"
+        title={localizeShortcutText(t("app.tab.newTabTitle"))}
+        onClick={onNew}
+      >
         <I.plus size={12} />
         <span style={{ fontSize: 11, marginLeft: 4 }}>{t("app.tab.newTab")}</span>
       </div>
@@ -3404,7 +3538,7 @@ export function App() {
     const stack =
       fontFamily === FONT_FAMILY.CUSTOM && custom
         ? custom
-        : FONT_FAMILY_STACK[fontFamily] ?? FONT_FAMILY_STACK.sans;
+        : (FONT_FAMILY_STACK[fontFamily] ?? FONT_FAMILY_STACK.sans);
     document.documentElement.style.setProperty("--font-sans", stack);
     localStorage.setItem("deepmicode.fontFamily", fontFamily);
     localStorage.setItem("deepmicode.customFontFamily", customFontFamily);

@@ -369,7 +369,9 @@ describe("R1 reasoning_content round-trip", () => {
       /* drain */
     }
     expect(bodies[0]!.extra_body?.thinking?.type).toBe("enabled");
-    expect(bodies[0]!.reasoning_effort).toBe("max");
+    // "max" is a DeepSeek-internal extension that the public API rejects with
+    // 400 — the client now clamps it to "high" before sending.
+    expect(bodies[0]!.reasoning_effort).toBe("high");
   });
 
   it("pins thinking=disabled for deepseek-chat (non-thinking compat alias)", async () => {

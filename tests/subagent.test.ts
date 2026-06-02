@@ -352,15 +352,7 @@ describe("registerSubagentTool", () => {
     registerSubagentTool(parent, { client });
     const tool = parent.get("spawn_subagent");
     const modelParam = tool?.parameters?.properties?.model as { enum?: string[] } | undefined;
-    expect(modelParam?.enum).toEqual(
-      expect.arrayContaining([
-        "mimo-v2.5-pro",
-        "mimo-v2.5",
-        "mimo-v2-flash",
-        "mimo-v2-omni",
-        "mimo-v2-pro",
-      ]),
-    );
+    expect(modelParam?.enum).toEqual(expect.arrayContaining(["mimo-v2.5-pro", "mimo-v2.5"]));
   });
 
   it("aborts the child when the parent's tool ctx signal fires", async () => {

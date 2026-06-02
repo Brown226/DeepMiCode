@@ -937,6 +937,7 @@ function AppInner({
     cacheHitRatio: 0,
     lastPromptTokens: 0,
     lastTurnCostUsd: 0,
+    totalCredits: 0,
   });
 
   const transcriptRef = useRef<WriteStream | null>(null);
@@ -1057,7 +1058,14 @@ function AppInner({
   // StatusRow doesn't keep showing the prior session's cost until the next turn.
   useEffect(() => {
     setSummary(loop.stats.summary());
-  }, [loop]);
+    // Propagate provider base URL into StatusBar so the StatusRow can
+    // detect Token Plan mode and display Credits.
+    const baseUrl =
+      "baseUrl" in loop.client ? (loop.client as { baseUrl: string }).baseUrl : undefined;
+    if (baseUrl) {
+      agentStore.dispatch({ type: "session.update", patch: { baseUrl } });
+    }
+  }, [loop, agentStore]);
 
   const generateCurrentSessionTitle = useCallback(
     async (seed?: { userText?: string; assistantText?: string; auto?: boolean }) => {

@@ -103,12 +103,14 @@ export class MimoClient implements LLMProvider {
     if (opts.maxTokens !== undefined) payload.max_tokens = opts.maxTokens;
     if (opts.topP !== undefined) payload.top_p = opts.topP;
     if (opts.stop?.length) payload.stop = opts.stop;
+    if (opts.responseFormat) payload.response_format = opts.responseFormat;
     if (opts.toolChoice !== undefined) payload.tool_choice = opts.toolChoice;
     // MiMo: reasoning_content is returned by default, no extra_body needed.
     // We skip the thinking toggle entirely.
     // MiMo does support reasoning_effort, but it's optional.
+    // `max` is a DeepSeek-internal extension; clamp to `high` for safety.
     if (opts.reasoningEffort) {
-      payload.reasoning_effort = opts.reasoningEffort;
+      payload.reasoning_effort = opts.reasoningEffort === "max" ? "high" : opts.reasoningEffort;
     }
     // Merge any extra body fields from the caller
     if (opts.extraBody) {

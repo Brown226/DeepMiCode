@@ -496,17 +496,9 @@ export function registerSubagentTool(
         },
         model: {
           type: "string",
-          enum: [
-            "deepseek-v4-flash",
-            "deepseek-v4-pro",
-            "mimo-v2.5-pro",
-            "mimo-v2.5",
-            "mimo-v2-flash",
-            "mimo-v2-omni",
-            "mimo-v2-pro",
-          ],
+          enum: ["deepseek-v4-flash", "deepseek-v4-pro", "mimo-v2.5-pro", "mimo-v2.5"],
           description:
-            "Which model the subagent runs on. Default is 'deepseek-v4-flash' — cheap and fast, fine for explore/research-style subtasks. Override to 'deepseek-v4-pro' (~12× more expensive) when the subtask genuinely needs the stronger model. MiMo models are also accepted when the parent session is on MiMo — pick e.g. 'mimo-v2.5-pro' to keep the subagent on the same provider as the parent.",
+            "Which model the subagent runs on. Default is 'deepseek-v4-flash' — cheap and fast, fine for explore/research-style subtasks. Override to 'deepseek-v4-pro' (~12× more expensive) when the subtask genuinely needs the stronger model. MiMo models are also accepted when the parent session is on MiMo: 'mimo-v2.5' (1× cost, efficient) or 'mimo-v2.5-pro' (2× cost, flagship 1T-param agent model). On MiMo, mimo-v2.5 can auto-escalate to mimo-v2.5-pro for hard tasks.",
         },
         resume_session: {
           type: "string",

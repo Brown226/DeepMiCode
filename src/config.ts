@@ -37,13 +37,7 @@ export const SUPPORTED_OFFICIAL_MODELS: readonly string[] = [
 ];
 
 /** MiMo models supported by the xiaomimimo.com API. */
-export const MIMO_MODELS: readonly string[] = [
-  "mimo-v2.5-pro",
-  "mimo-v2.5",
-  "mimo-v2-flash",
-  "mimo-v2-omni",
-  "mimo-v2-pro",
-];
+export const MIMO_MODELS: readonly string[] = ["mimo-v2.5-pro", "mimo-v2.5"];
 
 /** All supported models across providers. */
 export const ALL_SUPPORTED_MODELS: readonly string[] = [
@@ -1286,7 +1280,9 @@ export function loadModel(path: string = defaultConfigPath()): string {
   // Custom-endpoint owners pick their own model namespace; trust them.
   const customEndpoint = cfg.baseUrl?.trim() || resolveBaseUrlEnv();
   if (customEndpoint) return trimmed;
-  return SUPPORTED_OFFICIAL_MODELS.includes(trimmed) ? trimmed : DEFAULT_MODEL;
+  return SUPPORTED_OFFICIAL_MODELS.includes(trimmed) || MIMO_MODELS.includes(trimmed)
+    ? trimmed
+    : DEFAULT_MODEL;
 }
 
 export function saveModel(model: string, path: string = defaultConfigPath()): void {

@@ -13,10 +13,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { open as openFileDialog } from "@tauri-apps/plugin-dialog";
 import { t, type TKey } from "../i18n";
 import { I } from "../icons";
-import {
-  DEFAULT_COMPOSER_ROWS,
-  applyComposerTextareaAutosize,
-} from "./composer-sizing";
+import { DEFAULT_COMPOSER_ROWS, applyComposerTextareaAutosize } from "./composer-sizing";
 import { fmtElapsed } from "./live";
 import { Shortcut } from "./shortcut";
 
@@ -25,11 +22,30 @@ export type EditMode = "review" | "auto" | "yolo" | "plan";
 
 type ModeEntry = { k: EditMode; label: TKey; icon: React.ReactNode; hint: TKey };
 
-const EFFORTS: readonly ReasoningEffort[] = ["low", "medium", "high", "max"];
+const ALL_EFFORTS: readonly ReasoningEffort[] = ["low", "medium", "high", "max"];
+const STANDARD_EFFORTS: readonly ReasoningEffort[] = ["low", "medium", "high"];
+
+/** `max` is a DeepSeek / MiMo extension — third-party endpoints reject it with 400. */
+export function effortChoicesForBaseUrl(baseUrl?: string | null): readonly ReasoningEffort[] {
+  if (!baseUrl) return STANDARD_EFFORTS;
+  try {
+    const host = new URL(baseUrl).hostname.toLowerCase();
+    return host === "api.deepseek.com" || host.includes("xiaomimimo.com")
+      ? ALL_EFFORTS
+      : STANDARD_EFFORTS;
+  } catch {
+    return STANDARD_EFFORTS;
+  }
+}
 
 const MODE_INFO: ModeEntry[] = [
   { k: "plan", label: "editMode.plan", icon: <I.list size={11} />, hint: "editMode.planHint" },
-  { k: "review", label: "editMode.review", icon: <I.shield size={11} />, hint: "editMode.reviewHint" },
+  {
+    k: "review",
+    label: "editMode.review",
+    icon: <I.shield size={11} />,
+    hint: "editMode.reviewHint",
+  },
   { k: "auto", label: "editMode.auto", icon: <I.zap size={11} />, hint: "editMode.autoHint" },
   { k: "yolo", label: "editMode.yolo", icon: <I.warn size={11} />, hint: "editMode.yoloHint" },
 ];
@@ -74,14 +90,9 @@ export type MentionItem = {
   desc?: string;
 };
 
-export type Chip =
-  | { kind: "at"; label: string }
-  | { kind: "slash"; label: string };
+export type Chip = { kind: "at"; label: string } | { kind: "slash"; label: string };
 
-type Popup =
-  | { kind: "slash"; query: string }
-  | { kind: "at"; query: string; nonce: number }
-  | null;
+type Popup = { kind: "slash"; query: string } | { kind: "at"; query: string; nonce: number } | null;
 
 function slashIcon(cmd: string) {
   const m: Record<string, React.ReactNode> = {
@@ -151,6 +162,7 @@ export function Composer({
   onMentionPicked,
   mentionResults,
   workspaceDir,
+  baseUrl,
   queuedSends,
   onQueueWhileBusy,
   onDequeueSend,
@@ -172,6 +184,7 @@ export function Composer({
   onEditModeChange: (mode: EditMode) => void;
   textareaRef: RefObject<HTMLTextAreaElement | null>;
   slashCommands: SlashCmd[];
+  baseUrl?: string;
   onMentionQuery?: (q: string, nonce: number) => void;
   onMentionPreview?: (path: string, nonce: number) => void;
   onMentionPicked?: (path: string) => void;
@@ -201,9 +214,7 @@ export function Composer({
       workspaceDir && picked.startsWith(workspaceDir)
         ? picked.slice(workspaceDir.length).replace(/^[\\/]+/, "")
         : picked;
-    setDraft((current) =>
-      current ? `${current.replace(/\s+$/, "")} @${rel} ` : `@${rel} `,
-    );
+    setDraft((current) => (current ? `${current.replace(/\s+$/, "")} @${rel} ` : `@${rel} `));
     setChips((c) => [...c, { kind: "at", label: rel }]);
     onMentionPicked?.(rel);
     textareaRef.current?.focus();
@@ -228,10 +239,7 @@ export function Composer({
   useEffect(() => {
     if (!modelMenuOpen) return;
     const onDown = (e: MouseEvent) => {
-      if (
-        modelWrapRef.current &&
-        !modelWrapRef.current.contains(e.target as Node)
-      ) {
+      if (modelWrapRef.current && !modelWrapRef.current.contains(e.target as Node)) {
         setModelMenuOpen(false);
       }
     };
@@ -308,8 +316,7 @@ export function Composer({
     return base;
   }, [popup, mentionResults]);
 
-  const items =
-    popup?.kind === "slash" ? slashItems : popup?.kind === "at" ? atItems : [];
+  const items = popup?.kind === "slash" ? slashItems : popup?.kind === "at" ? atItems : [];
 
   useEffect(() => {
     setActiveIdx(0);
@@ -418,9 +425,7 @@ export function Composer({
       }
       if (e.key === "ArrowUp") {
         e.preventDefault();
-        setActiveIdx((i) =>
-          items.length ? (i - 1 + items.length) % items.length : 0,
-        );
+        setActiveIdx((i) => (items.length ? (i - 1 + items.length) % items.length : 0));
         return;
       }
       if (e.key === "Escape") {
@@ -519,9 +524,7 @@ export function Composer({
               <span className="composer-busy-status">
                 <span className="composer-busy-pip" />
                 <span className="composer-busy-label">{busyLabel}</span>
-                <span className="composer-busy-time">
-                  {fmtElapsed(busyElapsedMs ?? 0)}
-                </span>
+                <span className="composer-busy-time">{fmtElapsed(busyElapsedMs ?? 0)}</span>
               </span>
               <span className="grow" />
               <ModeSwitch mode={editMode} onChange={onEditModeChange} />
@@ -554,17 +557,11 @@ export function Composer({
             <div className="composer-tags">
               {chips.map((c, i) => (
                 <span key={i} className={`chip ${c.kind}`}>
-                  {c.kind === "slash" ? (
-                    <I.slash size={11} />
-                  ) : (
-                    <I.at size={11} />
-                  )}
+                  {c.kind === "slash" ? <I.slash size={11} /> : <I.at size={11} />}
                   <span>{c.label}</span>
                   <span
                     className="x"
-                    onClick={() =>
-                      setChips((cs) => cs.filter((_, j) => j !== i))
-                    }
+                    onClick={() => setChips((cs) => cs.filter((_, j) => j !== i))}
                   >
                     <I.x size={10} />
                   </span>
@@ -580,7 +577,9 @@ export function Composer({
             onChange={handleChange}
             onPaste={(e) => void handlePaste(e)}
             onKeyDown={handleKeyDown}
-            onCompositionStart={() => { composingRef.current = true; }}
+            onCompositionStart={() => {
+              composingRef.current = true;
+            }}
             onCompositionEnd={() => {
               composingRef.current = false;
               compositionEndedAtRef.current = Date.now();
@@ -652,6 +651,7 @@ export function Composer({
                 <ModelEffortMenu
                   modelLabel={modelLabel}
                   currentEffort={reasoningEffort}
+                  baseUrl={baseUrl}
                   onPickModel={(m) => {
                     onModelChange(m);
                     setModelMenuOpen(false);
@@ -741,11 +741,7 @@ function Popup({
     <div className="popup" onMouseDown={(e) => e.preventDefault()}>
       <div className="ph">
         <span className="tok">{kind === "slash" ? "/" : "@"}</span>
-        <span>
-          {kind === "slash"
-            ? t("composer.slashHeader")
-            : t("composer.atHeader")}
-        </span>
+        <span>{kind === "slash" ? t("composer.slashHeader") : t("composer.atHeader")}</span>
         <span className="grow" />
         <span style={{ cursor: "pointer" }} onClick={onClose}>
           <I.x size={11} />
@@ -792,9 +788,7 @@ function Popup({
                 </>
               )}
             </div>
-            <span className="kb">
-              {kind === "slash" ? ((it as SlashCmd).kb ?? "") : ""}
-            </span>
+            <span className="kb">{kind === "slash" ? ((it as SlashCmd).kb ?? "") : ""}</span>
           </div>
         ))}
       </div>
@@ -818,20 +812,22 @@ const KNOWN_MODELS: readonly string[] = [
   "deepseek-v4-pro",
   "mimo-v2.5-pro",
   "mimo-v2.5",
-  "mimo-v2-flash",
 ];
 
 function ModelEffortMenu({
   modelLabel,
   currentEffort,
+  baseUrl,
   onPickModel,
   onPickEffort,
 }: {
   modelLabel: string;
   currentEffort: ReasoningEffort;
+  baseUrl?: string;
   onPickModel: (model: string) => void;
   onPickEffort: (effort: ReasoningEffort) => void;
 }) {
+  const efforts = effortChoicesForBaseUrl(baseUrl);
   const [draft, setDraft] = useState(modelLabel);
   return (
     <div
@@ -887,7 +883,7 @@ function ModelEffortMenu({
         <span>{t("composer.switchEffort")}</span>
       </div>
       <div className="popup-list">
-        {EFFORTS.map((e) => (
+        {efforts.map((e) => (
           <div
             key={e}
             className="popup-item"

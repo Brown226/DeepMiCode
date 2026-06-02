@@ -56,7 +56,7 @@ import {
   saveWorkspaceDir,
   writeConfig,
 } from "../../config.js";
-import { loadMimoEndpoint } from "../../config.js";
+import { bridgeMimoEndpointEnv, loadMimoApiKey, loadMimoEndpoint } from "../../config.js";
 import { Eventizer } from "../../core/eventize.js";
 import type { Event as KernelEvent } from "../../core/events.js";
 import {
@@ -183,6 +183,8 @@ type InMessage = { tabId?: string } & (
       braveApiKey?: string | null;
       subagentModels?: Record<string, "flash" | "pro">;
       showSystemEvents?: boolean;
+      mimoApiKey?: string | null;
+      mimoBaseUrl?: string | null;
     }
   | { cmd: "qq_status_get" }
   | { cmd: "qq_connect" }
@@ -249,6 +251,9 @@ interface SettingsEvent {
   subagentModels?: Record<string, "flash" | "pro">;
   showSystemEvents?: boolean;
   version: string;
+  mimoBaseUrl?: string;
+  mimoRegion?: string;
+  mimoApiKeyPrefix?: string;
 }
 
 interface QQSettingsEvent {
@@ -727,24 +732,32 @@ function emitSettings(tab: Tab): void {
   const editMode = loadEditMode();
   if (tab.toolset) applyPlanMode(tab.toolset.tools, editMode);
   const recent = loadRecentWorkspaces().filter((p) => p !== tab.rootDir);
+  const cfg = readConfig();
+  const mimoEp = loadMimoEndpoint();
+  const isMimo = isMimoModel(tab.currentModel);
   emit(
     {
       type: "$settings",
       reasoningEffort: loadReasoningEffort(),
       editMode,
       budgetUsd: tab.runtime?.loop.budgetUsd ?? null,
-      baseUrl: ep.baseUrl,
+      baseUrl: isMimo ? (mimoEp.baseUrl ?? "https://token-plan-ams.xiaomimimo.com/v1") : ep.baseUrl,
       apiKeyPrefix: ep.apiKey ? `${ep.apiKey.slice(0, 6)}…${ep.apiKey.slice(-3)}` : undefined,
       workspaceDir: tab.rootDir,
       recentWorkspaces: recent,
       model: tab.currentModel,
       editor: loadEditor(),
       webSearchEngine: readWebSearchEngine(),
-      webSearchEndpoint: readConfig().webSearchEndpoint,
+      webSearchEndpoint: cfg.webSearchEndpoint,
       webSearchApiKeys: collectWebSearchApiKeyPrefixes(),
       subagentModels: loadSubagentModels(),
       showSystemEvents: loadShowSystemEvents(),
       version: VERSION,
+      mimoBaseUrl: cfg.mimoBaseUrl,
+      mimoRegion: cfg.mimoRegion,
+      mimoApiKeyPrefix: mimoEp.apiKey
+        ? `${mimoEp.apiKey.slice(0, 6)}…${mimoEp.apiKey.slice(-3)}`
+        : undefined,
     },
     tab.id,
   );
@@ -1519,8 +1532,9 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
       hasSemanticSearch: toolset.semantic.enabled,
       modelId: tab.currentModel,
     });
-    if (loadApiKey()) {
+    if (loadApiKey() || loadMimoApiKey()) {
       bridgeEndpointEnv();
+      bridgeMimoEndpointEnv();
       tab.runtime = buildRuntimeFor(tab);
       void bridgeTabMcp(tab);
     }
@@ -2125,11 +2139,12 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
         tab.id,
       );
     }
-    if (!loadApiKey()) emit({ type: "$needs_setup", reason: "no_api_key" }, tab.id);
+    if (!loadApiKey() && !loadMimoApiKey())
+      emit({ type: "$needs_setup", reason: "no_api_key" }, tab.id);
     void emitBalance(tab);
     void initTabToolset(tab)
       .then(() => {
-        if (loadApiKey()) emit({ type: "$ready" }, tab.id);
+        if (loadApiKey() || loadMimoApiKey()) emit({ type: "$ready" }, tab.id);
         emitCtxBreakdown(tab);
       })
       .catch((err) => {
@@ -2269,7 +2284,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
       // WebView reloads (DevTools F5, host-side respawn) leave the Node child
       // alive but the React app starts blank. Re-fire the bootstrap events
       // so it can rehydrate without restarting the agent.
-      const hasKey = !!loadApiKey();
+      const hasKey = !!loadApiKey() || !!loadMimoApiKey();
       for (const t of tabs.values()) {
         emit(
           { type: "$tab_opened", workspaceDir: t.rootDir, active: t.id === lastActiveTabId },
@@ -2398,7 +2413,10 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
     if (msg.cmd === "skill_run") {
       if (!tab.runtime) {
         emit(
-          { type: "$error", message: "Not configured yet — paste your DeepSeek API key first." },
+          {
+            type: "$error",
+            message: "Not configured yet — paste your DeepSeek or MiMo API key first.",
+          },
           tab.id,
         );
         return;
@@ -2607,6 +2625,13 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
           }
           writeConfig(cfg);
         }
+        if (msg.mimoApiKey !== undefined || msg.mimoBaseUrl !== undefined) {
+          const cfg = readConfig();
+          if (msg.mimoApiKey !== undefined) cfg.mimoApiKey = msg.mimoApiKey?.trim() || undefined;
+          if (msg.mimoBaseUrl !== undefined) cfg.mimoBaseUrl = msg.mimoBaseUrl?.trim() || undefined;
+          writeConfig(cfg);
+          bridgeMimoEndpointEnv();
+        }
         if (msg.subagentModels !== undefined) {
           saveSubagentModels(msg.subagentModels);
           emitSkills(tab);
@@ -2614,6 +2639,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
         if (msg.model !== undefined) {
           const next = msg.model.trim();
           if (next) {
+            const prev = tab.currentModel;
             tab.currentModel = next;
             saveModel(next);
             if (tab.toolset) {
@@ -2621,7 +2647,17 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
                 hasSemanticSearch: tab.toolset.semantic.enabled,
                 modelId: tab.currentModel,
               });
-              if (tab.runtime) tab.runtime = buildRuntimeFor(tab);
+              if (tab.runtime) {
+                try {
+                  tab.runtime = buildRuntimeFor(tab);
+                } catch {
+                  tab.currentModel = prev;
+                  tab.system = codeSystemPrompt(tab.rootDir, {
+                    hasSemanticSearch: tab.toolset.semantic.enabled,
+                    modelId: prev,
+                  });
+                }
+              }
             }
           }
         }
@@ -2851,7 +2887,10 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
     if (msg.cmd === "user_input") {
       if (!tab.runtime) {
         emit(
-          { type: "$error", message: "Not configured yet — paste your DeepSeek API key first." },
+          {
+            type: "$error",
+            message: "Not configured yet — paste your DeepSeek or MiMo API key first.",
+          },
           tab.id,
         );
         return;

@@ -220,6 +220,8 @@ export class DeepSeekClient {
     if (opts.tools?.length) payload.tools = opts.tools;
     if (opts.temperature !== undefined) payload.temperature = opts.temperature;
     if (opts.maxTokens !== undefined) payload.max_tokens = opts.maxTokens;
+    if (opts.topP !== undefined) payload.top_p = opts.topP;
+    if (opts.stop?.length) payload.stop = opts.stop;
     if (opts.responseFormat) payload.response_format = opts.responseFormat;
     // V4 thinking-mode toggle: lives under `extra_body.thinking.type` per
     // DeepSeek's docs. Docs also note that in thinking mode `temperature`,
@@ -231,7 +233,9 @@ export class DeepSeekClient {
       payload.extra_body = { thinking: { type: opts.thinking } };
     }
     if (opts.reasoningEffort) {
-      payload.reasoning_effort = opts.reasoningEffort;
+      // `max` is a DeepSeek-internal extension; the public API only accepts
+      // low / medium / high.  Clamp to avoid a 400 from the endpoint.
+      payload.reasoning_effort = opts.reasoningEffort === "max" ? "high" : opts.reasoningEffort;
     }
     return payload;
   }

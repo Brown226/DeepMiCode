@@ -1,6 +1,7 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { type ReactNode, useEffect, useState } from "react";
 import type { Balance, Settings as SettingsType, UsageStats } from "../App";
+import { effortChoicesForBaseUrl } from "./composer";
 import { getLangLabel, getSupportedLangs, setLang, t, useLang } from "../i18n";
 import { I } from "../icons";
 import type {
@@ -221,7 +222,6 @@ export function SettingsModal({
                 <MimoApiSection
                   mimoBaseUrl={settings.mimoBaseUrl}
                   mimoApiKeyPrefix={settings.mimoApiKeyPrefix}
-                  mimoRegion={settings.mimoRegion}
                   onSave={onSave}
                   onSaveApiKey={(key) => onSave({ mimoApiKey: key })}
                 />
@@ -614,7 +614,12 @@ function PageGeneral({
           </div>
           <div className="seg-ctrl">
             {getSupportedLangs().map((code) => (
-              <button type="button" key={code} data-on={lang === code} onClick={() => setLang(code)}>
+              <button
+                type="button"
+                key={code}
+                data-on={lang === code}
+                onClick={() => setLang(code)}
+              >
                 {getLangLabel(code)}
               </button>
             ))}
@@ -656,7 +661,7 @@ function PageGeneral({
             <div className="h">{t("settings.reasoningEffortHint")}</div>
           </div>
           <div className="seg-ctrl">
-            {(["low", "medium", "high", "max"] as const).map((e) => (
+            {effortChoicesForBaseUrl(settings.baseUrl).map((e) => (
               <button
                 type="button"
                 key={e}
@@ -764,7 +769,13 @@ function PageGeneral({
 
 const SEARCH_ENGINE_API_KEY_FIELDS: ReadonlyArray<{
   engine: "metaso" | "tavily" | "perplexity" | "exa" | "brave" | "ollama";
-  patchKey: "metasoApiKey" | "tavilyApiKey" | "perplexityApiKey" | "exaApiKey" | "braveApiKey" | "ollamaApiKey";
+  patchKey:
+    | "metasoApiKey"
+    | "tavilyApiKey"
+    | "perplexityApiKey"
+    | "exaApiKey"
+    | "braveApiKey"
+    | "ollamaApiKey";
   signupUrl: string;
 }> = [
   { engine: "metaso", patchKey: "metasoApiKey", signupUrl: "https://metaso.cn/settings/api" },
@@ -845,7 +856,13 @@ function WebSearchApiKeyRow({
   onSave,
 }: {
   engine: "metaso" | "tavily" | "perplexity" | "exa" | "brave" | "ollama";
-  patchKey: "metasoApiKey" | "tavilyApiKey" | "perplexityApiKey" | "exaApiKey" | "braveApiKey" | "ollamaApiKey";
+  patchKey:
+    | "metasoApiKey"
+    | "tavilyApiKey"
+    | "perplexityApiKey"
+    | "exaApiKey"
+    | "braveApiKey"
+    | "ollamaApiKey";
   signupUrl: string;
   prefix?: string;
   onSave: (patch: SettingsPatch) => void;
@@ -972,13 +989,11 @@ function ApiKeySection({
 function MimoApiSection({
   mimoBaseUrl,
   mimoApiKeyPrefix,
-  mimoRegion,
   onSave,
   onSaveApiKey,
 }: {
   mimoBaseUrl?: string;
   mimoApiKeyPrefix?: string;
-  mimoRegion?: "international" | "china";
   onSave: (patch: SettingsPatch) => void;
   onSaveApiKey: (key: string) => void;
 }) {
@@ -1031,24 +1046,6 @@ function MimoApiSection({
           placeholder={t("settings.mimoBaseUrlPlaceholder")}
         />
       </div>
-      <div className="setting-row">
-        <div className="l">
-          <div className="n">{t("settings.mimoRegion")}</div>
-          <div className="h">{t("settings.mimoRegionHint")}</div>
-        </div>
-        <select
-          className="field mono"
-          value={mimoRegion ?? ""}
-          onChange={(e) => {
-            const val = e.target.value;
-            onSave({ mimoRegion: val === "" ? undefined : (val as "international" | "china") });
-          }}
-        >
-          <option value="">{t("settings.mimoRegionNone")}</option>
-          <option value="international">{t("settings.mimoRegionInternational")}</option>
-          <option value="china">{t("settings.mimoRegionChina")}</option>
-        </select>
-      </div>
     </section>
   );
 }
@@ -1058,13 +1055,10 @@ const KNOWN_MODELS = [
   "deepseek-v4-pro",
   "mimo-v2.5-pro",
   "mimo-v2.5",
-  "mimo-v2-flash",
-  "mimo-v2-omni",
-  "mimo-v2-pro",
 ] as const;
 
-const EFFORT_VALUES = ["low", "medium", "high", "max"] as const;
-type EffortValue = (typeof EFFORT_VALUES)[number];
+/** @deprecated Use `effortChoicesForBaseUrl(settings.baseUrl)` instead. */
+const _LEGACY_EFFORT_VALUES = ["low", "medium", "high", "max"] as const;
 
 function PageModels({
   settings,
@@ -1128,12 +1122,12 @@ function PageModels({
             <div className="h">{t("settings.reasoningEffortHint")}</div>
           </div>
           <div className="seg-ctrl">
-            {EFFORT_VALUES.map((e) => (
+            {effortChoicesForBaseUrl(settings.baseUrl).map((e) => (
               <button
                 type="button"
                 key={e}
                 data-on={settings.reasoningEffort === e}
-                onClick={() => onSave({ reasoningEffort: e as EffortValue })}
+                onClick={() => onSave({ reasoningEffort: e })}
               >
                 {e}
               </button>
@@ -1305,9 +1299,7 @@ function PageSkills({
                   className="field"
                   style={{ marginLeft: "auto", minWidth: 96 }}
                   value={subagentModels[s.name] ?? "flash"}
-                  onChange={(e) =>
-                    setSubagentModel(s.name, e.target.value as "flash" | "pro")
-                  }
+                  onChange={(e) => setSubagentModel(s.name, e.target.value as "flash" | "pro")}
                   title={t("settings.subagentModelHint")}
                 >
                   <option value="flash">{t("settings.subagentModelFlash")}</option>
@@ -1364,9 +1356,7 @@ function PageMemory({
               </button>
             ))}
           </div>
-          <pre className="memory-detail">
-            {detail ? detail.body : t("settings.memoryDesc")}
-          </pre>
+          <pre className="memory-detail">{detail ? detail.body : t("settings.memoryDesc")}</pre>
         </div>
       )}
     </section>
