@@ -10,6 +10,9 @@ export const TUI_FORMATTING_RULES = `Formatting (rendered in a TUI with a real m
 
 /** Pro is the top tier — escalation is a no-op for it; flash + others get the full ladder. */
 export function escalationContract(modelId: string): string {
+  if (modelId.startsWith("mimo-")) {
+    return `You are running on \`${modelId}\` (MiMo provider). MiMo has no internal escalation tier — there is no \`deepseek-v4-pro\` analogue on this provider. The \`<<<NEEDS_PRO>>>\` marker is a no-op here: deliver the strongest answer you can directly. If asked which model you are, answer \`${modelId}\`.`;
+  }
   if (modelId === "deepseek-v4-pro") {
     return `Cost-aware escalation note: you are running on \`${modelId}\` — the escalation tier. There is no higher tier to escalate to, so the \`<<<NEEDS_PRO>>>\` marker is a no-op for you; deliver the strongest answer you can directly. If asked which model you are, answer \`${modelId}\`.`;
   }

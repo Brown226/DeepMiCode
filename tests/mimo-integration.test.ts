@@ -159,8 +159,12 @@ describe("Thinking Mode Detection", () => {
     expect(isThinkingModeModel("mimo-v2.5-pro")).toBe(true);
     expect(isThinkingModeModel("mimo-v2.5")).toBe(true);
     expect(isThinkingModeModel("mimo-v2-flash")).toBe(true);
+    expect(isThinkingModeModel("mimo-v2-omni")).toBe(true);
+    expect(isThinkingModeModel("mimo-v2-pro")).toBe(true);
     expect(isThinkingModeModel("deepseek-v4-flash")).toBe(true);
+    expect(isThinkingModeModel("deepseek-v4-pro")).toBe(true);
     expect(isThinkingModeModel("gpt-4")).toBe(false);
+    expect(isThinkingModeModel("deepseek-chat")).toBe(false);
   });
 
   it("should return undefined for MiMo thinking mode (no extra_body needed)", async () => {
@@ -196,5 +200,24 @@ describe("MiMo Host Detection", () => {
     expect(
       detectProviderFromError("Unknown error", "https://token-plan-ams.xiaomimimo.com/v1"),
     ).toBe("MiMo");
+  });
+});
+
+describe("MiMo Escalation Contract", () => {
+  it("should not retry on deepseek-v4-pro when running on MiMo", async () => {
+    const { escalationContract } = await import("../src/prompt-fragments.js");
+
+    const contract = escalationContract("mimo-v2.5-pro");
+    expect(contract).toContain("mimo-v2.5-pro");
+    expect(contract.toLowerCase()).toContain("mimo");
+    expect(contract).not.toMatch(/retries.*deepseek-v4-pro/i);
+    expect(contract).not.toMatch(/escalat.*to deepseek-v4-pro/i);
+  });
+
+  it("should mention deepseek-v4-pro as upgrade target for DeepSeek flash", async () => {
+    const { escalationContract } = await import("../src/prompt-fragments.js");
+
+    const contract = escalationContract("deepseek-v4-flash");
+    expect(contract).toContain("deepseek-v4-pro");
   });
 });

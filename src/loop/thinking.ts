@@ -2,10 +2,8 @@
 export function isThinkingModeModel(model: string): boolean {
   if (model.includes("reasoner")) return true;
   if (model === "deepseek-v4-flash" || model === "deepseek-v4-pro") return true;
-  // MiMo models return reasoning_content by default
-  if (model.startsWith("mimo-v2.5")) return true;
-  if (model === "mimo-v2-flash") return true;
-  if (model === "mimo-v2-omni") return true;
+  // All MiMo models return reasoning_content by default
+  if (model.startsWith("mimo-")) return true;
   return false;
 }
 

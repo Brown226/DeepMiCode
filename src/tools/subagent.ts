@@ -496,9 +496,17 @@ export function registerSubagentTool(
         },
         model: {
           type: "string",
-          enum: ["deepseek-v4-flash", "deepseek-v4-pro"],
+          enum: [
+            "deepseek-v4-flash",
+            "deepseek-v4-pro",
+            "mimo-v2.5-pro",
+            "mimo-v2.5",
+            "mimo-v2-flash",
+            "mimo-v2-omni",
+            "mimo-v2-pro",
+          ],
           description:
-            "Which DeepSeek model the subagent runs on. Default is 'deepseek-v4-flash' — cheap and fast, fine for explore/research-style subtasks. Override to 'deepseek-v4-pro' (~12× more expensive) when the subtask genuinely needs the stronger model: cross-file architecture, subtle bug hunts, anything where flash has empirically underperformed.",
+            "Which model the subagent runs on. Default is 'deepseek-v4-flash' — cheap and fast, fine for explore/research-style subtasks. Override to 'deepseek-v4-pro' (~12× more expensive) when the subtask genuinely needs the stronger model. MiMo models are also accepted when the parent session is on MiMo — pick e.g. 'mimo-v2.5-pro' to keep the subagent on the same provider as the parent.",
         },
         resume_session: {
           type: "string",
@@ -532,7 +540,8 @@ export function registerSubagentTool(
       }
       const typeSpec = getSubagentType(args.type);
       const model =
-        typeof args.model === "string" && args.model.startsWith("deepseek-")
+        typeof args.model === "string" &&
+        (args.model.startsWith("deepseek-") || args.model.startsWith("mimo-"))
           ? args.model
           : defaultModel;
       const system =

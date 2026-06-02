@@ -37,14 +37,12 @@ export const MIMO_ENDPOINTS = {
 
 /**
  * Detect the provider kind from model name or base URL.
- * Priority: explicit provider > model name > base URL > default (deepseek)
+ * Priority: explicit model name (mimo-* or deepseek-*) > base URL > default (deepseek)
  */
 export function detectProvider(model?: string, baseUrl?: string): ProviderKind {
-  // Check model name first
   if (model && isMimoModel(model)) return "mimo";
-  // Check base URL
+  if (model?.startsWith("deepseek-")) return "deepseek";
   if (isMimoEndpoint(baseUrl)) return "mimo";
-  // Default to DeepSeek
   return "deepseek";
 }
 

@@ -322,6 +322,47 @@ describe("registerSubagentTool", () => {
     expect(seenModels[0]).toBe("deepseek-v4-flash");
   });
 
+  it("accepts a MiMo model override (regression: was silently dropped)", async () => {
+    const seenModels: string[] = [];
+    const client = new DeepSeekClient({
+      apiKey: "sk-test",
+      fetch: vi.fn(async (_url: any, init: any) => {
+        const body = init?.body ? JSON.parse(init.body) : {};
+        seenModels.push(body.model);
+        return new Response(
+          JSON.stringify({
+            choices: [
+              { index: 0, message: { role: "assistant", content: "ok" }, finish_reason: "stop" },
+            ],
+            usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 },
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } },
+        );
+      }) as any,
+    });
+    const parent = new ToolRegistry();
+    registerSubagentTool(parent, { client });
+    await parent.dispatch("spawn_subagent", JSON.stringify({ task: "go", model: "mimo-v2.5-pro" }));
+    expect(seenModels[0]).toBe("mimo-v2.5-pro");
+  });
+
+  it("declares MiMo models in the spawn_subagent tool spec enum", () => {
+    const parent = new ToolRegistry();
+    const client = makeClient([{ content: "ok" }]);
+    registerSubagentTool(parent, { client });
+    const tool = parent.get("spawn_subagent");
+    const modelParam = tool?.parameters?.properties?.model as { enum?: string[] } | undefined;
+    expect(modelParam?.enum).toEqual(
+      expect.arrayContaining([
+        "mimo-v2.5-pro",
+        "mimo-v2.5",
+        "mimo-v2-flash",
+        "mimo-v2-omni",
+        "mimo-v2-pro",
+      ]),
+    );
+  });
+
   it("aborts the child when the parent's tool ctx signal fires", async () => {
     const parent = new ToolRegistry();
     // Slow client — sleeps 200ms before responding so the abort beats it.
