@@ -1,4 +1,4 @@
-﻿/** deepmicode.md project-memory loader — filesystem-backed tests in a temp dir. */
+/** deepmicode.md project-memory loader — filesystem-backed tests in a temp dir. */
 
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -118,12 +118,12 @@ describe("project-memory", () => {
       writeFileSync(join(root, "AGENT.md"), "agent loses too\n", "utf8");
       const mem = readProjectMemory(root);
       expect(mem?.content).toBe("deepmicode wins");
-      expect(mem?.path.endsWith("deepmicode.md")).toBe(true);
+      expect(mem?.path.toLowerCase().endsWith("deepmicode.md")).toBe(true);
     });
 
     it("PROJECT_MEMORY_FILES priority matches the documented read order", () => {
       expect(PROJECT_MEMORY_FILES).toEqual([
-        "deepmicode.md",
+        "DEEPMICODE.md",
         ".claude/CLAUDE.md",
         "CLAUDE.md",
         "AGENTS.md",
@@ -148,7 +148,9 @@ describe("project-memory", () => {
 
   describe("resolveProjectMemoryWritePath", () => {
     it("returns deepmicode.md path when no candidate exists yet (fresh project)", () => {
-      expect(resolveProjectMemoryWritePath(root).endsWith("deepmicode.md")).toBe(true);
+      expect(resolveProjectMemoryWritePath(root).toLowerCase().endsWith("deepmicode.md")).toBe(
+        true,
+      );
     });
 
     it("writes to the existing AGENTS.md when present (don't fragment)", () => {
@@ -159,7 +161,9 @@ describe("project-memory", () => {
     it("deepmicode.md still wins as the write target when it coexists with AGENTS.md", () => {
       writeFileSync(join(root, "deepmicode.md"), "x", "utf8");
       writeFileSync(join(root, "AGENTS.md"), "y", "utf8");
-      expect(resolveProjectMemoryWritePath(root).endsWith("deepmicode.md")).toBe(true);
+      expect(resolveProjectMemoryWritePath(root).toLowerCase().endsWith("deepmicode.md")).toBe(
+        true,
+      );
     });
   });
 
@@ -194,7 +198,7 @@ describe("project-memory", () => {
       );
       const out = applyProjectMemory(BASE, root);
       expect(out.length).toBeGreaterThan(BASE.length);
-      expect(out).toMatch(/# Project memory \(deepmicode\.md\)/);
+      expect(out).toMatch(/# Project memory \(deepmicode\.md\)/i);
       expect(out).toContain("snake_case");
       // Fenced block present.
       expect(out).toMatch(/```\n[\s\S]*```/);

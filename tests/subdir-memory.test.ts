@@ -1,4 +1,4 @@
-﻿/** Per-subdirectory deepmicode.md walker + injection (#1033). */
+/** Per-subdirectory deepmicode.md walker + injection (#1033). */
 
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -24,48 +24,48 @@ describe("findSubdirMemoryAncestors", () => {
   });
 
   it("returns [] for a file directly under rootDir (project memory handles it)", () => {
-    writeFileSync(join(root, "deepmicode.md"), "root rules");
+    writeFileSync(join(root, "DEEPMICODE.md"), "root rules");
     writeFileSync(join(root, "foo.ts"), "");
     expect(findSubdirMemoryAncestors(join(root, "foo.ts"), root)).toEqual([]);
   });
 
   it("finds the closest ancestor memory for a file in a subdir", () => {
     mkdirSync(join(root, "frontend"), { recursive: true });
-    writeFileSync(join(root, "frontend", "deepmicode.md"), "use pnpm");
+    writeFileSync(join(root, "frontend", "DEEPMICODE.md"), "use pnpm");
     writeFileSync(join(root, "frontend", "App.tsx"), "");
     expect(findSubdirMemoryAncestors(join(root, "frontend", "App.tsx"), root)).toEqual([
-      join(root, "frontend", "deepmicode.md"),
+      join(root, "frontend", "DEEPMICODE.md"),
     ]);
   });
 
   it("returns multiple ancestors innermost-first when both subdirs carry memory", () => {
     mkdirSync(join(root, "pkg", "module"), { recursive: true });
-    writeFileSync(join(root, "pkg", "deepmicode.md"), "package rules");
-    writeFileSync(join(root, "pkg", "module", "deepmicode.md"), "module rules");
+    writeFileSync(join(root, "pkg", "DEEPMICODE.md"), "package rules");
+    writeFileSync(join(root, "pkg", "module", "DEEPMICODE.md"), "module rules");
     writeFileSync(join(root, "pkg", "module", "deep.ts"), "");
     expect(findSubdirMemoryAncestors(join(root, "pkg", "module", "deep.ts"), root)).toEqual([
-      join(root, "pkg", "module", "deepmicode.md"),
-      join(root, "pkg", "deepmicode.md"),
+      join(root, "pkg", "module", "DEEPMICODE.md"),
+      join(root, "pkg", "DEEPMICODE.md"),
     ]);
   });
 
   it("skips dirs that have no memory file", () => {
     mkdirSync(join(root, "a", "b", "c"), { recursive: true });
-    writeFileSync(join(root, "a", "deepmicode.md"), "only at a");
+    writeFileSync(join(root, "a", "DEEPMICODE.md"), "only at a");
     writeFileSync(join(root, "a", "b", "c", "x.ts"), "");
     expect(findSubdirMemoryAncestors(join(root, "a", "b", "c", "x.ts"), root)).toEqual([
-      join(root, "a", "deepmicode.md"),
+      join(root, "a", "DEEPMICODE.md"),
     ]);
   });
 
   it("excludes the rootDir's own deepmicode.md from the walk", () => {
     mkdirSync(join(root, "sub"), { recursive: true });
-    writeFileSync(join(root, "deepmicode.md"), "root rules");
-    writeFileSync(join(root, "sub", "deepmicode.md"), "sub rules");
+    writeFileSync(join(root, "DEEPMICODE.md"), "root rules");
+    writeFileSync(join(root, "sub", "DEEPMICODE.md"), "sub rules");
     writeFileSync(join(root, "sub", "x.ts"), "");
     const ancestors = findSubdirMemoryAncestors(join(root, "sub", "x.ts"), root);
-    expect(ancestors).toEqual([join(root, "sub", "deepmicode.md")]);
-    expect(ancestors).not.toContain(join(root, "deepmicode.md"));
+    expect(ancestors).toEqual([join(root, "sub", "DEEPMICODE.md")]);
+    expect(ancestors).not.toContain(join(root, "DEEPMICODE.md"));
   });
 
   it("returns [] for an absolute path that escapes rootDir", () => {
@@ -105,13 +105,13 @@ describe("readSubdirMemoryContent", () => {
   });
 
   it("returns trimmed content", () => {
-    const p = join(root, "deepmicode.md");
+    const p = join(root, "DEEPMICODE.md");
     writeFileSync(p, "  hello world  \n\n");
     expect(readSubdirMemoryContent(p)).toBe("hello world");
   });
 
   it("returns null for an empty or whitespace-only file", () => {
-    const p = join(root, "deepmicode.md");
+    const p = join(root, "DEEPMICODE.md");
     writeFileSync(p, "  \n\n");
     expect(readSubdirMemoryContent(p)).toBeNull();
   });
@@ -121,7 +121,7 @@ describe("readSubdirMemoryContent", () => {
   });
 
   it("truncates beyond PROJECT_MEMORY_MAX_CHARS with a marker", () => {
-    const p = join(root, "deepmicode.md");
+    const p = join(root, "DEEPMICODE.md");
     writeFileSync(p, "x".repeat(8100));
     const out = readSubdirMemoryContent(p);
     expect(out).not.toBeNull();
@@ -146,7 +146,7 @@ describe("read_file injects subdir memory on first read per session", () => {
   beforeEach(() => {
     root = mkdtempSync(join(tmpdir(), "deepmicode-fs-mem-"));
     mkdirSync(join(root, "frontend"), { recursive: true });
-    writeFileSync(join(root, "frontend", "deepmicode.md"), "use pnpm, never npm");
+    writeFileSync(join(root, "frontend", "DEEPMICODE.md"), "use pnpm, never npm");
     writeFileSync(join(root, "frontend", "App.tsx"), "export const App = () => null;");
     tools = new ToolRegistry();
     registerFilesystemTools(tools, { rootDir: root });
@@ -157,7 +157,7 @@ describe("read_file injects subdir memory on first read per session", () => {
 
   it("prepends [module memory:…] on first read of a file under that subdir", async () => {
     const out = await tools.dispatch("read_file", JSON.stringify({ path: "frontend/App.tsx" }));
-    expect(out).toContain("[module memory: frontend/deepmicode.md]");
+    expect(out).toContain("[module memory: frontend/DEEPMICODE.md]");
     expect(out).toContain("use pnpm, never npm");
     expect(out).toContain("export const App");
   });
@@ -212,16 +212,16 @@ describe("findDirMemory — for list_directory's listed dir", () => {
 
   it("walks ancestors innermost-first when nested dirs each have memory", () => {
     mkdirSync(join(root, "pkg", "module"), { recursive: true });
-    writeFileSync(join(root, "pkg", "deepmicode.md"), "pkg rules");
-    writeFileSync(join(root, "pkg", "module", "deepmicode.md"), "module rules");
+    writeFileSync(join(root, "pkg", "DEEPMICODE.md"), "pkg rules");
+    writeFileSync(join(root, "pkg", "module", "DEEPMICODE.md"), "module rules");
     expect(findDirMemory(join(root, "pkg", "module"), root)).toEqual([
-      join(root, "pkg", "module", "deepmicode.md"),
-      join(root, "pkg", "deepmicode.md"),
+      join(root, "pkg", "module", "DEEPMICODE.md"),
+      join(root, "pkg", "DEEPMICODE.md"),
     ]);
   });
 
   it("returns [] when the listed dir IS the root (root memory lives in system prompt)", () => {
-    writeFileSync(join(root, "deepmicode.md"), "root rules");
+    writeFileSync(join(root, "DEEPMICODE.md"), "root rules");
     expect(findDirMemory(root, root)).toEqual([]);
   });
 
@@ -269,7 +269,7 @@ describe("list_directory injects subdir memory (issue #1160)", () => {
   });
 
   it("does not inject memory when listing the project root", async () => {
-    writeFileSync(join(root, "deepmicode.md"), "root rules");
+    writeFileSync(join(root, "DEEPMICODE.md"), "root rules");
     const out = await tools.dispatch("list_directory", JSON.stringify({ path: "." }));
     expect(out).not.toContain("[module memory:");
   });

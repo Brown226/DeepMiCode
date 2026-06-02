@@ -8,6 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": resolve(here, "src"),
+      "@reasonix/core-utils": resolve(here, "packages/core-utils/src/index.ts"),
       ink: resolve(here, "packages/ink/src/index.ts"),
       react: resolve(here, "node_modules/react"),
       "react-dom": resolve(here, "node_modules/react-dom"),

@@ -1,4 +1,4 @@
-﻿/** `~/.deepmicode/memory/` store + prefix-loading composer — temp homeDir per test. */
+/** `~/.deepmicode/memory/` store + prefix-loading composer — temp homeDir per test. */
 
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -9,7 +9,7 @@ import {
   MEMORY_INDEX_FILE,
   MEMORY_INDEX_MAX_CHARS,
   MemoryStore,
-  applyGlobaldeepmicodeMemory,
+  applyGlobalDeepMiCodeMemory,
   applyMemoryStack,
   applyUserMemory,
   projectHash,
@@ -406,25 +406,25 @@ describe("user-memory", () => {
     });
   });
 
-  describe("applyGlobaldeepmicodeMemory", () => {
+  describe("applyGlobalDeepMiCodeMemory", () => {
     it("loads ~/.deepmicode/deepmicode.md when present", () => {
       mkdirSync(home, { recursive: true });
       writeFileSync(join(home, "deepmicode.md"), "- always pnpm not npm\n", "utf8");
-      const out = applyGlobaldeepmicodeMemory(BASE, home);
+      const out = applyGlobalDeepMiCodeMemory(BASE, home);
       expect(out).toContain("# Global memory");
       expect(out).toContain("always pnpm not npm");
       expect(out.startsWith(BASE)).toBe(true);
     });
 
     it("returns BASE unchanged when the file is missing", () => {
-      const out = applyGlobaldeepmicodeMemory(BASE, home);
+      const out = applyGlobalDeepMiCodeMemory(BASE, home);
       expect(out).toBe(BASE);
     });
 
     it("returns BASE unchanged when the file is empty / whitespace-only", () => {
       mkdirSync(home, { recursive: true });
       writeFileSync(join(home, "deepmicode.md"), "   \n  \n", "utf8");
-      const out = applyGlobaldeepmicodeMemory(BASE, home);
+      const out = applyGlobalDeepMiCodeMemory(BASE, home);
       expect(out).toBe(BASE);
     });
 
@@ -434,7 +434,7 @@ describe("user-memory", () => {
       const orig = process.env.deepmicode_MEMORY;
       process.env.deepmicode_MEMORY = "off";
       try {
-        const out = applyGlobaldeepmicodeMemory(BASE, home);
+        const out = applyGlobalDeepMiCodeMemory(BASE, home);
         expect(out).toBe(BASE);
       } finally {
         if (orig === undefined) {

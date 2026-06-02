@@ -1,4 +1,4 @@
-﻿import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -126,8 +126,8 @@ describe("handleSlash", () => {
   it("/about prints version, website, repo, and MIT license", () => {
     const r = handleSlash("about", [], makeLoop());
     expect(r.info).toContain(VERSION);
-    expect(r.info).toContain("https://esengine.github.io/DeepSeek-deepmicode/");
-    expect(r.info).toContain("https://github.com/esengine/DeepSeek-deepmicode");
+    expect(r.info).toContain("https://esengine.github.io/DeepSeek-DeepMiCode/");
+    expect(r.info).toContain("https://github.com/esengine/DeepSeek-DeepMiCode");
     expect(r.info).toContain("MIT");
     expect(SLASH_COMMANDS.find((s) => s.cmd === "about")?.group).toBe("info");
   });
@@ -1295,7 +1295,7 @@ describe("handleSlash", () => {
     it("prints a how-to when no memory (deepmicode.md or ~/.deepmicode/memory) exists", () => {
       const r = handleSlash("memory", [], makeLoop(), { memoryRoot: root });
       expect(r.info).toMatch(/no memory pinned/);
-      expect(r.info).toMatch(/deepmicode\.md/);
+      expect(r.info).toMatch(/deepmicode\.md/i);
     });
 
     it("prints the deepmicode.md contents + path when present", () => {
@@ -1305,7 +1305,7 @@ describe("handleSlash", () => {
         "utf8",
       );
       const r = handleSlash("memory", [], makeLoop(), { memoryRoot: root });
-      expect(r.info).toMatch(/▸ deepmicode\.md:/);
+      expect(r.info).toMatch(/▸ deepmicode\.md:/i);
       expect(r.info).toContain("Snake case only");
       expect(r.info).toMatch(/chars/);
     });

@@ -1,4 +1,4 @@
-﻿import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -112,19 +112,19 @@ describe("appendProjectMemory", () => {
     }
   });
 
-  it("creates deepmicode.md with a header and the first bullet when absent", () => {
-    const path = join(dir, "deepmicode.md");
+  it("creates DEEPMICODE.md with a header and the first bullet when absent", () => {
+    const path = join(dir, "DEEPMICODE.md");
     expect(existsSync(path)).toBe(false);
     const result = appendProjectMemory(dir, "always use pnpm");
     expect(result.created).toBe(true);
     expect(result.path).toBe(path);
     const content = readFileSync(path, "utf8");
-    expect(content).toContain("# deepmicode project memory");
+    expect(content).toContain("# DeepMiCode project memory");
     expect(content).toMatch(/- always use pnpm\n$/);
   });
 
-  it("appends to an existing deepmicode.md without disturbing earlier content", () => {
-    const path = join(dir, "deepmicode.md");
+  it("appends to an existing DEEPMICODE.md without disturbing earlier content", () => {
+    const path = join(dir, "DEEPMICODE.md");
     writeFileSync(path, "# Custom header\n\nSome existing note.\n", "utf8");
     const result = appendProjectMemory(dir, "always use pnpm");
     expect(result.created).toBe(false);
@@ -159,8 +159,8 @@ describe("appendProjectMemory", () => {
     const nested = join(dir, "subproject");
     mkdirSync(nested);
     const result = appendProjectMemory(nested, "scoped note");
-    expect(result.path).toBe(join(nested, "deepmicode.md"));
-    expect(existsSync(join(dir, "deepmicode.md"))).toBe(false);
+    expect(result.path).toBe(join(nested, "DEEPMICODE.md"));
+    expect(existsSync(join(dir, "DEEPMICODE.md"))).toBe(false);
   });
 });
 
@@ -186,7 +186,7 @@ describe("appendGlobalMemory", () => {
     expect(result.created).toBe(true);
     expect(result.path).toBe(path);
     const content = readFileSync(path, "utf8");
-    expect(content).toContain("# deepmicode global memory");
+    expect(content).toContain("# DeepMiCode global memory");
     expect(content).toMatch(/- always use pnpm\n$/);
   });
 
@@ -205,7 +205,7 @@ describe("appendGlobalMemory", () => {
     // sane. The test environment's HOME is a tmpdir from the parent
     // afterEach setup, so this won't pollute the real user home.
     const path = globalMemoryPath();
-    expect(path).toMatch(/[/\\]\.deepmicode[/\\]deepmicode\.md$/);
+    expect(path).toMatch(/[/\\]\.deepmicode[/\\]deepmicode\.md$/i);
   });
 
   it("rejects empty notes", () => {
