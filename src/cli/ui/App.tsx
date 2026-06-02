@@ -1498,8 +1498,6 @@ function AppInner({
     };
   }, [pendingCheckpoint, broadcastDashboardEvent]);
 
-  // `max` is a DeepSeek-only reasoning extension — drop it from /effort
-  // suggestions + picker when the active endpoint is third-party (#1794).
   const effortChoices = React.useMemo(() => effortChoicesForBaseUrl(loop.client.baseUrl), [loop]);
 
   // Three mutually-exclusive input-prefix pickers (slash name, @ file
@@ -3316,7 +3314,7 @@ function AppInner({
               const ctx = {
                 model: ev.stats?.model ?? loop.model ?? model,
                 prefixHash,
-                reasoningEffort: loop.reasoningEffort ?? "max",
+                reasoningEffort: loop.reasoningEffort ?? "high",
               };
               for (const out of eventizer.consume(ev, ctx)) sink.append(out);
             }

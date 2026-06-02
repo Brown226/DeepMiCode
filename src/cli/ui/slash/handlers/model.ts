@@ -32,8 +32,6 @@ const model: SlashHandler = (args, loop, ctx) => {
 const effort: SlashHandler = (args, loop) => {
   const choices = effortChoicesForBaseUrl(loop.client.baseUrl);
   const list = choices.join(" | ");
-  const usageKey =
-    choices.length === 4 ? "handlers.model.effortUsage" : "handlers.model.effortUsageNoMax";
   const raw = (args[0] ?? "").toLowerCase();
   if (raw === "") {
     return {
@@ -41,7 +39,7 @@ const effort: SlashHandler = (args, loop) => {
     };
   }
   if (!isReasoningEffort(raw) || !choices.includes(raw as ReasoningEffort)) {
-    return { info: t(usageKey, { list }) };
+    return { info: t("handlers.model.effortUsage", { list }) };
   }
   const next: ReasoningEffort = raw;
   loop.configure({ reasoningEffort: next });

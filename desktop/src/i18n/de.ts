@@ -154,9 +154,7 @@ export const de: typeof en = {
     reasoningEffort: "Reasoning-Effort",
     reasoningEffortHint: "Wirkt live auf die laufende Sitzung.",
     effortHigh: "hoch",
-    effortMax: "max",
     effortHighDesc: "schneller, weniger Denken",
-    effortMaxDesc: "tieferes Reasoning, langsamer",
     editMode: "Edit-Gate",
     editModeHint:
       "Tool-Genehmigungsverhalten — Änderungen werden auf Platte gespeichert, wirken beim nächsten Tool-Aufruf.",
@@ -182,7 +180,8 @@ export const de: typeof en = {
     webSearchEngineTavily: "tavily — 1000/Monat kostenlos (TAVILY_API_KEY setzen)",
     webSearchEnginePerplexity: "perplexity — AI-native (PERPLEXITY_API_KEY setzen)",
     webSearchEngineExa: "exa — AI-native 1000/Monat kostenlos (EXA_API_KEY setzen)",
-    webSearchEngineBrave: "brave — unabhängiger Index, 2000/Monat kostenlos (BRAVE_SEARCH_API_KEY setzen)",
+    webSearchEngineBrave:
+      "brave — unabhängiger Index, 2000/Monat kostenlos (BRAVE_SEARCH_API_KEY setzen)",
     webSearchEngineOllama: "ollama — Ollama Cloud-Websuche (OLLAMA_API_KEY setzen)",
     webSearchEngineNote: "gilt für den nächsten web_search-Aufruf",
     webSearchEndpoint: "SearXNG-Endpunkt",
@@ -202,17 +201,14 @@ export const de: typeof en = {
       "Nur bei Verwendung eines Proxys überschreiben. Leer = offizieller Endpunkt. Neustart erforderlich.",
     mimoSection: "MiMo API",
     mimoApiKey: "MiMo API-Schlüssel",
-    mimoApiKeyHint: "Separater Schlüssel für Xiaomi MiMo Modelle. Fällt auf MIMO_API_KEY Env-Var zurück.",
+    mimoApiKeyHint:
+      "Separater Schlüssel für Xiaomi MiMo Modelle. Fällt auf MIMO_API_KEY Env-Var zurück.",
     mimoApiKeyNotSet: "(nicht gesetzt)",
     mimoApiKeySave: "Speichern",
     mimoBaseUrl: "MiMo-Basis-URL",
     mimoBaseUrlHint: "MiMo-Endpunkt überschreiben. Leer = Standard-Regionalendpunkt.",
     mimoBaseUrlPlaceholder: "https://token-plan-ams.xiaomimimo.com/v1",
-    mimoRegion: "MiMo-Region",
-    mimoRegionHint: "API-Region für MiMo-Modelle auswählen.",
-    mimoRegionInternational: "International (Amsterdam)",
-    mimoRegionChina: "China",
-    mimoRegionNone: "(nicht gesetzt)",
+
     workspace: "Arbeitsbereich",
     workspaceHint:
       "Root-Verzeichnis, in dem Agent-Tools arbeiten. Wechseln speichert in der Konfiguration und lädt Tools neu.",
@@ -382,8 +378,7 @@ export const de: typeof en = {
     ...en.effort,
     lowDesc: "am schnellsten — minimales Reasoning",
     mediumDesc: "ausgewogen",
-    highDesc: "Standard — sicher für vLLM / Azure",
-    maxDesc: "DeepSeek-Erweiterung; von stock OpenAI / vLLM abgelehnt",
+    highDesc: "Standard",
   },
   checkpoint: {
     ...en.checkpoint,
@@ -704,7 +699,8 @@ export const de: typeof en = {
     importSessionCount: "{count} Sitzungen · importiert alle",
     importNotFound: "Keine lokalen Sitzungen gefunden",
     importPrivacyHint: "Bestehende App-Einstellungen bleiben unverändert.",
-    importResult: "{imported} Sitzung(en) importiert, {skipped} übersprungen, {failed} fehlgeschlagen.",
+    importResult:
+      "{imported} Sitzung(en) importiert, {skipped} übersprungen, {failed} fehlgeschlagen.",
     continue: "Weiter",
     refresh: "Aktualisieren",
     importSource: "Quelle",

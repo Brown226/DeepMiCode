@@ -287,7 +287,7 @@ export type NeedsSetupEvent = {
 
 export type EditMode = "review" | "auto" | "yolo" | "plan";
 
-export type ReasoningEffort = "low" | "medium" | "high" | "max";
+export type ReasoningEffort = "low" | "medium" | "high";
 
 export type WebSearchEngineName =
   | "bing"

@@ -363,14 +363,12 @@ describe("R1 reasoning_content round-trip", () => {
       prefix: new ImmutablePrefix({ system: "s" }),
       model: "deepseek-v4-pro",
       stream: false,
-      reasoningEffort: "max",
+      reasoningEffort: "high",
     });
     for await (const _ev of loop.step("hello")) {
       /* drain */
     }
     expect(bodies[0]!.extra_body?.thinking?.type).toBe("enabled");
-    // "max" is a DeepSeek-internal extension that the public API rejects with
-    // 400 — the client now clamps it to "high" before sending.
     expect(bodies[0]!.reasoning_effort).toBe("high");
   });
 

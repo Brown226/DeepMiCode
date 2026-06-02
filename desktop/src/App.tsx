@@ -235,7 +235,7 @@ export type SessionInfo = {
 };
 
 export type Settings = {
-  reasoningEffort: "low" | "medium" | "high" | "max";
+  reasoningEffort: "low" | "medium" | "high";
   editMode: "review" | "auto" | "yolo" | "plan";
   budgetUsd: number | null;
   baseUrl?: string;
@@ -2531,7 +2531,6 @@ function TabRuntime({
                 textareaRef={composerRef}
                 modelLabel={state.settings?.model ?? "deepseek-v4-flash"}
                 reasoningEffort={state.settings?.reasoningEffort ?? "high"}
-                baseUrl={state.settings?.baseUrl}
                 onModelChange={(model) => {
                   applySettingsPatch({ model });
                   flashToast(t("app.toast.modelSwitched", { model }));

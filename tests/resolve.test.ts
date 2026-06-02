@@ -49,8 +49,8 @@ describe("resolveDefaults", () => {
   });
 
   it("config.reasoningEffort persists across launches", () => {
-    writeConfig({ reasoningEffort: "max" }, join(home, ".deepmicode", "config.json"));
-    expect(resolveDefaults({}).reasoningEffort).toBe("max");
+    writeConfig({ reasoningEffort: "high" }, join(home, ".deepmicode", "config.json"));
+    expect(resolveDefaults({}).reasoningEffort).toBe("high");
   });
 
   it("--model wins over config.model", () => {
@@ -60,13 +60,13 @@ describe("resolveDefaults", () => {
   });
 
   it("--effort wins over config.reasoningEffort", () => {
-    writeConfig({ reasoningEffort: "max" }, join(home, ".deepmicode", "config.json"));
+    writeConfig({ reasoningEffort: "high" }, join(home, ".deepmicode", "config.json"));
     const r = resolveDefaults({ effort: "low" });
     expect(r.reasoningEffort).toBe("low");
   });
 
   it("--effort accepts any of the four enum values", () => {
-    for (const e of ["low", "medium", "high", "max"] as const) {
+    for (const e of ["low", "medium", "high"] as const) {
       expect(resolveDefaults({ effort: e }).reasoningEffort).toBe(e);
     }
   });
@@ -97,7 +97,7 @@ describe("resolveDefaults", () => {
 
   it("--no-config ignores the config entirely", () => {
     writeConfig(
-      { model: "deepseek-v4-pro", reasoningEffort: "max", mcp: ["x=cmd"] },
+      { model: "deepseek-v4-pro", reasoningEffort: "high", mcp: ["x=cmd"] },
       join(home, ".deepmicode", "config.json"),
     );
     const r = resolveDefaults({ noConfig: true });

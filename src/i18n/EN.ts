@@ -202,13 +202,13 @@ export const EN: TranslationSchema = {
     budgetHint: "session USD cap — warns at 80%, refuses next turn at 100%",
     modelIdHint: "DeepSeek model id (e.g. deepseek-v4-flash)",
     systemPromptHint: "override the default system prompt",
-    effortHint: "reasoning effort — low|medium|high|max",
+    effortHint: "reasoning effort — low|medium|high",
     sessionNameHint: "session name (default: 'default')",
     ephemeralHint: "disable session persistence for this run",
     mcpSpecHint: "MCP server spec (repeatable)",
     mcpPrefixHint: "prefix MCP tool names with this string",
     noConfigHint: "ignore ~/.deepmicode/config.json for this run",
-    effortHintShort: "reasoning effort — low|medium|high|max",
+    effortHintShort: "reasoning effort — low|medium|high",
     budgetHintShort: "session USD cap",
     transcriptHintShort: "JSONL transcript path",
     mcpSpecHintShort: "MCP server spec (repeatable)",
@@ -264,9 +264,8 @@ export const EN: TranslationSchema = {
     help: { description: "show the full command reference" },
     status: { description: "current model, flags, context, session" },
     effort: {
-      description:
-        "reasoning_effort cap (low|medium|high|max); high is the safe default for vLLM/Azure",
-      argsHint: "<low|medium|high|max>",
+      description: "reasoning_effort cap (low|medium|high)",
+      argsHint: "<low|medium|high>",
     },
     model: { description: "switch DeepSeek model id", argsHint: "<id>" },
     models: { description: "list available models fetched from DeepSeek /models" },
@@ -712,6 +711,8 @@ export const EN: TranslationSchema = {
       "Authentication failed (DeepSeek 401): {inner}. Your API key is rejected. Fix with `deepmicode setup` or `export DEEPSEEK_API_KEY=sk-...`. Get one at https://platform.deepseek.com/api_keys.",
     balance402:
       "Out of balance (DeepSeek 402): {inner}. Top up at https://platform.deepseek.com/top_up — the panel header shows your balance once it's non-zero.",
+    contentModeration421:
+      "Content moderation blocked ({provider} 421): {inner}. The request was intercepted by content review — avoid unsafe or sensitive content.",
     badparam422: "Invalid parameter (DeepSeek 422): {inner}",
     badrequest400: "Bad request (DeepSeek 400): {inner}",
     concurrency429:
@@ -957,9 +958,7 @@ export const EN: TranslationSchema = {
         "model → {id}   (⚠ not in the fetched catalog: {list}. If this is wrong the next call will 400 — run /models to refresh.)",
       modelSet: "model → {id}",
       effortStatus: "effort → {current}   (pick: {list})",
-      effortUsage:
-        "usage: /effort <{list}>   (high is the safe default; max is a DeepSeek extension)",
-      effortUsageNoMax: "usage: /effort <{list}>",
+      effortUsage: "usage: /effort <{list}>",
       effortSet: "effort → {effort}",
       budgetNoCap:
         "no session budget set — DeepMiCode will keep going until you stop it. Set one with: /budget <usd>   (e.g. /budget 5)",

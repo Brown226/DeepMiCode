@@ -1,7 +1,7 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { type ReactNode, useEffect, useState } from "react";
 import type { Balance, Settings as SettingsType, UsageStats } from "../App";
-import { effortChoicesForBaseUrl } from "./composer";
+
 import { getLangLabel, getSupportedLangs, setLang, t, useLang } from "../i18n";
 import { I } from "../icons";
 import type {
@@ -661,7 +661,7 @@ function PageGeneral({
             <div className="h">{t("settings.reasoningEffortHint")}</div>
           </div>
           <div className="seg-ctrl">
-            {effortChoicesForBaseUrl(settings.baseUrl).map((e) => (
+            {(["low", "medium", "high"] as const).map((e) => (
               <button
                 type="button"
                 key={e}
@@ -1057,9 +1057,6 @@ const KNOWN_MODELS = [
   "mimo-v2.5",
 ] as const;
 
-/** @deprecated Use `effortChoicesForBaseUrl(settings.baseUrl)` instead. */
-const _LEGACY_EFFORT_VALUES = ["low", "medium", "high", "max"] as const;
-
 function PageModels({
   settings,
   onSave,
@@ -1122,7 +1119,7 @@ function PageModels({
             <div className="h">{t("settings.reasoningEffortHint")}</div>
           </div>
           <div className="seg-ctrl">
-            {effortChoicesForBaseUrl(settings.baseUrl).map((e) => (
+            {(["low", "medium", "high"] as const).map((e) => (
               <button
                 type="button"
                 key={e}

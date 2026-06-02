@@ -233,9 +233,7 @@ export class DeepSeekClient {
       payload.extra_body = { thinking: { type: opts.thinking } };
     }
     if (opts.reasoningEffort) {
-      // `max` is a DeepSeek-internal extension; the public API only accepts
-      // low / medium / high.  Clamp to avoid a 400 from the endpoint.
-      payload.reasoning_effort = opts.reasoningEffort === "max" ? "high" : opts.reasoningEffort;
+      payload.reasoning_effort = opts.reasoningEffort;
     }
     return payload;
   }

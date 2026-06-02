@@ -14,16 +14,21 @@ import { I } from "../icons";
 import { fmtElapsed } from "./live";
 import { Shortcut } from "./shortcut";
 
-export type ReasoningEffort = "low" | "medium" | "high" | "max";
+export type ReasoningEffort = "low" | "medium" | "high";
 export type EditMode = "review" | "auto" | "yolo" | "plan";
 
 type ModeEntry = { k: EditMode; label: TKey; icon: React.ReactNode; hint: TKey };
 
-const EFFORTS: readonly ReasoningEffort[] = ["low", "medium", "high", "max"];
+const EFFORTS: readonly ReasoningEffort[] = ["low", "medium", "high"];
 
 const MODE_INFO: ModeEntry[] = [
   { k: "plan", label: "editMode.plan", icon: <I.list size={11} />, hint: "editMode.planHint" },
-  { k: "review", label: "editMode.review", icon: <I.shield size={11} />, hint: "editMode.reviewHint" },
+  {
+    k: "review",
+    label: "editMode.review",
+    icon: <I.shield size={11} />,
+    hint: "editMode.reviewHint",
+  },
   { k: "auto", label: "editMode.auto", icon: <I.zap size={11} />, hint: "editMode.autoHint" },
   { k: "yolo", label: "editMode.yolo", icon: <I.warn size={11} />, hint: "editMode.yoloHint" },
 ];
@@ -68,14 +73,9 @@ export type MentionItem = {
   desc?: string;
 };
 
-export type Chip =
-  | { kind: "at"; label: string }
-  | { kind: "slash"; label: string };
+export type Chip = { kind: "at"; label: string } | { kind: "slash"; label: string };
 
-type Popup =
-  | { kind: "slash"; query: string }
-  | { kind: "at"; query: string; nonce: number }
-  | null;
+type Popup = { kind: "slash"; query: string } | { kind: "at"; query: string; nonce: number } | null;
 
 function slashIcon(cmd: string) {
   const m: Record<string, React.ReactNode> = {
@@ -189,10 +189,7 @@ export function Composer({
   useEffect(() => {
     if (!modelMenuOpen) return;
     const onDown = (e: MouseEvent) => {
-      if (
-        modelWrapRef.current &&
-        !modelWrapRef.current.contains(e.target as Node)
-      ) {
+      if (modelWrapRef.current && !modelWrapRef.current.contains(e.target as Node)) {
         setModelMenuOpen(false);
       }
     };
@@ -257,8 +254,7 @@ export function Composer({
     return base;
   }, [popup, mentionResults]);
 
-  const items =
-    popup?.kind === "slash" ? slashItems : popup?.kind === "at" ? atItems : [];
+  const items = popup?.kind === "slash" ? slashItems : popup?.kind === "at" ? atItems : [];
 
   useEffect(() => {
     setActiveIdx(0);
@@ -334,9 +330,7 @@ export function Composer({
       }
       if (e.key === "ArrowUp") {
         e.preventDefault();
-        setActiveIdx((i) =>
-          items.length ? (i - 1 + items.length) % items.length : 0,
-        );
+        setActiveIdx((i) => (items.length ? (i - 1 + items.length) % items.length : 0));
         return;
       }
       if (e.key === "Escape") {
@@ -421,9 +415,7 @@ export function Composer({
               <span className="composer-busy-status">
                 <span className="composer-busy-pip" />
                 <span className="composer-busy-label">{busyLabel}</span>
-                <span className="composer-busy-time">
-                  {fmtElapsed(busyElapsedMs ?? 0)}
-                </span>
+                <span className="composer-busy-time">{fmtElapsed(busyElapsedMs ?? 0)}</span>
               </span>
               <span className="grow" />
               <ModeSwitch mode={editMode} onChange={onEditModeChange} />
@@ -456,17 +448,11 @@ export function Composer({
             <div className="composer-tags">
               {chips.map((c, i) => (
                 <span key={i} className={`chip ${c.kind}`}>
-                  {c.kind === "slash" ? (
-                    <I.slash size={11} />
-                  ) : (
-                    <I.at size={11} />
-                  )}
+                  {c.kind === "slash" ? <I.slash size={11} /> : <I.at size={11} />}
                   <span>{c.label}</span>
                   <span
                     className="x"
-                    onClick={() =>
-                      setChips((cs) => cs.filter((_, j) => j !== i))
-                    }
+                    onClick={() => setChips((cs) => cs.filter((_, j) => j !== i))}
                   >
                     <I.x size={10} />
                   </span>
@@ -643,11 +629,7 @@ function Popup({
     <div className="popup" onMouseDown={(e) => e.preventDefault()}>
       <div className="ph">
         <span className="tok">{kind === "slash" ? "/" : "@"}</span>
-        <span>
-          {kind === "slash"
-            ? t("composer.slashHeader")
-            : t("composer.atHeader")}
-        </span>
+        <span>{kind === "slash" ? t("composer.slashHeader") : t("composer.atHeader")}</span>
         <span className="grow" />
         <span style={{ cursor: "pointer" }} onClick={onClose}>
           <I.x size={11} />
@@ -694,9 +676,7 @@ function Popup({
                 </>
               )}
             </div>
-            <span className="kb">
-              {kind === "slash" ? ((it as SlashCmd).kb ?? "") : ""}
-            </span>
+            <span className="kb">{kind === "slash" ? ((it as SlashCmd).kb ?? "") : ""}</span>
           </div>
         ))}
       </div>

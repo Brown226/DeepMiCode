@@ -35,7 +35,7 @@ describe("eventsCommand", () => {
       ev(2, "user.message", { text: "list src" }),
       ev(3, "model.turn.started", {
         model: "deepseek-v4-flash",
-        reasoningEffort: "max",
+        reasoningEffort: "high",
         prefixHash: "abcd1234ef",
       }),
       ev(4, "tool.intent", { callId: "tc-1", name: "list_directory", args: '{"path":"src"}' }),

@@ -9,7 +9,7 @@ import { ImmutablePrefix } from "../src/memory/runtime.js";
 
 const ctx: EventizeContext = {
   model: "deepseek-v4-flash",
-  reasoningEffort: "max",
+  reasoningEffort: "high",
   prefixHash: "test",
 };
 

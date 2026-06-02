@@ -144,9 +144,7 @@ export const zhCN: typeof en = {
     reasoningEffort: "思考深度",
     reasoningEffortHint: "立即生效。",
     effortHigh: "high",
-    effortMax: "max",
     effortHighDesc: "更快，思考更少",
-    effortMaxDesc: "推理更深，更慢",
     editMode: "审批模式",
     editModeHint: "工具审批策略 — 改动写入磁盘，下一次工具调用生效。",
     editModeReview: "review",
@@ -194,11 +192,7 @@ export const zhCN: typeof en = {
     mimoBaseUrl: "MiMo 基础 URL",
     mimoBaseUrlHint: "覆盖 MiMo API 端点。留空 = 默认区域端点。",
     mimoBaseUrlPlaceholder: "https://token-plan-ams.xiaomimimo.com/v1",
-    mimoRegion: "MiMo 区域",
-    mimoRegionHint: "选择 MiMo 模型的 API 区域。",
-    mimoRegionInternational: "国际版（阿姆斯特丹）",
-    mimoRegionChina: "中国版",
-    mimoRegionNone: "（未设置）",
+
     workspace: "工作目录",
     workspaceHint: "agent 工具操作的根目录。切换会写入配置并重载工具。",
     workspaceChange: "更换…",
@@ -356,8 +350,7 @@ export const zhCN: typeof en = {
   effort: {
     lowDesc: "最快 — 极少推理",
     mediumDesc: "平衡",
-    highDesc: "默认 — vLLM / Azure 安全",
-    maxDesc: "DeepSeek 扩展；标准 OpenAI / vLLM 会拒绝",
+    highDesc: "默认",
   },
   checkpoint: {
     title: "步骤已完成",

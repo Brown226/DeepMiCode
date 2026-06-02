@@ -238,8 +238,7 @@ export const zhCN = {
     modelCustomActive: "当前运行自定义 ID：{model}",
     appliesNextTurn: "下一轮生效",
     effort: "推理强度",
-    effortMax: "max（DeepSeek 扩展 — 标准 OpenAI / vLLM 会拒绝）",
-    effortHigh: "high（安全默认 — vLLM / Azure 兼容）",
+    effortHigh: "high",
     effortMedium: "medium",
     effortLow: "low（最快）",
     webSearch: "网页搜索",
@@ -443,8 +442,7 @@ export const zhCN = {
     slashCommands: "斜杠命令",
     projectFiles: "项目文件",
     effortTitle: "reasoning_effort — 下一轮生效",
-    effortMaxTitle: "max（DeepSeek 扩展）",
-    effortHighTitle: "high（安全默认 — vLLM / Azure 兼容）",
+    effortHighTitle: "high",
     effortMediumTitle: "medium",
     effortLowTitle: "low（最快）",
     editGateTitle: "编辑门控 — Shift+Tab 在 TUI 中循环",
@@ -710,7 +708,8 @@ export const zhCN = {
     marketplaceInstalledBadge: "已安装",
     marketplaceUninstall: "卸载",
     marketplaceEnvTitle: "必需的环境变量",
-    marketplaceEnvHint: "下次启动 `deepmicode code` 之前在 shell 里设好，桥接的服务器才能正常鉴权。",
+    marketplaceEnvHint:
+      "下次启动 `deepmicode code` 之前在 shell 里设好，桥接的服务器才能正常鉴权。",
     marketplaceRestartHint:
       "已写入 ~/.deepmicode/config.json。重启 `deepmicode code` 后服务器才会真正桥接（热重载在路线图上）。",
   },
@@ -1297,8 +1296,7 @@ export const zhCN = {
   effort: {
     lowDesc: "最快 — 极少推理",
     mediumDesc: "平衡",
-    highDesc: "默认 — vLLM / Azure 安全",
-    maxDesc: "DeepSeek 扩展；标准 OpenAI / vLLM 会拒绝",
+    highDesc: "默认",
   },
   editMode: {
     plan: "计划",

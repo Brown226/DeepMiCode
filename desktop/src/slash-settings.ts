@@ -10,7 +10,6 @@ export const SLASH_REASONING_EFFORTS = [
   "low",
   "medium",
   "high",
-  "max",
 ] as const satisfies readonly ReasoningEffort[];
 
 export type SlashSettingsCommand =

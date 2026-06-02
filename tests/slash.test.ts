@@ -183,7 +183,7 @@ describe("handleSlash", () => {
   it("/effort with no arg returns the current value", () => {
     const r = handleSlash("effort", [], makeLoop());
     expect(r.info).toMatch(/effort/);
-    expect(r.info).toMatch(/low.*medium.*high.*max/);
+    expect(r.info).toMatch(/low.*medium.*high/);
   });
 
   it("unknown commands return an unknown flag with hint", () => {
@@ -235,7 +235,7 @@ describe("handleSlash", () => {
   });
 
   it("/effort accepts each enum value", () => {
-    for (const e of ["low", "medium", "high", "max"] as const) {
+    for (const e of ["low", "medium", "high"] as const) {
       const loop = makeLoop();
       handleSlash("effort", [e], loop);
       expect(loop.reasoningEffort).toBe(e);
@@ -247,31 +247,12 @@ describe("handleSlash", () => {
     expect(r.info).toMatch(/usage/);
   });
 
-  it("/effort rejects `max` on non-DeepSeek endpoints (#1794)", () => {
-    const client = new DeepSeekClient({
-      apiKey: "sk-test",
-      baseUrl: "http://localhost:8080/v1",
-      fetch: vi.fn() as unknown as typeof fetch,
-    });
-    const loop = new CacheFirstLoop({ client, prefix: new ImmutablePrefix({ system: "s" }) });
-    const r = handleSlash("effort", ["max"], loop);
-    expect(r.info).toMatch(/usage/);
-    expect(r.info).not.toMatch(/\bmax\b/);
-    expect(loop.reasoningEffort).not.toBe("max");
-  });
-
-  it("/effort status on non-DeepSeek endpoint omits `max` from the list (#1794)", () => {
-    const client = new DeepSeekClient({
-      apiKey: "sk-test",
-      baseUrl: "http://localhost:8080/v1",
-      fetch: vi.fn() as unknown as typeof fetch,
-    });
-    const loop = new CacheFirstLoop({ client, prefix: new ImmutablePrefix({ system: "s" }) });
+  it("/effort status lists all three values", () => {
+    const loop = makeLoop();
     const r = handleSlash("effort", [], loop);
     expect(r.info).toMatch(/low/);
     expect(r.info).toMatch(/medium/);
     expect(r.info).toMatch(/high/);
-    expect(r.info).not.toMatch(/\bmax\b/);
   });
 
   it("/help mentions sessions", () => {
@@ -428,7 +409,7 @@ describe("handleSlash", () => {
       const ctx = detectSlashArgContext("/effort hi");
       expect(ctx).not.toBeNull();
       expect(ctx!.kind).toBe("picker");
-      expect(ctx!.spec.argCompleter).toEqual(["low", "medium", "high", "max"]);
+      expect(ctx!.spec.argCompleter).toEqual(["low", "medium", "high"]);
       expect(ctx!.partial).toBe("hi");
       expect(ctx!.partialOffset).toBe("/effort ".length);
     });

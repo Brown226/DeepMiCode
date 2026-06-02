@@ -294,10 +294,17 @@ export type NeedsSetupEvent = {
 
 export type EditMode = "review" | "auto" | "yolo" | "plan";
 
-export type ReasoningEffort = "low" | "medium" | "high" | "max";
+export type ReasoningEffort = "low" | "medium" | "high";
 
-export type WebSearchEngineName = "bing" | "searxng" | "metaso" | "tavily" | "perplexity" | "exa"
-  | "brave" | "ollama";
+export type WebSearchEngineName =
+  | "bing"
+  | "searxng"
+  | "metaso"
+  | "tavily"
+  | "perplexity"
+  | "exa"
+  | "brave"
+  | "ollama";
 
 export type SettingsEvent = {
   type: "$settings";

@@ -184,7 +184,7 @@ export type SessionInfo = {
 };
 
 export type Settings = {
-  reasoningEffort: "low" | "medium" | "high" | "max";
+  reasoningEffort: "low" | "medium" | "high";
   editMode: "review" | "auto" | "yolo" | "plan";
   budgetUsd: number | null;
   baseUrl?: string;
@@ -193,7 +193,15 @@ export type Settings = {
   recentWorkspaces: string[];
   model: string;
   editor?: string;
-  webSearchEngine?: "bing" | "searxng" | "metaso" | "tavily" | "perplexity" | "exa" | "brave" | "ollama";
+  webSearchEngine?:
+    | "bing"
+    | "searxng"
+    | "metaso"
+    | "tavily"
+    | "perplexity"
+    | "exa"
+    | "brave"
+    | "ollama";
   subagentModels?: Record<string, "flash" | "pro">;
   showSystemEvents?: boolean;
   version: string;
@@ -294,9 +302,7 @@ function fallbackSkillDesc(skill: SkillInfo): string {
         ? t("app.skill.scope.global")
         : t("app.skill.scope.project");
   const runAs =
-    skill.runAs === "subagent"
-      ? t("app.skill.runAs.subagent")
-      : t("app.skill.runAs.inline");
+    skill.runAs === "subagent" ? t("app.skill.runAs.subagent") : t("app.skill.runAs.inline");
   return t("app.skill.generic", { scope, runAs });
 }
 
@@ -316,7 +322,12 @@ function reduce(state: State, action: Action): State {
         busy: true,
         messages: [
           ...state.messages,
-          { kind: "user", text: action.text, clientId: action.clientId, turn: nextMessageTurn(state.messages) },
+          {
+            kind: "user",
+            text: action.text,
+            clientId: action.clientId,
+            turn: nextMessageTurn(state.messages),
+          },
         ],
       };
     }
@@ -1030,10 +1041,7 @@ export function applyIncoming(state: State, ev: IncomingEvent): State {
     case "$btw_result":
       return {
         ...state,
-        messages: [
-          ...state.messages,
-          { kind: "status", text: `≫ btw\n${ev.answer}` },
-        ],
+        messages: [...state.messages, { kind: "status", text: `≫ btw\n${ev.answer}` }],
       };
     case "status":
       return state;
@@ -1088,7 +1096,12 @@ function formatConversationMarkdown(messages: ChatMessage[], userLabel: string):
 }
 
 function sanitizeFilename(name: string): string {
-  return name.replace(/[<>:"/\\|?*\x00-\x1f]/g, "_").replace(/^\.+/, "").slice(0, 200) || "session";
+  return (
+    name
+      .replace(/[<>:"/\\|?*\x00-\x1f]/g, "_")
+      .replace(/^\.+/, "")
+      .slice(0, 200) || "session"
+  );
 }
 
 function defaultExportFilename(session: string): string {
@@ -1299,13 +1312,10 @@ function TabRuntime({
     }
   }, [saveSettings, state.settings?.workspaceDir]);
 
-  const flashToast = useCallback(
-    (msg: string, opts?: { yolo?: boolean; duration?: number }) => {
-      setToast({ msg, yolo: opts?.yolo });
-      window.setTimeout(() => setToast(null), opts?.duration ?? 1600);
-    },
-    [],
-  );
+  const flashToast = useCallback((msg: string, opts?: { yolo?: boolean; duration?: number }) => {
+    setToast({ msg, yolo: opts?.yolo });
+    window.setTimeout(() => setToast(null), opts?.duration ?? 1600);
+  }, []);
 
   // Drag-and-drop: dropping files/folders onto the window inserts them
   // as @-mentions in the draft (relative to workspaceDir when inside it).
@@ -1326,10 +1336,7 @@ function TabRuntime({
         const handle = await webview.onDragDropEvent((event: any) => {
           if (!dropActiveRef.current) return;
           if (event.payload.type === "enter") {
-            document.body.style.setProperty(
-              "--drop-overlay-label",
-              `"${t("dragDrop.overlay")}"`,
-            );
+            document.body.style.setProperty("--drop-overlay-label", `"${t("dragDrop.overlay")}"`);
             document.body.dataset.dragOver = "1";
             return;
           }
@@ -1393,7 +1400,12 @@ function TabRuntime({
         if (skill) {
           const clientId = `skill-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
           const trimmedArgs = args?.trim() ?? "";
-          dispatch({ t: "start_skill", skill: { name: skill.name, runAs: skill.runAs }, args: trimmedArgs, clientId });
+          dispatch({
+            t: "start_skill",
+            skill: { name: skill.name, runAs: skill.runAs },
+            args: trimmedArgs,
+            clientId,
+          });
           sendRpc({ cmd: "skill_run", name: skill.name, args: trimmedArgs || undefined });
           if (!override) setDraft("");
           return;
@@ -1647,7 +1659,12 @@ function TabRuntime({
         composerRef.current?.focus();
       },
     },
-    { cmd: "/new", desc: t("app.cmd.newSession"), run: () => newChat(), kb: shortcutText(["mod", "N"]) },
+    {
+      cmd: "/new",
+      desc: t("app.cmd.newSession"),
+      run: () => newChat(),
+      kb: shortcutText(["mod", "N"]),
+    },
     { cmd: "/clear", desc: t("app.cmd.clearChat"), run: () => dispatch({ t: "clear" }) },
     { cmd: "/abort", desc: t("app.cmd.abort"), run: () => abort(), kb: "esc" },
     {
@@ -1809,11 +1826,7 @@ function TabRuntime({
         style={{ display: active ? undefined : "none" }}
       >
         {/* 移动端遮罩层：点击关闭侧边栏抽屉 */}
-        <div
-          className="mobile-overlay"
-          aria-hidden="true"
-          onClick={onToggleMobileSide}
-        />
+        <div className="mobile-overlay" aria-hidden="true" onClick={onToggleMobileSide} />
 
         <TitleBar
           session={session}
@@ -1850,7 +1863,10 @@ function TabRuntime({
           sessions={state.sessions}
           activeName={state.currentSession}
           loadingName={loadingSession}
-          onNewChat={() => { newChat(); onToggleMobileSide && mobileSideOpen && onToggleMobileSide(); }}
+          onNewChat={() => {
+            newChat();
+            onToggleMobileSide && mobileSideOpen && onToggleMobileSide();
+          }}
           onLoadSession={(name) => {
             if (name === state.currentSession || name === loadingSession) return;
             setLoadingSession(name);
@@ -1859,10 +1875,22 @@ function TabRuntime({
             if (mobileSideOpen) onToggleMobileSide();
           }}
           onDeleteSession={(name) => sendRpc({ cmd: "session_delete", name })}
-          onOpenSettings={() => { openSettingsAt("general"); if (mobileSideOpen) onToggleMobileSide(); }}
-          onOpenRules={() => { openSettingsAt("rules"); if (mobileSideOpen) onToggleMobileSide(); }}
-          onOpenCommands={() => { palette.setOpen(true); if (mobileSideOpen) onToggleMobileSide(); }}
-          onOpenAbout={() => { setAboutOpen(true); if (mobileSideOpen) onToggleMobileSide(); }}
+          onOpenSettings={() => {
+            openSettingsAt("general");
+            if (mobileSideOpen) onToggleMobileSide();
+          }}
+          onOpenRules={() => {
+            openSettingsAt("rules");
+            if (mobileSideOpen) onToggleMobileSide();
+          }}
+          onOpenCommands={() => {
+            palette.setOpen(true);
+            if (mobileSideOpen) onToggleMobileSide();
+          }}
+          onOpenAbout={() => {
+            setAboutOpen(true);
+            if (mobileSideOpen) onToggleMobileSide();
+          }}
         />
 
         <main className="main" style={{ position: "relative" }}>
@@ -2247,23 +2275,63 @@ function WinMinimize() {
 function WinMaximize() {
   return (
     <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
-      <rect x="0.5" y="0.5" width="9" height="9" fill="none" stroke="currentColor" strokeWidth="1" />
+      <rect
+        x="0.5"
+        y="0.5"
+        width="9"
+        height="9"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+      />
     </svg>
   );
 }
 function WinRestore() {
   return (
     <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
-      <rect x="2.5" y="0.5" width="7" height="7" fill="none" stroke="currentColor" strokeWidth="1" />
-      <rect x="0.5" y="2.5" width="7" height="7" fill="var(--bg-2, #eee)" stroke="currentColor" strokeWidth="1" />
+      <rect
+        x="2.5"
+        y="0.5"
+        width="7"
+        height="7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+      />
+      <rect
+        x="0.5"
+        y="2.5"
+        width="7"
+        height="7"
+        fill="var(--bg-2, #eee)"
+        stroke="currentColor"
+        strokeWidth="1"
+      />
     </svg>
   );
 }
 function WinClose() {
   return (
     <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
-      <line x1="0.5" y1="0.5" x2="9.5" y2="9.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-      <line x1="9.5" y1="0.5" x2="0.5" y2="9.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <line
+        x1="0.5"
+        y1="0.5"
+        x2="9.5"
+        y2="9.5"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+      <line
+        x1="9.5"
+        y1="0.5"
+        x2="0.5"
+        y2="9.5"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -2312,9 +2380,13 @@ function TitleBar({
     const win = getCurrentWindow();
     win.isMaximized().then(setIsMaximized);
     let unlisten: (() => void) | undefined;
-    win.listen("tauri://resize", async () => {
-      setIsMaximized(await win.isMaximized());
-    }).then((fn: (() => void) | undefined) => { unlisten = fn; });
+    win
+      .listen("tauri://resize", async () => {
+        setIsMaximized(await win.isMaximized());
+      })
+      .then((fn: (() => void) | undefined) => {
+        unlisten = fn;
+      });
     return () => unlisten?.();
   }, []);
 
@@ -2435,39 +2507,89 @@ function TitleBar({
           {menuOpen ? (
             <div
               className="popup"
-              style={{ top: "calc(100% + 6px)", right: 0, left: "auto", bottom: "auto", width: 220 }}
+              style={{
+                top: "calc(100% + 6px)",
+                right: 0,
+                left: "auto",
+                bottom: "auto",
+                width: 220,
+              }}
             >
               <div className="popup-list">
-                <div className="popup-item" onClick={() => { onOpenCommands(); setMenuOpen(false); }}>
-                  <span className="ico"><I.search size={12} /></span>
-                  <div className="nm"><span>{t("app.titlebar.commandPalette")}</span></div>
+                <div
+                  className="popup-item"
+                  onClick={() => {
+                    onOpenCommands();
+                    setMenuOpen(false);
+                  }}
+                >
+                  <span className="ico">
+                    <I.search size={12} />
+                  </span>
+                  <div className="nm">
+                    <span>{t("app.titlebar.commandPalette")}</span>
+                  </div>
                   <span className="kb">
                     <Shortcut keys={["mod", "K"]} />
                   </span>
                 </div>
                 <div
                   className="popup-item"
-                  onClick={() => { if (hasMessages) onCopy(); setMenuOpen(false); }}
+                  onClick={() => {
+                    if (hasMessages) onCopy();
+                    setMenuOpen(false);
+                  }}
                   style={{ opacity: hasMessages ? 1 : 0.5 }}
                 >
-                  <span className="ico"><I.copy size={12} /></span>
-                  <div className="nm"><span>{t("app.titlebar.copyMd")}</span></div>
+                  <span className="ico">
+                    <I.copy size={12} />
+                  </span>
+                  <div className="nm">
+                    <span>{t("app.titlebar.copyMd")}</span>
+                  </div>
                 </div>
                 <div
                   className="popup-item"
-                  onClick={() => { if (hasMessages) onExport(); setMenuOpen(false); }}
+                  onClick={() => {
+                    if (hasMessages) onExport();
+                    setMenuOpen(false);
+                  }}
                   style={{ opacity: hasMessages ? 1 : 0.5 }}
                 >
-                  <span className="ico"><I.download size={12} /></span>
-                  <div className="nm"><span>{t("app.titlebar.exportMd")}</span></div>
+                  <span className="ico">
+                    <I.download size={12} />
+                  </span>
+                  <div className="nm">
+                    <span>{t("app.titlebar.exportMd")}</span>
+                  </div>
                 </div>
-                <div className="popup-item" onClick={() => { onClear(); setMenuOpen(false); }}>
-                  <span className="ico"><I.x size={12} /></span>
-                  <div className="nm"><span>{t("app.titlebar.clearChat")}</span></div>
+                <div
+                  className="popup-item"
+                  onClick={() => {
+                    onClear();
+                    setMenuOpen(false);
+                  }}
+                >
+                  <span className="ico">
+                    <I.x size={12} />
+                  </span>
+                  <div className="nm">
+                    <span>{t("app.titlebar.clearChat")}</span>
+                  </div>
                 </div>
-                <div className="popup-item" onClick={() => { onOpenSettings(); setMenuOpen(false); }}>
-                  <span className="ico"><I.cog size={12} /></span>
-                  <div className="nm"><span>{t("app.titlebar.settings")}</span></div>
+                <div
+                  className="popup-item"
+                  onClick={() => {
+                    onOpenSettings();
+                    setMenuOpen(false);
+                  }}
+                >
+                  <span className="ico">
+                    <I.cog size={12} />
+                  </span>
+                  <div className="nm">
+                    <span>{t("app.titlebar.settings")}</span>
+                  </div>
                   <span className="kb">
                     <Shortcut keys={["mod", ","]} />
                   </span>
@@ -2484,7 +2606,10 @@ function TitleBar({
               type="button"
               className="win-ctrl"
               title={t("app.titlebar.minimize")}
-              onMouseDown={(e) => { e.stopPropagation(); win.minimize(); }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                win.minimize();
+              }}
             >
               <WinMinimize />
             </button>
@@ -2492,7 +2617,10 @@ function TitleBar({
               type="button"
               className="win-ctrl"
               title={isMaximized ? t("app.titlebar.restore") : t("app.titlebar.maximize")}
-              onMouseDown={(e) => { e.stopPropagation(); win.toggleMaximize(); }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                win.toggleMaximize();
+              }}
             >
               {isMaximized ? <WinRestore /> : <WinMaximize />}
             </button>
@@ -2500,7 +2628,10 @@ function TitleBar({
               type="button"
               className="win-ctrl close"
               title={t("app.titlebar.close")}
-              onMouseDown={(e) => { e.stopPropagation(); win.close(); }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                win.close();
+              }}
             >
               <WinClose />
             </button>

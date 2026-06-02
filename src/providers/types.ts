@@ -19,7 +19,8 @@ export interface ChatRequestOptions {
   toolChoice?: "auto" | "none" | "required" | { type: "function"; function: { name: string } };
   stop?: string[];
   stream?: boolean;
-  reasoningEffort?: "low" | "medium" | "high" | "max";
+  reasoningEffort?: "low" | "medium" | "high";
+  responseFormat?: { type: "json_object" | "text" };
   signal?: AbortSignal;
   /** Provider-specific extra body fields. */
   extraBody?: Record<string, unknown>;

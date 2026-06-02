@@ -184,7 +184,8 @@ export const de: typeof en = {
     restoreBtn: "Wiederherstellen",
     restoreConfirm: '"{name}" wiederherstellen? Dies überschreibt aktuelle Dateien.',
     deleteBtn: "Löschen",
-    deleteConfirm: 'Checkpoint "{name}" löschen? Der Schnappschuss wird entfernt, Dateien bleiben unverändert.',
+    deleteConfirm:
+      'Checkpoint "{name}" löschen? Der Schnappschuss wird entfernt, Dateien bleiben unverändert.',
     createBtn: "Schnappschuss",
     createPlaceholder: "Name für Schnappschuss…",
     backToList: "zurück zur Liste",
@@ -237,7 +238,8 @@ export const de: typeof en = {
     baseUrlHint: "Basis-URL für API-Anfragen",
     mimoSection: "MiMo API",
     mimoApiKey: "MiMo API-Schlüssel",
-    mimoApiKeyHint: "Separater Schlüssel für Xiaomi MiMo Modelle. Fällt auf MIMO_API_KEY Env-Var zurück.",
+    mimoApiKeyHint:
+      "Separater Schlüssel für Xiaomi MiMo Modelle. Fällt auf MIMO_API_KEY Env-Var zurück.",
     mimoApiKeyNotSet: "Nicht gesetzt",
     mimoApiKeySave: "Schlüssel speichern",
     mimoApiKeySet: "Gesetzt",
@@ -252,12 +254,12 @@ export const de: typeof en = {
     sectionDefaults: "Standardwerte",
     effortSection: "Reasoning-Effort",
     modelCustom: "Benutzerdefinierte Modell-ID",
-    modelCustomHint: "Jede OpenAI-kompatible ID, die dein Endpunkt bereitstellt (vLLM, Ollama, Together, …).",
+    modelCustomHint:
+      "Jede OpenAI-kompatible ID, die dein Endpunkt bereitstellt (vLLM, Ollama, Together, …).",
     modelCustomActive: "Läuft aktuell auf benutzerdefinierter ID: {model}",
     appliesNextTurn: "gilt ab nächstem Turn",
     effort: "Effort",
-    effortMax: "max (DeepSeek-Erweiterung — von stock OpenAI / vLLM abgelehnt)",
-    effortHigh: "hoch (sicherer Standard — vLLM / Azure kompatibel)",
+    effortHigh: "hoch",
     effortMedium: "mittel",
     effortLow: "niedrig (am schnellsten)",
     webSearch: "Websuche",
@@ -265,11 +267,13 @@ export const de: typeof en = {
     webSearchEngine: "Suchmaschine",
     webSearchEngineBing: "bing — Standard, funktioniert von CN ohne Proxy",
     webSearchEngineSearxng: "searxng — selbst gehostet (Endpunkt via /se searxng <url>)",
-    webSearchEngineMetaso: "metaso — 100/Tag kostenlos (CN-freundlich, kostenloser Schlüssel auf metaso.cn)",
+    webSearchEngineMetaso:
+      "metaso — 100/Tag kostenlos (CN-freundlich, kostenloser Schlüssel auf metaso.cn)",
     webSearchEngineTavily: "tavily — 1000/Monat kostenlos (TAVILY_API_KEY setzen)",
     webSearchEnginePerplexity: "perplexity — AI-native (PERPLEXITY_API_KEY setzen)",
     webSearchEngineExa: "exa — AI-native 1000/Monat kostenlos (EXA_API_KEY setzen)",
-    webSearchEngineBrave: "brave — unabhängiger Index, 2000/Monat kostenlos (BRAVE_SEARCH_API_KEY setzen)",
+    webSearchEngineBrave:
+      "brave — unabhängiger Index, 2000/Monat kostenlos (BRAVE_SEARCH_API_KEY setzen)",
     webSearchEngineOllama: "ollama — Ollama Cloud-Websuche (OLLAMA_API_KEY setzen)",
     webSearchEngineNote: "gilt für den nächsten web_search-Aufruf",
     sectionBudget: "Budget",
@@ -305,7 +309,8 @@ export const de: typeof en = {
     skillsLoaded: "Skills geladen",
     subagentModelFlash: "flash",
     subagentModelPro: "pro",
-    subagentModelHint: "Modell, das verwendet wird, wenn dieser Skill seinen isolierten Subagenten startet",
+    subagentModelHint:
+      "Modell, das verwendet wird, wenn dieser Skill seinen isolierten Subagenten startet",
     sectionRuntime: "Laufzeit",
     activeModel: "aktives Modell",
     model: "Modell",
@@ -316,7 +321,8 @@ export const de: typeof en = {
     editModeNote: "Umschaltung über den Chat-Tab-Header",
     editModeHint: "Bearbeitungsmodus konfigurieren",
     showSystemEvents: "Systemereignisse",
-    showSystemEventsHint: "Zeige leise Inline-Hinweise zur Kontextkomprimierung, Abbruch, Ratelimit.",
+    showSystemEventsHint:
+      "Zeige leise Inline-Hinweise zur Kontextkomprimierung, Abbruch, Ratelimit.",
     shown: "angezeigt",
     hidden: "ausgeblendet",
     sectionLanguage: "Sprache",
@@ -439,7 +445,8 @@ export const de: typeof en = {
     modeView: "Sitzungsansicht",
     placeholder: "Prompt eingeben – Enter sendet, Shift+Enter für neue Zeile · / @ für Auswahl",
     placeholderBusy: "warte auf Abschluss des aktuellen Turns…",
-    placeholderSteerBusy: "tippe zum Steuern — Befehle und Auswahl sind während des Betriebs deaktiviert",
+    placeholderSteerBusy:
+      "tippe zum Steuern — Befehle und Auswahl sind während des Betriebs deaktiviert",
     steerHint: "Nachricht steuert den aktuellen Turn (wird als Anweisung hinzugefügt)",
     send: "Senden",
     new: "Neu",
@@ -462,8 +469,7 @@ export const de: typeof en = {
     slashCommands: "Slash-Befehle",
     projectFiles: "Projektdateien",
     effortTitle: "reasoning_effort — gilt ab nächstem Turn",
-    effortMaxTitle: "max (DeepSeek-Erweiterung)",
-    effortHighTitle: "hoch (sicherer Standard — vLLM / Azure kompatibel)",
+    effortHighTitle: "hoch",
     effortMediumTitle: "mittel",
     effortLowTitle: "niedrig (am schnellsten)",
     editGateTitle: "Edit-Gate — Shift+Tab schaltet in der TUI",
@@ -547,7 +553,8 @@ export const de: typeof en = {
     records: "{count} Datensätze",
     dailyUsage: "Tägliche Nutzung",
     dailyMeta: "Kosten · Cache-Ersparnis · Turns",
-    noData: "Noch keine Nutzungsdaten — führe einen Turn in deepmicode chat / code / run aus und aktualisiere.",
+    noData:
+      "Noch keine Nutzungsdaten — führe einen Turn in deepmicode chat / code / run aus und aktualisiere.",
     windows: "Rollierende Fenster",
     colWindow: "Fenster",
     colTurns: "Turns",
@@ -583,7 +590,8 @@ export const de: typeof en = {
     newHint: "Aktuelles Gespräch archivieren und neues beginnen",
     switchBtn: "Zu dieser Sitzung wechseln",
     deleteBtn: "Löschen",
-    deleteConfirm: 'Sitzung "{name}" löschen? Dies entfernt die Transkriptdatei und kann nicht rückgängig gemacht werden.',
+    deleteConfirm:
+      'Sitzung "{name}" löschen? Dies entfernt die Transkriptdatei und kann nicht rückgängig gemacht werden.',
     cantDeleteActive: "Wechsle zu einer anderen Sitzung, bevor du diese löschst.",
     attachRequired:
       "Live-Sitzungsoperationen benötigen eine angehängte CLI-Sitzung. Starte über deepmicode chat oder öffne das Dashboard von einer TUI-Sitzung aus.",
@@ -637,15 +645,18 @@ export const de: typeof en = {
       search_content:
         "Durchsuche Dateiinhalte rekursiv mit grep nach einem Teilstring oder Regex. Liefert Treffer im Format pfad:zeile:text. Das richtige Werkzeug zum Finden von Referenzen.",
       glob: "Liste Dateien, die einem Glob-Muster entsprechen, sortiert nach Änderungsdatum. Standardlimit 200, max 1000. Überspringt node_modules/.git/dist standardmäßig.",
-      get_file_info: "Ermittle Informationen zu einem Pfad unter dem Sandbox-Root. Liefert Typ, Größe in Bytes und Änderungsdatum.",
+      get_file_info:
+        "Ermittle Informationen zu einem Pfad unter dem Sandbox-Root. Liefert Typ, Größe in Bytes und Änderungsdatum.",
       write_file:
         "Erstelle oder überschreibe eine Datei mit dem angegebenen Inhalt. Übergeordnete Verzeichnisse werden bei Bedarf erstellt.",
       edit_file:
         "Wende eine SEARCH/REPLACE-Bearbeitung auf eine vorhandene Datei an. Die Suche muss exakt übereinstimmen und in der Datei eindeutig sein.",
       multi_edit:
         "Wende N SEARCH/REPLACE-Bearbeitungen atomar auf eine oder mehrere Dateien an. Wenn eine Bearbeitung fehlschlägt, werden keine Dateien geschrieben.",
-      create_directory: "Erstelle ein Verzeichnis (und alle fehlenden übergeordneten) unter dem Sandbox-Root.",
-      move_file: "Benenne eine Datei oder ein Verzeichnis unter dem Sandbox-Root um oder verschiebe es.",
+      create_directory:
+        "Erstelle ein Verzeichnis (und alle fehlenden übergeordneten) unter dem Sandbox-Root.",
+      move_file:
+        "Benenne eine Datei oder ein Verzeichnis unter dem Sandbox-Root um oder verschiebe es.",
       delete_file:
         "Lösche eine Datei unter dem Sandbox-Root. Lehnt Verzeichnisse ab — verwende delete_directory dafür.",
       delete_directory:
@@ -719,7 +730,8 @@ export const de: typeof en = {
     whyUnbridged: "Warum unverbunden?",
     whyUnbridgedDesc:
       "Diese Spec befindet sich in deiner config.json, ist aber nicht in die Live-Sitzung eingebunden. MCP-Server werden beim Start von deepmicode code angehängt; das Dashboard allein kann den Kindprozess nicht starten.",
-    whyUnbridgedHint: "Zum Aktivieren: starte deepmicode code neu und aktualisiere dieses Dashboard.",
+    whyUnbridgedHint:
+      "Zum Aktivieren: starte deepmicode code neu und aktualisiere dieses Dashboard.",
     bridgeFailed: "Verbindung fehlgeschlagen",
     bridgeFailedTitle: "Verbindung fehlgeschlagen · in Konfiguration",
     bridgeFailedHint:
@@ -770,7 +782,8 @@ export const de: typeof en = {
     create: "erstellen",
     noFiles: "Noch keine Memory-Dateien.",
     pickHint: "Wähle links eine Memory-Datei.",
-    pickDesc: "Projekt-DEEPMICODE.md ist commitierbar; globale Notizen leben in ~/.deepmicode/memory/.",
+    pickDesc:
+      "Projekt-DEEPMICODE.md ist commitierbar; globale Notizen leben in ~/.deepmicode/memory/.",
     chars: "{count} Zeichen",
     saved: "{scope} gespeichert",
     reloadHint: "wird beim nächsten /new oder Sitzungsneustart neu angewendet",
@@ -783,7 +796,8 @@ export const de: typeof en = {
     matrixSub: "{scripts} Skript{s} × {events} Ereignis{se}",
     noHooks: "Keine Hooks konfiguriert. Bearbeite das JSON unten, um welche hinzuzufügen.",
     colScript: "Skript",
-    noProject: "Kein aktives Projekt — öffne /dashboard von deepmicode code, um Projekt-Hooks zu bearbeiten.",
+    noProject:
+      "Kein aktives Projekt — öffne /dashboard von deepmicode code, um Projekt-Hooks zu bearbeiten.",
     saveReload: "Speichern + Neu laden",
     discard: "Änderungen verwerfen",
     savedReloaded: "{scope} gespeichert + neu geladen",
@@ -850,7 +864,8 @@ export const de: typeof en = {
     ...en.plans,
     loading: "lade Pläne…",
     failed: "Pläne fehlgeschlagen: {error}",
-    noPlans: "Noch keine archivierten Pläne — führe einen Turn aus, der submit_plan und mark_step_complete aufruft.",
+    noPlans:
+      "Noch keine archivierten Pläne — führe einen Turn aus, der submit_plan und mark_step_complete aufruft.",
     filterPlaceholder: "Pläne filtern",
     active: "aktiv",
     done: "erledigt",
@@ -907,9 +922,11 @@ export const de: typeof en = {
     openaiCompat: "OpenAI-kompatibel",
     apiUrl: "API-URL",
     apiKey: "API-Schlüssel",
-    apiKeyStoredNote: "API-Schlüssel wird in ~/.deepmicode/config.json gespeichert — teile diese Datei nicht.",
+    apiKeyStoredNote:
+      "API-Schlüssel wird in ~/.deepmicode/config.json gespeichert — teile diese Datei nicht.",
     customRequestBody: "benutzerdefinierter Request-Body",
-    invalidCustomRequestBody: "Der benutzerdefinierte Request-Body muss gültiges JSON sein: {error}",
+    invalidCustomRequestBody:
+      "Der benutzerdefinierte Request-Body muss gültiges JSON sein: {error}",
     customRequestBodyMustBeObject: "Der benutzerdefinierte Request-Body muss ein JSON-Objekt sein.",
     saveBeforeIndex: "Speichere semantische Einstellungen vor dem Start eines Index.",
     extraBody: "zusätzlicher Body",
@@ -970,7 +987,8 @@ export const de: typeof en = {
     daemonUp: "Daemon ist aktiv",
     daemonTimeout: "Daemon wurde nicht rechtzeitig aktiv — überprüfe ollama serve manuell",
     pullingModel: "ziehe {model} — dies kann bei der ersten Installation einige Minuten dauern",
-    savedConfig: "gespeichert · {count} Felder aktualisiert · führe Index erneut aus, um anzuwenden",
+    savedConfig:
+      "gespeichert · {count} Felder aktualisiert · führe Index erneut aus, um anzuwenden",
     runningPreview: "führe Trockenlauf gegen Projekt-Root aus…",
     exclude: "ausschließen",
   },
@@ -1009,7 +1027,8 @@ export const de: typeof en = {
     before: "vorher",
     after: "nachher",
     workspaceTitle: "Modell möchte Arbeitsbereich wechseln",
-    workspaceSubtitle: "jedes nachfolgende Datei-/Shell-/Memory-Tool wird gegen den neuen Root aufgelöst",
+    workspaceSubtitle:
+      "jedes nachfolgende Datei-/Shell-/Memory-Tool wird gegen den neuen Root aufgelöst",
     switchBtn: "Wechseln (Enter)",
     denyBtn: "Ablehnen (Esc)",
     stepComplete: "Schritt abgeschlossen{counter}",
@@ -1374,8 +1393,7 @@ export const de: typeof en = {
     ...en.effort,
     lowDesc: "am schnellsten — minimales Reasoning",
     mediumDesc: "ausgewogen",
-    highDesc: "Standard — sicher für vLLM / Azure",
-    maxDesc: "DeepSeek-Erweiterung; von stock OpenAI / vLLM abgelehnt",
+    highDesc: "Standard",
   },
   editMode: {
     ...en.editMode,

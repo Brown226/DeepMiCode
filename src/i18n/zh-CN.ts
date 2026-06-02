@@ -195,13 +195,13 @@ export const zhCN: TranslationSchema = {
     budgetHint: "会话美元上限 — 80% 时警告，100% 时拒绝下一轮",
     modelIdHint: "DeepSeek 模型 ID（例如 deepseek-v4-flash）",
     systemPromptHint: "覆盖默认系统提示词",
-    effortHint: "推理强度 — low|medium|high|max",
+    effortHint: "推理强度 — low|medium|high",
     sessionNameHint: "会话名称（默认：'default'）",
     ephemeralHint: "禁用本次运行的会话持久化",
     mcpSpecHint: "MCP 服务器规格（可重复）",
     mcpPrefixHint: "用此字符串为 MCP 工具名添加前缀",
     noConfigHint: "本次运行忽略 ~/.deepmicode/config.json",
-    effortHintShort: "推理强度 — low|medium|high|max",
+    effortHintShort: "推理强度 — low|medium|high",
     budgetHintShort: "会话美元上限",
     transcriptHintShort: "JSONL 转录稿路径",
     mcpSpecHintShort: "MCP 服务器规格（可重复）",
@@ -685,6 +685,8 @@ export const zhCN: TranslationSchema = {
       "认证失败（DeepSeek 401）：{inner}。你的 API key 被拒绝。运行 `deepmicode setup` 或 `export DEEPSEEK_API_KEY=sk-...` 修复。在 https://platform.deepseek.com/api_keys 获取 key。",
     balance402:
       "余额不足（DeepSeek 402）：{inner}。在 https://platform.deepseek.com/top_up 充值 — 余额非零时面板顶栏会显示。",
+    contentModeration421:
+      "内容审核拦截（{provider} 421）：{inner}。请求被内容审核拦截 — 请避免不安全或敏感内容。",
     badparam422: "参数错误（DeepSeek 422）：{inner}",
     badrequest400: "请求错误（DeepSeek 400）：{inner}",
     concurrency429:
@@ -903,8 +905,7 @@ export const zhCN: TranslationSchema = {
         "model → {id}   （⚠ 不在获取的目录中：{list}。如果这是错误的，下次调用将返回 400 — 运行 /models 刷新。）",
       modelSet: "model → {id}",
       effortStatus: "effort → {current}   （可选：{list}）",
-      effortUsage: "用法：/effort <{list}>   （high 为安全默认；max 是 DeepSeek 扩展）",
-      effortUsageNoMax: "用法：/effort <{list}>",
+      effortUsage: "用法：/effort <{list}>",
       effortSet: "effort → {effort}",
       budgetNoCap:
         "未设置会话预算 — DeepMiCode 将持续运行直到您停止。使用以下方式设置：/budget <usd>   （例如 /budget 5）",

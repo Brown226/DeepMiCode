@@ -1132,7 +1132,7 @@ describe("CacheFirstLoop - configure() method", () => {
       client,
       prefix: new ImmutablePrefix({ system: "s" }),
       stream: false,
-      reasoningEffort: "max",
+      reasoningEffort: "high",
     });
     loop.configure({ reasoningEffort: "high" });
     expect(loop.reasoningEffort).toBe("high");

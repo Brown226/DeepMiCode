@@ -554,7 +554,12 @@ function PageGeneral({
           </div>
           <div className="seg-ctrl">
             {getSupportedLangs().map((code) => (
-              <button type="button" key={code} data-on={lang === code} onClick={() => setLang(code)}>
+              <button
+                type="button"
+                key={code}
+                data-on={lang === code}
+                onClick={() => setLang(code)}
+              >
                 {getLangLabel(code)}
               </button>
             ))}
@@ -596,7 +601,7 @@ function PageGeneral({
             <div className="h">{t("settings.reasoningEffortHint")}</div>
           </div>
           <div className="seg-ctrl">
-            {(["low", "medium", "high", "max"] as const).map((e) => (
+            {(["low", "medium", "high"] as const).map((e) => (
               <button
                 type="button"
                 key={e}
@@ -859,7 +864,7 @@ const KNOWN_MODELS = [
   "mimo-v2-pro",
 ] as const;
 
-const EFFORT_VALUES = ["low", "medium", "high", "max"] as const;
+const EFFORT_VALUES = ["low", "medium", "high"] as const;
 type EffortValue = (typeof EFFORT_VALUES)[number];
 
 function PageModels({
@@ -1100,9 +1105,7 @@ function PageSkills({
                   className="field"
                   style={{ marginLeft: "auto", minWidth: 96 }}
                   value={subagentModels[s.name] ?? "flash"}
-                  onChange={(e) =>
-                    setSubagentModel(s.name, e.target.value as "flash" | "pro")
-                  }
+                  onChange={(e) => setSubagentModel(s.name, e.target.value as "flash" | "pro")}
                   title={t("settings.subagentModelHint")}
                 >
                   <option value="flash">{t("settings.subagentModelFlash")}</option>
@@ -1159,9 +1162,7 @@ function PageMemory({
               </button>
             ))}
           </div>
-          <pre className="memory-detail">
-            {detail ? detail.body : t("settings.memoryDesc")}
-          </pre>
+          <pre className="memory-detail">{detail ? detail.body : t("settings.memoryDesc")}</pre>
         </div>
       )}
     </section>

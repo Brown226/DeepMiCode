@@ -124,6 +124,7 @@ const sessionUpdate = z.object({
     balanceCurrency: z.string().optional(),
     costDisplayCurrency: z.string().optional(),
     cacheHit: z.number().optional(),
+    baseUrl: z.string().optional(),
   }),
 });
 
@@ -134,7 +135,7 @@ const sessionModelChange = z.object({
 
 const sessionEffortChange = z.object({
   type: z.literal("session.effort.change"),
-  reasoningEffort: z.enum(["low", "medium", "high", "max"]),
+  reasoningEffort: z.enum(["low", "medium", "high"]),
 });
 
 const mcpLoading = z.object({

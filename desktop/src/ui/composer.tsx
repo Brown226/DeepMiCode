@@ -17,26 +17,12 @@ import { DEFAULT_COMPOSER_ROWS, applyComposerTextareaAutosize } from "./composer
 import { fmtElapsed } from "./live";
 import { Shortcut } from "./shortcut";
 
-export type ReasoningEffort = "low" | "medium" | "high" | "max";
+export type ReasoningEffort = "low" | "medium" | "high";
 export type EditMode = "review" | "auto" | "yolo" | "plan";
 
 type ModeEntry = { k: EditMode; label: TKey; icon: React.ReactNode; hint: TKey };
 
-const ALL_EFFORTS: readonly ReasoningEffort[] = ["low", "medium", "high", "max"];
-const STANDARD_EFFORTS: readonly ReasoningEffort[] = ["low", "medium", "high"];
-
-/** `max` is a DeepSeek / MiMo extension — third-party endpoints reject it with 400. */
-export function effortChoicesForBaseUrl(baseUrl?: string | null): readonly ReasoningEffort[] {
-  if (!baseUrl) return STANDARD_EFFORTS;
-  try {
-    const host = new URL(baseUrl).hostname.toLowerCase();
-    return host === "api.deepseek.com" || host.includes("xiaomimimo.com")
-      ? ALL_EFFORTS
-      : STANDARD_EFFORTS;
-  } catch {
-    return STANDARD_EFFORTS;
-  }
-}
+const EFFORTS: readonly ReasoningEffort[] = ["low", "medium", "high"];
 
 const MODE_INFO: ModeEntry[] = [
   { k: "plan", label: "editMode.plan", icon: <I.list size={11} />, hint: "editMode.planHint" },
@@ -162,7 +148,6 @@ export function Composer({
   onMentionPicked,
   mentionResults,
   workspaceDir,
-  baseUrl,
   queuedSends,
   onQueueWhileBusy,
   onDequeueSend,
@@ -184,7 +169,6 @@ export function Composer({
   onEditModeChange: (mode: EditMode) => void;
   textareaRef: RefObject<HTMLTextAreaElement | null>;
   slashCommands: SlashCmd[];
-  baseUrl?: string;
   onMentionQuery?: (q: string, nonce: number) => void;
   onMentionPreview?: (path: string, nonce: number) => void;
   onMentionPicked?: (path: string) => void;
@@ -651,7 +635,6 @@ export function Composer({
                 <ModelEffortMenu
                   modelLabel={modelLabel}
                   currentEffort={reasoningEffort}
-                  baseUrl={baseUrl}
                   onPickModel={(m) => {
                     onModelChange(m);
                     setModelMenuOpen(false);
@@ -817,17 +800,14 @@ const KNOWN_MODELS: readonly string[] = [
 function ModelEffortMenu({
   modelLabel,
   currentEffort,
-  baseUrl,
   onPickModel,
   onPickEffort,
 }: {
   modelLabel: string;
   currentEffort: ReasoningEffort;
-  baseUrl?: string;
   onPickModel: (model: string) => void;
   onPickEffort: (effort: ReasoningEffort) => void;
 }) {
-  const efforts = effortChoicesForBaseUrl(baseUrl);
   const [draft, setDraft] = useState(modelLabel);
   return (
     <div
@@ -883,7 +863,7 @@ function ModelEffortMenu({
         <span>{t("composer.switchEffort")}</span>
       </div>
       <div className="popup-list">
-        {efforts.map((e) => (
+        {EFFORTS.map((e) => (
           <div
             key={e}
             className="popup-item"

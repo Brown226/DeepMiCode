@@ -143,9 +143,7 @@ export const en = {
     reasoningEffort: "Reasoning effort",
     reasoningEffortHint: "Applies live to the running session.",
     effortHigh: "high",
-    effortMax: "max",
     effortHighDesc: "faster, less thinking",
-    effortMaxDesc: "deeper reasoning, slower",
     editMode: "Edit gate",
     editModeHint: "Tool approval behavior — change saves to disk, takes effect on next tool call.",
     editModeReview: "review",
@@ -194,11 +192,7 @@ export const en = {
     mimoBaseUrl: "MiMo base URL",
     mimoBaseUrlHint: "Override MiMo API endpoint. Empty = default regional endpoint.",
     mimoBaseUrlPlaceholder: "https://token-plan-ams.xiaomimimo.com/v1",
-    mimoRegion: "MiMo region",
-    mimoRegionHint: "Select API region for MiMo models.",
-    mimoRegionInternational: "International (Amsterdam)",
-    mimoRegionChina: "China",
-    mimoRegionNone: "(not set)",
+
     workspace: "Workspace",
     workspaceHint:
       "Root dir agent tools operate inside. Switching saves to config and reloads tools.",
@@ -370,8 +364,7 @@ export const en = {
   effort: {
     lowDesc: "fastest — minimal reasoning",
     mediumDesc: "balanced",
-    highDesc: "default — safe for vLLM / Azure",
-    maxDesc: "DeepSeek extension; rejected by stock OpenAI / vLLM",
+    highDesc: "default",
   },
   checkpoint: {
     title: "Step complete",

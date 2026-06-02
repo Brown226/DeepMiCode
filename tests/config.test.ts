@@ -625,7 +625,7 @@ describe("config", () => {
   });
 
   it("saveReasoningEffort + loadReasoningEffort round-trip every supported value", () => {
-    for (const e of ["low", "medium", "high", "max"] as const) {
+    for (const e of ["low", "medium", "high"] as const) {
       saveReasoningEffort(e, path);
       expect(loadReasoningEffort(path)).toBe(e);
       expect(readConfig(path).reasoningEffort).toBe(e);

@@ -238,8 +238,7 @@ export const en = {
     modelCustomActive: "Currently running on a custom id: {model}",
     appliesNextTurn: "applies next turn",
     effort: "effort",
-    effortMax: "max (DeepSeek extension — rejected by stock OpenAI / vLLM)",
-    effortHigh: "high (safe default — vLLM / Azure compatible)",
+    effortHigh: "high",
     effortMedium: "medium",
     effortLow: "low (fastest)",
     webSearch: "web search",
@@ -443,8 +442,7 @@ export const en = {
     slashCommands: "slash commands",
     projectFiles: "project files",
     effortTitle: "reasoning_effort — applies next turn",
-    effortMaxTitle: "max (DeepSeek extension)",
-    effortHighTitle: "high (safe default — vLLM / Azure compatible)",
+    effortHighTitle: "high",
     effortMediumTitle: "medium",
     effortLowTitle: "low (fastest)",
     editGateTitle: "edit gate — Shift+Tab cycles in TUI",
@@ -561,7 +559,8 @@ export const en = {
     newHint: "Archive the current conversation and start a fresh one",
     switchBtn: "Switch to this session",
     deleteBtn: "Delete",
-    deleteConfirm: "Delete session \"{name}\"? This removes the transcript file and cannot be undone.",
+    deleteConfirm:
+      'Delete session "{name}"? This removes the transcript file and cannot be undone.',
     cantDeleteActive: "Switch to a different session before deleting this one.",
     attachRequired:
       "Live session operations need an attached CLI session. Launch via deepmicode chat or open the dashboard from inside a TUI session.",
@@ -1322,8 +1321,7 @@ export const en = {
   effort: {
     lowDesc: "fastest — minimal reasoning",
     mediumDesc: "balanced",
-    highDesc: "default — safe for vLLM / Azure",
-    maxDesc: "DeepSeek extension; rejected by stock OpenAI / vLLM",
+    highDesc: "default",
   },
   editMode: {
     plan: "Plan",

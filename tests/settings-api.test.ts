@@ -72,8 +72,8 @@ describe("settings API — combined POST persistence (#274)", () => {
     expect(cfg.search).toBe(false);
   });
 
-  it("accepts the full effort enum (low | medium | high | max)", async () => {
-    for (const effort of ["low", "medium", "high", "max"] as const) {
+  it("accepts the full effort enum (low | medium | high)", async () => {
+    for (const effort of ["low", "medium", "high"] as const) {
       const res = await handleSettings(
         "POST",
         [],

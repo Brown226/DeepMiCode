@@ -80,13 +80,13 @@ export const de: TranslationSchema = {
     budgetHint: "Sitzungs-USD-Obergrenze – warnt bei 80 %, verweigert den nächsten Zug bei 100 %",
     modelIdHint: "DeepSeek-Modell-ID (z. B. deepseek-v4-flash)",
     systemPromptHint: "den Standard-System-Prompt überschreiben",
-    effortHint: "Reasoning-Effort – niedrig|mittel|hoch|maximal",
+    effortHint: "Reasoning-Effort – niedrig|mittel|hoch",
     sessionNameHint: "Sitzungsname (Standard: „default“)",
     ephemeralHint: "Sitzungsspeicherung für diesen Durchlauf deaktivieren",
     mcpSpecHint: "MCP-Server-Spezifikation (wiederholbar)",
     mcpPrefixHint: "Präfix für MCP-Toolnamen",
     noConfigHint: "Ignoriere bei diesem Durchlauf die Datei ~/.deepmicode/config.json",
-    effortHintShort: "Reasoning-Effort – niedrig|mittel|hoch|maximal",
+    effortHintShort: "Reasoning-Effort – niedrig|mittel|hoch",
     budgetHintShort: "Sitzungs-USD-Obergrenze",
     transcriptHintShort: "Pfad zum JSONL-Transkript",
     mcpSpecHintShort: "MCP-Server-Spezifikation (wiederholbar)",
@@ -186,9 +186,8 @@ export const de: TranslationSchema = {
     status: { ...EN.slash.status, description: "Aktuelles Modell, Flags, Kontext und Sitzung" },
     effort: {
       ...EN.slash.effort,
-      argsHint: "<niedrig|mittel|hoch|max>",
-      description:
-        "Reasoning-Effort-Grenze (low|medium|high|max); high ist der sichere Standard für vLLM/Azure",
+      argsHint: "<niedrig|mittel|hoch>",
+      description: "Reasoning-Effort-Grenze (low|medium|high)",
     },
     model: {
       ...EN.slash.model,
@@ -735,6 +734,8 @@ export const de: TranslationSchema = {
       "Authentifizierung fehlgeschlagen (DeepSeek 401): {inner}. Dein API-Schlüssel wird abgewiesen. Behebe mit `deepmicode setup` oder `export DEEPSEEK_API_KEY=sk-...`. Erhalte einen unter https://platform.deepseek.com/api_keys.",
     balance402:
       "Kontoguthaben aufgebraucht (DeepSeek 402): {inner}. Lade auf unter https://platform.deepseek.com/top_up — der Panel-Header zeigt dein Guthaben, sobald es nicht Null ist.",
+    contentModeration421:
+      "Inhaltsmoderation blockiert ({provider} 421): {inner}. Die Anfrage wurde durch die Inhaltsprüfung blockiert — vermeiden Sie unsichere oder sensible Inhalte.",
     badparam422: "Ungültiger Parameter (DeepSeek 422): {inner}",
     badrequest400: "Fehlerhafte Anfrage (DeepSeek 400): {inner}",
     concurrency429:
@@ -1002,9 +1003,7 @@ export const de: TranslationSchema = {
         "Modell → {id}   (⚠ nicht im abgerufenen Katalog: {list}. Falls das falsch ist, wird der nächste Aufruf 400 geben — führe /models zum Aktualisieren aus.)",
       modelSet: "Modell → {id}",
       effortStatus: "Effort → {current}   (Auswahl: {list})",
-      effortUsage:
-        "Verwendung: /effort <{list}>   (high ist der sichere Standard; max ist eine DeepSeek-Erweiterung)",
-      effortUsageNoMax: "Verwendung: /effort <{list}>",
+      effortUsage: "Verwendung: /effort <{list}>",
       effortSet: "Effort → {effort}",
       budgetNoCap:
         "Kein Sitzungsbudget festgelegt — DeepMiCode wird weiterlaufen, bis du es stoppst. Setze eines mit: /budget <usd>   (z.B. /budget 5)",

@@ -51,12 +51,12 @@ export const MIMO_ENDPOINTS = {
   china: "https://token-plan-cn.xiaomimimo.com/v1",
 } as const;
 
-export type ReasoningEffort = "low" | "medium" | "high" | "max";
+export type ReasoningEffort = "low" | "medium" | "high";
 
-export const REASONING_EFFORT_VALUES: readonly ReasoningEffort[] = ["low", "medium", "high", "max"];
+export const REASONING_EFFORT_VALUES: readonly ReasoningEffort[] = ["low", "medium", "high"];
 
 export function isReasoningEffort(value: unknown): value is ReasoningEffort {
-  return value === "low" || value === "medium" || value === "high" || value === "max";
+  return value === "low" || value === "medium" || value === "high";
 }
 
 export type EngineeringLifecycleMode = "off" | "strict";
@@ -1235,7 +1235,7 @@ export function mouseClipboardHintShown(path: string = defaultConfigPath()): boo
   return readConfig(path).mouseClipboardHintShown === true;
 }
 
-/** Unknown / missing fall back to "high" — the only value every OpenAI-compatible endpoint accepts (vLLM rejects "max"). */
+/** Unknown / missing / legacy "max" fall back to "high". */
 export function loadReasoningEffort(path: string = defaultConfigPath()): ReasoningEffort {
   const v = readConfig(path).reasoningEffort;
   return isReasoningEffort(v) ? v : "high";

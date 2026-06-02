@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { Eventizer } from "../src/core/eventize.js";
 import type { LoopEvent } from "../src/loop.js";
 
-const ctx = { model: "deepseek-v4-flash", prefixHash: "abc123", reasoningEffort: "max" } as const;
+const ctx = { model: "deepseek-v4-flash", prefixHash: "abc123", reasoningEffort: "high" } as const;
 
 const lev = (partial: Partial<LoopEvent>): LoopEvent =>
   ({ turn: 1, role: "status", content: "", ...partial }) as LoopEvent;
