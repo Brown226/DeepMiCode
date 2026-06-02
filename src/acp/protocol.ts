@@ -175,3 +175,29 @@ export function flattenPrompt(blocks: ContentBlock[]): string {
   }
   return parts.join("\n\n").trim();
 }
+
+/** Extract multimodal content (text + images) from ACP content blocks for model consumption. */
+export interface MultimodalContent {
+  text: string;
+  images: Array<{ mimeType: string; data: string }>;
+}
+
+export function extractMultimodalContent(blocks: ContentBlock[]): MultimodalContent {
+  const textParts: string[] = [];
+  const images: Array<{ mimeType: string; data: string }> = [];
+
+  for (const b of blocks) {
+    if (b.type === "text") {
+      textParts.push(b.text);
+    } else if (b.type === "resource" && b.resource.text) {
+      textParts.push(b.resource.text);
+    } else if (b.type === "image") {
+      images.push({ mimeType: b.mimeType, data: b.data });
+    }
+  }
+
+  return {
+    text: textParts.join("\n\n").trim(),
+    images,
+  };
+}

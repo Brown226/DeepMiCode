@@ -38,6 +38,8 @@ export interface ChatMessage {
   tool_calls?: ToolCall[];
   /** Must round-trip in tool-loop continuations — thinking mode 400s without it. */
   reasoning_content?: string | null;
+  /** Multimodal content — images attached to the message. */
+  images?: Array<{ mimeType: string; data: string }>;
 }
 
 export interface RawUsage {
@@ -57,7 +59,9 @@ export interface ChatRequestOptions {
   messages: ChatMessage[];
   tools?: ToolSpec[];
   temperature?: number;
+  topP?: number;
   maxTokens?: number;
+  stop?: string[];
   stream?: boolean;
   signal?: AbortSignal;
   /** DeepSeek response_format — use { type: "json_object" } to force valid JSON. */

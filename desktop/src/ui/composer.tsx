@@ -154,7 +154,7 @@ export function Composer({
 }: {
   draft: string;
   setDraft: React.Dispatch<React.SetStateAction<string>>;
-  onSend: () => void;
+  onSend: (images?: Array<{ mimeType: string; data: string }>) => void;
   onAbort: () => void;
   disabled?: boolean;
   busy?: boolean;
@@ -192,6 +192,7 @@ export function Composer({
   const historyRef = useRef<string[]>([]);
   const [browseIdx, setBrowseIdx] = useState(-1);
   const savedDraftRef = useRef("");
+  const [pendingImages, setPendingImages] = useState<Array<{ mimeType: string; data: string; preview: string }>>([]);
 
   const insertMention = (picked: string) => {
     const rel =
@@ -263,11 +264,14 @@ export function Composer({
     e.preventDefault();
     try {
       const buffer = await file.arrayBuffer();
-      const savedPath = await invoke<string>("save_clipboard_image", {
-        bytes: buffer,
-        extension: guessImageExtension(file.type),
-      });
-      insertMention(savedPath);
+      const base64 = btoa(
+        new Uint8Array(buffer).reduce((data, byte) => data + String.fromCharCode(byte), "")
+      );
+      const preview = URL.createObjectURL(file);
+      setPendingImages((prev) => [
+        ...prev,
+        { mimeType: file.type, data: base64, preview },
+      ]);
     } catch (err) {
       console.error("clipboard image paste failed", err);
     }
@@ -475,7 +479,9 @@ export function Composer({
         }
       } else if (!disabled && draft.trim()) {
         recordSendAndReset();
-        onSend();
+        const images = pendingImages.length > 0 ? pendingImages.map(({ mimeType, data }) => ({ mimeType, data })) : undefined;
+        onSend(images);
+        setPendingImages([]);
         setChips([]);
       }
     }
@@ -537,6 +543,25 @@ export function Composer({
         </div>
 
         <div className="composer">
+          {pendingImages.length > 0 ? (
+            <div className="composer-images">
+              {pendingImages.map((img, i) => (
+                <div key={i} className="composer-image-preview">
+                  <img src={img.preview} alt="Pasted image" />
+                  <button
+                    type="button"
+                    className="composer-image-remove"
+                    onClick={() => {
+                      URL.revokeObjectURL(img.preview);
+                      setPendingImages((prev) => prev.filter((_, j) => j !== i));
+                    }}
+                  >
+                    <I.x size={12} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : null}
           {chips.length > 0 ? (
             <div className="composer-tags">
               {chips.map((c, i) => (
@@ -664,7 +689,9 @@ export function Composer({
                 onClick={() => {
                   if (!disabled && draft.trim()) {
                     recordSendAndReset();
-                    onSend();
+                    const images = pendingImages.length > 0 ? pendingImages.map(({ mimeType, data }) => ({ mimeType, data })) : undefined;
+                    onSend(images);
+                    setPendingImages([]);
                     setChips([]);
                   }
                 }}

@@ -3,6 +3,40 @@ import { loadRateLimit, resolveBaseUrlEnv } from "./config.js";
 import { type RetryOptions, fetchWithRetry } from "./retry.js";
 import type { ChatMessage, ChatRequestOptions, RawUsage, ToolCall, ToolSpec } from "./types.js";
 
+/** Convert a ChatMessage with optional images to OpenAI-compatible multimodal format. */
+function convertMessageForMultimodal(msg: ChatMessage): Record<string, unknown> {
+  // Only user messages can have images
+  if (msg.role !== "user" || !msg.images || msg.images.length === 0) {
+    return { ...msg };
+  }
+
+  const content: Array<{ type: string; text?: string; image_url?: { url: string } }> = [];
+
+  // Add text content if present
+  if (msg.content) {
+    content.push({ type: "text", text: msg.content });
+  }
+
+  // Add images
+  for (const img of msg.images) {
+    content.push({
+      type: "image_url",
+      image_url: {
+        url: `data:${img.mimeType};base64,${img.data}`,
+      },
+    });
+  }
+
+  return {
+    role: msg.role,
+    content,
+    name: msg.name,
+    tool_call_id: msg.tool_call_id,
+    tool_calls: msg.tool_calls,
+    reasoning_content: msg.reasoning_content,
+  };
+}
+
 export class Usage {
   constructor(
     public promptTokens = 0,
@@ -213,7 +247,7 @@ export class DeepSeekClient {
   private buildPayload(opts: ChatRequestOptions, stream: boolean) {
     const payload: Record<string, unknown> = {
       model: opts.model,
-      messages: opts.messages,
+      messages: opts.messages.map(convertMessageForMultimodal),
       stream,
     };
     if (stream) payload.stream_options = { include_usage: true };

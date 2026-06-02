@@ -1046,6 +1046,7 @@ export function applyIncoming(state: State, ev: IncomingEvent): State {
           totalCompletionTokens: ev.carryover.totalCompletionTokens ?? 0,
           cacheHitTokens: ev.carryover.cacheHitTokens,
           cacheMissTokens: ev.carryover.cacheMissTokens,
+          totalCredits: ev.carryover.totalCredits ?? 0,
         },
         sessionFiles,
         activeSkill: null,
@@ -1623,7 +1624,7 @@ function TabRuntime({
   }, [state.settings?.workspaceDir, markMentionPicked]);
 
   const send = useCallback(
-    (override?: string) => {
+    (override?: string, images?: Array<{ mimeType: string; data: string }>) => {
       const text = (override ?? draft).trim();
       if (!text || !state.ready || state.busy) return;
 
@@ -1688,7 +1689,7 @@ function TabRuntime({
       const clientId = `c-${Date.now()}`;
       recordAbortDraft("user_input", text);
       dispatch({ t: "send_user", text, clientId });
-      sendRpc({ cmd: "user_input", text });
+      sendRpc({ cmd: "user_input", text, images });
       if (!override) setDraft("");
     },
     [
@@ -2132,6 +2133,173 @@ function TabRuntime({
         composerRef.current?.focus();
       },
     },
+    // ── Info commands ──
+    {
+      cmd: "/status",
+      desc: t("app.cmd.status"),
+      run: () => {
+        const u = state.usage;
+        const denom = u.cacheHitTokens + u.cacheMissTokens;
+        const sym = currency === "CNY" ? "¥" : "$";
+        const cost = currency === "CNY" ? u.totalCostUsd * 7.2 : u.totalCostUsd;
+        const info = [
+          `Model: ${state.settings?.model ?? "—"}`,
+          `Mode: ${state.settings?.editMode ?? "review"}`,
+          `Effort: ${state.settings?.reasoningEffort ?? "high"}`,
+          `Messages: ${state.messages.length}`,
+          `Tokens: ${u.totalPromptTokens.toLocaleString()} prompt, ${u.totalCompletionTokens.toLocaleString()} completion`,
+          `Cache: ${denom > 0 ? Math.round((u.cacheHitTokens / denom) * 100) : 0}%`,
+          `Cost: ${sym} ${cost.toFixed(4)}`,
+        ].join("\n");
+        flashToast(info, { duration: 8000 });
+      },
+    },
+    {
+      cmd: "/cost",
+      desc: t("app.cmd.cost"),
+      run: () => {
+        const u = state.usage;
+        const hit = u.lastCallCacheHit ?? 0;
+        const miss = u.lastCallCacheMiss ?? 0;
+        const sym = currency === "CNY" ? "¥" : "$";
+        const cost = currency === "CNY" ? u.totalCostUsd * 7.2 : u.totalCostUsd;
+        const info = [
+          `Last turn: ${hit.toLocaleString()} hit, ${miss.toLocaleString()} miss, ${u.totalCompletionTokens.toLocaleString()} out`,
+          `Session total: ${sym} ${cost.toFixed(4)}`,
+          `Credits: ${Math.round(u.totalCredits).toLocaleString()}`,
+        ].join("\n");
+        flashToast(info, { duration: 6000 });
+      },
+    },
+    {
+      cmd: "/context",
+      desc: t("app.cmd.context"),
+      run: () => {
+        const u = state.usage;
+        const tokens = u.totalPromptTokens || u.cacheHitTokens + u.cacheMissTokens;
+        const live = u.reservedTokens + u.liveLogTokens;
+        const total = Math.max(tokens, live);
+        const denom = u.cacheHitTokens + u.cacheMissTokens;
+        const info = [
+          `Prompt: ${total.toLocaleString()} tokens`,
+          `Reserved (system+tools): ${u.reservedTokens.toLocaleString()}`,
+          `Log: ${u.liveLogTokens.toLocaleString()}`,
+          `Cache hit: ${denom > 0 ? Math.round((u.cacheHitTokens / denom) * 100) : 0}%`,
+        ].join("\n");
+        flashToast(info, { duration: 6000 });
+      },
+    },
+    {
+      cmd: "/stats",
+      desc: t("app.cmd.stats"),
+      run: () => {
+        const u = state.usage;
+        const denom = u.cacheHitTokens + u.cacheMissTokens;
+        const sym = currency === "CNY" ? "¥" : "$";
+        const cost = currency === "CNY" ? u.totalCostUsd * 7.2 : u.totalCostUsd;
+        const info = [
+          `Session cost: ${sym} ${cost.toFixed(4)}`,
+          `Credits: ${Math.round(u.totalCredits).toLocaleString()}`,
+          `Prompt tokens: ${u.totalPromptTokens.toLocaleString()}`,
+          `Completion tokens: ${u.totalCompletionTokens.toLocaleString()}`,
+          `Cache hit: ${denom > 0 ? Math.round((u.cacheHitTokens / denom) * 100) : 0}%`,
+        ].join("\n");
+        flashToast(info, { duration: 8000 });
+      },
+    },
+    {
+      cmd: "/doctor",
+      desc: t("app.cmd.doctor"),
+      run: () => sendRpc({ cmd: "user_input", text: "/doctor" }),
+    },
+    // ── Session commands ──
+    {
+      cmd: "/sessions",
+      desc: t("app.cmd.sessions"),
+      run: () => sendRpc({ cmd: "session_list" }),
+    },
+    {
+      cmd: "/title",
+      desc: t("app.cmd.title"),
+      run: () => sendRpc({ cmd: "user_input", text: "/title" }),
+    },
+    {
+      cmd: "/budget",
+      desc: t("app.cmd.budget"),
+      run: () => {
+        setDraft("/budget ");
+        composerRef.current?.focus();
+      },
+    },
+    // ── Extend commands ──
+    {
+      cmd: "/mcp",
+      desc: t("app.cmd.mcp"),
+      run: () => openSettingsAt("mcp"),
+    },
+    {
+      cmd: "/memory",
+      desc: t("app.cmd.memory"),
+      run: () => openSettingsAt("memory"),
+    },
+    // ── Code commands ──
+    {
+      cmd: "/init",
+      desc: t("app.cmd.init"),
+      run: () => sendRpc({ cmd: "user_input", text: "/init" }),
+    },
+    {
+      cmd: "/undo",
+      desc: t("app.cmd.undo"),
+      run: () => sendRpc({ cmd: "user_input", text: "/undo" }),
+    },
+    {
+      cmd: "/apply",
+      desc: t("app.cmd.apply"),
+      run: () => sendRpc({ cmd: "user_input", text: "/apply" }),
+    },
+    {
+      cmd: "/discard",
+      desc: t("app.cmd.discard"),
+      run: () => sendRpc({ cmd: "user_input", text: "/discard" }),
+    },
+    {
+      cmd: "/checkpoint",
+      desc: t("app.cmd.checkpoint"),
+      run: () => sendRpc({ cmd: "user_input", text: "/checkpoint" }),
+    },
+    {
+      cmd: "/restore",
+      desc: t("app.cmd.restore"),
+      run: () => {
+        setDraft("/restore ");
+        composerRef.current?.focus();
+      },
+    },
+    // ── Advanced commands ──
+    {
+      cmd: "/hooks",
+      desc: t("app.cmd.hooks"),
+      run: () => sendRpc({ cmd: "user_input", text: "/hooks" }),
+    },
+    {
+      cmd: "/permissions",
+      desc: t("app.cmd.permissions"),
+      run: () => openSettingsAt("general"),
+    },
+    {
+      cmd: "/loop",
+      desc: t("app.cmd.loop"),
+      run: () => {
+        setDraft("/loop ");
+        composerRef.current?.focus();
+      },
+    },
+    {
+      cmd: "/plans",
+      desc: t("app.cmd.plans"),
+      run: () => sendRpc({ cmd: "user_input", text: "/plans" }),
+    },
     ...state.skills.map((s) => ({
       cmd: `/${s.name}`,
       desc: s.description?.trim() || fallbackSkillDesc(s),
@@ -2516,7 +2684,7 @@ function TabRuntime({
               <Composer
                 draft={draft}
                 setDraft={setDraft}
-                onSend={() => send()}
+                onSend={(images) => send(undefined, images)}
                 onAbort={abort}
                 disabled={!state.ready}
                 busy={state.busy}

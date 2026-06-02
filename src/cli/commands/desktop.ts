@@ -138,7 +138,7 @@ export function desktopUserAbortLoopOptions(): LoopAbortOptions | undefined {
 }
 
 type InMessage = { tabId?: string } & (
-  | { cmd: "user_input"; text: string }
+  | { cmd: "user_input"; text: string; images?: Array<{ mimeType: string; data: string }> }
   | { cmd: "abort" }
   | { cmd: "confirm_response"; id: number; response: ConfirmationChoice }
   | { cmd: "choice_response"; id: number; response: ChoiceVerdict }
@@ -371,6 +371,7 @@ interface SessionLoadedEvent {
     cacheHitTokens: number;
     cacheMissTokens: number;
     totalCompletionTokens: number;
+    totalCredits: number;
   };
 }
 
@@ -858,6 +859,7 @@ function loadSessionIntoTab(
         cacheHitTokens: meta.cacheHitTokens ?? 0,
         cacheMissTokens: meta.cacheMissTokens ?? 0,
         totalCompletionTokens: meta.totalCompletionTokens ?? 0,
+        totalCredits: meta.totalCredits ?? 0,
       },
     },
     tab.id,
@@ -1632,7 +1634,12 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
     emit({ type: "$tab_closed" }, tab.id);
   }
 
-  async function runTurn(tab: Tab, text: string, fromQQ = false): Promise<void> {
+  async function runTurn(
+    tab: Tab,
+    text: string,
+    fromQQ = false,
+    images?: Array<{ mimeType: string; data: string }>,
+  ): Promise<void> {
     if (!tab.runtime) return;
     const rt = tab.runtime;
     tab.aborter = new AbortController();
@@ -1670,7 +1677,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
     await tabContext.run(tab.id, async () => {
       try {
         let emittedTurnContext = false;
-        for await (const ev of rt.loop.step(text)) {
+        for await (const ev of rt.loop.step(text, images)) {
           if (!emittedTurnContext) {
             emittedTurnContext = true;
             emitCtxBreakdown(tab);
@@ -1715,6 +1722,23 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
             tab.completedStepIds.clear();
             tab.planTotalSteps = 0;
             emit({ type: "$plan_cleared" }, tab.id);
+          }
+          // Persist cumulative credits to session meta so they survive restart.
+          if (tab.currentSession) {
+            try {
+              const s = rt.loop.stats.summary();
+              patchSessionMeta(tab.currentSession, {
+                totalCostUsd: s.totalCostUsd,
+                totalCredits: s.totalCredits,
+                cacheHitTokens: rt.loop.stats.cumulativeCacheHitTokens,
+                cacheMissTokens: rt.loop.stats.cumulativeCacheMissTokens,
+                totalCompletionTokens: rt.loop.stats.cumulativeCompletionTokens,
+                turnCount: s.turns,
+                lastPromptTokens: s.lastPromptTokens,
+              });
+            } catch {
+              /* best-effort */
+            }
           }
           emitSessions(tab);
           void emitBalance(tab);
@@ -2134,6 +2158,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
             cacheHitTokens: meta.cacheHitTokens ?? 0,
             cacheMissTokens: meta.cacheMissTokens ?? 0,
             totalCompletionTokens: meta.totalCompletionTokens ?? 0,
+            totalCredits: meta.totalCredits ?? 0,
           },
         },
         tab.id,
@@ -2315,6 +2340,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
                   cacheHitTokens: meta.cacheHitTokens ?? 0,
                   cacheMissTokens: meta.cacheMissTokens ?? 0,
                   totalCompletionTokens: meta.totalCompletionTokens ?? 0,
+                  totalCredits: meta.totalCredits ?? 0,
                 },
               },
               t.id,
@@ -2895,7 +2921,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
         );
         return;
       }
-      void runTurn(tab, msg.text);
+      void runTurn(tab, msg.text, false, msg.images);
     }
   });
 

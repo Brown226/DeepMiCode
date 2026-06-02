@@ -69,6 +69,8 @@ export interface SessionMeta {
   totalCompletionTokens?: number;
   /** Last turn's promptTokens — lets /status render the context bar before the next turn fires. */
   lastPromptTokens?: number;
+  /** Cumulative Token Plan credits consumed across the session. */
+  totalCredits?: number;
   /** True when the session filename/summary was generated from conversation content. */
   autoTitleGenerated?: boolean;
   /** Source app when the session was imported from another local AI client. */

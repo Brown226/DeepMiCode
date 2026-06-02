@@ -278,6 +278,7 @@ export type SessionLoadedEvent = {
     cacheHitTokens: number;
     cacheMissTokens: number;
     totalCompletionTokens: number;
+    totalCredits: number;
   };
 };
 
@@ -539,7 +540,7 @@ export type IncomingEvent = { tabId?: string } & (
 );
 
 export type OutgoingCommand = { tabId?: string } & (
-  | { cmd: "user_input"; text: string }
+  | { cmd: "user_input"; text: string; images?: Array<{ mimeType: string; data: string }> }
   | { cmd: "abort" }
   | { cmd: "confirm_response"; id: number; response: ConfirmationChoice }
   | { cmd: "choice_response"; id: number; response: ChoiceVerdict }

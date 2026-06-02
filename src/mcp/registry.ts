@@ -210,12 +210,40 @@ export interface FlattenOptions {
   maxChars?: number;
 }
 
+export interface FlattenMultimodalResult {
+  text: string;
+  images: Array<{ mimeType: string; data: string }>;
+}
+
 export function flattenMcpResult(result: CallToolResult, opts: FlattenOptions = {}): string {
   validateResultShape(result);
   const parts = result.content.map(blockToString);
   const joined = parts.join("\n").trim();
   const prefixed = result.isError ? `ERROR: ${joined || "(no error message from server)"}` : joined;
   return opts.maxChars ? truncateForModel(prefixed, opts.maxChars) : prefixed;
+}
+
+export function flattenMcpResultMultimodal(
+  result: CallToolResult,
+  opts: FlattenOptions = {},
+): FlattenMultimodalResult {
+  validateResultShape(result);
+  const textParts: string[] = [];
+  const images: Array<{ mimeType: string; data: string }> = [];
+
+  for (const block of result.content) {
+    if (block.type === "text") {
+      textParts.push(block.text);
+    } else if (block.type === "image") {
+      images.push({ mimeType: block.mimeType, data: block.data });
+    }
+  }
+
+  const joined = textParts.join("\n").trim();
+  const prefixed = result.isError ? `ERROR: ${joined || "(no error message from server)"}` : joined;
+  const text = opts.maxChars ? truncateForModel(prefixed, opts.maxChars) : prefixed;
+
+  return { text, images };
 }
 
 /** Runtime schema check — MCP server responses cross a network boundary and the TypeScript types are compile-time only. */

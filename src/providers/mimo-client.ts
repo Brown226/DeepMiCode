@@ -11,6 +11,31 @@
 import { type EventSourceMessage, createParser } from "eventsource-parser";
 import { type RetryOptions, fetchWithRetry } from "../retry.js";
 import type { ChatMessage, ToolCall, ToolSpec } from "../types.js";
+
+/** Convert a ChatMessage with optional images to OpenAI-compatible multimodal format. */
+function convertMessageForMultimodal(msg: ChatMessage): Record<string, unknown> {
+  if (msg.role !== "user" || !msg.images || msg.images.length === 0) {
+    return { ...msg };
+  }
+  const content: Array<{ type: string; text?: string; image_url?: { url: string } }> = [];
+  if (msg.content) {
+    content.push({ type: "text", text: msg.content });
+  }
+  for (const img of msg.images) {
+    content.push({
+      type: "image_url",
+      image_url: { url: `data:${img.mimeType};base64,${img.data}` },
+    });
+  }
+  return {
+    role: msg.role,
+    content,
+    name: msg.name,
+    tool_call_id: msg.tool_call_id,
+    tool_calls: msg.tool_calls,
+    reasoning_content: msg.reasoning_content,
+  };
+}
 import type {
   ChatRequestOptions,
   ChatResponse,
@@ -94,7 +119,7 @@ export class MimoClient implements LLMProvider {
   private buildPayload(opts: ChatRequestOptions, stream: boolean): Record<string, unknown> {
     const payload: Record<string, unknown> = {
       model: opts.model,
-      messages: opts.messages,
+      messages: opts.messages.map(convertMessageForMultimodal),
       stream,
     };
     if (stream) payload.stream_options = { include_usage: true };

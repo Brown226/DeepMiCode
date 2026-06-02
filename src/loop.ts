@@ -243,7 +243,7 @@ export class CacheFirstLoop {
       // Thinking-mode sessions still need tool-call reasoning_content, while stale
       // plain-turn reasoning can be dropped before it bloats long-session requests.
       const stamped = stampMissingReasoningForThinkingMode(shrunk.messages, this.model);
-      const pruned = stripDroppableReasoningContent(stamped.messages);
+      const pruned = stripDroppableReasoningContent(stamped.messages, this.model);
       const messages = pruned.messages;
       const healedCount = shrunk.healedCount + stamped.stampedCount;
       const tokensSaved = shrunk.tokensSaved;
@@ -528,7 +528,7 @@ export class CacheFirstLoop {
       healed.messages,
       DEFAULT_MAX_RESULT_TOKENS,
     );
-    const pruned = stripDroppableReasoningContent(argsShrunk.messages);
+    const pruned = stripDroppableReasoningContent(argsShrunk.messages, this.model);
     if (healed.healedCount === 0 && argsShrunk.healedCount === 0 && pruned.prunedCount === 0) {
       return current;
     }
@@ -618,7 +618,10 @@ export class CacheFirstLoop {
     return userText;
   }
 
-  async *step(userInput: string): AsyncGenerator<LoopEvent> {
+  async *step(
+    userInput: string,
+    images?: Array<{ mimeType: string; data: string }>,
+  ): AsyncGenerator<LoopEvent> {
     // Reset per-turn flags.
     this._steerConsumed = false;
 
@@ -693,7 +696,7 @@ export class CacheFirstLoop {
     // first round-trip still leaves the message in the log; the user can
     // /retry without re-typing.
     const turnStartLogIndex = this.log.length;
-    this.appendAndPersist({ role: "user", content: userInput });
+    this.appendAndPersist({ role: "user", content: userInput, images });
     const toolSpecs = this.prefix.tools();
     const rateLimitState = { shown: false };
 

@@ -18,6 +18,7 @@ import {
   type SessionPromptResult,
   type SessionUpdateParams,
   type StopReason,
+  extractMultimodalContent,
   flattenPrompt,
 } from "../../acp/protocol.js";
 import { AcpServer } from "../../acp/server.js";
@@ -249,7 +250,7 @@ export async function acpCommand(opts: AcpOptions): Promise<void> {
       protocolVersion: ACP_PROTOCOL_VERSION,
       agentCapabilities: {
         loadSession: false,
-        promptCapabilities: { image: false, audio: false, embeddedContext: true },
+        promptCapabilities: { image: true, audio: false, embeddedContext: true },
         mcpCapabilities: { http: false, sse: false },
       },
       agentInfo: { name: "deepmicode", title: "DeepMiCode", version: VERSION },
@@ -283,15 +284,19 @@ export async function acpCommand(opts: AcpOptions): Promise<void> {
         code: ERR_INVALID_PARAMS,
       });
     }
-    const text = flattenPrompt(params.prompt as ContentBlock[]);
-    if (!text) {
+    const multimodalContent = extractMultimodalContent(params.prompt as ContentBlock[]);
+    const text = multimodalContent.text;
+    if (!text && multimodalContent.images.length === 0) {
       throw Object.assign(new Error("session/prompt: empty prompt"), { code: ERR_INVALID_PARAMS });
     }
     session.aborter = new AbortController();
     let stopReason: StopReason = "end_turn";
     try {
       await sessionContext.run(session.id, async () => {
-        for await (const ev of session.loop.step(text)) {
+        for await (const ev of session.loop.step(
+          text,
+          multimodalContent.images.length > 0 ? multimodalContent.images : undefined,
+        )) {
           if (session.aborter?.signal.aborted) {
             stopReason = "cancelled";
             break;

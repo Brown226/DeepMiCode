@@ -11,13 +11,42 @@ export const DEEPSEEK_PRICING: Record<
   // Compat aliases — priced as v4-flash per the deprecation notice.
   "deepseek-chat": { inputCacheHit: 0.0028, inputCacheMiss: 0.14, output: 0.28 },
   "deepseek-reasoner": { inputCacheHit: 0.0028, inputCacheMiss: 0.14, output: 0.28 },
-  // MiMo models — placeholder pricing (verify against Mimo's published rates)
-  "mimo-v2.5-pro": { inputCacheHit: 0.002, inputCacheMiss: 0.1, output: 0.2 },
-  "mimo-v2.5": { inputCacheHit: 0.002, inputCacheMiss: 0.1, output: 0.2 },
-  "mimo-v2-flash": { inputCacheHit: 0.001, inputCacheMiss: 0.05, output: 0.1 },
-  "mimo-v2-omni": { inputCacheHit: 0.002, inputCacheMiss: 0.1, output: 0.2 },
-  "mimo-v2-pro": { inputCacheHit: 0.001, inputCacheMiss: 0.05, output: 0.1 },
+  // MiMo V2.5 models — official API USD pricing.
+  // Source: platform.xiaomimimo.com/docs/zh-CN/price/pay-as-you-go (2026-06-01).
+  "mimo-v2.5-pro": { inputCacheHit: 0.0036, inputCacheMiss: 0.435, output: 0.87 },
+  "mimo-v2.5": { inputCacheHit: 0.0028, inputCacheMiss: 0.14, output: 0.28 },
 };
+
+/** MiMo Token Plan Credit consumption rates (Credits per token).
+ *  Source: platform.xiaomimimo.com/docs/zh-CN/price/tokenplan/subscription (2026-06-01). */
+export const MIMO_TOKEN_PLAN_PRICING: Record<
+  string,
+  { inputCacheHit: number; inputCacheMiss: number; output: number }
+> = {
+  "mimo-v2.5-pro": { inputCacheHit: 2.5, inputCacheMiss: 300, output: 600 },
+  "mimo-v2.5": { inputCacheHit: 2, inputCacheMiss: 100, output: 200 },
+};
+
+/** Detect Token Plan base URL — contains "token-plan" in the host. */
+export function isTokenPlanUrl(baseUrl?: string | null): boolean {
+  if (!baseUrl) return false;
+  try {
+    return new URL(baseUrl).hostname.includes("token-plan");
+  } catch {
+    return baseUrl.includes("token-plan");
+  }
+}
+
+/** Compute Credits consumed for a single turn (Token Plan mode). */
+export function creditsForTurn(model: string, usage: Usage): number {
+  const p = MIMO_TOKEN_PLAN_PRICING[model];
+  if (!p) return 0;
+  return (
+    usage.promptCacheHitTokens * p.inputCacheHit +
+    usage.promptCacheMissTokens * p.inputCacheMiss +
+    usage.completionTokens * p.output
+  );
+}
 
 export type ModelPricing = (typeof DEEPSEEK_PRICING)[string];
 
@@ -48,9 +77,6 @@ export const DEEPSEEK_CONTEXT_TOKENS: Record<string, number> = {
   // MiMo models
   "mimo-v2.5-pro": 1_000_000,
   "mimo-v2.5": 1_000_000,
-  "mimo-v2-flash": 262_144, // 256K context
-  "mimo-v2-omni": 1_000_000,
-  "mimo-v2-pro": 262_144,
 };
 
 /** Fallback when the caller's model id isn't in the table — safe lower bound. */
@@ -126,6 +152,8 @@ export interface SessionSummary {
   /** Floor estimate for next call — actual cost = this + user delta + new tool outputs. */
   lastPromptTokens: number;
   lastTurnCostUsd: number;
+  /** Token Plan Credits consumed (0 when not in Token Plan mode). */
+  totalCredits: number;
 }
 
 export class SessionStats {
@@ -139,6 +167,8 @@ export class SessionStats {
   private _carryoverCompletion = 0;
   /** Last turn's promptTokens before exit — surfaced via summary() until the next live turn lands. */
   private _carryoverLastPromptTokens = 0;
+  /** Token Plan Credits from prior runs of a resumed session. */
+  private _carryoverCredits = 0;
 
   /** Seed totals from a resumed session's persisted meta — only call once at construction. */
   seedCarryover(opts: {
@@ -148,6 +178,7 @@ export class SessionStats {
     cacheMissTokens?: number;
     totalCompletionTokens?: number;
     lastPromptTokens?: number;
+    totalCredits?: number;
   }): void {
     if (typeof opts.totalCostUsd === "number" && opts.totalCostUsd > 0) {
       this._carryoverCost = opts.totalCostUsd;
@@ -166,6 +197,9 @@ export class SessionStats {
     }
     if (typeof opts.lastPromptTokens === "number" && opts.lastPromptTokens > 0) {
       this._carryoverLastPromptTokens = opts.lastPromptTokens;
+    }
+    if (typeof opts.totalCredits === "number" && opts.totalCredits > 0) {
+      this._carryoverCredits = opts.totalCredits;
     }
   }
 
@@ -198,6 +232,7 @@ export class SessionStats {
     this._carryoverCacheMiss = 0;
     this._carryoverCompletion = 0;
     this._carryoverLastPromptTokens = 0;
+    this._carryoverCredits = 0;
   }
 
   record(turn: number, model: string, usage: Usage): TurnStats {
@@ -273,7 +308,15 @@ export class SessionStats {
       cacheHitRatio: round(this.aggregateCacheHitRatio, 4),
       lastPromptTokens: last?.usage.promptTokens ?? this._carryoverLastPromptTokens,
       lastTurnCostUsd: round(last?.cost ?? 0, 6),
+      totalCredits: round(this.totalCredits, 2),
     };
+  }
+
+  get totalCredits(): number {
+    return (
+      this._carryoverCredits +
+      this.turns.reduce((sum, t) => sum + creditsForTurn(t.model, t.usage), 0)
+    );
   }
 }
 
