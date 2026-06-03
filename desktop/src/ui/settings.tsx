@@ -1304,6 +1304,29 @@ function AddProviderForm({
   const [baseUrl, setBaseUrl] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [modelsText, setModelsText] = useState("");
+  const [testStatus, setTestStatus] = useState<"idle" | "testing" | "success" | "error">("idle");
+  const [testError, setTestError] = useState<string | null>(null);
+
+  const handleTestConnection = async () => {
+    if (!baseUrl.trim() || !apiKey.trim()) return;
+    setTestStatus("testing");
+    setTestError(null);
+    try {
+      const resp = await fetch(`${baseUrl.trim()}/models`, {
+        headers: { Authorization: `Bearer ${apiKey.trim()}` },
+        signal: AbortSignal.timeout(10000),
+      });
+      if (resp.ok) {
+        setTestStatus("success");
+      } else {
+        setTestStatus("error");
+        setTestError(`HTTP ${resp.status}`);
+      }
+    } catch (err) {
+      setTestStatus("error");
+      setTestError(err instanceof Error ? err.message : String(err));
+    }
+  };
 
   const handleSubmit = () => {
     const models = modelsText
@@ -1360,13 +1383,30 @@ function AddProviderForm({
       </div>
       <div className="form-row">
         <label>{t("settings.providerApiKey")}</label>
-        <input
-          className="field mono"
-          type="password"
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-          placeholder="sk-..."
-        />
+        <div style={{ display: "flex", gap: 6 }}>
+          <input
+            className="field mono"
+            type="password"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+            placeholder="sk-..."
+            style={{ flex: 1 }}
+          />
+          <button
+            type="button"
+            className="btn"
+            disabled={!baseUrl.trim() || !apiKey.trim() || testStatus === "testing"}
+            onClick={handleTestConnection}
+          >
+            {testStatus === "testing" ? t("settings.providerTesting") : t("settings.providerTest")}
+          </button>
+        </div>
+        {testStatus === "success" && (
+          <div className="form-hint" style={{ color: "var(--success)" }}>{t("settings.providerTestSuccess")}</div>
+        )}
+        {testStatus === "error" && (
+          <div className="form-hint" style={{ color: "var(--danger)" }}>{t("settings.providerTestFailed")}: {testError}</div>
+        )}
       </div>
       <div className="form-row">
         <label>{t("settings.providerModelsLabel")}</label>
