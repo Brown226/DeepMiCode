@@ -382,7 +382,7 @@ export function detectProvider(model?: string, baseUrl?: string): ProviderKind {
 | 问题 ID | 描述 | 优先级 | 状态 | 备注 |
 |---|---|---|---|---|
 | DMC-ISSUE-006 | Mimo 模型价格为 placeholder 值（[src/telemetry/stats.ts:14-19](file:///e:/DeepCode/DeepMiCode-Reasonix-v0.53.0/src/telemetry/stats.ts#L14-L19)） | 🟡 P2 | 跟踪中 | 待 Mimo 官方发布公开费率后对齐 |
-| DMC-ISSUE-007 | `Usage` 类在 [src/client.ts](file:///e:/DeepCode/DeepMiCode-Reasonix-v0.53.0/src/client.ts) 与 [src/providers/types.ts](file:///e:/DeepCode/DeepMiCode-Reasonix-v0.53.0/src/providers/types.ts) 中存在重复定义 | 🟢 P3 | 跟踪中 | 类型安全而非运行时问题；大改动，需谨慎 |
+| DMC-ISSUE-007 | `Usage` 类在 [src/client.ts](file:///e:/DeepCode/DeepMiCode-Reasonix-v0.53.0/src/client.ts) 与 [src/providers/types.ts](file:///e:/DeepCode/DeepMiCode-Reasonix-v0.53.0/src/providers/types.ts) 中存在重复定义 | 🟢 P3 | 跟踪中 | 类型安全而非运行时问题；重构尝试因 subagent 测试回归被回退（`fromApi()` 行为差异）；维持现状安全 |
 | DMC-ISSUE-008 | Ink TUI 渲染测试在 Windows / 无 TTY 环境批量失败（约 50 个测试） | 🟢 P3 | 已知 | 环境相关，非本批次引入 |
 | DMC-ISSUE-009 | Dashboard SPA `__DEEPMICODE_TOKEN__` 占位符未在 `server-dashboard.test.ts` 中正确插值 | 🟢 P3 | 已知 | 测试需要先 `npm run build:dashboard` |
 

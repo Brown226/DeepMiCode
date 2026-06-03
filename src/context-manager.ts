@@ -173,7 +173,9 @@ export class ContextManager {
     model: string,
   ): { estimateTokens: number; ctxMax: number; ratio: number } {
     const ctxMax = DEEPSEEK_CONTEXT_TOKENS[model] ?? DEFAULT_CONTEXT_TOKENS;
-    const estimate = estimateRequestTokens(messages, toolSpecs ?? null, true);
+    // MiMo requires full reasoning_content round-trip — don't drop thinking in estimation.
+    const dropThinking = !model.startsWith("mimo-");
+    const estimate = estimateRequestTokens(messages, toolSpecs ?? null, dropThinking);
     return { estimateTokens: estimate, ctxMax, ratio: estimate / ctxMax };
   }
 

@@ -354,7 +354,7 @@ type LoadedSegment =
     };
 
 type LoadedMessage =
-  | { kind: "user"; text: string }
+  | { kind: "user"; text: string; images?: Array<{ url: string }> }
   | {
       kind: "assistant";
       turn: number;
@@ -663,7 +663,7 @@ export function buildLoadedMessages(records: ChatMessage[]): LoadedMessage[] {
   for (const rec of records) {
     if (rec.role === "system") continue;
     if (rec.role === "user") {
-      out.push({ kind: "user", text: rec.content ?? "" });
+      out.push({ kind: "user", text: rec.content ?? "", images: rec.images });
       pendingAssistantIdx = -1;
       continue;
     }

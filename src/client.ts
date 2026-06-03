@@ -17,12 +17,12 @@ function convertMessageForMultimodal(msg: ChatMessage): Record<string, unknown> 
     content.push({ type: "text", text: msg.content });
   }
 
-  // Add images
+  // Add images (data URL format - no conversion needed)
   for (const img of msg.images) {
     content.push({
       type: "image_url",
       image_url: {
-        url: `data:${img.mimeType};base64,${img.data}`,
+        url: img.url,
       },
     });
   }

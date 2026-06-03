@@ -29,6 +29,8 @@ export interface StatusBar {
   sessionCost: number;
   balance?: number;
   balanceCurrency?: string;
+  /** Base URL of the current provider — used to detect Token Plan mode. */
+  baseUrl?: string;
   /** User-togglable cost display currency ("USD" or "CNY"). When set, takes
    *  precedence over `balanceCurrency` for cost formatting. Seeded from
    *  config on mount; toggle by clicking the turn-cost pill in the status bar. */
@@ -96,6 +98,7 @@ export function initialState(session: SessionInfo, cards: ReadonlyArray<Card> = 
       network: "online",
       cost: 0,
       sessionCost: 0,
+      baseUrl: undefined,
       cacheHit: 0,
       sessionInputTokens: 0,
       sessionOutputTokens: 0,

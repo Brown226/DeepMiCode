@@ -137,7 +137,7 @@ export type SkillOrigin = {
 };
 
 export type ChatMessage =
-  | { kind: "user"; text: string; clientId: string; turn: number; skill?: SkillOrigin }
+  | { kind: "user"; text: string; clientId: string; turn: number; skill?: SkillOrigin; images?: Array<{ url: string }> }
   | {
       kind: "assistant";
       turn: number;
@@ -345,7 +345,7 @@ type DeltaBatchItem = {
 };
 
 type Action =
-  | { t: "send_user"; text: string; clientId: string }
+  | { t: "send_user"; text: string; clientId: string; images?: Array<{ url: string }> }
   | { t: "start_skill"; skill: SkillOrigin; args?: string; clientId: string }
   | { t: "incoming"; event: IncomingEvent }
   | { t: "batch_delta"; items: DeltaBatchItem[] }
@@ -423,6 +423,7 @@ export function reduce(state: State, action: Action): State {
             text: action.text,
             clientId: action.clientId,
             turn: nextMessageTurn(state.messages),
+            images: action.images,
           },
         ],
       };
@@ -999,7 +1000,7 @@ export function applyIncoming(state: State, ev: IncomingEvent): State {
       const sessionName = ev.name;
       const loaded: ChatMessage[] = ev.messages.map((m, i) => {
         if (m.kind === "user") {
-          return { kind: "user", text: m.text, clientId: `c-loaded-${i}`, turn: i + 1 };
+          return { kind: "user", text: m.text, clientId: `c-loaded-${i}`, turn: i + 1, images: m.images };
         }
         const segments: AssistantSegment[] = m.segments.map((s) => {
           if (s.kind === "tool") {
@@ -1690,7 +1691,7 @@ function TabRuntime({
       }
       const clientId = `c-${Date.now()}`;
       recordAbortDraft("user_input", text);
-      dispatch({ t: "send_user", text, clientId });
+      dispatch({ t: "send_user", text, clientId, images });
       sendRpc({ cmd: "user_input", text, images });
       if (!override) setDraft("");
     },
@@ -2529,7 +2530,7 @@ function TabRuntime({
                       return (
                         <div key={`u-${i}`} data-turn={m.turn}>
                           {needsDivider ? <TurnDivider label={dividerLabel} /> : null}
-                          <UserMsg text={m.text} skill={m.skill} onEdit={onEditUserMsg} />
+                          <UserMsg text={m.text} skill={m.skill} images={m.images} onEdit={onEditUserMsg} />
                         </div>
                       );
                     }

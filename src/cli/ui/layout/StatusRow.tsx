@@ -2,7 +2,12 @@ import { Box, type Color, Text, useStdout } from "ink";
 // biome-ignore lint/style/useImportType: tsconfig jsx=react needs React in value scope for JSX compilation
 import React from "react";
 import { t } from "../../../i18n/index.js";
-import { DEEPSEEK_CONTEXT_TOKENS, DEFAULT_CONTEXT_TOKENS } from "../../../telemetry/stats.js";
+import {
+  DEEPSEEK_CONTEXT_TOKENS,
+  DEFAULT_CONTEXT_TOKENS,
+  MIMO_TOKEN_PLAN_PRICING,
+  isTokenPlanUrl,
+} from "../../../telemetry/stats.js";
 import { VERSION } from "../../../version.js";
 import { formatTokens } from "../primitives.js";
 import { Countdown } from "../primitives/Countdown.js";
@@ -88,19 +93,37 @@ export function StatusRow({
         <Pill>
           <Text color={FG.sub}>{`${session.id} · ${session.branch}`}</Text>
         </Pill>
-        {hasTurn && statusBar.showTurnCost && (
-          <>
-            <Gap />
-            <Pill>
-              <Text bold color={TONE.brand}>
-                {"▸ "}
-              </Text>
-              <Text bold color={FG.body}>
-                {`${formatCost(status.cost, status.costDisplayCurrency ?? status.balanceCurrency)} ${t("statusBar.turn")}`}
-              </Text>
-            </Pill>
-          </>
-        )}
+        {hasTurn &&
+          statusBar.showTurnCost &&
+          (() => {
+            const isTokenPlan = isTokenPlanUrl(status.baseUrl);
+            const tokenPlanCredits =
+              isTokenPlan && status.sessionInputTokens > 0
+                ? Math.round(
+                    status.sessionInputTokens *
+                      (MIMO_TOKEN_PLAN_PRICING[session.model]?.inputCacheMiss ?? 0),
+                  )
+                : 0;
+            return (
+              <>
+                <Gap />
+                <Pill>
+                  <Text bold color={TONE.brand}>
+                    {"▸ "}
+                  </Text>
+                  {isTokenPlan && tokenPlanCredits > 0 ? (
+                    <Text bold color={FG.body}>
+                      {`Credits ${formatTokens(tokenPlanCredits)} · ${formatCost(status.cost, status.costDisplayCurrency ?? status.balanceCurrency)} ${t("statusBar.turn")}`}
+                    </Text>
+                  ) : (
+                    <Text bold color={FG.body}>
+                      {`${formatCost(status.cost, status.costDisplayCurrency ?? status.balanceCurrency)} ${t("statusBar.turn")}`}
+                    </Text>
+                  )}
+                </Pill>
+              </>
+            );
+          })()}
         {statusBar.showCacheHit && (
           <>
             <Gap />

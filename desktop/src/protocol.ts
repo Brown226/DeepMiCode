@@ -261,7 +261,7 @@ export type LoadedSegment =
     };
 
 export type LoadedMessage =
-  | { kind: "user"; text: string }
+  | { kind: "user"; text: string; images?: Array<{ url: string }> }
   | {
       kind: "assistant";
       turn: number;
@@ -540,7 +540,7 @@ export type IncomingEvent = { tabId?: string } & (
 );
 
 export type OutgoingCommand = { tabId?: string } & (
-  | { cmd: "user_input"; text: string; images?: Array<{ mimeType: string; data: string }> }
+  | { cmd: "user_input"; text: string; images?: Array<{ url: string }> }
   | { cmd: "abort" }
   | { cmd: "confirm_response"; id: number; response: ConfirmationChoice }
   | { cmd: "choice_response"; id: number; response: ChoiceVerdict }

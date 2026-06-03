@@ -57,6 +57,8 @@ import { loadMimoEndpoint } from "../../config.js";
 import { Eventizer } from "../../core/eventize.js";
 import { pauseGate } from "../../core/pause-gate.js";
 import { autoResolveVerdict, shouldAutoResolveCheckpoint } from "../../core/pause-policy.js";
+import { CronScheduler } from "../../cron/cronScheduler.js";
+import { CronService } from "../../cron/cronService.js";
 import { formatHookOutcomeMessage, runHooks } from "../../hooks.js";
 import { t, tObj } from "../../i18n/index.js";
 import { CacheFirstLoop, DeepSeekClient, ImmutablePrefix } from "../../index.js";
@@ -78,8 +80,6 @@ import { isMimoModel } from "../../providers/mimo-client.js";
 import type { LLMProvider } from "../../providers/types.js";
 import type { QQChannel } from "../../qq/channel.js";
 import { useQQChannel } from "../../qq/use-qq-channel.js";
-import { CronService } from "../../cron/cronService.js";
-import { CronScheduler } from "../../cron/cronScheduler.js";
 import type {
   ActiveModal,
   ChoiceResolution,
@@ -2217,7 +2217,7 @@ function AppInner({
   const startDashboard = useCallback(async (): Promise<string> => {
     if (dashboardRef.current) return dashboardRef.current.url;
     if (dashboardStartingRef.current) return dashboardStartingRef.current;
-    const buildCtx = (): DashboardContext => {
+    const buildCtx = async (): Promise<DashboardContext> => {
       const ctx: DashboardContext = {
         mode: "attached",
         configPath: defaultConfigPath(),
@@ -2498,7 +2498,7 @@ function AppInner({
     // than rebinding the port — which would race the OS-level release and
     // fall back to a new ephemeral port (= URL change the user hates).
     if (persistentDashboardHandle) {
-      persistentDashboardHandle.updateContext(buildCtx());
+      persistentDashboardHandle.updateContext(await buildCtx());
       dashboardRef.current = persistentDashboardHandle;
       setDashboardUrlState(persistentDashboardHandle.url);
       return persistentDashboardHandle.url;
@@ -2507,8 +2507,8 @@ function AppInner({
     const startup = (async () => {
       const { startDashboardServer } = await import("../../server/index.js");
       const { saveDashboardPort } = await import("../../config.js");
-      const tryStart = (port: number | undefined) =>
-        startDashboardServer(buildCtx(), {
+      const tryStart = async (port: number | undefined) =>
+        startDashboardServer(await buildCtx(), {
           port,
           host: dashboardHost,
           token: dashboardToken,

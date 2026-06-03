@@ -60,6 +60,7 @@ function initialState(): Parameters<typeof reduce>[0] {
       lastCallCacheMiss: null,
       reservedTokens: 0,
       liveLogTokens: 0,
+      totalCredits: 0,
     },
     sessions: [],
     externalImportSources: [],

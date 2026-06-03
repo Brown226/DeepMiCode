@@ -132,7 +132,6 @@ describe("MiMo Context Windows", () => {
 
     expect(DEEPSEEK_CONTEXT_TOKENS["mimo-v2.5-pro"]).toBe(1_000_000);
     expect(DEEPSEEK_CONTEXT_TOKENS["mimo-v2.5"]).toBe(1_000_000);
-    expect(DEEPSEEK_CONTEXT_TOKENS["mimo-v2-flash"]).toBe(262_144);
   });
 });
 
@@ -142,7 +141,6 @@ describe("MiMo Pricing", () => {
 
     expect(DEEPSEEK_PRICING["mimo-v2.5-pro"]).toBeDefined();
     expect(DEEPSEEK_PRICING["mimo-v2.5"]).toBeDefined();
-    expect(DEEPSEEK_PRICING["mimo-v2-flash"]).toBeDefined();
 
     // Verify pricing structure
     const mimoPro = DEEPSEEK_PRICING["mimo-v2.5-pro"];
@@ -204,14 +202,31 @@ describe("MiMo Host Detection", () => {
 });
 
 describe("MiMo Escalation Contract", () => {
-  it("should not retry on deepseek-v4-pro when running on MiMo", async () => {
+  it("should mark mimo-v2.5-pro as top tier (no escalation)", async () => {
     const { escalationContract } = await import("../src/prompt-fragments.js");
 
     const contract = escalationContract("mimo-v2.5-pro");
     expect(contract).toContain("mimo-v2.5-pro");
-    expect(contract.toLowerCase()).toContain("mimo");
+    expect(contract).toContain("flagship");
+    expect(contract).not.toMatch(/escalat.*to mimo-v2\.5/i);
     expect(contract).not.toMatch(/retries.*deepseek-v4-pro/i);
     expect(contract).not.toMatch(/escalat.*to deepseek-v4-pro/i);
+  });
+
+  it("should allow mimo-v2.5 to escalate to mimo-v2.5-pro", async () => {
+    const { escalationContract } = await import("../src/prompt-fragments.js");
+
+    const contract = escalationContract("mimo-v2.5");
+    expect(contract).toContain("mimo-v2.5");
+    expect(contract).toContain("mimo-v2.5-pro");
+    expect(contract).toContain("NEEDS_PRO");
+  });
+
+  it("should not mention deepseek-v4-pro for MiMo models", async () => {
+    const { escalationContract } = await import("../src/prompt-fragments.js");
+
+    expect(escalationContract("mimo-v2.5")).not.toContain("deepseek-v4-pro");
+    expect(escalationContract("mimo-v2.5-pro")).not.toContain("deepseek-v4-pro");
   });
 
   it("should mention deepseek-v4-pro as upgrade target for DeepSeek flash", async () => {

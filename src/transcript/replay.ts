@@ -115,6 +115,14 @@ function summarizeTurns(turns: TurnStats[]): SessionSummary {
   const cacheHitRatio = hit + miss > 0 ? hit / (hit + miss) : 0;
   const savingsVsClaude = totalClaude > 0 ? 1 - totalCost / totalClaude : 0;
   const lastTurn = turns[turns.length - 1];
+  const totalCredits = turns.reduce(
+    (sum, t) =>
+      sum +
+      (t.usage.promptCacheHitTokens * 2 +
+        t.usage.promptCacheMissTokens * 100 +
+        t.usage.completionTokens * 200),
+    0,
+  );
   return {
     turns: turns.length,
     totalCostUsd: round(totalCost, 6),
@@ -125,6 +133,7 @@ function summarizeTurns(turns: TurnStats[]): SessionSummary {
     cacheHitRatio: round(cacheHitRatio, 4),
     lastPromptTokens: lastTurn?.usage.promptTokens ?? 0,
     lastTurnCostUsd: round(lastTurn?.cost ?? 0, 6),
+    totalCredits: round(totalCredits, 2),
   };
 }
 

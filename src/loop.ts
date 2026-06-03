@@ -61,6 +61,7 @@ import { SessionStats, type TurnStats } from "./telemetry/stats.js";
 import { ToolRegistry } from "./tools.js";
 import { ReadTracker } from "./tools/read-tracker.js";
 import type { ChatMessage, ToolCall } from "./types.js";
+import { resizeImageFromDataUrl } from "./utils/imageResizer.js";
 
 export const MID_TURN_STEER_WRAPPER =
   "[Mid-turn steer queued by the user. Do not treat this as a new task; use it only as additional guidance for the current task after completing the current step.]";
@@ -618,10 +619,7 @@ export class CacheFirstLoop {
     return userText;
   }
 
-  async *step(
-    userInput: string,
-    images?: Array<{ mimeType: string; data: string }>,
-  ): AsyncGenerator<LoopEvent> {
+  async *step(userInput: string, images?: Array<{ url: string }>): AsyncGenerator<LoopEvent> {
     // Reset per-turn flags.
     this._steerConsumed = false;
 
@@ -696,7 +694,22 @@ export class CacheFirstLoop {
     // first round-trip still leaves the message in the log; the user can
     // /retry without re-typing.
     const turnStartLogIndex = this.log.length;
-    this.appendAndPersist({ role: "user", content: userInput, images });
+    // Compress images before persisting (cc-haha strategy)
+    let compressedImages = images;
+    if (images && images.length > 0) {
+      try {
+        compressedImages = [];
+        for (const img of images) {
+          const compressed = await resizeImageFromDataUrl(img.url);
+          compressedImages.push({ url: compressed });
+        }
+      } catch (err) {
+        console.error("Image compression failed:", err);
+        // Fall back to original images
+        compressedImages = images;
+      }
+    }
+    this.appendAndPersist({ role: "user", content: userInput, images: compressedImages });
     const toolSpecs = this.prefix.tools();
     const rateLimitState = { shown: false };
 

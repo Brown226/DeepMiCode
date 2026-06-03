@@ -716,18 +716,16 @@ export function loadBaseUrl(path: string = defaultConfigPath()): string | undefi
 }
 
 /** Load MiMo API endpoint configuration.
- *  Priority: env vars > config file > defaults. */
+ *  Config file takes priority over env vars — a user who explicitly saves
+ *  a key via the settings UI expects that key to win over a stale
+ *  .env / shell-rc MIMO_API_KEY, matching loadEndpoint's behaviour
+ *  for DeepSeek credentials. */
 export function loadMimoEndpoint(path: string = defaultConfigPath()): ResolvedEndpoint {
-  const envBaseUrl = process.env.MIMO_BASE_URL;
-  const envApiKey = process.env.MIMO_API_KEY;
-  if (envBaseUrl) {
-    return { baseUrl: envBaseUrl, apiKey: envApiKey };
-  }
   const cfg = readConfig(path);
   if (cfg.mimoBaseUrl) {
-    return { baseUrl: cfg.mimoBaseUrl, apiKey: cfg.mimoApiKey ?? envApiKey };
+    return { baseUrl: cfg.mimoBaseUrl, apiKey: cfg.mimoApiKey };
   }
-  return { baseUrl: undefined, apiKey: envApiKey ?? cfg.mimoApiKey };
+  return { baseUrl: undefined, apiKey: cfg.mimoApiKey || process.env.MIMO_API_KEY };
 }
 
 /** Load MiMo API key. */

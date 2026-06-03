@@ -1025,7 +1025,7 @@ function MimoApiSection({
             disabled={!key}
             onClick={() => {
               if (!key) return;
-              onSaveApiKey(key);
+              onSave({ mimoApiKey: key });
               setKey("");
             }}
           >

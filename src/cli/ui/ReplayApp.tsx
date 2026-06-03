@@ -61,6 +61,7 @@ export function ReplayApp({ meta, pages }: ReplayAppProps) {
     // Replay is read-only — no live last-turn prompt tokens to show.
     lastPromptTokens: 0,
     lastTurnCostUsd: 0,
+    totalCredits: cumStats.totalCredits ?? 0,
   };
 
   const prefixHash =

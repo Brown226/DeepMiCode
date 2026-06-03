@@ -21,6 +21,7 @@ const usage: UsageStats = {
   lastCallCacheMiss: null,
   reservedTokens: 0,
   liveLogTokens: 0,
+  totalCredits: 0,
 };
 
 const settings: Settings = {

@@ -38,8 +38,8 @@ export interface ChatMessage {
   tool_calls?: ToolCall[];
   /** Must round-trip in tool-loop continuations — thinking mode 400s without it. */
   reasoning_content?: string | null;
-  /** Multimodal content — images attached to the message. */
-  images?: Array<{ mimeType: string; data: string }>;
+  /** Multimodal content — images attached to the message as data URLs. */
+  images?: Array<{ url: string }>;
 }
 
 export interface RawUsage {

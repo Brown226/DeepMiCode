@@ -154,7 +154,7 @@ export function Composer({
 }: {
   draft: string;
   setDraft: React.Dispatch<React.SetStateAction<string>>;
-  onSend: (images?: Array<{ mimeType: string; data: string }>) => void;
+  onSend: (images?: Array<{ url: string }>) => void;
   onAbort: () => void;
   disabled?: boolean;
   busy?: boolean;
@@ -192,7 +192,7 @@ export function Composer({
   const historyRef = useRef<string[]>([]);
   const [browseIdx, setBrowseIdx] = useState(-1);
   const savedDraftRef = useRef("");
-  const [pendingImages, setPendingImages] = useState<Array<{ mimeType: string; data: string; preview: string }>>([]);
+  const [pendingImages, setPendingImages] = useState<Array<{ url: string; preview: string }>>([]);
 
   const insertMention = (picked: string) => {
     const rel =
@@ -263,15 +263,31 @@ export function Composer({
     if (!file) return;
     e.preventDefault();
     try {
-      const buffer = await file.arrayBuffer();
-      const base64 = btoa(
-        new Uint8Array(buffer).reduce((data, byte) => data + String.fromCharCode(byte), "")
-      );
-      const preview = URL.createObjectURL(file);
-      setPendingImages((prev) => [
-        ...prev,
-        { mimeType: file.type, data: base64, preview },
-      ]);
+      // Compress image via Canvas to keep IPC payload small (<500KB)
+      const MAX_EDGE = 1600;
+      const QUALITY = 0.8;
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > MAX_EDGE || height > MAX_EDGE) {
+            const scale = MAX_EDGE / Math.max(width, height);
+            width = Math.round(width * scale);
+            height = Math.round(height * scale);
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) { reject(new Error("Canvas 2D not supported")); return; }
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL("image/jpeg", QUALITY));
+          URL.revokeObjectURL(img.src);
+        };
+        img.onerror = () => { URL.revokeObjectURL(img.src); reject(new Error("Image load failed")); };
+        img.src = URL.createObjectURL(file);
+      });
+      setPendingImages((prev) => [...prev, { url: dataUrl, preview: dataUrl }]);
     } catch (err) {
       console.error("clipboard image paste failed", err);
     }
@@ -479,7 +495,7 @@ export function Composer({
         }
       } else if (!disabled && draft.trim()) {
         recordSendAndReset();
-        const images = pendingImages.length > 0 ? pendingImages.map(({ mimeType, data }) => ({ mimeType, data })) : undefined;
+        const images = pendingImages.length > 0 ? pendingImages.map(({ url }) => ({ url })) : undefined;
         onSend(images);
         setPendingImages([]);
         setChips([]);
@@ -552,7 +568,6 @@ export function Composer({
                     type="button"
                     className="composer-image-remove"
                     onClick={() => {
-                      URL.revokeObjectURL(img.preview);
                       setPendingImages((prev) => prev.filter((_, j) => j !== i));
                     }}
                   >
@@ -689,7 +704,7 @@ export function Composer({
                 onClick={() => {
                   if (!disabled && draft.trim()) {
                     recordSendAndReset();
-                    const images = pendingImages.length > 0 ? pendingImages.map(({ mimeType, data }) => ({ mimeType, data })) : undefined;
+                    const images = pendingImages.length > 0 ? pendingImages.map(({ url }) => ({ url })) : undefined;
                     onSend(images);
                     setPendingImages([]);
                     setChips([]);

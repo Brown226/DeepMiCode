@@ -79,14 +79,19 @@ export function StatusBar({
     return () => window.removeEventListener("pointerdown", onPointerDown);
   }, [themeOpen]);
 
+  const isMimo = settings?.model?.startsWith("mimo-") ?? false;
+  const currentUrl = isMimo
+    ? (settings?.mimoBaseUrl ?? "token-plan-ams.xiaomimimo.com")
+    : (settings?.baseUrl ?? "api.deepseek.com");
+
   return (
     <footer className="statusbar">
-      <span className="seg" title={`API · ${settings?.baseUrl ?? "api.deepseek.com"}`}>
+      <span className="seg" title={`API · ${currentUrl}`}>
         <span
           className={connState === "off" ? "sw warn" : "sw"}
           style={connState === "off" ? { background: "var(--danger)" } : undefined}
         />
-        <span>{settings?.baseUrl?.replace(/^https?:\/\//, "") ?? "api.deepseek.com"}</span>
+        <span>{currentUrl.replace(/^https?:\/\//, "")}</span>
         <span className="v">{!ready ? t("statusbar.offline") : busy ? t("statusbar.busy") : t("statusbar.online")}</span>
       </span>
       <span className="seg" title={t("statusbar.cacheHit")}>
@@ -98,6 +103,11 @@ export function StatusBar({
         <I.cpu size={11} />
         <span>{t("statusbar.tokens")}</span>
         <span className="v">{tokenLabel(totalTokens)}</span>
+      </span>
+      <span className="seg">
+        <I.cpu size={11} />
+        <span>Credits</span>
+        <span className="v acc">{tokenLabel(Math.round(usage.totalCredits))}</span>
       </span>
       <span className="seg">
         <I.coin size={11} />

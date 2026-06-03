@@ -207,6 +207,7 @@ function defaultSpawner(input: HookSpawnInput): Promise<HookSpawnResult> {
     const child = spawn(input.command, {
       cwd: input.cwd,
       shell: true,
+      windowsHide: true,
       stdio: ["pipe", "pipe", "pipe"],
     });
     // Collect raw bytes per stream and decode once at close so a

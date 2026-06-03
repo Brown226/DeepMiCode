@@ -2,7 +2,8 @@ import type { ApprovalPrompt } from "@reasonix/core-utils";
 import { isCompactionSummary, stripCompactionMarker } from "@reasonix/core-utils/compaction";
 import { derivePrefix } from "@reasonix/core-utils/derive-prefix";
 import { Copy } from "lucide-react";
-import { type ReactNode, memo, useState } from "react";
+import { type ReactNode, memo, useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import type {
   ActivePlan,
   AssistantSegment,
@@ -41,15 +42,30 @@ export const UserMsg = memo(function UserMsg({
   text,
   time,
   skill,
+  images,
   onEdit,
 }: {
   text: string;
   time?: string;
   skill?: SkillOrigin;
+  images?: Array<{ url: string }>;
   onEdit?: (text: string) => void;
 }) {
   useLang();
   const [copied, setCopied] = useState(false);
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
+
+  const closeLightbox = useCallback(() => setLightboxIdx(null), []);
+
+  useEffect(() => {
+    if (lightboxIdx === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxIdx, closeLightbox]);
+
   const onCopy = async () => {
     try {
       await navigator.clipboard.writeText(text);
@@ -75,6 +91,24 @@ export const UserMsg = memo(function UserMsg({
           ) : null}
           {time ? <span className="time">{time}</span> : null}
         </div>
+        {images && images.length > 0 ? (
+          <div className="msg-images">
+            {images.map((img, idx) => (
+              <div
+                key={idx}
+                className="msg-image-thumb"
+                onClick={() => setLightboxIdx(idx)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") setLightboxIdx(idx);
+                }}
+              >
+                <img src={img.url} alt={`Uploaded image ${idx + 1}`} />
+              </div>
+            ))}
+          </div>
+        ) : null}
         <div className="msg-text">{text}</div>
         <div className="msg-actions">
           {onEdit ? (
@@ -98,6 +132,46 @@ export const UserMsg = memo(function UserMsg({
           </button>
         </div>
       </div>
+      {lightboxIdx !== null && images
+        ? createPortal(
+            <div className="lightbox-overlay" onClick={closeLightbox}>
+              <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+                <button type="button" className="lightbox-close" onClick={closeLightbox}>
+                  ✕
+                </button>
+                <img src={images[lightboxIdx].url} alt="Full size" className="lightbox-img" />
+                {images.length > 1 ? (
+                  <div className="lightbox-nav">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setLightboxIdx((prev) =>
+                          prev !== null ? (prev - 1 + images.length) % images.length : null,
+                        )
+                      }
+                    >
+                      ‹
+                    </button>
+                    <span>
+                      {lightboxIdx + 1} / {images.length}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setLightboxIdx((prev) =>
+                          prev !== null ? (prev + 1) % images.length : null,
+                        )
+                      }
+                    >
+                      ›
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   );
 });

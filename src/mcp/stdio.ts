@@ -56,6 +56,7 @@ export class StdioTransport implements McpTransport {
         cwd: opts.cwd,
         stdio: ["pipe", "pipe", "pipe"],
         shell: true,
+        windowsHide: true,
       });
     } else {
       this.child = spawn(opts.command, opts.args ?? [], {

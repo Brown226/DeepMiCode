@@ -45,8 +45,8 @@ describe("desktop memory browser", () => {
     const entries = collectMemoryEntriesForWorkspace(root, { deepmicodeHome });
 
     expect(entries.map((e) => `${e.kind}:${e.scope}:${e.name}`)).toEqual([
-      "project_file:project:deepmicode.md",
-      "global_file:global:deepmicode.md",
+      "project_file:project:DEEPMICODE.md",
+      "global_file:global:DEEPMICODE.md",
       "structured:global:cli_pref",
       "structured:project:build_cmd",
     ]);
@@ -63,7 +63,7 @@ describe("desktop memory browser", () => {
     expect(detail).toMatchObject({
       kind: "project_file",
       scope: "project",
-      name: "deepmicode.md",
+      name: "DEEPMICODE.md",
       body: "project note",
     });
     expect(() =>
