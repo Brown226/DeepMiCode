@@ -306,6 +306,7 @@ export interface TranslationSchema {
     contextOverflowTooMany: string;
     auth401: string;
     balance402: string;
+    contentModeration421: string;
     badparam422: string;
     badrequest400: string;
     concurrency429: string;

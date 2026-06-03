@@ -682,15 +682,15 @@ export const zhCN: TranslationSchema = {
       "上下文溢出（DeepSeek 400）：会话历史已达 {requested}，超出模型 prompt 上限（V4：1M tokens；旧版 chat/reasoner：131k）。通常是单个工具结果太大。DeepMiCode 默认将新工具结果限制在 8k tokens，并在会话加载时自动修复超大历史 — 重启常能清掉。如果仍然溢出，运行 /new 重新开始，或打开 /sessions 选中后按 [d] 删除该会话。",
     contextOverflowTooMany: "tokens 数量过多",
     auth401:
-      "认证失败（DeepSeek 401）：{inner}。你的 API key 被拒绝。运行 `deepmicode setup` 或 `export DEEPSEEK_API_KEY=sk-...` 修复。在 https://platform.deepseek.com/api_keys 获取 key。",
+      "认证失败（{provider} 401）：{inner}。你的 API key 被拒绝。请在设置 → 模型中修复 API key，或设置对应的环境变量。请从你的服务商控制台获取 key。",
     balance402:
-      "余额不足（DeepSeek 402）：{inner}。在 https://platform.deepseek.com/top_up 充值 — 余额非零时面板顶栏会显示。",
+      "余额不足（{provider} 402）：{inner}。请在服务商充值页面充值 — 余额非零时面板顶栏会显示。",
     contentModeration421:
       "内容审核拦截（{provider} 421）：{inner}。请求被内容审核拦截 — 请避免不安全或敏感内容。",
-    badparam422: "参数错误（DeepSeek 422）：{inner}",
-    badrequest400: "请求错误（DeepSeek 400）：{inner}",
+    badparam422: "参数错误（{provider} 422）：{inner}",
+    badrequest400: "请求错误（{provider} 400）：{inner}",
     concurrency429:
-      "DeepSeek 并发超限（429）：{inner}。账号在跑的请求超过上限（v4-pro 500、v4-flash 2500，账号下所有 API key 累加）。通常是同一账号开了多个 DeepMiCode 进程，或者并行 subagent 一次发太多。等几秒重试、减少并行，或在 https://platform.deepseek.com 申请扩容。",
+      "{provider} 并发超限（429）：{inner}。账号在跑的请求超过上限。通常是同一账号开了多个进程，或者并行 subagent 一次发太多。等几秒重试或减少并行。",
     deepseek5xxHead:
       "DeepSeek 服务不可用（{status}） — 这是 DeepSeek 服务端问题，不是 DeepMiCode 故障。已按指数退避重试 4 次。",
     deepseek5xxReachable:

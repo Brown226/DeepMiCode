@@ -23,24 +23,25 @@ describe("formatLoopError", () => {
     expect(out).toMatch(/929,452 tokens/); // pretty-printed from the raw JSON
   });
 
-  it("401 → authentication hint with setup/env var fix", () => {
+  it("401 → authentication hint with provider-aware fix", () => {
     const raw = new Error(
       'DeepSeek 401: {"error":{"message":"Authentication Fails, Your api key is invalid"}}',
     );
     const out = formatLoopError(raw);
     expect(out).toMatch(/Authentication failed/);
-    expect(out).toMatch(/deepmicode setup/);
-    expect(out).toMatch(/DEEPSEEK_API_KEY/);
+    expect(out).toMatch(/DeepSeek 401/);
+    expect(out).toMatch(/Settings → Models|environment variable|provider/);
     // Inner error.message survives the unwrap
     expect(out).toContain("Your api key is invalid");
   });
 
-  it("402 → balance hint with top-up URL", () => {
+  it("402 → balance hint with provider-aware wording", () => {
     const raw = new Error('DeepSeek 402: {"error":{"message":"Insufficient Balance"}}');
     const out = formatLoopError(raw);
     expect(out).toMatch(/Out of balance/);
-    expect(out).toMatch(/top_up/);
+    expect(out).toMatch(/DeepSeek 402/);
     expect(out).toContain("Insufficient Balance");
+    expect(out).toMatch(/provider/i);
   });
 
   it("422 → invalid parameter with the server's reason", () => {
@@ -52,16 +53,14 @@ describe("formatLoopError", () => {
     expect(out).toContain("temperature");
   });
 
-  it("429 → concurrency-limit hint with cap numbers + remediation (#1522)", () => {
+  it("429 → concurrency-limit hint with provider-aware wording (#1522)", () => {
     const raw = new Error(
       'DeepSeek 429: {"error":{"message":"Too Many Requests, please reduce concurrency"}}',
     );
     const out = formatLoopError(raw);
     expect(out).toMatch(/concurrency limit/);
-    expect(out).toMatch(/500/);
-    expect(out).toMatch(/2500/);
+    expect(out).toMatch(/DeepSeek.*429/);
     expect(out).toContain("reduce concurrency");
-    expect(out).toContain("platform.deepseek.com");
   });
 
   it("400 (non-overflow) → extracts the inner error message, drops the JSON wrapping", () => {
@@ -99,7 +98,7 @@ describe("formatLoopError", () => {
     const raw = new Error('DeepSeek 503: {"error":{"message":"Service unavailable"}}');
     const out = formatLoopError(raw);
     expect(out).toMatch(/service unavailable \(503\)/);
-    expect(out).toMatch(/DeepSeek-side problem, not deepmicode/);
+    expect(out).toMatch(/DeepSeek-side problem, not DeepMiCode/);
     expect(out).toMatch(/Already retried 4×/);
     expect(out).toContain("status.deepseek.com");
     expect(out).not.toMatch(/main API answered/);
@@ -220,7 +219,8 @@ describe("formatLoopError — zh-CN runtime switch", () => {
     );
     expect(out).toContain("认证失败");
     expect(out).toContain("Authentication Fails");
-    expect(out).toContain("deepmicode setup");
+    expect(out).toContain("DeepSeek 401");
+    expect(out).toMatch(/环境变量|服务商/i);
   });
 });
 

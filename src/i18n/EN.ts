@@ -708,15 +708,15 @@ export const EN: TranslationSchema = {
       "Context overflow (DeepSeek 400): session history is {requested}, past the model's prompt limit (V4: 1M tokens; legacy chat/reasoner: 131k). Usually a single tool result grew too big. DeepMiCode caps new tool results at 8k tokens and auto-heals oversized history on session load — a restart often clears it. If it still overflows, run /new to start fresh, or open /sessions and press [d] to delete this session.",
     contextOverflowTooMany: "too many tokens",
     auth401:
-      "Authentication failed (DeepSeek 401): {inner}. Your API key is rejected. Fix with `deepmicode setup` or `export DEEPSEEK_API_KEY=sk-...`. Get one at https://platform.deepseek.com/api_keys.",
+      "Authentication failed ({provider} 401): {inner}. Your API key is rejected. Fix your API key in Settings → Models, or set the environment variable. Get a key from your provider's dashboard.",
     balance402:
-      "Out of balance (DeepSeek 402): {inner}. Top up at https://platform.deepseek.com/top_up — the panel header shows your balance once it's non-zero.",
+      "Out of balance ({provider} 402): {inner}. Top up at your provider's billing page — the panel header shows your balance once it's non-zero.",
     contentModeration421:
       "Content moderation blocked ({provider} 421): {inner}. The request was intercepted by content review — avoid unsafe or sensitive content.",
-    badparam422: "Invalid parameter (DeepSeek 422): {inner}",
-    badrequest400: "Bad request (DeepSeek 400): {inner}",
+    badparam422: "Invalid parameter ({provider} 422): {inner}",
+    badrequest400: "Bad request ({provider} 400): {inner}",
     concurrency429:
-      "DeepSeek concurrency limit hit (429): {inner}. The account has too many in-flight requests (cap: 500 for v4-pro, 2500 for v4-flash, summed across API keys account-wide). Usually means another DeepMiCode process is sharing the same key, or a parallel subagent fan-out overshot. Wait a few seconds and retry, reduce parallelism, or request a higher cap at https://platform.deepseek.com.",
+      "{provider} concurrency limit hit (429): {inner}. The account has too many in-flight requests. Usually means another process is sharing the same key, or a parallel subagent fan-out overshot. Wait a few seconds and retry, or reduce parallelism.",
     deepseek5xxHead:
       "DeepSeek service unavailable ({status}) — this is a DeepSeek-side problem, not DeepMiCode. Already retried 4× with backoff.",
     deepseek5xxReachable:

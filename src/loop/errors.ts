@@ -33,11 +33,12 @@ export function formatLoopError(
   const body = m[3] ?? "";
   const inner = extractErrorMessage(body);
 
-  if (status === "401") return t("errors.auth401", { inner });
-  if (status === "402") return t("errors.balance402", { inner });
-  if (status === "422") return t("errors.badparam422", { inner });
-  if (status === "400") return t("errors.badrequest400", { inner });
-  if (status === "429") return t("errors.concurrency429", { inner });
+  if (status === "401") return t("errors.auth401", { provider, inner });
+  if (status === "402") return t("errors.balance402", { provider, inner });
+  if (status === "421") return t("errors.contentModeration421", { provider, inner });
+  if (status === "422") return t("errors.badparam422", { provider, inner });
+  if (status === "400") return t("errors.badrequest400", { provider, inner });
+  if (status === "429") return t("errors.concurrency429", { provider, inner });
   if (is5xxStatus(status)) return format5xx(status, probe, opts?.upstreamHost);
   return msg;
 }

@@ -731,15 +731,15 @@ export const de: TranslationSchema = {
       "Context-Überlauf (DeepSeek 400): Sitzungsverlauf ist {requested}, über dem Prompt-Limit des Modells (V4: 1M Tokens; legacy chat/reasoner: 131k). Meist ist ein einzelnes Tool-Ergebnis zu groß geworden. DeepMiCode begrenzt neue Tool-Ergebnisse auf 8k Tokens und heilt überdimensionierte Verläufe automatisch beim Sitzungsladen – ein Neustart behebt es oft. Falls es weiterhin überläuft, führe /new für einen frischen Start aus oder öffne /sessions und drücke [d], um diese Sitzung zu löschen.",
     contextOverflowTooMany: "Zu viele Tokens",
     auth401:
-      "Authentifizierung fehlgeschlagen (DeepSeek 401): {inner}. Dein API-Schlüssel wird abgewiesen. Behebe mit `deepmicode setup` oder `export DEEPSEEK_API_KEY=sk-...`. Erhalte einen unter https://platform.deepseek.com/api_keys.",
+      "Authentifizierung fehlgeschlagen ({provider} 401): {inner}. Dein API-Schlüssel wird abgewiesen. Behebe deinen API-Schlüssel in Einstellungen → Modelle oder setze die Umgebungsvariable. Erhalte einen Schlüssel von deinem Anbieter-Dashboard.",
     balance402:
-      "Kontoguthaben aufgebraucht (DeepSeek 402): {inner}. Lade auf unter https://platform.deepseek.com/top_up — der Panel-Header zeigt dein Guthaben, sobald es nicht Null ist.",
+      "Kontoguthaben aufgebraucht ({provider} 402): {inner}. Lade auf deiner Anbieter-Rechnungsseite auf — der Panel-Header zeigt dein Guthaben, sobald es nicht Null ist.",
     contentModeration421:
       "Inhaltsmoderation blockiert ({provider} 421): {inner}. Die Anfrage wurde durch die Inhaltsprüfung blockiert — vermeiden Sie unsichere oder sensible Inhalte.",
-    badparam422: "Ungültiger Parameter (DeepSeek 422): {inner}",
-    badrequest400: "Fehlerhafte Anfrage (DeepSeek 400): {inner}",
+    badparam422: "Ungültiger Parameter ({provider} 422): {inner}",
+    badrequest400: "Fehlerhafte Anfrage ({provider} 400): {inner}",
     concurrency429:
-      "DeepSeek-Gleichzeitigkeitslimit erreicht (429): {inner}. Das Konto hat zu viele gleichzeitige Anfragen (Grenze: 500 für v4-pro, 2500 für v4-flash, summiert über alle API-Schlüssel des Kontos). Meist läuft ein weiterer DeepMiCode-Prozess mit demselben Schlüssel oder ein paralleler Subagent-Fan-out hat überzogen. Warte einige Sekunden und wiederhole, reduziere die Parallelität oder beantrage eine höhere Grenze unter https://platform.deepseek.com.",
+      "{provider}-Gleichzeitigkeitslimit erreicht (429): {inner}. Das Konto hat zu viele gleichzeitige Anfragen. Meist läuft ein weiterer Prozess mit demselben Schlüssel oder ein paralleler Subagent-Fan-out hat überzogen. Warte einige Sekunden und wiederhole oder reduziere die Parallelität.",
     deepseek5xxHead:
       "DeepSeek-Dienst nicht verfügbar ({status}) — dies ist ein DeepSeek-seitiges Problem, nicht DeepMiCode. Bereits 4× mit Backoff wiederholt.",
     deepseek5xxReachable:

@@ -138,7 +138,7 @@ export function desktopUserAbortLoopOptions(): LoopAbortOptions | undefined {
 }
 
 type InMessage = { tabId?: string } & (
-  | { cmd: "user_input"; text: string; images?: Array<{ mimeType: string; data: string }> }
+  | { cmd: "user_input"; text: string; images?: Array<{ url: string }> }
   | { cmd: "abort" }
   | { cmd: "confirm_response"; id: number; response: ConfirmationChoice }
   | { cmd: "choice_response"; id: number; response: ChoiceVerdict }
@@ -1638,7 +1638,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
     tab: Tab,
     text: string,
     fromQQ = false,
-    images?: Array<{ mimeType: string; data: string }>,
+    images?: Array<{ url: string }>,
   ): Promise<void> {
     if (!tab.runtime) return;
     const rt = tab.runtime;
@@ -1674,6 +1674,7 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
         return;
       }
     }
+
     await tabContext.run(tab.id, async () => {
       try {
         let emittedTurnContext = false;
@@ -2657,6 +2658,20 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
           if (msg.mimoBaseUrl !== undefined) cfg.mimoBaseUrl = msg.mimoBaseUrl?.trim() || undefined;
           writeConfig(cfg);
           bridgeMimoEndpointEnv();
+          // Rebuild runtime so the new Mimo credentials take effect immediately
+          if (isMimoModel(tab.currentModel) && tab.runtime) {
+            try {
+              tab.runtime = buildRuntimeFor(tab);
+            } catch (mimoErr) {
+              emit(
+                {
+                  type: "$error",
+                  message: `Failed to rebuild Mimo runtime: ${(mimoErr as Error).message}. Check your Mimo API key and base URL.`,
+                },
+                tab.id,
+              );
+            }
+          }
         }
         if (msg.subagentModels !== undefined) {
           saveSubagentModels(msg.subagentModels);
@@ -2676,12 +2691,19 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
               if (tab.runtime) {
                 try {
                   tab.runtime = buildRuntimeFor(tab);
-                } catch {
+                } catch (switchErr) {
                   tab.currentModel = prev;
                   tab.system = codeSystemPrompt(tab.rootDir, {
                     hasSemanticSearch: tab.toolset.semantic.enabled,
                     modelId: prev,
                   });
+                  emit(
+                    {
+                      type: "$error",
+                      message: `Failed to switch model: ${(switchErr as Error).message}. Reverted to ${prev}.`,
+                    },
+                    tab.id,
+                  );
                 }
               }
             }
