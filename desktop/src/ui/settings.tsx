@@ -1,5 +1,5 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import type { Balance, Settings as SettingsType, UsageStats } from "../App";
 
 import { getLangLabel, getSupportedLangs, setLang, t, useLang } from "../i18n";
@@ -122,6 +122,8 @@ export function SettingsModal({
 }) {
   const [page, setPage] = useState<PageId>(initialPage ?? "general");
   const [qqConfigureOpen, setQQConfigureOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -132,13 +134,52 @@ export function SettingsModal({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
+
   const currentMeta = PAGE_META.find((p) => p.id === page) ?? PAGE_META[0]!;
+
+  // Filter pages based on search query
+  const filteredPages = useMemo(() => {
+    if (!searchQuery.trim()) return PAGE_META;
+    const q = searchQuery.toLowerCase();
+    return PAGE_META.filter((p) => {
+      const label = t(`settings.page${p.id[0]!.toUpperCase()}${p.id.slice(1)}Label` as any).toLowerCase();
+      const desc = t(`settings.page${p.id[0]!.toUpperCase()}${p.id.slice(1)}Desc` as any).toLowerCase();
+      return label.includes(q) || desc.includes(q) || p.id.includes(q);
+    });
+  }, [searchQuery]);
+
+  // Auto-select first matching page when searching
+  useEffect(() => {
+    if (searchQuery.trim() && filteredPages.length > 0 && !filteredPages.some((p) => p.id === page)) {
+      setPage(filteredPages[0].id);
+    }
+  }, [searchQuery, filteredPages, page]);
+
   return (
     <div className="settings-mask" onClick={onClose}>
       <div className="settings" onClick={(e) => e.stopPropagation()}>
         <nav className="settings-side">
           <div className="sg">{t("settings.title")}</div>
-          {PAGE_META.map((p) => (
+          <div className="settings-search">
+            <I.search size={12} />
+            <input
+              placeholder={t("settings.searchPlaceholder")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                className="clear-btn"
+                onClick={() => setSearchQuery("")}
+                aria-label={t("settings.clearSearch")}
+              >
+                <I.x size={10} />
+              </button>
+            )}
+          </div>
+          {filteredPages.map((p) => (
             <div
               key={p.id}
               className="row"
@@ -149,6 +190,9 @@ export function SettingsModal({
               <span>{t(`settings.page${p.id[0]!.toUpperCase()}${p.id.slice(1)}Label` as any)}</span>
             </div>
           ))}
+          {searchQuery && filteredPages.length === 0 && (
+            <div className="no-results">{t("settings.noResults")}</div>
+          )}
         </nav>
         <div className="settings-main">
           <div className="settings-head">

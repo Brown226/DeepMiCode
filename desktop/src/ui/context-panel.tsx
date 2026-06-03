@@ -199,6 +199,41 @@ function buildSessionTree(files: SessionFile[]): TreeNode[] {
 
 function CtxFiles({ files, settings }: { files: SessionFile[]; settings: Settings | null }) {
   const tree = useMemo(() => buildSessionTree(files), [files]);
+  const [previewPath, setPreviewPath] = useState<string | null>(null);
+  const [previewContent, setPreviewContent] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+
+  const loadPreview = useCallback(async (path: string) => {
+    setPreviewPath(path);
+    setPreviewContent(null);
+    setPreviewError(null);
+    setPreviewLoading(true);
+    try {
+      const workspaceDir = settings?.workspaceDir;
+      const isWindows = workspaceDir?.includes("\\") ?? false;
+      const sep = isWindows ? "\\" : "/";
+      const abs =
+        workspaceDir && !/^[a-zA-Z]:[\\/]/.test(path) && !path.startsWith("/")
+          ? `${workspaceDir.replace(/[\\/]$/, "")}${sep}${path.replace(/^[\\/]+/, "").replace(/\//g, sep)}`
+          : isWindows
+            ? path.replace(/\//g, "\\")
+            : path;
+      const result = await invoke<{ content: string; truncated: boolean }>("read_file_preview", { path: abs });
+      setPreviewContent(result.content);
+    } catch (err) {
+      setPreviewError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setPreviewLoading(false);
+    }
+  }, [settings?.workspaceDir]);
+
+  const closePreview = useCallback(() => {
+    setPreviewPath(null);
+    setPreviewContent(null);
+    setPreviewError(null);
+  }, []);
+
   return (
     <div className="ctx-block">
       <div className="h">
@@ -248,6 +283,15 @@ function CtxFiles({ files, settings }: { files: SessionFile[]; settings: Setting
                 />
                 <button
                   type="button"
+                  className="tree-action preview-btn"
+                  aria-label={t("contextPanel.previewFile", { path: n.path })}
+                  title={t("contextPanel.previewFile", { path: n.path })}
+                  onClick={() => loadPreview(n.path)}
+                >
+                  <I.search size={12} />
+                </button>
+                <button
+                  type="button"
                   className="tree-action"
                   aria-label={t("contextPanel.openFile", { path: n.path })}
                   title={t("contextPanel.openFile", { path: n.path })}
@@ -269,6 +313,34 @@ function CtxFiles({ files, settings }: { files: SessionFile[]; settings: Setting
           )
         )}
       </div>
+
+      {/* File Preview Panel */}
+      {previewPath && (
+        <div className="file-preview">
+          <div className="file-preview-header">
+            <span className="file-preview-title">{previewPath}</span>
+            <button
+              type="button"
+              className="file-preview-close"
+              onClick={closePreview}
+              aria-label={t("contextPanel.previewClose")}
+            >
+              <I.x size={12} />
+            </button>
+          </div>
+          <div className="file-preview-content">
+            {previewLoading && (
+              <div className="file-preview-loading">{t("contextPanel.previewLoading")}</div>
+            )}
+            {previewError && (
+              <div className="file-preview-error">{t("contextPanel.previewError")}: {previewError}</div>
+            )}
+            {previewContent && (
+              <pre className="file-preview-code">{previewContent}</pre>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

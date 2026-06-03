@@ -9,6 +9,8 @@ import {
   memo,
   type ReactNode,
   useContext,
+  useEffect,
+  useRef,
   useState,
 } from "react";
 import ReactMarkdown from "react-markdown";
@@ -342,6 +344,54 @@ function flattenChildText(node: ReactNode): string {
   return "";
 }
 
+function MermaidDiagram({ code }: { code: string }): ReactNode {
+  const ref = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    let cancelled = false;
+
+    const render = async () => {
+      try {
+        const mermaid = (await import("mermaid")).default;
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: document.documentElement.dataset.theme === "dark" ? "dark" : "default",
+          securityLevel: "loose",
+        });
+        const id = `mermaid-${Math.random().toString(36).slice(2, 10)}`;
+        const { svg } = await mermaid.render(id, code);
+        if (!cancelled && ref.current) {
+          ref.current.innerHTML = svg;
+          setError(null);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : String(err));
+        }
+      }
+    };
+
+    void render();
+    return () => {
+      cancelled = true;
+    };
+  }, [code]);
+
+  if (error) {
+    return (
+      <div className="mermaid-error">
+        <div className="mermaid-error-title">Mermaid Error</div>
+        <pre className="mermaid-error-msg">{error}</pre>
+        <pre className="mermaid-error-code">{code}</pre>
+      </div>
+    );
+  }
+
+  return <div ref={ref} className="mermaid-diagram" />;
+}
+
 function CodeBlock({ lang, text }: { lang: string; text: string }): ReactNode {
   useLang();
   const [copied, setCopied] = useState(false);
@@ -354,6 +404,24 @@ function CodeBlock({ lang, text }: { lang: string; text: string }): ReactNode {
       /* ignore */
     }
   };
+
+  // Render Mermaid diagrams
+  if (lang === "mermaid") {
+    return (
+      <div className="codeblock mermaid-block">
+        <div className="codeblock-head">
+          <span className="codeblock-lang">mermaid</span>
+          <span className="codeblock-copy-wrap">
+            <button type="button" className={`copy-btn ${copied ? "done" : ""}`} onClick={onCopy}>
+              {copied ? <Check size={11} /> : <Copy size={11} />}
+            </button>
+          </span>
+        </div>
+        <MermaidDiagram code={text} />
+      </div>
+    );
+  }
+
   return (
     <div className="codeblock">
       <div className="codeblock-head">

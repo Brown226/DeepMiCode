@@ -253,6 +253,22 @@ fn purge_old_pasted_images(max_age: Duration) {
     }
 }
 
+#[derive(Serialize)]
+struct FilePreview {
+    content: String,
+    truncated: bool,
+}
+
+#[tauri::command]
+fn read_file_preview(path: String, max_bytes: Option<usize>) -> Result<FilePreview, String> {
+    let limit = max_bytes.unwrap_or(100_000); // 100KB default
+    let bytes = std::fs::read(&path).map_err(|e| format!("read failed: {e}"))?;
+    let truncated = bytes.len() > limit;
+    let slice = if truncated { &bytes[..limit] } else { &bytes };
+    let content = String::from_utf8_lossy(slice).into_owned();
+    Ok(FilePreview { content, truncated })
+}
+
 fn main() {
     #[cfg(target_os = "linux")]
     linux_webkit_compat();
@@ -273,7 +289,8 @@ fn main() {
             list_workspace_tree,
             git_status,
             write_text_file,
-            save_clipboard_image
+            save_clipboard_image,
+            read_file_preview
         ])
         .setup(|app| {
             use tauri::Manager;
