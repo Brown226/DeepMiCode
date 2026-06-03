@@ -5109,6 +5109,79 @@ html:not([data-platform="macos"]) .cmdk-row .kb .shortcut kbd[data-key="mod"] {
   white-space: pre-wrap;
   color: var(--muted);
 }
+
+/* Provider management */
+.provider-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.provider-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  gap: 12px;
+}
+.provider-card[data-default] {
+  border-color: var(--accent);
+}
+.provider-info {
+  flex: 1;
+  min-width: 0;
+}
+.provider-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.provider-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 4px;
+  font-weight: 500;
+}
+.provider-meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.provider-kind {
+  padding: 1px 6px;
+  background: var(--panel);
+  border-radius: 4px;
+  font-family: "Geist Mono", monospace;
+  font-size: 11px;
+}
+.provider-url {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+.provider-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.btn.danger {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+.btn.danger:hover {
+  background: var(--danger);
+  color: #fff;
+}
 .settings-side .row {
   display: flex;
   align-items: center;

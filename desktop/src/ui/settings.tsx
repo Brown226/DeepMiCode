@@ -4,6 +4,7 @@ import type { Balance, Settings as SettingsType, UsageStats } from "../App";
 
 import { getLangLabel, getSupportedLangs, setLang, t, useLang } from "../i18n";
 import { I } from "../icons";
+import { useProviderStore } from "../stores/providerStore";
 import type {
   McpSpecInfo,
   MemoryDetail,
@@ -1108,6 +1109,15 @@ function PageModels({
   settings: SettingsType;
   onSave: (patch: SettingsPatch) => void;
 }) {
+  const providers = useProviderStore((s) => s.providers);
+  const fetchProviders = useProviderStore((s) => s.fetchProviders);
+  const saveProvider = useProviderStore((s) => s.saveProvider);
+  const deleteProvider = useProviderStore((s) => s.deleteProvider);
+  const setDefaultProvider = useProviderStore((s) => s.setDefaultProvider);
+
+  useEffect(() => {
+    fetchProviders();
+  }, [fetchProviders]);
   const [draft, setDraft] = useState(settings.model);
   useEffect(() => setDraft(settings.model), [settings.model]);
   const isKnown = (KNOWN_MODELS as readonly string[]).includes(settings.model);
@@ -1203,6 +1213,61 @@ function PageModels({
             ))}
           </select>
         </div>
+      </section>
+
+      {/* Multi-provider management */}
+      <section className="section">
+        <div className="stitle">{t("settings.providersSection")}</div>
+        <div className="h">{t("settings.providersSectionDesc")}</div>
+        {providers.length === 0 ? (
+          <div className="muted-card">{t("settings.providersEmpty")}</div>
+        ) : (
+          <div className="provider-list">
+            {providers.map((p) => (
+              <div key={p.id} className="provider-card" data-default={p.isDefault || undefined}>
+                <div className="provider-info">
+                  <div className="provider-name">
+                    {p.name}
+                    {p.isDefault ? <span className="provider-badge">{t("settings.providerDefault")}</span> : null}
+                  </div>
+                  <div className="provider-meta">
+                    <span className="provider-kind">{p.kind}</span>
+                    <span className="provider-url">{p.baseUrl}</span>
+                    <span className="provider-models">{p.models.length} {t("settings.providerModels")}</span>
+                  </div>
+                </div>
+                <div className="provider-actions">
+                  {!p.isDefault && (
+                    <button
+                      type="button"
+                      className="btn"
+                      onClick={() => setDefaultProvider(p.id)}
+                    >
+                      {t("settings.providerSetDefault")}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={() => {
+                      // Toggle enabled state
+                      saveProvider({ ...p, enabled: !p.enabled });
+                    }}
+                  >
+                    {p.enabled ? t("settings.providerDisable") : t("settings.providerEnable")}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn danger"
+                    onClick={() => deleteProvider(p.id)}
+                  >
+                    {t("settings.providerDelete")}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
     </>
   );
