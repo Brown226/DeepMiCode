@@ -162,6 +162,18 @@ export type TabClosedEvent = {
 
 export type McpSpecStatus = "configured" | "handshake" | "connected" | "failed" | "disabled";
 
+export type ProviderConfig = {
+  id: string;
+  name: string;
+  kind: "deepseek" | "openai" | "claude" | "custom";
+  baseUrl: string;
+  apiKey: string;
+  models: string[];
+  isDefault: boolean;
+  enabled: boolean;
+  description?: string;
+};
+
 export type McpSpecInfo = {
   raw: string;
   name: string | null;
@@ -229,6 +241,11 @@ export type MemoryDetailEvent = {
 export type RetryResultEvent = { type: "$retry_result"; text: string };
 
 export type BtwResultEvent = { type: "$btw_result"; question: string; answer: string };
+
+export type ProvidersEvent = {
+  type: "$providers";
+  providers: ProviderConfig[];
+};
 
 export type JobInfo = {
   id: number;
@@ -537,6 +554,7 @@ export type IncomingEvent = { tabId?: string } & (
   | KernelErrorEvent
   | RetryResultEvent
   | BtwResultEvent
+  | ProvidersEvent
 );
 
 export type OutgoingCommand = { tabId?: string } & (
@@ -580,4 +598,8 @@ export type OutgoingCommand = { tabId?: string } & (
   | { cmd: "compact_history" }
   | { cmd: "retry" }
   | { cmd: "btw"; text: string }
+  | { cmd: "providers_list" }
+  | { cmd: "providers_save"; provider: ProviderConfig }
+  | { cmd: "providers_delete"; id: string }
+  | { cmd: "providers_set_default"; id: string }
 );

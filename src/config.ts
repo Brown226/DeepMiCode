@@ -29,6 +29,24 @@ export const DEFAULT_MODEL = "deepseek-v4-flash";
 /** Provider kind — determines which API client to use. */
 export type ProviderKind = "deepseek" | "mimo";
 
+/** Multi-provider configuration — supports multiple AI model providers. */
+export interface ProviderConfig {
+  id: string;
+  name: string;
+  /** Provider kind — determines API client behavior. */
+  kind: "deepseek" | "openai" | "claude" | "custom";
+  baseUrl: string;
+  apiKey: string;
+  /** Supported model IDs for this provider. */
+  models: string[];
+  /** Whether this is the default provider. */
+  isDefault: boolean;
+  /** Whether this provider is enabled. */
+  enabled: boolean;
+  /** Optional description. */
+  description?: string;
+}
+
 /** Models the official api.deepseek.com endpoint currently accepts. v3-era
  *  `deepseek-chat`/`deepseek-reasoner` are gone — sending them produces a 400. */
 export const SUPPORTED_OFFICIAL_MODELS: readonly string[] = [
@@ -309,6 +327,8 @@ export interface DeepMiCodeConfig {
   };
   /** QQ Bot configuration */
   qq?: QQBotConfig;
+  /** Multi-provider configuration — supports multiple AI model providers. */
+  providers?: ProviderConfig[];
 }
 
 export interface CustomMemoryTypeConfig {
@@ -1036,6 +1056,92 @@ export function saveApiKey(key: string, path: string = defaultConfigPath()): voi
   // A stale process env (User-level Windows env, `.env`, shell rc) shadows config in
   // loadEndpoint's fallback branch — an explicit UI save must win for the current run.
   if (trimmed) process.env.DEEPSEEK_API_KEY = trimmed;
+}
+
+// ---- Multi-provider CRUD ----
+
+/** List all configured providers. */
+export function listProviders(path: string = defaultConfigPath()): ProviderConfig[] {
+  const cfg = readConfig(path);
+  return cfg.providers ?? [];
+}
+
+/** Get a provider by ID. */
+export function getProvider(
+  id: string,
+  path: string = defaultConfigPath(),
+): ProviderConfig | undefined {
+  return listProviders(path).find((p) => p.id === id);
+}
+
+/** Save or update a provider. If ID exists, updates; otherwise adds. */
+export function saveProvider(provider: ProviderConfig, path: string = defaultConfigPath()): void {
+  const cfg = readConfig(path);
+  const providers = cfg.providers ?? [];
+  const idx = providers.findIndex((p) => p.id === provider.id);
+  if (idx >= 0) {
+    providers[idx] = provider;
+  } else {
+    providers.push(provider);
+  }
+  cfg.providers = providers;
+  writeConfig(cfg, path);
+}
+
+/** Delete a provider by ID. */
+export function deleteProvider(id: string, path: string = defaultConfigPath()): boolean {
+  const cfg = readConfig(path);
+  const providers = cfg.providers ?? [];
+  const idx = providers.findIndex((p) => p.id === id);
+  if (idx < 0) return false;
+  providers.splice(idx, 1);
+  cfg.providers = providers;
+  writeConfig(cfg, path);
+  return true;
+}
+
+/** Set a provider as default (clears others). */
+export function setDefaultProvider(id: string, path: string = defaultConfigPath()): boolean {
+  const cfg = readConfig(path);
+  const providers = cfg.providers ?? [];
+  let found = false;
+  for (const p of providers) {
+    if (p.id === id) {
+      p.isDefault = true;
+      found = true;
+    } else {
+      p.isDefault = false;
+    }
+  }
+  if (!found) return false;
+  cfg.providers = providers;
+  writeConfig(cfg, path);
+  return true;
+}
+
+/** Get the default provider, or undefined if none set. */
+export function getDefaultProvider(path: string = defaultConfigPath()): ProviderConfig | undefined {
+  return listProviders(path).find((p) => p.isDefault && p.enabled);
+}
+
+/** Resolve provider for a given model — checks providers list, falls back to legacy config. */
+export function resolveProviderForModel(
+  model: string,
+  path: string = defaultConfigPath(),
+): { baseUrl: string; apiKey: string; provider: ProviderConfig } | undefined {
+  const providers = listProviders(path).filter((p) => p.enabled);
+  // 1. Check if model belongs to any provider's model list
+  for (const p of providers) {
+    if (p.models.includes(model)) {
+      return { baseUrl: p.baseUrl, apiKey: p.apiKey, provider: p };
+    }
+  }
+  // 2. Use default provider
+  const defaultP = providers.find((p) => p.isDefault);
+  if (defaultP) {
+    return { baseUrl: defaultP.baseUrl, apiKey: defaultP.apiKey, provider: defaultP };
+  }
+  return undefined;
 }
 
 /** Windows: case-insensitive — NTFS treats `F:\Foo` and `f:\foo` as one directory (#402). */

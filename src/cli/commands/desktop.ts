@@ -56,7 +56,15 @@ import {
   saveWorkspaceDir,
   writeConfig,
 } from "../../config.js";
-import { bridgeMimoEndpointEnv, loadMimoApiKey, loadMimoEndpoint } from "../../config.js";
+import {
+  bridgeMimoEndpointEnv,
+  deleteProvider,
+  listProviders,
+  loadMimoApiKey,
+  loadMimoEndpoint,
+  saveProvider,
+  setDefaultProvider,
+} from "../../config.js";
 import { Eventizer } from "../../core/eventize.js";
 import type { Event as KernelEvent } from "../../core/events.js";
 import {
@@ -213,6 +221,10 @@ type InMessage = { tabId?: string } & (
   | { cmd: "retry" }
   | { cmd: "btw"; text: string }
   | { cmd: "desktop_resync" }
+  | { cmd: "providers_list" }
+  | { cmd: "providers_save"; provider: import("../../config.js").ProviderConfig }
+  | { cmd: "providers_delete"; id: string }
+  | { cmd: "providers_set_default"; id: string }
 );
 
 interface NeedsSetupEvent {
@@ -568,7 +580,8 @@ type EmittableEvent =
   | CtxBreakdownEvent
   | MemoryEvent
   | MemoryDetailEvent
-  | JobsEvent;
+  | JobsEvent
+  | { type: "$providers"; providers: import("../../config.js").ProviderConfig[] };
 
 const STDOUT_BACKPRESSURE_WAIT = new Int32Array(new SharedArrayBuffer(4));
 
@@ -2364,6 +2377,52 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
     }
     if (msg.cmd === "jobs_stop_all") {
       void stopAllJobs().finally(() => emitJobs());
+      return;
+    }
+
+    // ---- Multi-provider commands ----
+    if (msg.cmd === "providers_list") {
+      const providers = listProviders();
+      emit({ type: "$providers", providers }, msg.tabId ?? first?.id);
+      return;
+    }
+    if (msg.cmd === "providers_save") {
+      try {
+        saveProvider(msg.provider);
+        const providers = listProviders();
+        emit({ type: "$providers", providers }, msg.tabId ?? first?.id);
+      } catch (err) {
+        emit(
+          { type: "$error", message: `providers_save failed: ${(err as Error).message}` },
+          msg.tabId ?? first?.id,
+        );
+      }
+      return;
+    }
+    if (msg.cmd === "providers_delete") {
+      try {
+        deleteProvider(msg.id);
+        const providers = listProviders();
+        emit({ type: "$providers", providers }, msg.tabId ?? first?.id);
+      } catch (err) {
+        emit(
+          { type: "$error", message: `providers_delete failed: ${(err as Error).message}` },
+          msg.tabId ?? first?.id,
+        );
+      }
+      return;
+    }
+    if (msg.cmd === "providers_set_default") {
+      try {
+        setDefaultProvider(msg.id);
+        const providers = listProviders();
+        emit({ type: "$providers", providers }, msg.tabId ?? first?.id);
+      } catch (err) {
+        emit(
+          { type: "$error", message: `providers_set_default failed: ${(err as Error).message}` },
+          msg.tabId ?? first?.id,
+        );
+      }
       return;
     }
 
