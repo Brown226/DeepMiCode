@@ -1969,6 +1969,21 @@ function TabRuntime({
       } else if (mod && (e.key === "j" || e.key === "J")) {
         e.preventDefault();
         setJobsOpen((v) => !v);
+      } else if (mod && e.shiftKey && (e.key === "c" || e.key === "C")) {
+        // Cmd+Shift+C — Copy last assistant message
+        e.preventDefault();
+        const last = [...state.messages].reverse().find((m) => m.kind === "assistant");
+        if (last && last.kind === "assistant") {
+          const text = last.segments
+            .filter((s): s is { kind: "text"; text: string } => s.kind === "text")
+            .map((s) => s.text)
+            .join("\n\n")
+            .trim();
+          if (text) {
+            void navigator.clipboard.writeText(text);
+            flashToast(t("app.toast.copied"));
+          }
+        }
       } else if (e.key === "Escape" && state.busy) {
         const target = e.target as HTMLElement | null;
         if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA") return;
@@ -3989,6 +4004,21 @@ export function App() {
         } else {
           e.preventDefault();
           onToggleSide();
+        }
+      } else if (mod && (e.key === "/" || e.key === "?")) {
+        // Cmd+/ — Toggle sidebar (alternative to Cmd+B)
+        e.preventDefault();
+        onToggleSide();
+      } else if (mod && (e.key === "." || e.key === ">")) {
+        // Cmd+. — Toggle context panel
+        e.preventDefault();
+        onToggleCtx();
+      } else if (mod && e.key >= "1" && e.key <= "9") {
+        // Cmd+1-9 — Switch to specific tab
+        const idx = Number.parseInt(e.key, 10) - 1;
+        if (idx < tabs.length) {
+          e.preventDefault();
+          setActiveTabId(tabs[idx].id);
         }
       }
     };

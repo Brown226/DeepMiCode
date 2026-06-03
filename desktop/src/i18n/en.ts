@@ -621,6 +621,8 @@ export const en = {
     kbClose: "close",
   },
   contextPanel: {
+    collapse: "Collapse panel",
+    expand: "Expand panel",
     reservedKey: "reserved",
     usedKey: "used",
     filesTab: "Files",

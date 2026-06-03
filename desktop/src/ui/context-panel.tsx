@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { openPath } from "@tauri-apps/plugin-opener";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { SessionFile, Settings, UsageStats } from "../App";
 import { t, useLang } from "../i18n";
 import { I } from "../icons";
@@ -10,6 +10,7 @@ import { PanelErrorBoundary } from "./error-boundary";
 type Tab = "files" | "tools" | "memory" | "rules";
 
 const CONTEXT_MAX_TOKENS = 1_000_000;
+const CTX_COLLAPSED_KEY = "deepmicode.ctxPanelCollapsed";
 
 export function ContextPanel({
   settings,
@@ -32,6 +33,26 @@ export function ContextPanel({
 }) {
   useLang();
   const [tab, setTab] = useState<Tab>("files");
+  const [collapsed, setCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem(CTX_COLLAPSED_KEY) === "1";
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleCollapsed = useCallback(() => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem(CTX_COLLAPSED_KEY, next ? "1" : "0");
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }, []);
+
   const reserved = usage.reservedTokens;
   const lastHit = usage.lastCallCacheHit ?? 0;
   const lastMiss = usage.lastCallCacheMiss ?? 0;
@@ -44,64 +65,80 @@ export function ContextPanel({
   const cachedPct = Math.min(100, (cached / CONTEXT_MAX_TOKENS) * 100);
   const free = Math.max(0, CONTEXT_MAX_TOKENS - reserved - used - cached);
   return (
-    <aside className="ctx">
-      <div className="ctx-tabs">
-        <div className="ctx-tab" data-active={tab === "files"} onClick={() => setTab("files")}>
-          {t("contextPanel.filesTab")}
+    <aside className="ctx" data-collapsed={collapsed || undefined}>
+      {/* Token usage bar — always visible */}
+      <div className="ctx-block ctx-token-bar">
+        <div className="h">
+          <span>{t("contextPanel.contextTokens")}</span>
+          <span className="right">
+            {(reserved + used + cached).toLocaleString()} /{" "}
+            {CONTEXT_MAX_TOKENS.toLocaleString()}
+          </span>
         </div>
-        <div className="ctx-tab" data-active={tab === "tools"} onClick={() => setTab("tools")}>
-          {t("contextPanel.toolsTab")}
+        <div className="meter">
+          <span className="rsvd" style={{ width: `${reservedPct}%` }} />
+          <span className="cached" style={{ width: `${cachedPct}%` }} />
+          <span className="used" style={{ width: `${usedPct}%` }} />
         </div>
-        <div className="ctx-tab" data-active={tab === "memory"} onClick={() => setTab("memory")}>
-          {t("contextPanel.memoryTab")}
+        <div className="legend">
+          <span className="l">
+            <span className="sw r" />
+            {t("contextPanel.reservedKey")} <span className="v">{reserved.toLocaleString()}</span>
+          </span>
+          <span className="l">
+            <span className="sw c" />
+            {t("contextPanel.cacheKey")} <span className="v">{cached.toLocaleString()}</span>
+          </span>
+          <span className="l">
+            <span className="sw u" />
+            {t("contextPanel.usedKey")} <span className="v">{used.toLocaleString()}</span>
+          </span>
+          <span className="l">
+            {t("contextPanel.freeKey")} <span className="v">{free.toLocaleString()}</span>
+          </span>
         </div>
-        <div className="ctx-tab" data-active={tab === "rules"} onClick={() => setTab("rules")}>
-          {t("contextPanel.rulesTab")}
-        </div>
+        <button
+          type="button"
+          className="ctx-toggle"
+          onClick={toggleCollapsed}
+          title={collapsed ? t("contextPanel.expand") : t("contextPanel.collapse")}
+          aria-label={collapsed ? t("contextPanel.expand") : t("contextPanel.collapse")}
+          style={{ transform: collapsed ? "rotate(0deg)" : "rotate(180deg)" }}
+        >
+          <I.chev size={12} />
+        </button>
       </div>
 
-      <div className="ctx-body">
-        <div className="ctx-block">
-          <div className="h">
-            <span>{t("contextPanel.contextTokens")}</span>
-            <span className="right">
-              {(reserved + used + cached).toLocaleString()} /{" "}
-              {CONTEXT_MAX_TOKENS.toLocaleString()}
-            </span>
+      {/* Expandable content — hidden when collapsed */}
+      {!collapsed && (
+        <>
+          <div className="ctx-tabs">
+            <div className="ctx-tab" data-active={tab === "files"} onClick={() => setTab("files")}>
+              {t("contextPanel.filesTab")}
+            </div>
+            <div className="ctx-tab" data-active={tab === "tools"} onClick={() => setTab("tools")}>
+              {t("contextPanel.toolsTab")}
+            </div>
+            <div className="ctx-tab" data-active={tab === "memory"} onClick={() => setTab("memory")}>
+              {t("contextPanel.memoryTab")}
+            </div>
+            <div className="ctx-tab" data-active={tab === "rules"} onClick={() => setTab("rules")}>
+              {t("contextPanel.rulesTab")}
+            </div>
           </div>
-          <div className="meter">
-            <span className="rsvd" style={{ width: `${reservedPct}%` }} />
-            <span className="cached" style={{ width: `${cachedPct}%` }} />
-            <span className="used" style={{ width: `${usedPct}%` }} />
-          </div>
-          <div className="legend">
-            <span className="l">
-              <span className="sw r" />
-              {t("contextPanel.reservedKey")} <span className="v">{reserved.toLocaleString()}</span>
-            </span>
-            <span className="l">
-              <span className="sw c" />
-              {t("contextPanel.cacheKey")} <span className="v">{cached.toLocaleString()}</span>
-            </span>
-            <span className="l">
-              <span className="sw u" />
-              {t("contextPanel.usedKey")} <span className="v">{used.toLocaleString()}</span>
-            </span>
-            <span className="l">
-              {t("contextPanel.freeKey")} <span className="v">{free.toLocaleString()}</span>
-            </span>
-          </div>
-        </div>
 
-        <PanelErrorBoundary key={tab} label={tab}>
-          {tab === "files" && <CtxFiles files={sessionFiles} settings={settings} />}
-          {tab === "tools" && <CtxTools specs={mcpSpecs} bridged={mcpBridged} />}
-          {tab === "memory" && (
-            <CtxMemory entries={memory} detail={memoryDetail} onRead={onReadMemory} />
-          )}
-          {tab === "rules" && <CtxRules settings={settings} />}
-        </PanelErrorBoundary>
-      </div>
+          <div className="ctx-body">
+            <PanelErrorBoundary key={tab} label={tab}>
+              {tab === "files" && <CtxFiles files={sessionFiles} settings={settings} />}
+              {tab === "tools" && <CtxTools specs={mcpSpecs} bridged={mcpBridged} />}
+              {tab === "memory" && (
+                <CtxMemory entries={memory} detail={memoryDetail} onRead={onReadMemory} />
+              )}
+              {tab === "rules" && <CtxRules settings={settings} />}
+            </PanelErrorBoundary>
+          </div>
+        </>
+      )}
     </aside>
   );
 }

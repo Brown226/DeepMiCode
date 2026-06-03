@@ -606,6 +606,8 @@ export const zhCN: typeof en = {
     elapsed: "耗时",
   },
   contextPanel: {
+    collapse: "折叠面板",
+    expand: "展开面板",
     reservedKey: "预留",
     usedKey: "已用",
     filesTab: "文件",
