@@ -12,6 +12,7 @@ import { type Update, check } from "@tauri-apps/plugin-updater";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { CommandPalette, Toast, buildCommands, useCommandPalette } from "./CommandPalette";
 import { WorkspaceProvider } from "./Markdown";
+import { useUIStore } from "./stores/uiStore";
 import { nextAbortDraftCandidate, restoreAbortedDraft, type AbortDraftSource } from "./abort-draft";
 import { getLang, getLangLabel, getSupportedLangs, setLang, t, useLang } from "./i18n";
 import { I } from "./icons";
@@ -3601,33 +3602,19 @@ export function App() {
     downloaded: number;
     total: number | null;
   } | null>(null);
-  const [currency, setCurrency] = useState<"CNY" | "USD">(() => {
-    const v = localStorage.getItem("deepmicode.currency");
-    return v === "USD" ? "USD" : "CNY";
-  });
-  const [theme, setTheme] = useState<Theme>(() => {
-    const v = localStorage.getItem("deepmicode.theme");
-    const style = localStorage.getItem("deepmicode.themeStyle");
-    if (isThemeStyle(style)) return themeForStyle(style);
-    return isTheme(v) ? v : THEME.DARK;
-  });
-  const [themeStyle, setThemeStyle] = useState<ThemeStyle>(() => {
-    const style = localStorage.getItem("deepmicode.themeStyle");
-    if (isThemeStyle(style)) return style;
-    const storedTheme = localStorage.getItem("deepmicode.theme");
-    return defaultStyleForTheme(isTheme(storedTheme) ? storedTheme : THEME.DARK);
-  });
-  const [fontScale, setFontScale] = useState<FontScale>(() => {
-    const v = localStorage.getItem("deepmicode.fontScale");
-    return isFontScale(v) ? v : FONT_SCALE.MEDIUM;
-  });
-  const [fontFamily, setFontFamily] = useState<FontFamily>(() => {
-    const v = localStorage.getItem("deepmicode.fontFamily");
-    return isFontFamily(v) ? v : FONT_FAMILY.SANS;
-  });
-  const [customFontFamily, setCustomFontFamily] = useState<string>(() => {
-    return localStorage.getItem("deepmicode.customFontFamily") ?? "";
-  });
+  // Theme / font / currency — delegated to uiStore
+  const currency = useUIStore((s) => s.currency);
+  const setCurrency = useUIStore((s) => s.setCurrency);
+  const theme = useUIStore((s) => s.theme);
+  const setTheme = useUIStore((s) => s.setTheme);
+  const themeStyle = useUIStore((s) => s.themeStyle);
+  const setThemeStyle = useUIStore((s) => s.setThemeStyle);
+  const fontScale = useUIStore((s) => s.fontScale);
+  const setFontScale = useUIStore((s) => s.setFontScale);
+  const fontFamily = useUIStore((s) => s.fontFamily);
+  const setFontFamily = useUIStore((s) => s.setFontFamily);
+  const customFontFamily = useUIStore((s) => s.customFontFamily);
+  const setCustomFontFamily = useUIStore((s) => s.setCustomFontFamily);
   const {
     collapsed: sideCollapsed,
     toggle: onToggleSide,
@@ -3648,12 +3635,19 @@ export function App() {
   const visibleCtx = ctxCollapsed ? 0 : ctxWidth;
   const threadMaxWidth = getThreadMaxWidth({ viewportWidth, visibleSide, visibleCtx });
 
+  // Theme / font initialization — apply store values to DOM on mount
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.dataset.themeStyle = themeStyle;
-    localStorage.setItem("deepmicode.theme", theme);
-    localStorage.setItem("deepmicode.themeStyle", themeStyle);
-  }, [theme, themeStyle]);
+    const s = useUIStore.getState();
+    document.documentElement.dataset.theme = s.theme;
+    document.documentElement.dataset.themeStyle = s.themeStyle;
+    document.documentElement.style.setProperty("zoom", String(FONT_SCALE_ZOOM[s.fontScale]));
+    const custom = s.customFontFamily.trim();
+    const stack =
+      s.fontFamily === FONT_FAMILY.CUSTOM && custom
+        ? custom
+        : (FONT_FAMILY_STACK[s.fontFamily] ?? FONT_FAMILY_STACK.sans);
+    document.documentElement.style.setProperty("--font-sans", stack);
+  }, []);
 
   // Sync --composer-max-width to .app (separate from inline style to avoid React override)
   const composerRef = useRef<HTMLElement | null>(null);
@@ -3702,27 +3696,15 @@ export function App() {
     };
   }, [requireCtxCollapsed, releaseCtxCollapsed, requireSideCollapsed, releaseSideCollapsed]);
 
-  useEffect(() => {
-    // Chromium webview supports `zoom`; scales every px-based size without touching CSS rules.
-    document.documentElement.style.setProperty("zoom", String(FONT_SCALE_ZOOM[fontScale]));
-    localStorage.setItem("deepmicode.fontScale", fontScale);
-  }, [fontScale]);
 
-  useEffect(() => {
-    const custom = customFontFamily.trim();
-    const stack =
-      fontFamily === FONT_FAMILY.CUSTOM && custom
-        ? custom
-        : (FONT_FAMILY_STACK[fontFamily] ?? FONT_FAMILY_STACK.sans);
-    document.documentElement.style.setProperty("--font-sans", stack);
-    localStorage.setItem("deepmicode.fontFamily", fontFamily);
-    localStorage.setItem("deepmicode.customFontFamily", customFontFamily);
-  }, [fontFamily, customFontFamily]);
 
+  // Currency event listener — still needed to bridge CustomEvent → store
   useEffect(() => {
     const onCur = (e: Event) => {
       const detail = (e as CustomEvent).detail;
-      if (detail === "CNY" || detail === "USD") setCurrency(detail);
+      if (detail === "CNY" || detail === "USD") {
+        useUIStore.getState().setCurrency(detail);
+      }
     };
     window.addEventListener("deepmicode:currency", onCur);
     return () => window.removeEventListener("deepmicode:currency", onCur);
@@ -4029,12 +4011,7 @@ export function App() {
   }, [onSetTheme, theme]);
 
   const onToggleCurrency = useCallback(() => {
-    setCurrency((c) => {
-      const next = c === "CNY" ? "USD" : "CNY";
-      localStorage.setItem("deepmicode.currency", next);
-      window.dispatchEvent(new CustomEvent("deepmicode:currency", { detail: next }));
-      return next;
-    });
+    useUIStore.getState().toggleCurrency();
   }, []);
 
   if (startupFailure && tabs.length === 0) {
