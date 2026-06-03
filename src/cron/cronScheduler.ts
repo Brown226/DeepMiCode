@@ -1,7 +1,7 @@
 /** Cron scheduler - runs tasks based on cron expressions */
 
-import { randomBytes } from "node:crypto";
 import { spawn } from "node:child_process";
+import { randomBytes } from "node:crypto";
 import { cronMatches } from "./cronParser.js";
 import type { CronService } from "./cronService.js";
 import type { CronTask, TaskRun } from "./types.js";
@@ -123,8 +123,10 @@ export class CronScheduler {
       const args = [
         "--print",
         "--verbose",
-        "--input-format", "stream-json",
-        "--output-format", "stream-json",
+        "--input-format",
+        "stream-json",
+        "--output-format",
+        "stream-json",
       ];
 
       if (task.model) {
@@ -134,6 +136,7 @@ export class CronScheduler {
       // Spawn deepmicode process
       const child = spawn("deepmicode", args, {
         stdio: ["pipe", "pipe", "pipe"],
+        windowsHide: true,
         env: {
           ...process.env,
           CLAUDE_CODE_ENABLE_TASKS: "1",
@@ -190,10 +193,10 @@ export class CronScheduler {
       });
 
       // Send prompt via stdin in stream-json format
-      const inputMessage = JSON.stringify({
+      const inputMessage = `${JSON.stringify({
         type: "user",
         message: task.prompt,
-      }) + "\n";
+      })}\n`;
 
       child.stdin.write(inputMessage);
       child.stdin.end();

@@ -20,7 +20,7 @@ const includedFiles = new Set();
 const t0 = Date.now();
 const patternHits = [];
 for await (const chunk of walkChunks(root, {
-  config: resolveIndexConfig({ excludePatterns: ["**/dashboard/**", "**/*.test.ts"] }),
+  config: resolveIndexConfig({ excludePatterns: ["**/*.test.ts"] }),
   onSkip: (p, reason) => {
     buckets[reason]++;
     if (reason === "pattern" && patternHits.length < 5) patternHits.push(p);

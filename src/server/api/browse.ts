@@ -43,6 +43,7 @@ function listWindowsDrives(): string[] {
     const raw = execSync("wmic logicaldisk get deviceid /value", {
       encoding: "utf8",
       timeout: 1500,
+      windowsHide: true,
     });
     const drives = raw
       .split(/\r?\n/)

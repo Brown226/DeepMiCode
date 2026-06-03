@@ -288,6 +288,7 @@ export class ClassSourceFinder {
           maxBuffer: 15 * 1024 * 1024,
           timeout: 30_000,
           signal: this.signal,
+          windowsHide: true,
         },
         (err, stdout, stderr) => {
           if (err) {

@@ -27,7 +27,7 @@ export function openUrl(url: string): OpenUrlResult {
   }
 
   try {
-    const child = spawn(cmd, args, { detached: true, stdio: "ignore" });
+    const child = spawn(cmd, args, { detached: true, stdio: "ignore", windowsHide: true });
     child.unref();
     return { opened: true };
   } catch {

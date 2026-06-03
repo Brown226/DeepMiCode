@@ -56,3 +56,19 @@ desktop/src-tauri/binaries/
 mimo-LLM-配置文件.md
 *配置*.md
 test-mimo*.mjs
+
+# IDE / editor local state
+.cursor/
+.codegraph/
+
+# Debug artifacts & screenshots
+*.stackdump
+*.jpg
+*.png
+Snipaste_*
+debug-*.md
+deepmicode-desktop.exe
+nul;
+
+# Reasonix / probe debug output
+.reasonix/

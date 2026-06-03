@@ -37,6 +37,7 @@ export async function handleCheckpointCreate(
       env,
       encoding: "utf8",
       maxBuffer: 10 * 1024 * 1024,
+      windowsHide: true,
     });
     paths = stdout.split("\n").filter(Boolean);
   } catch (err: unknown) {

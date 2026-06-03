@@ -33,7 +33,7 @@ function fieldMatches(field: string, value: number): boolean {
   // Handle range with step (e.g., "1-10/3")
   if (field.includes("/")) {
     const [range, stepStr] = field.split("/");
-    const step = parseInt(stepStr, 10);
+    const step = Number.parseInt(stepStr, 10);
     if (!Number.isFinite(step) || step <= 0) return false;
 
     if (range === "*") {
@@ -42,13 +42,13 @@ function fieldMatches(field: string, value: number): boolean {
 
     if (range.includes("-")) {
       const [startStr, endStr] = range.split("-");
-      const start = parseInt(startStr, 10);
-      const end = parseInt(endStr, 10);
+      const start = Number.parseInt(startStr, 10);
+      const end = Number.parseInt(endStr, 10);
       if (!Number.isFinite(start) || !Number.isFinite(end)) return false;
       return value >= start && value <= end && (value - start) % step === 0;
     }
 
-    const start = parseInt(range, 10);
+    const start = Number.parseInt(range, 10);
     if (!Number.isFinite(start)) return false;
     return value >= start && (value - start) % step === 0;
   }
@@ -56,21 +56,21 @@ function fieldMatches(field: string, value: number): boolean {
   // Handle range (e.g., "1-5")
   if (field.includes("-")) {
     const [startStr, endStr] = field.split("-");
-    const start = parseInt(startStr, 10);
-    const end = parseInt(endStr, 10);
+    const start = Number.parseInt(startStr, 10);
+    const end = Number.parseInt(endStr, 10);
     if (!Number.isFinite(start) || !Number.isFinite(end)) return false;
     return value >= start && value <= end;
   }
 
   // Handle step (e.g., "*/5")
   if (field.startsWith("*/")) {
-    const step = parseInt(field.slice(2), 10);
+    const step = Number.parseInt(field.slice(2), 10);
     if (!Number.isFinite(step) || step <= 0) return false;
     return value % step === 0;
   }
 
   // Exact match
-  const target = parseInt(field, 10);
+  const target = Number.parseInt(field, 10);
   return Number.isFinite(target) && value === target;
 }
 

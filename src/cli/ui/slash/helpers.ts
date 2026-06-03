@@ -67,13 +67,18 @@ export function stripOuterQuotes(s: string): string {
 }
 
 export function runGitCommit(rootDir: string, message: string): SlashResult {
-  const add = spawnSync("git", ["add", "-A"], { cwd: rootDir, encoding: "utf8" });
+  const add = spawnSync("git", ["add", "-A"], {
+    cwd: rootDir,
+    encoding: "utf8",
+    windowsHide: true,
+  });
   if (add.error || add.status !== 0) {
     return { info: `git add failed (${add.status ?? "?"}):\n${gitTail(add)}` };
   }
   const commit = spawnSync("git", ["commit", "-m", message], {
     cwd: rootDir,
     encoding: "utf8",
+    windowsHide: true,
   });
   if (commit.error || commit.status !== 0) {
     return { info: `git commit failed (${commit.status ?? "?"}):\n${gitTail(commit)}` };

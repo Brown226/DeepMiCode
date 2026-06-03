@@ -1,7 +1,7 @@
 /** Cron task CRUD service - persists to JSON file */
 
 import { randomBytes } from "node:crypto";
-import { mkdir, readFile, writeFile, rename, unlink } from "node:fs/promises";
+import { mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import type { CronTask, CronTasksFile, TaskRun, TaskRunsFile } from "./types.js";
 
@@ -49,7 +49,7 @@ export class CronService {
   private async saveTasks(): Promise<void> {
     const data: CronTasksFile = { tasks: this.tasks };
     const json = JSON.stringify(data, null, 2);
-    const tmpPath = this.tasksPath + ".tmp";
+    const tmpPath = `${this.tasksPath}.tmp`;
     await writeFile(tmpPath, json, "utf-8");
     await rename(tmpPath, this.tasksPath);
   }
@@ -70,7 +70,7 @@ export class CronService {
     this.runs = filteredRuns;
     const data: TaskRunsFile = { runs: this.runs };
     const json = JSON.stringify(data, null, 2);
-    const tmpPath = this.runsPath + ".tmp";
+    const tmpPath = `${this.runsPath}.tmp`;
     await writeFile(tmpPath, json, "utf-8");
     await rename(tmpPath, this.runsPath);
   }
@@ -87,9 +87,7 @@ export class CronService {
     return this.tasks.find((t) => t.id === id);
   }
 
-  async createTask(
-    input: Omit<CronTask, "id" | "createdAt" | "enabled">
-  ): Promise<CronTask> {
+  async createTask(input: Omit<CronTask, "id" | "createdAt" | "enabled">): Promise<CronTask> {
     const task: CronTask = {
       id: this.generateId(),
       name: input.name,

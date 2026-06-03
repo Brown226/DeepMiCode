@@ -1,7 +1,7 @@
 /** Scheduled tasks API endpoints */
 
-import type { ApiResult } from "../router.js";
 import type { DashboardContext } from "../context.js";
+import type { ApiResult } from "../router.js";
 
 export async function handleScheduledTasks(
   method: string,

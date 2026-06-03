@@ -35,6 +35,7 @@ export function detectGitBranch(cwd: string): string | undefined {
       stdio: ["ignore", "pipe", "ignore"],
       timeout: 800,
       encoding: "utf8",
+      windowsHide: true,
     }).trim();
     return out || undefined;
   } catch {
