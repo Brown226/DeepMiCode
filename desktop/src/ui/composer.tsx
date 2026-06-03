@@ -13,6 +13,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { open as openFileDialog } from "@tauri-apps/plugin-dialog";
 import { t, type TKey } from "../i18n";
 import { I } from "../icons";
+import { useProviderStore } from "../stores/providerStore";
 import { DEFAULT_COMPOSER_ROWS, applyComposerTextareaAutosize } from "./composer-sizing";
 import { fmtElapsed } from "./live";
 import { Shortcut } from "./shortcut";
@@ -851,6 +852,14 @@ function ModelEffortMenu({
   onPickEffort: (effort: ReasoningEffort) => void;
 }) {
   const [draft, setDraft] = useState(modelLabel);
+  const providers = useProviderStore((s) => s.providers);
+  const fetchProviders = useProviderStore((s) => s.fetchProviders);
+
+  useEffect(() => {
+    fetchProviders();
+  }, [fetchProviders]);
+
+  const enabledProviders = providers.filter((p) => p.enabled);
   return (
     <div
       className="popup"
@@ -858,7 +867,7 @@ function ModelEffortMenu({
         bottom: "calc(100% + 6px)",
         left: "auto",
         right: 0,
-        width: 280,
+        width: 320,
         position: "absolute",
       }}
     >
@@ -867,6 +876,7 @@ function ModelEffortMenu({
         <span>{t("composer.switchModel")}</span>
       </div>
       <div className="popup-list">
+        {/* Default models */}
         {KNOWN_MODELS.map((m) => (
           <div
             key={m}
@@ -882,6 +892,27 @@ function ModelEffortMenu({
             </div>
           </div>
         ))}
+        {/* Provider-specific models */}
+        {enabledProviders.map((p) =>
+          p.models
+            .filter((m) => !(KNOWN_MODELS as readonly string[]).includes(m))
+            .map((m) => (
+              <div
+                key={`${p.id}-${m}`}
+                className="popup-item"
+                data-active={m === modelLabel}
+                onClick={() => onPickModel(m)}
+              >
+                <span className="ico">
+                  <I.brain size={12} />
+                </span>
+                <div className="nm">
+                  <span className="cmd">{m}</span>
+                  <span className="provider-tag">{p.name}</span>
+                </div>
+              </div>
+            )),
+        )}
         <div style={{ padding: "6px 8px", display: "flex", gap: 6 }}>
           <input
             className="field mono"

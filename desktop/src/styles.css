@@ -5182,6 +5182,17 @@ html:not([data-platform="macos"]) .cmdk-row .kb .shortcut kbd[data-key="mod"] {
   background: var(--danger);
   color: #fff;
 }
+
+/* Provider tag in model menu */
+.provider-tag {
+  font-size: 10px;
+  padding: 1px 5px;
+  background: var(--panel);
+  border-radius: 3px;
+  color: var(--muted);
+  margin-left: 6px;
+  font-family: "Geist Mono", monospace;
+}
 .settings-side .row {
   display: flex;
   align-items: center;
