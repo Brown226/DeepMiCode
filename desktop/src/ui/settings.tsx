@@ -1111,9 +1111,10 @@ function PageModels({
 }) {
   const providers = useProviderStore((s) => s.providers);
   const fetchProviders = useProviderStore((s) => s.fetchProviders);
-  const saveProvider = useProviderStore((s) => s.saveProvider);
+  const saveProviderAction = useProviderStore((s) => s.saveProvider);
   const deleteProvider = useProviderStore((s) => s.deleteProvider);
   const setDefaultProvider = useProviderStore((s) => s.setDefaultProvider);
+  const [showAddProvider, setShowAddProvider] = useState(false);
 
   useEffect(() => {
     fetchProviders();
@@ -1217,9 +1218,30 @@ function PageModels({
 
       {/* Multi-provider management */}
       <section className="section">
-        <div className="stitle">{t("settings.providersSection")}</div>
+        <div className="stitle" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span>{t("settings.providersSection")}</span>
+          <button
+            type="button"
+            className="btn primary"
+            onClick={() => setShowAddProvider(true)}
+          >
+            <I.plus size={12} /> {t("settings.providerAdd")}
+          </button>
+        </div>
         <div className="h">{t("settings.providersSectionDesc")}</div>
-        {providers.length === 0 ? (
+
+        {/* Add Provider Form */}
+        {showAddProvider && (
+          <AddProviderForm
+            onSave={(provider) => {
+              saveProviderAction(provider);
+              setShowAddProvider(false);
+            }}
+            onCancel={() => setShowAddProvider(false)}
+          />
+        )}
+
+        {providers.length === 0 && !showAddProvider ? (
           <div className="muted-card">{t("settings.providersEmpty")}</div>
         ) : (
           <div className="provider-list">
@@ -1249,10 +1271,7 @@ function PageModels({
                   <button
                     type="button"
                     className="btn"
-                    onClick={() => {
-                      // Toggle enabled state
-                      saveProvider({ ...p, enabled: !p.enabled });
-                    }}
+                    onClick={() => saveProviderAction({ ...p, enabled: !p.enabled })}
                   >
                     {p.enabled ? t("settings.providerDisable") : t("settings.providerEnable")}
                   </button>
@@ -1270,6 +1289,109 @@ function PageModels({
         )}
       </section>
     </>
+  );
+}
+
+function AddProviderForm({
+  onSave,
+  onCancel,
+}: {
+  onSave: (provider: import("../protocol").ProviderConfig) => void;
+  onCancel: () => void;
+}) {
+  const [name, setName] = useState("");
+  const [kind, setKind] = useState<"deepseek" | "openai" | "claude" | "custom">("openai");
+  const [baseUrl, setBaseUrl] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [modelsText, setModelsText] = useState("");
+
+  const handleSubmit = () => {
+    const models = modelsText
+      .split(",")
+      .map((m) => m.trim())
+      .filter(Boolean);
+    if (!name.trim() || !baseUrl.trim() || models.length === 0) return;
+    onSave({
+      id: `provider-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      name: name.trim(),
+      kind,
+      baseUrl: baseUrl.trim(),
+      apiKey: apiKey.trim(),
+      models,
+      isDefault: false,
+      enabled: true,
+    });
+  };
+
+  return (
+    <div className="add-provider-form">
+      <div className="form-row">
+        <label>{t("settings.providerName")}</label>
+        <input
+          className="field"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder={t("settings.providerNamePlaceholder")}
+        />
+      </div>
+      <div className="form-row">
+        <label>{t("settings.providerKind")}</label>
+        <div className="seg-ctrl">
+          {(["openai", "deepseek", "claude", "custom"] as const).map((k) => (
+            <button
+              key={k}
+              type="button"
+              data-on={kind === k}
+              onClick={() => setKind(k)}
+            >
+              {k}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="form-row">
+        <label>{t("settings.providerBaseUrl")}</label>
+        <input
+          className="field mono"
+          value={baseUrl}
+          onChange={(e) => setBaseUrl(e.target.value)}
+          placeholder="https://api.openai.com/v1"
+        />
+      </div>
+      <div className="form-row">
+        <label>{t("settings.providerApiKey")}</label>
+        <input
+          className="field mono"
+          type="password"
+          value={apiKey}
+          onChange={(e) => setApiKey(e.target.value)}
+          placeholder="sk-..."
+        />
+      </div>
+      <div className="form-row">
+        <label>{t("settings.providerModelsLabel")}</label>
+        <input
+          className="field mono"
+          value={modelsText}
+          onChange={(e) => setModelsText(e.target.value)}
+          placeholder={t("settings.providerModelsPlaceholder")}
+        />
+        <div className="form-hint">{t("settings.providerModelsHint")}</div>
+      </div>
+      <div className="form-actions">
+        <button type="button" className="btn" onClick={onCancel}>
+          {t("settings.cancel")}
+        </button>
+        <button
+          type="button"
+          className="btn primary"
+          disabled={!name.trim() || !baseUrl.trim() || !modelsText.trim()}
+          onClick={handleSubmit}
+        >
+          {t("settings.providerSave")}
+        </button>
+      </div>
+    </div>
   );
 }
 
