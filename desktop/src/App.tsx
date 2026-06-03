@@ -263,7 +263,7 @@ export type Settings = {
     ollama?: string;
     brave?: string;
   };
-  subagentModels?: Record<string, "flash" | "pro">;
+  subagentModels?: Record<string, string>;
   showSystemEvents?: boolean;
   version: string;
   mimoApiKeyPrefix?: string;

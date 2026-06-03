@@ -25,7 +25,7 @@ export interface SkillToolsOptions {
   /** Called synchronously after `install_skill` successfully writes a new skill file. */
   onSkillInstalled?: SkillInstalledHook;
   /** Per-skill model override for `runAs: subagent` skills — sourced from config.json's `subagentModels`. */
-  subagentModels?: Record<string, "flash" | "pro">;
+  subagentModels?: Record<string, string>;
 }
 
 interface BuiltinSubagentToolSpec {

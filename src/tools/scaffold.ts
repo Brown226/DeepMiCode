@@ -64,9 +64,9 @@ export function registerScaffoldTools(
         },
         model: {
           type: "string",
-          enum: ["deepseek-v4-flash", "deepseek-v4-pro", "mimo-v2.5-pro", "mimo-v2.5"],
+          enum: ["mimo-v2.5", "mimo-v2.5-pro", "deepseek-v4-flash", "deepseek-v4-pro"],
           description:
-            "Subagent model override. Default flash; use pro only when the playbook needs it. MiMo models: 'mimo-v2.5' (1× cost) or 'mimo-v2.5-pro' (2× cost, flagship). MiMo's mimo-v2.5 can auto-escalate to mimo-v2.5-pro for hard tasks.",
+            "Subagent model override. Default 'mimo-v2.5'. Use 'mimo-v2.5-pro' for flagship quality, or 'deepseek-v4-flash'/'deepseek-v4-pro' for DeepSeek models.",
         },
       },
       required: ["name", "description", "body"],

@@ -298,7 +298,9 @@ export const en = {
       "No skills available. Create SKILL.md under ~/.deepmicode/skills/ or .deepmicode/skills/ in your project root.",
     subagentModelFlash: "flash",
     subagentModelPro: "pro",
-    subagentModelHint: "Model used when this skill spawns its isolated subagent",
+    subagentModelHint: "Default model for subagents",
+    subagentModelSection: "Subagent Model",
+    subagentModelSectionDesc: "Model used when subagents (explore, research, review) are spawned. Can be overridden per-skill in the Skills tab.",
     // Memory
     memorySection: "Long-term memory",
     memoryDesc:

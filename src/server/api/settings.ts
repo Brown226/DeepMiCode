@@ -250,14 +250,14 @@ export async function handleSettings(
       ) {
         return {
           status: 400,
-          body: { error: "subagentModels must be an object mapping skill name → 'flash' | 'pro'" },
+          body: { error: "subagentModels must be an object mapping skill name → model ID" },
         };
       }
-      const sanitized = new Map<string, "flash" | "pro">();
+      const sanitized = new Map<string, string>();
       for (const [name, value] of Object.entries(fields.subagentModels)) {
         if (typeof name !== "string" || !name) continue;
         if (name === "__proto__" || name === "constructor" || name === "prototype") continue;
-        if (value === "flash" || value === "pro") sanitized.set(name, value);
+        if (typeof value === "string" && value) sanitized.set(name, value);
       }
       cfg.subagentModels = sanitized.size > 0 ? Object.fromEntries(sanitized) : undefined;
       changed.push("subagentModels");

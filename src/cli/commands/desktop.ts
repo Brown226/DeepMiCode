@@ -181,7 +181,7 @@ type InMessage = { tabId?: string } & (
       exaApiKey?: string | null;
       ollamaApiKey?: string | null;
       braveApiKey?: string | null;
-      subagentModels?: Record<string, "flash" | "pro">;
+      subagentModels?: Record<string, string>;
       showSystemEvents?: boolean;
       mimoApiKey?: string | null;
       mimoBaseUrl?: string | null;
@@ -248,7 +248,7 @@ interface SettingsEvent {
     exa?: string;
     ollama?: string;
   };
-  subagentModels?: Record<string, "flash" | "pro">;
+  subagentModels?: Record<string, string>;
   showSystemEvents?: boolean;
   version: string;
   mimoBaseUrl?: string;
@@ -2892,7 +2892,18 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
       if (!tab.runtime) return;
       void tab.runtime.loop
         .compactHistory()
-        .then(() => emitCtxBreakdown(tab))
+        .then((r) => {
+          if (!r.folded) {
+            emit(
+              {
+                type: "$error",
+                message: "▸ 无需折叠 — 日志已足够小，或最近轮次本身已超过预算。",
+              },
+              tab.id,
+            );
+          }
+          emitCtxBreakdown(tab);
+        })
         .catch((err: Error) => {
           emit({ type: "$error", message: `/compact failed: ${err.message}` }, tab.id);
         });

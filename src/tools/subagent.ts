@@ -114,11 +114,9 @@ function defaultSubagentSystem(modelId: string): string {
 }
 
 const DEFAULT_MAX_RESULT_CHARS = 8000;
-// Subagents default to flash — their work is read-and-synthesize
-// (explore, research), which doesn't need the 12× pro tier. Skill
-// frontmatter `model: deepseek-v4-pro` is the opt-in override for
-// skills that empirically benefit from the stronger model.
-const DEFAULT_SUBAGENT_MODEL = "deepseek-v4-flash";
+// Subagents default to mimo-v2.5 — cheap, fast, and supports prefix caching.
+// Config `subagentModels.__default__` overrides this globally; per-skill overrides take priority.
+const FALLBACK_SUBAGENT_MODEL = "mimo-v2.5";
 const DEFAULT_SUBAGENT_EFFORT: import("../config.js").ReasoningEffort = "high";
 
 const SUBAGENT_TOOL_NAME = "spawn_subagent";
@@ -145,7 +143,7 @@ export function subagentBudgetHint(spawnCount: number, totalTokens: number): str
 
 /** Errors captured in the result shape, never thrown — caller decides how to surface. */
 export async function spawnSubagent(opts: SpawnSubagentOptions): Promise<SubagentResult> {
-  const model = opts.model ?? DEFAULT_SUBAGENT_MODEL;
+  const model = opts.model ?? FALLBACK_SUBAGENT_MODEL;
   const maxResultChars = opts.maxResultChars ?? DEFAULT_MAX_RESULT_CHARS;
   const sink = opts.sink;
   const skillName = opts.skillName;
@@ -468,7 +466,7 @@ export function registerSubagentTool(
   const defaultSystemBase = opts.projectRoot
     ? applyProjectMemory(baseSystem, opts.projectRoot)
     : baseSystem;
-  const defaultModel = opts.defaultModel ?? DEFAULT_SUBAGENT_MODEL;
+  const defaultModel = opts.defaultModel ?? FALLBACK_SUBAGENT_MODEL;
   const maxResultChars = opts.maxResultChars ?? DEFAULT_MAX_RESULT_CHARS;
   const sink = opts.sink;
   // Per-session counters survive across spawn calls because registerSubagentTool
@@ -496,9 +494,9 @@ export function registerSubagentTool(
         },
         model: {
           type: "string",
-          enum: ["deepseek-v4-flash", "deepseek-v4-pro", "mimo-v2.5-pro", "mimo-v2.5"],
+          enum: ["mimo-v2.5", "mimo-v2.5-pro", "deepseek-v4-flash", "deepseek-v4-pro"],
           description:
-            "Which model the subagent runs on. Default is 'deepseek-v4-flash' — cheap and fast, fine for explore/research-style subtasks. Override to 'deepseek-v4-pro' (~12× more expensive) when the subtask genuinely needs the stronger model. MiMo models are also accepted when the parent session is on MiMo: 'mimo-v2.5' (1× cost, efficient) or 'mimo-v2.5-pro' (2× cost, flagship 1T-param agent model). On MiMo, mimo-v2.5 can auto-escalate to mimo-v2.5-pro for hard tasks.",
+            "Which model the subagent runs on. Default is 'mimo-v2.5' — cheap and fast with prefix caching. Use 'mimo-v2.5-pro' for flagship quality, or 'deepseek-v4-flash'/'deepseek-v4-pro' for DeepSeek models.",
         },
         resume_session: {
           type: "string",

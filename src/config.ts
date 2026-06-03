@@ -287,7 +287,7 @@ export interface DeepMiCodeConfig {
     paths?: string[];
   };
   /** Per-skill model override for `runAs: subagent` skills, keyed by skill name. Empty / missing entry → spawn site's default. */
-  subagentModels?: Record<string, "flash" | "pro">;
+  subagentModels?: Record<string, string>;
   /** Enable the `java_source` tool for finding and decompiling Java class source. Default off. */
   javaSource?: boolean;
   /** User-declared extensions to the built-in memory types (#709). Unknown types round-trip even without a declaration; declaring one lets you attach a default priority + lifecycle. */
@@ -911,26 +911,29 @@ export function saveSkillPaths(
   return normalized;
 }
 
-export function loadSubagentModels(
-  path: string = defaultConfigPath(),
-): Record<string, "flash" | "pro"> {
+export function loadSubagentModels(path: string = defaultConfigPath()): Record<string, string> {
   const raw = readConfig(path).subagentModels;
   if (!raw || typeof raw !== "object") return {};
-  const out: Record<string, "flash" | "pro"> = {};
+  const out: Record<string, string> = {};
   for (const [name, value] of Object.entries(raw)) {
-    if (value === "flash" || value === "pro") out[name] = value;
+    if (typeof value === "string" && value) {
+      // Backward compat: legacy "flash"/"pro" presets → concrete DeepSeek model ids
+      if (value === "flash") out[name] = "deepseek-v4-flash";
+      else if (value === "pro") out[name] = "deepseek-v4-pro";
+      else out[name] = value;
+    }
   }
   return out;
 }
 
 export function saveSubagentModels(
-  map: Record<string, "flash" | "pro">,
+  map: Record<string, string>,
   path: string = defaultConfigPath(),
 ): void {
   const cfg = readConfig(path);
-  const out: Record<string, "flash" | "pro"> = {};
+  const out: Record<string, string> = {};
   for (const [name, value] of Object.entries(map)) {
-    if (value === "flash" || value === "pro") out[name] = value;
+    if (typeof value === "string" && value) out[name] = value;
   }
   cfg.subagentModels = Object.keys(out).length > 0 ? out : undefined;
   writeConfig(cfg, path);

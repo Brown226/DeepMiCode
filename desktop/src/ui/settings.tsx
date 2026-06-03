@@ -1132,6 +1132,34 @@ function PageModels({
           </div>
         </div>
       </section>
+      <section className="section">
+        <div className="stitle">{t("settings.subagentModelSection")}</div>
+        <div className="setting-row">
+          <div className="l">
+            <div className="n">{t("settings.subagentModelHint")}</div>
+            <div className="h">{t("settings.subagentModelSectionDesc")}</div>
+          </div>
+          <select
+            className="field"
+            style={{ minWidth: 180 }}
+            value={settings.subagentModels?.["__default__"] ?? "mimo-v2.5"}
+            onChange={(e) =>
+              onSave({
+                subagentModels: {
+                  ...(settings.subagentModels ?? {}),
+                  __default__: e.target.value,
+                },
+              })
+            }
+          >
+            {SUBAGENT_MODEL_OPTIONS.map((opt) => (
+              <option key={opt.id} value={opt.id}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </section>
     </>
   );
 }
@@ -1240,16 +1268,24 @@ function PageMCP({
   );
 }
 
+/** All available subagent model IDs. */
+const SUBAGENT_MODEL_OPTIONS = [
+  { id: "mimo-v2.5", label: "MiMo v2.5 (fast)" },
+  { id: "mimo-v2.5-pro", label: "MiMo v2.5 Pro" },
+  { id: "deepseek-v4-flash", label: "DeepSeek v4 Flash" },
+  { id: "deepseek-v4-pro", label: "DeepSeek v4 Pro" },
+];
+
 function PageSkills({
   skills,
   subagentModels,
   onSave,
 }: {
   skills: SkillInfo[];
-  subagentModels: Record<string, "flash" | "pro">;
+  subagentModels: Record<string, string>;
   onSave: (patch: SettingsPatch) => void;
 }) {
-  const setSubagentModel = (name: string, value: "flash" | "pro") => {
+  const setSubagentModel = (name: string, value: string) => {
     onSave({ subagentModels: { ...subagentModels, [name]: value } });
   };
   return (
@@ -1294,13 +1330,16 @@ function PageSkills({
               {s.runAs === "subagent" ? (
                 <select
                   className="field"
-                  style={{ marginLeft: "auto", minWidth: 96 }}
-                  value={subagentModels[s.name] ?? "flash"}
-                  onChange={(e) => setSubagentModel(s.name, e.target.value as "flash" | "pro")}
+                  style={{ marginLeft: "auto", minWidth: 160 }}
+                  value={subagentModels[s.name] ?? "mimo-v2.5"}
+                  onChange={(e) => setSubagentModel(s.name, e.target.value)}
                   title={t("settings.subagentModelHint")}
                 >
-                  <option value="flash">{t("settings.subagentModelFlash")}</option>
-                  <option value="pro">{t("settings.subagentModelPro")}</option>
+                  {SUBAGENT_MODEL_OPTIONS.map((opt) => (
+                    <option key={opt.id} value={opt.id}>
+                      {opt.label}
+                    </option>
+                  ))}
                 </select>
               ) : null}
             </div>
