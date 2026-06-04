@@ -225,6 +225,7 @@ type InMessage = { tabId?: string } & (
   | { cmd: "providers_save"; provider: import("../../config.js").ProviderConfig }
   | { cmd: "providers_delete"; id: string }
   | { cmd: "providers_set_default"; id: string }
+  | { cmd: "providers_test"; baseUrl: string; apiKey: string }
 );
 
 interface NeedsSetupEvent {
@@ -2423,6 +2424,36 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
           msg.tabId ?? first?.id,
         );
       }
+      return;
+    }
+    if (msg.cmd === "providers_test") {
+      const { baseUrl, apiKey } = msg;
+      (async () => {
+        try {
+          const url = `${baseUrl.replace(/\/+$/, "")}/models`;
+          const resp = await fetch(url, {
+            headers: { Authorization: `Bearer ${apiKey}` },
+            signal: AbortSignal.timeout(15_000),
+          });
+          if (resp.ok) {
+            emit({ type: "$providers_test_result", ok: true }, msg.tabId ?? first?.id);
+          } else {
+            emit(
+              { type: "$providers_test_result", ok: false, error: `HTTP ${resp.status}` },
+              msg.tabId ?? first?.id,
+            );
+          }
+        } catch (err) {
+          emit(
+            {
+              type: "$providers_test_result",
+              ok: false,
+              error: err instanceof Error ? err.message : String(err),
+            },
+            msg.tabId ?? first?.id,
+          );
+        }
+      })();
       return;
     }
 

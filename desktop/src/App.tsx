@@ -12,6 +12,7 @@ import { type Update, check } from "@tauri-apps/plugin-updater";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { CommandPalette, Toast, buildCommands, useCommandPalette } from "./CommandPalette";
 import { WorkspaceProvider } from "./Markdown";
+import { useProviderStore } from "./stores/providerStore";
 import { useUIStore } from "./stores/uiStore";
 import { nextAbortDraftCandidate, restoreAbortedDraft, type AbortDraftSource } from "./abort-draft";
 import { getLang, getLangLabel, getSupportedLangs, setLang, t, useLang } from "./i18n";
@@ -3864,6 +3865,11 @@ export function App() {
               setTabs((prev) =>
                 prev.map((t) => (t.id === tabId ? { ...t, workspaceDir: ev.workspaceDir } : t)),
               );
+            }
+
+            if (ev.type === "$providers") {
+              useProviderStore.getState().setProviders(ev.providers);
+              return;
             }
 
             if (ev.type === "$jobs") {

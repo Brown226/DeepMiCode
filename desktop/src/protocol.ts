@@ -247,6 +247,12 @@ export type ProvidersEvent = {
   providers: ProviderConfig[];
 };
 
+export type ProvidersTestResultEvent = {
+  type: "$providers_test_result";
+  ok: boolean;
+  error?: string;
+};
+
 export type JobInfo = {
   id: number;
   tabId: string;
@@ -555,6 +561,7 @@ export type IncomingEvent = { tabId?: string } & (
   | RetryResultEvent
   | BtwResultEvent
   | ProvidersEvent
+  | ProvidersTestResultEvent
 );
 
 export type OutgoingCommand = { tabId?: string } & (
@@ -602,4 +609,5 @@ export type OutgoingCommand = { tabId?: string } & (
   | { cmd: "providers_save"; provider: ProviderConfig }
   | { cmd: "providers_delete"; id: string }
   | { cmd: "providers_set_default"; id: string }
+  | { cmd: "providers_test"; baseUrl: string; apiKey: string }
 );

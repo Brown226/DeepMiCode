@@ -1,5 +1,7 @@
+import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Balance, Settings as SettingsType, UsageStats } from "../App";
 
 import { getLangLabel, getSupportedLangs, setLang, t, useLang } from "../i18n";
@@ -1307,26 +1309,55 @@ function AddProviderForm({
   const [testStatus, setTestStatus] = useState<"idle" | "testing" | "success" | "error">("idle");
   const [testError, setTestError] = useState<string | null>(null);
 
-  const handleTestConnection = async () => {
+  const handleTestConnection = useCallback(async () => {
     if (!baseUrl.trim() || !apiKey.trim()) return;
     setTestStatus("testing");
     setTestError(null);
     try {
-      const resp = await fetch(`${baseUrl.trim()}/models`, {
-        headers: { Authorization: `Bearer ${apiKey.trim()}` },
-        signal: AbortSignal.timeout(10000),
+      // Use backend IPC to test connection (bypasses CSP restrictions)
+      const result = await new Promise<{ ok: boolean; error?: string }>((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          unlisten();
+          reject(new Error("Test timeout"));
+        }, 20_000);
+        let unlisten: () => void;
+        void listen<{ data: string }>(
+          "rpc:event",
+          (e) => {
+            try {
+              const ev = JSON.parse(e.payload.data) as { type: string; ok?: boolean; error?: string };
+              if (ev.type === "$providers_test_result") {
+                clearTimeout(timeout);
+                unlisten();
+                resolve({ ok: ev.ok, error: ev.error });
+              }
+            } catch {
+              // ignore parse errors
+            }
+          },
+        ).then((fn) => {
+          unlisten = fn;
+          // Send the test command after listener is ready
+          void invoke("rpc_send", {
+            line: JSON.stringify({
+              cmd: "providers_test",
+              baseUrl: baseUrl.trim(),
+              apiKey: apiKey.trim(),
+            }),
+          });
+        });
       });
-      if (resp.ok) {
+      if (result.ok) {
         setTestStatus("success");
       } else {
         setTestStatus("error");
-        setTestError(`HTTP ${resp.status}`);
+        setTestError(result.error ?? "Unknown error");
       }
     } catch (err) {
       setTestStatus("error");
       setTestError(err instanceof Error ? err.message : String(err));
     }
-  };
+  }, [baseUrl, apiKey]);
 
   const handleSubmit = () => {
     const models = modelsText
